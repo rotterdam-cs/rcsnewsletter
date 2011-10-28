@@ -2,7 +2,7 @@
 package com.rcs.newsletter;
 
 /**
- *
+ * Constants for Newsletter
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
 public interface NewsletterConstants {    

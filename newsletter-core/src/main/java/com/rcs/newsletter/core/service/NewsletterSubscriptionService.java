@@ -9,21 +9,11 @@ import java.util.List;
  *
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
-public interface NewsletterSubscriptionService {
-
-    boolean addNewsletterSubscription(NewsletterSubscription newsletterSubscription);
-    
-    boolean updateNewsletterSubscription(NewsletterSubscription newsletterSubscription);
-
-    List<NewsletterSubscription> findAllNewsletterSubscriptions();
-    
-    NewsletterSubscription findById(long newsletterSubscriptionId);
+public interface NewsletterSubscriptionService {    
     
     NewsletterSubscription findBySubscriptor(NewsletterSubscriptor newsletterSubscriptor);
     
-    NewsletterSubscription findBySubscriptorAndCategory(NewsletterSubscriptor newsletterSubscriptor, NewsletterCategory newsletterCategory);
-
-    boolean deleteNewsletterSubscription(long newsletterSubscriptionId);
+    NewsletterSubscription findBySubscriptorAndCategory(NewsletterSubscriptor newsletterSubscriptor, NewsletterCategory newsletterCategory);    
     
     List<NewsletterSubscription> findSubscriptionByKey(String s);
     

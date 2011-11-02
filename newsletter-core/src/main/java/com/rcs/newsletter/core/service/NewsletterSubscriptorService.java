@@ -9,10 +9,6 @@ import com.rcs.newsletter.core.model.NewsletterSubscriptor;
  */
 public interface NewsletterSubscriptorService {
     
-    boolean addNewsletterSubscriptor(NewsletterSubscriptor newsletterSubscriptor);
-    
-    boolean updateNewsletterSubscriptor(NewsletterSubscriptor newsletterSubscriptor);
-    
     NewsletterSubscriptor findByEmail(String email);
     
 }

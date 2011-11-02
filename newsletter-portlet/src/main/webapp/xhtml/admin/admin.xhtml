@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Newsletter Administration</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:tabView>
+                <p:tab title="Lists">
+                    <p:commandButton type="button" value="Add List" onclick="addCategoryDlg.show()" />  
+                    <hr/>
+                    <p:growl id="categoryMessages"/>
+                    <hr/>
+                    <p:dataTable var="item" value="#{categoryAdminManagedBean.categorys}">
+                        <p:column>
+                            <f:facet name="header">
+                                Id
+                            </f:facet>
+                            #{item.id}
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                Name
+                            </f:facet>
+                            #{item.name}
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                Description
+                            </f:facet>
+                            #{item.description}
+                        </p:column>
+                        <p:column>                            
+                            <f:facet name="header">
+                                Action
+                            </f:facet>
+                            <p:menu type="tiered" style="width:180px">  
+                                <p:submenu label="Actions">  
+                                    <p:menuitem value="Edit List" update="messages" icon="ui-icon ui-icon-arrowrefresh-1-w"/>  
+                                    <p:menuitem value="Delete List" action="#{categoryCRUDManagedBean.delete}" update="messages" ajax="true" icon="ui-icon ui-icon-close">
+                                        <f:setPropertyActionListener target="#{categoryCRUDManagedBean.id}" value="#{item.id}" />
+                                    </p:menuitem>
+                                    <p:menuitem value="Edit Subscribe Mail" icon="ui-icon ui-icon-star"/>  
+                                    <p:menuitem value="Edit Unsubscribe Mail" update="messages" ajax="false" icon="ui-icon ui-icon-star"/>  
+                                </p:submenu>
+                            </p:menu>                            
+                        </p:column>
+                    </p:dataTable>
+                </p:tab>
+
+                <p:tab title="Subscribers">
+                    <p:commandButton type="button" value="Add List" onclick="addCategoryDlg.show()" />  
+                    <hr/>
+                    <p:growl id="subscribersMessages"/>
+                    <hr/>
+                    <p:dataTable var="item" value="#{categoryAdminManagedBean.categorys}">
+
+                        <p:column>
+                            <f:facet name="header">
+                                Id
+                            </f:facet>
+                            #{item.id}
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                Name
+                            </f:facet>
+                            #{item.name}
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                Description
+                            </f:facet>
+                            #{item.description}
+                        </p:column>
+                        <p:column>                            
+                            <f:facet name="header">
+                                Action
+                            </f:facet>
+                            <p:menu type="tiered" style="width:180px">  
+                                <p:submenu label="Actions">  
+                                    <p:menuitem value="Edit List" actionListener="#{categoryManagedBean.delete}" update="messages" icon="ui-icon ui-icon-arrowrefresh-1-w"/>  
+                                    <p:menuitem value="Delete List" actionListener="#{categoryManagedBean.delete}" update="messages" ajax="true" icon="ui-icon ui-icon-close">
+                                        <f:setPropertyActionListener target="#{categoryManagedBean.id}" value="#{item.id}" />
+                                    </p:menuitem>
+                                    <p:menuitem value="Edit Subscribe Mail" icon="ui-icon ui-icon-star"/>  
+                                    <p:menuitem value="Edit Unsubscribe Mail" actionListener="#{categoryManagedBean.delete}" update="messages" ajax="false" icon="ui-icon ui-icon-star"/>  
+                                </p:submenu>
+                            </p:menu>                            
+                        </p:column>
+                    </p:dataTable>
+                </p:tab>
+
+                <p:tab title="Mailing">
+
+                </p:tab>
+
+                <p:tab title="Archive">
+
+                </p:tab>
+
+            </p:tabView>
+        </h:form>
+
+        <p:dialog header="Add List" widgetVar="addCategoryDlg" resizable="false" modal="true">
+            <h:form>
+                <h:panelGrid columns="2" style="margin-bottom:10px">
+                    <h:outputText value="Name" /> 
+                    <p:inputText value="#{categoryCRUDManagedBean.name}" required="true" label="Name"/>
+                    <h:outputText value="Description" /> 
+                    <p:inputTextarea value="#{categoryCRUDManagedBean.description}" required="true" label="Description"/>
+                    <h:outputText value="From Name" /> 
+                    <p:inputText value="#{categoryCRUDManagedBean.fromName}" required="true" label="From name"/>
+                    <h:outputText value="Name" /> 
+                    <p:inputText value="#{categoryCRUDManagedBean.fromEmail}" required="true" label="From email"/>
+                </h:panelGrid>
+                <p:commandButton value="Save" actionListener="#{categoryCRUDManagedBean.save}" oncomplete="addCategoryDlg.hide();"/>
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>

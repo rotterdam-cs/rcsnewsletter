@@ -26,11 +26,13 @@ public class NewsletterCategory implements Serializable, NewsletterEntity {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;    
+    private long id;
     private boolean active;
     private String name;
     private String description;
-    private long articleId;    
+    private String fromName;
+    private String fromEmail;
+    private long articleId;
     @OneToMany
     @JoinColumn(name = "category_id")
     @Cascade(CascadeType.DELETE)
@@ -68,6 +70,22 @@ public class NewsletterCategory implements Serializable, NewsletterEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFromEmail() {
+        return fromEmail;
+    }
+
+    public void setFromEmail(String fromEmail) {
+        this.fromEmail = fromEmail;
+    }
+
+    public String getFromName() {
+        return fromName;
+    }
+
+    public void setFromName(String fromName) {
+        this.fromName = fromName;
     }
 
     public long getArticleId() {

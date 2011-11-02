@@ -209,7 +209,7 @@
 </script>
 
 <div id="subscription-content-div">
-    <h3> <liferay-ui:message key="newsletter.subscribe.title"/></h3>
+    <h3><liferay-ui:message key="newsletter.subscribe.title"/></h3>
     <aui:form name="subscription-form-id">
         <aui:fieldset>
             <c:forEach items="${categories}" var="category">        

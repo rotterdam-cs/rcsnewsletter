@@ -6,7 +6,6 @@ import com.rcs.newsletter.core.model.NewsletterSubscription;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.validation.Validator;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
@@ -25,65 +24,12 @@ import org.slf4j.Logger;
  */
 @Service
 @Transactional
-public class NewsletterCategoryImpl implements NewsletterCategoryService {
+public class NewsletterCategoryImpl extends CRUDServiceImpl<NewsletterCategory> implements NewsletterCategoryService {
 
     @Autowired
     private SessionFactory sessionFactory;
     
-    @Autowired
-    private Validator validator;
-    
     private final static Logger logger = LoggerFactory.getLogger(NewsletterSubscriptionImpl.class);
-    
-    @Override
-    public boolean addNewsletterCategory(NewsletterCategory newsletterCategory) {
-        boolean result = true;
-        Set violations = validator.validate(newsletterCategory);
-
-        if (!violations.isEmpty()) {
-            return false;
-        }
-
-        sessionFactory.getCurrentSession().save(newsletterCategory);
-
-        return result;
-    }
-    
-    @Override
-    public boolean updateNewsletterCategory(NewsletterCategory newsletterCategory) {
-        boolean result = true;
-        Set violations = validator.validate(newsletterCategory);
-
-        if (!violations.isEmpty()) {
-            return false;
-        }
-
-        sessionFactory.getCurrentSession().update(newsletterCategory);
-
-        return result;
-    }
-    
-    @Override
-    public NewsletterCategory findById(long newsletterCategoryId, boolean fetchSubscriptors) {
-        NewsletterCategory result = null;
-        
-        try {                        
-            Criteria criteria = sessionFactory.getCurrentSession().createCriteria(NewsletterCategory.class);
-            criteria.add(Restrictions.eq(NewsletterCategory.ID, newsletterCategoryId));
-            criteria.setMaxResults(1);
-            
-            result = (NewsletterCategory) criteria.uniqueResult();
-            
-            if(fetchSubscriptors) {
-                result.setSubscriptions(getNewsletterSubscriptionsByCategoryId(result));
-            }
-        } catch (NonUniqueResultException ex) {
-            String error = "Exists more than unique id";
-            logger.error(error);
-        }        
-        
-        return result;
-    }
     
     @Override
     public NewsletterCategory findByKey(String categoryKey) {
@@ -113,20 +59,6 @@ public class NewsletterCategoryImpl implements NewsletterCategoryService {
             }
         }
         
-        return result;
-    }
-
-    @Override
-    public boolean deleteNewsletterCategory(NewsletterCategory newsletterCategory) {
-        boolean result = true;
-        Set violations = validator.validate(newsletterCategory);
-        
-        if (!violations.isEmpty()) {
-            return false;
-        }
-
-        sessionFactory.getCurrentSession().delete(newsletterCategory);
-
         return result;
     }
     

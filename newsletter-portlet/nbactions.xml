@@ -7,4 +7,13 @@
                 <goal>liferay:deploy</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-All In One</actionName>
+            <displayName>All In One</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>install</goal>
+                <goal>liferay:deploy</goal>
+            </goals>
+        </action>
     </actions>

@@ -2,8 +2,6 @@
 package com.rcs.newsletter.core.service;
 
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
-import java.util.Set;
-import javax.validation.Validator;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
@@ -25,38 +23,7 @@ public class NewsletterSubscriptorImpl implements NewsletterSubscriptorService {
     @Autowired
     private SessionFactory sessionFactory;
     
-    @Autowired
-    private Validator validator;
-    
     private final static Logger logger = LoggerFactory.getLogger(NewsletterSubscriptionImpl.class);
-    
-    @Override
-    public boolean addNewsletterSubscriptor(NewsletterSubscriptor newsletterSubscriptor) {
-        boolean result = true;
-        Set violations = validator.validate(newsletterSubscriptor);
-
-        if (!violations.isEmpty()) {
-            return false;
-        }
-
-        sessionFactory.getCurrentSession().save(newsletterSubscriptor);
-
-        return result;
-    }
-
-    @Override
-    public boolean updateNewsletterSubscriptor(NewsletterSubscriptor newsletterSubscriptor) {
-        boolean result = true;
-        Set violations = validator.validate(newsletterSubscriptor);
-
-        if (!violations.isEmpty()) {
-            return false;
-        }
-
-        sessionFactory.getCurrentSession().update(newsletterSubscriptor);
-
-        return result;
-    }
 
     @Override
     public NewsletterSubscriptor findByEmail(String email) {

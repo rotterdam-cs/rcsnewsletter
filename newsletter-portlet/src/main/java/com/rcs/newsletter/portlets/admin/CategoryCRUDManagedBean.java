@@ -1,13 +1,13 @@
-
 package com.rcs.newsletter.portlets.admin;
 
+import com.liferay.portal.kernel.log.Log;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
-
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 /**
  *
@@ -15,26 +15,20 @@ import org.springframework.context.annotation.Scope;
  */
 @Named
 @Scope("request")
-public class CategoryCRUDManagedBean {
+public class CategoryCRUDManagedBean extends NewsletterCrudManagedBean {
+
+    private static Log log = LogFactoryUtil.getLog(CategoryCRUDManagedBean.class);
+    private static final String CATEGORY_ID_PARAM = "categoryId";
     
     @Inject
-    NewsletterCategoryService categoryCRUDService;
+    NewsletterCategoryService categoryCRUDService;    
     
-    private long id;
     private String name;
     private String fromName;
     private String fromEmail;
     private String description;
     private boolean active;
     private long articleId;
-    
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getFromEmail() {
         return fromEmail;
@@ -74,7 +68,7 @@ public class CategoryCRUDManagedBean {
 
     public void setDescription(String description) {
         this.description = description;
-    }    
+    }
 
     public String getName() {
         return name;
@@ -83,23 +77,70 @@ public class CategoryCRUDManagedBean {
     public void setName(String name) {
         this.name = name;
     }
-    
-    public void save() {
-        NewsletterCategory newsletterCategory = new NewsletterCategory();
-        
-        newsletterCategory.setName(name);
-        newsletterCategory.setDescription(description);
-        newsletterCategory.setActive(active);
-        
-        categoryCRUDService.save(newsletterCategory);     
+
+    public String redirectCategoryList() {
+        return "admin?faces-redirect=true";
     }
     
-    public void delete() {
-        ServiceActionResult result = categoryCRUDService.findById(id);
-        if(result.isSuccess()) {
-            NewsletterCategory newsletterCategory = (NewsletterCategory) result.getPayload();
-            System.out.println("Deleting " + newsletterCategory.getName());
+    public String redirectCreateCategory() {
+        this.setAction(CRUDActionEnum.CREATE);
+        return "editCategory";
+    }
+
+    public String redirectEditCategory() {
+        ServiceActionResult serviceActionResult = categoryCRUDService.findById(getId());
+        if (serviceActionResult.isSuccess()) {
+            NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
+            this.name = newsletterCategory.getName();
+            this.description = newsletterCategory.getDescription();
+            this.articleId = newsletterCategory.getArticleId();
+            this.fromEmail = newsletterCategory.getFromEmail();
+            this.fromName = newsletterCategory.getFromName();
+            this.setAction(CRUDActionEnum.UPDATE);
+        }
+        
+        return "editCategory";
+    }
+    
+    public String redirectDeleteCategory() {
+        return "deleteCategory";
+    }
+
+    public String save() {        
+        NewsletterCategory newsletterCategory = null;
+        if (getId() == 0) {
+            newsletterCategory = new NewsletterCategory();
+            fillNewsletterCategory(newsletterCategory);
+            categoryCRUDService.save(newsletterCategory);
+            
+        } else {
+            ServiceActionResult serviceActionResult = categoryCRUDService.findById(getId());
+            if (serviceActionResult.isSuccess()) {
+                newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
+                fillNewsletterCategory(newsletterCategory);
+                
+                categoryCRUDService.update(newsletterCategory);
+            }
+        }
+        
+        return redirectCategoryList();
+    }
+    
+    private void fillNewsletterCategory(NewsletterCategory newsletterCategory) {
+        newsletterCategory.setName(name);
+        newsletterCategory.setDescription(description);
+        newsletterCategory.setArticleId(articleId);
+        newsletterCategory.setFromName(fromName);
+        newsletterCategory.setFromEmail(fromEmail);
+    }
+
+    public String delete() {
+        ServiceActionResult serviceActionResult = categoryCRUDService.findById(getId());
+        if (serviceActionResult.isSuccess()) {
+            NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
             categoryCRUDService.delete(newsletterCategory);
         }
+
+        return redirectCategoryList();
     }
 }

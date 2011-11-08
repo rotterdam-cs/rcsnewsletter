@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"      
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+    <h:head>
+        <title>Delete Category</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h1>Remove List</h1>
+            <span>
+                Are you sure you want to remove the list and all of its subscribers?
+            </span>
+            <br></br>
+            <span>
+                (if the subscribers are also subscribed to other list only their subscribtion will be removed)
+            </span>
+            <br></br>
+            <h:panelGrid columns="3">
+                <h:inputHidden value="#{categoryCRUDManagedBean.id}"/>
+                <h:selectBooleanCheckbox onchange="enableDeleteButton(this)"/>
+                <h:outputText value="I understand the risks involved in this action"/>
+            </h:panelGrid> 
+            <p:commandButton styleClass="confirm-delete-button" widgetVar="confirmDeleteButton" value="Yes, I Am Sure" action="#{categoryCRUDManagedBean.delete}" ajax="false"/>
+            <p:commandButton value="No, Please take me back" action="#{categoryCRUDManagedBean.redirectCategoryList}" ajax="false"/>            
+        </h:form>        
+
+        <script type="text/javascript">            
+            function enableDeleteButton(ob) {
+                var confirmButton = $(".confirm-delete-button");
+                
+                if (confirmButton.attr('disabled')) {
+                    confirmButton.removeAttr('disabled');
+                } else {
+                    confirmButton.attr('disabled', 'disabled');
+                }
+                confirmButton.toggleClass("ui-button-disabled ui-state-disabled");                                
+            }
+            
+            $(document).ready(function(){
+                var confirmButton = $(".confirm-delete-button");
+                confirmButton.attr('disabled', 'true');
+                confirmButton.addClass("ui-button-disabled ui-state-disabled");                
+            });
+        </script>
+    </h:body>
+</html>

@@ -28,7 +28,9 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
     private String fromEmail;
     private String description;
     private boolean active;
-    private long articleId;
+    
+    private String emailTypeName;
+    private long subscriptionArticleId;
 
     public String getFromEmail() {
         return fromEmail;
@@ -54,14 +56,6 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
         this.active = active;
     }
 
-    public long getArticleId() {
-        return articleId;
-    }
-
-    public void setArticleId(long articleId) {
-        this.articleId = articleId;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -76,6 +70,22 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getSubscriptionArticleId() {
+        return subscriptionArticleId;
+    }
+
+    public void setSubscriptionArticleId(long subscriptionArticleId) {
+        this.subscriptionArticleId = subscriptionArticleId;
+    }
+
+    public String getEmailTypeName() {
+        return emailTypeName;
+    }
+
+    public void setEmailTypeName(String emailTypeName) {
+        this.emailTypeName = emailTypeName;
     }
 
     public String redirectCategoryList() {
@@ -93,7 +103,6 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
             NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
             this.name = newsletterCategory.getName();
             this.description = newsletterCategory.getDescription();
-            this.articleId = newsletterCategory.getArticleId();
             this.fromEmail = newsletterCategory.getFromEmail();
             this.fromName = newsletterCategory.getFromName();
             this.setAction(CRUDActionEnum.UPDATE);
@@ -104,6 +113,28 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
 
     public String redirectDeleteCategory() {
         return "deleteCategory";
+    }
+
+    public String redirectEditSubscribeMail() {
+        ServiceActionResult serviceActionResult = categoryCRUDService.findById(getId());
+        if (serviceActionResult.isSuccess()) {
+            NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
+            this.subscriptionArticleId = newsletterCategory.getSubscriptionArticleId();
+            this.emailTypeName = "Subscription";
+        }
+
+        return "editSubscriptionMail";
+    }
+
+    public String redirectEditUnsubscribeMail() {
+        ServiceActionResult serviceActionResult = categoryCRUDService.findById(getId());
+        if (serviceActionResult.isSuccess()) {
+            NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
+            this.subscriptionArticleId = newsletterCategory.getUnsubscriptionArticleId();
+            this.emailTypeName = "Unsubscription";
+        }
+
+        return "editSubscriptionMail";
     }
 
     public String save() {
@@ -145,7 +176,6 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
     private void fillNewsletterCategory(NewsletterCategory newsletterCategory) {
         newsletterCategory.setName(name);
         newsletterCategory.setDescription(description);
-        newsletterCategory.setArticleId(articleId);
         newsletterCategory.setFromName(fromName);
         newsletterCategory.setFromEmail(fromEmail);
     }

@@ -3,6 +3,7 @@ package com.rcs.newsletter.core.model;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,8 +21,7 @@ import org.hibernate.annotations.CascadeType;
 @Entity
 @Table(name = "newsletter_category")
 public class NewsletterCategory implements Serializable, NewsletterEntity {
-
-    public static final String ID = "id";
+    
     public static final String CATEGORY_KEY = "categoryKey";
     private static final long serialVersionUID = 1L;
     @Id
@@ -32,12 +32,15 @@ public class NewsletterCategory implements Serializable, NewsletterEntity {
     private String description;
     private String fromName;
     private String fromEmail;
-    private long articleId;
     @OneToMany
     @JoinColumn(name = "category_id")
     @Cascade(CascadeType.DELETE)
-    private Set<NewsletterSubscription> subscriptions;
-
+    private Set<NewsletterSubscription> subscriptions;    
+    @Column(columnDefinition="bigint default -1")
+    private long subscriptionArticleId;    
+    @Column(columnDefinition="bigint default -1")
+    private long unsubscriptionArticleId;
+    
     @Override
     public long getId() {
         return id;
@@ -88,14 +91,6 @@ public class NewsletterCategory implements Serializable, NewsletterEntity {
         this.fromName = fromName;
     }
 
-    public long getArticleId() {
-        return articleId;
-    }
-
-    public void setArticleId(long articleId) {
-        this.articleId = articleId;
-    }
-
     public Set<NewsletterSubscription> getSubscriptions() {
         if (subscriptions == null) {
             subscriptions = new HashSet<NewsletterSubscription>();
@@ -105,5 +100,21 @@ public class NewsletterCategory implements Serializable, NewsletterEntity {
 
     public void setSubscriptions(Set<NewsletterSubscription> subscriptions) {
         this.subscriptions = subscriptions;
+    }
+
+    public long getSubscriptionArticleId() {
+        return subscriptionArticleId;
+    }
+
+    public void setSubscriptionArticleId(long subscriptionArticleId) {
+        this.subscriptionArticleId = subscriptionArticleId;
+    }
+
+    public long getUnsubscriptionArticleId() {
+        return unsubscriptionArticleId;
+    }
+
+    public void setUnsubscriptionArticleId(long unsubscriptionArticleId) {
+        this.unsubscriptionArticleId = unsubscriptionArticleId;
     }
 }

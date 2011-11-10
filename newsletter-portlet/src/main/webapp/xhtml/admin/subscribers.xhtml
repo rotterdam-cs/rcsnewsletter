@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <hr/>
+            <p:growl id="subscribersMessages"/>
+            <hr/>
+            <p:dataTable var="item" value="#{categoryAdminManagedBean.categorys}">
+
+                <p:column>
+                    <f:facet name="header">
+                        Id
+                    </f:facet>
+                    #{item.id}
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        Name
+                    </f:facet>
+                    #{item.name}
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        Description
+                    </f:facet>
+                    #{item.description}
+                </p:column>
+                <p:column>                            
+                    <f:facet name="header">
+                        Action
+                    </f:facet>
+                    <p:menu type="tiered" style="width:180px">  
+                        <p:submenu label="Actions">  
+                            <p:menuitem value="Edit List" actionListener="#{categoryManagedBean.delete}" update="messages" icon="ui-icon ui-icon-arrowrefresh-1-w"/>  
+                            <p:menuitem value="Delete List" actionListener="#{categoryManagedBean.delete}" update="messages" ajax="true" icon="ui-icon ui-icon-close">
+                                <f:setPropertyActionListener target="#{categoryManagedBean.id}" value="#{item.id}" />
+                            </p:menuitem>
+                            <p:menuitem value="Edit Subscribe Mail" icon="ui-icon ui-icon-star"/>  
+                            <p:menuitem value="Edit Unsubscribe Mail" actionListener="#{categoryManagedBean.delete}" update="messages" ajax="false" icon="ui-icon ui-icon-star"/>  
+                        </p:submenu>
+                    </p:menu>                            
+                </p:column>
+            </p:dataTable>
+        </ui:composition>
+    </h:body>
+</html>
+

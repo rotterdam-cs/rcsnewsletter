@@ -11,14 +11,14 @@
             <h:panelGrid columns="2" style="margin-bottom:10px">
                 <h:inputHidden value="#{categoryCRUDManagedBean.id}"/>
                 <h:outputText value="" />
-                <h:outputText value="Name" />
-                <p:inputText value="#{categoryCRUDManagedBean.name}"/>
-                <h:outputText value="Description" /> 
-                <p:inputTextarea value="#{categoryCRUDManagedBean.description}"/>
-                <h:outputText value="From Name" /> 
-                <p:inputText value="#{categoryCRUDManagedBean.fromName}"/>
-                <h:outputText value="From Email" /> 
-                <p:inputText value="#{categoryCRUDManagedBean.fromEmail}"/>
+                <h:outputLabel value="Name: " for="name"/>
+                <p:inputText id="name" value="#{categoryCRUDManagedBean.name}"/>
+                <h:outputLabel value="Description: " for="description"/> 
+                <p:inputTextarea id="description" value="#{categoryCRUDManagedBean.description}"/>
+                <h:outputLabel value="From Name" for="fromName"/> 
+                <p:inputText id="fromName" value="#{categoryCRUDManagedBean.fromName}"/>
+                <h:outputLabel value="From Email" for="fromEmail"/> 
+                <p:inputText id="fromEmail" value="#{categoryCRUDManagedBean.fromEmail}"/>
             </h:panelGrid>            
             <p:growl id="editCategoryMessages"/>            
             <p:commandButton value="#{categoryCRUDManagedBean.action.key}" update="editCategoryMessages" action="#{categoryCRUDManagedBean.save}" ajax="false"/>

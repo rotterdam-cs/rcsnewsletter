@@ -8,6 +8,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -15,14 +17,12 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
  */
 @Named
 @Scope("request")
-public class CategoryCRUDManagedBean extends NewsletterCrudManagedBean {
+public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
 
     private static Log log = LogFactoryUtil.getLog(CategoryCRUDManagedBean.class);
     private static final String CATEGORY_ID_PARAM = "categoryId";
-    
     @Inject
-    NewsletterCategoryService categoryCRUDService;    
-    
+    NewsletterCategoryService categoryCRUDService;
     private String name;
     private String fromName;
     private String fromEmail;
@@ -79,9 +79,9 @@ public class CategoryCRUDManagedBean extends NewsletterCrudManagedBean {
     }
 
     public String redirectCategoryList() {
-        return "admin?faces-redirect=true";
+        return "admin";
     }
-    
+
     public String redirectCreateCategory() {
         this.setAction(CRUDActionEnum.CREATE);
         return "editCategory";
@@ -98,34 +98,50 @@ public class CategoryCRUDManagedBean extends NewsletterCrudManagedBean {
             this.fromName = newsletterCategory.getFromName();
             this.setAction(CRUDActionEnum.UPDATE);
         }
-        
+
         return "editCategory";
     }
-    
+
     public String redirectDeleteCategory() {
         return "deleteCategory";
     }
 
-    public String save() {        
+    public String save() {
         NewsletterCategory newsletterCategory = null;
+        String message = "";
+        FacesMessage.Severity messageSeverity = null;
         if (getId() == 0) {
             newsletterCategory = new NewsletterCategory();
             fillNewsletterCategory(newsletterCategory);
-            categoryCRUDService.save(newsletterCategory);
-            
+            ServiceActionResult<NewsletterCategory> saveResult = categoryCRUDService.save(newsletterCategory);
+
+            if (saveResult.isSuccess()) {
+                messageSeverity = FacesMessage.SEVERITY_INFO;
+            } else {
+                messageSeverity = FacesMessage.SEVERITY_ERROR;
+            }
+
         } else {
             ServiceActionResult serviceActionResult = categoryCRUDService.findById(getId());
             if (serviceActionResult.isSuccess()) {
                 newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
                 fillNewsletterCategory(newsletterCategory);
-                
-                categoryCRUDService.update(newsletterCategory);
+
+                ServiceActionResult<NewsletterCategory> updateResult = categoryCRUDService.update(newsletterCategory);
+
+                if (updateResult.isSuccess()) {
+                    messageSeverity = FacesMessage.SEVERITY_INFO;
+                } else {
+                    messageSeverity = FacesMessage.SEVERITY_ERROR;
+                }
             }
         }
-        
+
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(messageSeverity, message, message));
+
         return redirectCategoryList();
     }
-    
+
     private void fillNewsletterCategory(NewsletterCategory newsletterCategory) {
         newsletterCategory.setName(name);
         newsletterCategory.setDescription(description);
@@ -136,10 +152,20 @@ public class CategoryCRUDManagedBean extends NewsletterCrudManagedBean {
 
     public String delete() {
         ServiceActionResult serviceActionResult = categoryCRUDService.findById(getId());
+        FacesMessage.Severity messageSeverity = null;
+        String message = "";
         if (serviceActionResult.isSuccess()) {
             NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
-            categoryCRUDService.delete(newsletterCategory);
+            serviceActionResult = categoryCRUDService.delete(newsletterCategory);
         }
+
+        if (serviceActionResult.isSuccess()) {
+            messageSeverity = FacesMessage.SEVERITY_INFO;
+        } else {
+            messageSeverity = FacesMessage.SEVERITY_ERROR;
+        }
+
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(messageSeverity, message, message));
 
         return redirectCategoryList();
     }

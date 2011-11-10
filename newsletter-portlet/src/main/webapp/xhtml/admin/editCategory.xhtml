@@ -10,8 +10,9 @@
         <h:form id="edit-category-form">
             <h:panelGrid columns="2" style="margin-bottom:10px">
                 <h:inputHidden value="#{categoryCRUDManagedBean.id}"/>
-                <h:outputText value="Name" />                 
-                <p:inputText value="#{categoryCRUDManagedBean.name}" required="true"/>
+                <h:outputText value="" />
+                <h:outputText value="Name" />
+                <p:inputText value="#{categoryCRUDManagedBean.name}"/>
                 <h:outputText value="Description" /> 
                 <p:inputTextarea value="#{categoryCRUDManagedBean.description}"/>
                 <h:outputText value="From Name" /> 
@@ -21,7 +22,7 @@
             </h:panelGrid>            
             <p:growl id="editCategoryMessages"/>            
             <p:commandButton value="#{categoryCRUDManagedBean.action.key}" update="editCategoryMessages" action="#{categoryCRUDManagedBean.save}" ajax="false"/>
-            <p:commandButton value="Cancel" action="#{categoryCRUDManagedBean.redirectCategoryList}" ajax="false"/>
+            <p:commandButton value="Cancel" update="editCategoryMessages" action="#{categoryCRUDManagedBean.redirectCategoryList}" ajax="false"/>
         </h:form>
     </h:body>
 </html>

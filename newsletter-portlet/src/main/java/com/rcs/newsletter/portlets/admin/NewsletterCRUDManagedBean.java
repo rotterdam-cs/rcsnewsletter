@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Scope;
  */
 @Named
 @Scope("request")
-public class NewsletterCrudManagedBean {    
+public class NewsletterCRUDManagedBean {    
     
     private long id;
     private CRUDActionEnum action;

@@ -44,8 +44,12 @@
                             <p:menuitem value="Delete List" action="#{categoryCRUDManagedBean.redirectDeleteCategory}" icon="ui-icon ui-icon-close">
                                 <f:setPropertyActionListener target="#{categoryCRUDManagedBean.id}" value="#{item.id}" />
                             </p:menuitem>
-                            <p:menuitem value="Edit Subscribe Mail" update="messages" ajax="false" icon="ui-icon ui-icon-star"/>  
-                            <p:menuitem value="Edit Unsubscribe Mail" update="messages" ajax="false" icon="ui-icon ui-icon-star"/>  
+                            <p:menuitem value="Edit Subscribe Mail" action="#{categoryCRUDManagedBean.redirectEditSubscribeMail}" icon="ui-icon ui-icon-star">
+                                <f:setPropertyActionListener target="#{categoryCRUDManagedBean.id}" value="#{item.id}" />
+                            </p:menuitem>  
+                            <p:menuitem value="Edit Unsubscribe Mail" action="#{categoryCRUDManagedBean.redirectEditUnsubscribeMail}" icon="ui-icon ui-icon-star">
+                                <f:setPropertyActionListener target="#{categoryCRUDManagedBean.id}" value="#{item.id}" />
+                            </p:menuitem>
                         </p:submenu>
                     </p:menu>                            
                 </p:column>

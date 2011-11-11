@@ -2,14 +2,10 @@ package com.rcs.newsletter.core.model;
 
 import com.rcs.newsletter.core.json.GsonExclude;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
-import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -21,7 +17,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "newsletter_subscription")
-public class NewsletterSubscription implements Serializable, NewsletterEntity {
+public class NewsletterSubscription extends NewsletterEntity {
     
     public static final String SUBSCRIPTOR = "subscriptor";
     public static final String CATEGORY = "category";
@@ -29,10 +25,6 @@ public class NewsletterSubscription implements Serializable, NewsletterEntity {
     public static final String CANCELLATION_KEY = "cancellationKey";
 
     private static final long serialVersionUID = 1L;
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
     
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -49,16 +41,6 @@ public class NewsletterSubscription implements Serializable, NewsletterEntity {
     @ManyToOne(cascade= CascadeType.ALL)
     @JoinColumn(name="category_id")
     private NewsletterCategory category;
-
-    @Override
-    public long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public SubscriptionStatus getStatus() {
         return status;

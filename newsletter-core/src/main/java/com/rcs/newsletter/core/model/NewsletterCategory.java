@@ -1,13 +1,9 @@
 package com.rcs.newsletter.core.model;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -20,13 +16,11 @@ import org.hibernate.annotations.CascadeType;
  */
 @Entity
 @Table(name = "newsletter_category")
-public class NewsletterCategory implements Serializable, NewsletterEntity {
+public class NewsletterCategory extends NewsletterEntity {
     
     public static final String CATEGORY_KEY = "categoryKey";
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    
     private boolean active;
     private String name;
     private String description;
@@ -41,16 +35,6 @@ public class NewsletterCategory implements Serializable, NewsletterEntity {
     @Column(columnDefinition="bigint default -1")
     private long unsubscriptionArticleId;
     
-    @Override
-    public long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public boolean getActive() {
         return active;
     }

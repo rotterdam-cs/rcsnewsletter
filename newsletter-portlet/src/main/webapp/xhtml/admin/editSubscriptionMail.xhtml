@@ -2,21 +2,38 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
     <h:head>
-        <title>Edit #{categoryCRUDManagedBean.emailTypeName} Mails</title>
+        <title>Edit Mails</title>
     </h:head>
     <h:body>
-        #{categoryCRUDManagedBean.emailTypeName}
+        <h2>#{categoryCRUDManagedBean.subscriptionEmailType}</h2>
+        <br></br>
         <h:form id="edit-subscription-email-form">
-            <h:panelGrid columns="2">
+            <h:panelGrid columns="2" style="margin-bottom:10px">                
+                <h:outputLabel value=""/>
+                <h:inputHidden value="#{categoryCRUDManagedBean.id}"/>
+                <h:outputLabel value="Select Article: "/>
+                <h:selectOneMenu value="#{categoryCRUDManagedBean.subscriptionEmailArticle}" valueChangeListener="#{categoryCRUDManagedBean.changeArticle}">
+                    <f:selectItem itemLabel="Select Model" itemValue="" />
+                    <f:selectItems value="#{categoryCRUDManagedBean.articlesForSubscription}" var="article" itemLabel="#{article.title}"/>
+                </h:selectOneMenu>                
                 <h:outputLabel value="Email Text: "/>
-                <p:editor value="" />
+                <p:editor id="articleEditor" value="#{categoryCRUDManagedBean.subscriptionEmailBody}" />
             </h:panelGrid>
-            <p:commandButton value="Edit" update="#{categoryCRUDManagedBean.emailTypeName}" ajax="false"/>
-            <p:commandButton value="Cancel" action="#{categoryCRUDManagedBean.redirectCategoryList}" ajax="false"/>
+            <br></br>
+            <p:growl id="editSubscriptionMailMessage"/>
+            <p:commandButton value="Edit" update="editSubscriptionMailMessage" action="#{categoryCRUDManagedBean.editSubscriptionMail}" ajax="false"/>
+            <p:commandButton value="Cancel" update="editSubscriptionMailMessage" action="#{categoryCRUDManagedBean.redirectCategoryList}" ajax="false"/>
         </h:form>
+        <script type="text/javascript">
+            $ = jQuery;
+            
+            $(document).ready(function(){
+                
+            });
+        </script>
     </h:body>
 </html>
 

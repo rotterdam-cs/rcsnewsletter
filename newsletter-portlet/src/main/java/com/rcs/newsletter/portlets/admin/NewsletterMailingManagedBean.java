@@ -1,6 +1,10 @@
 package com.rcs.newsletter.portlets.admin;
 
-import edu.emory.mathcs.backport.java.util.Collections;
+import com.rcs.newsletter.core.model.NewsletterCategory;
+import com.rcs.newsletter.core.model.NewsletterMailing;
+import com.rcs.newsletter.core.service.NewsletterCategoryService;
+import com.rcs.newsletter.core.service.NewsletterMailingService;
+import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -13,24 +17,35 @@ import org.springframework.context.annotation.Scope;
  */
 @Named
 @Scope("session")
-public class NewsletterMailingManagedBean {
+public class NewsletterMailingManagedBean implements Serializable {
+    private static final long serialVersionUID = 1L;
     
     @Inject
     private UserUiStateManagedBean uiState;
     
+    @Inject
+    private NewsletterMailingService service;
     
-    private List mailingList;
+    @Inject
+    private NewsletterCategoryService categoryService;
+    
+    private List<NewsletterMailing> mailingList;
+    private List<NewsletterCategory> categories;
     
     @PostConstruct
     public void init() {
-        mailingList = Collections.emptyList();
+        mailingList = service.findAll().getPayload();
+        categories = categoryService.findAll().getPayload();
     }
     
     //the mailing list.
-    public List getMailingList() {
+    public List<NewsletterMailing> getMailingList() {
         return mailingList;
     }
-    
+
+    public List<NewsletterCategory> getCategories() {
+        return categories;
+    }
     
     public String addMailing() {
         uiState.setAdminActiveTabIndex(2);

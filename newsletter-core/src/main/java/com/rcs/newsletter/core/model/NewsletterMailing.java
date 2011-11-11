@@ -2,12 +2,14 @@ package com.rcs.newsletter.core.model;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  *
  * @author juan
  */
 @Entity
+@Table(name="newsletter_mailing")
 public class NewsletterMailing extends NewsletterEntity{
     private static final long serialVersionUID = 1L;
     

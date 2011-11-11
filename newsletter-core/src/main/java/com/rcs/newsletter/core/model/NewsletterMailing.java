@@ -12,7 +12,7 @@ public class NewsletterMailing extends NewsletterEntity{
     private static final long serialVersionUID = 1L;
     
     //mailing properties.
-    private String nombre;
+    private String name;
     
     @ManyToOne
     private NewsletterCategory list;
@@ -34,12 +34,11 @@ public class NewsletterMailing extends NewsletterEntity{
         this.list = list;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
-    
 }

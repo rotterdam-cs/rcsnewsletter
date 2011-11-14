@@ -16,25 +16,25 @@
             <p:dataTable var="item" value="#{categoryAdminManagedBean.categorys}">
                 <p:column>
                     <f:facet name="header">
-                        Id
+                        #{msg['newsletter.admin.general.id']}
                     </f:facet>
                     #{item.id}
                 </p:column>
                 <p:column>
                     <f:facet name="header">
-                        Name
+                        #{msg['newsletter.admin.general.name']}
                     </f:facet>
                     #{item.name}
                 </p:column>
                 <p:column>
                     <f:facet name="header">
-                        Description
+                        #{msg['newsletter.admin.general.description']}
                     </f:facet>
                     #{item.description}
                 </p:column>
                 <p:column>                            
                     <f:facet name="header">
-                        Action
+                        #{msg['newsletter.admin.general.action']}
                     </f:facet>
                     <p:menu type="tiered" style="width:180px">  
                         <p:submenu label="Actions">  

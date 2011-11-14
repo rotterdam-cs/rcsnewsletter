@@ -102,7 +102,8 @@ public class SubscriptionEmailManagedBean {
         return "editSubscriptionMail";
     }
     
-    public String editSubscriptionMail() {
+    public String updateSubscriptionMail() {
+        System.out.println("Body: " + subscriptionEmailBody);
         
         subscriptionEmailArticle.setContent(subscriptionEmailBody);
         try {
@@ -111,7 +112,7 @@ public class SubscriptionEmailManagedBean {
             log.warn("Could not update subscription article", ex);
         }
         
-        return "admin?faces-redirect=true";
+        return uiState.redirectAdmin();
     }
 
     public void changeArticle(ValueChangeEvent event) {

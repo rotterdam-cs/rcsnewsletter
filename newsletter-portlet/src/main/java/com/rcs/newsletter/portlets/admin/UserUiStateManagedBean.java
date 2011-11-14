@@ -86,4 +86,8 @@ public class UserUiStateManagedBean implements Serializable {
             logger.error("Error while trying to get the list of journal articles", ex);
         }
     }
+    
+    public String redirectAdmin() {
+        return "admin?faces-redirect=true";
+    }
 }

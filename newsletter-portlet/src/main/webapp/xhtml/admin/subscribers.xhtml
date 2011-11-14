@@ -13,12 +13,12 @@
         <h:form>
             <h:panelGrid columns="2">                
                 <h:outputLabel value="#{msg['newsletter.admin.subscribers.only.show.subscribers.off']}:&nbsp;" />                               
-                <h:selectOneMenu value="#{subscriptionEmailManagedBean.subscriptionEmailArticle}" valueChangeListener="#{categoryAdminManagedBean.changeCategory}">
-                    <f:selectItem itemLabel="All lists" itemValue="" />
-                    <f:selectItems value="#{categoryAdminManagedBean.categorys}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}"/>
-                </h:selectOneMenu>               
+                <h:selectOneMenu value="#{subscriptionEmailManagedBean.subscriptionEmailArticle}" valueChangeListener="#{categoryAdminManagedBean.changeCategory}" onchange="submit()">
+                    <f:selectItem itemLabel="#{msg['newsletter.admin.general.all.lists']}" itemValue="" />
+                    <f:selectItems value="#{categoryAdminManagedBean.categorys}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}"/>                    
+                </h:selectOneMenu>                
             </h:panelGrid>
-        </h:form>        
+        </h:form>
         
         <hr/>        
         <p:dataTable var="item" value="#{subscriberAdminManagedBean.subscribers}">

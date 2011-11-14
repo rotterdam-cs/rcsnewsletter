@@ -1,7 +1,11 @@
 
 package com.rcs.newsletter.core.service;
 
+import com.rcs.newsletter.core.model.NewsletterCategory;
+import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import java.util.ArrayList;
+import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
@@ -43,5 +47,24 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
         }        
         
         return result;
-    }    
+    }
+
+    @Override
+    public List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory) {
+        List <NewsletterSubscriptor> result = new ArrayList<NewsletterSubscriptor>();        
+        try {
+            
+            Session currentSession = sessionFactory.getCurrentSession();
+            Criteria criteria = currentSession.createCriteria(NewsletterSubscriptor.class);
+            criteria.add(Restrictions.eq(NewsletterSubscription.CATEGORY, newsletterCategory));            
+            
+            result = criteria.list();
+            
+        } catch (NonUniqueResultException ex) {
+            String error = "Error loading Subscriptor by Category" + ex;
+            logger.error(error);
+        }   
+        
+        return result;
+    }
 }

@@ -28,6 +28,27 @@
                 </f:facet>
                 #{item.id}
             </p:column>
+            <p:column>
+                <f:facet name="header">
+                    #{msg['newsletter.admin.general.email']}
+                </f:facet>
+                <h:outputText value="#{row.email}" />
+            </p:column>
+            <p:column>                            
+                    <f:facet name="header">
+                        #{msg['newsletter.admin.general.action']}
+                    </f:facet>
+                    <p:menu type="tiered" style="width:180px">  
+                        <p:submenu label="#{msg['newsletter.admin.general.actions']}">  
+                            <p:menuitem value="#{msg['newsletter.admin.general.edit']}" action="#{subscriberCRUDManagedBean.redirectEditCategory}" icon="ui-icon ui-icon-arrowrefresh-1-w">  
+                                <f:setPropertyActionListener target="#{subscriberCRUDManagedBean.id}" value="#{item.id}" />
+                            </p:menuitem>
+                            <p:menuitem value="#{msg['newsletter.admin.general.remove']}" action="#{subscriberCRUDManagedBean.redirectDeleteCategory}" icon="ui-icon ui-icon-close">
+                                <f:setPropertyActionListener target="#{subscriberCRUDManagedBean.id}" value="#{item.id}" />
+                            </p:menuitem>                            
+                        </p:submenu>
+                    </p:menu>                            
+                </p:column>
         </p:dataTable>
     </h:body>
 </html>

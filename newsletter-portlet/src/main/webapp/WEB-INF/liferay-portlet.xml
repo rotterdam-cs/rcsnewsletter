@@ -11,6 +11,7 @@
         <instanceable>false</instanceable>                        
         <ajaxable>false</ajaxable>                    
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
+        <header-portlet-javascript>/js/main.js</header-portlet-javascript>
     </portlet> 
         
     <portlet>            

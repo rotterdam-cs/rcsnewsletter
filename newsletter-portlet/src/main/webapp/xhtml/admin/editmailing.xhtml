@@ -12,6 +12,7 @@
     <h:body>
         <h1>#{nlk[editMailingManagedBean.titleKey]}</h1>
         <h:form>
+            <p:growl id="messages" />
             <h:panelGrid columns="2">
                 <h:outputLabel value="Name:" />
                 <h:inputText value="#{editMailingManagedBean.mailingName}" />
@@ -24,7 +25,7 @@
                     <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
                 </h:selectOneListbox>
                 <f:facet name="footer">
-                    <p:commandButton action="#{editMailingManagedBean.save}" value="#{nlk[editMailingManagedBean.saveButtonKey]}" />
+                    <p:commandButton action="#{editMailingManagedBean.save}" update="messages" value="#{nlk[editMailingManagedBean.saveButtonKey]}" />
                     <p:button outcome="admin" value="Cancel" />
                 </f:facet>
             </h:panelGrid>

@@ -32,6 +32,9 @@ public class NewsletterMailingManagedBean implements Serializable {
     private List<NewsletterMailing> mailingList;
     private List<NewsletterCategory> categories;
     
+    /**
+     * Load the listings on this managed bean.
+     */
     @PostConstruct
     public void init() {
         mailingList = service.findAll().getPayload();

@@ -107,7 +107,12 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
             if (saveResult.isSuccess()) {
                 FacesUtil.infoMessage(message);
             } else {
-                FacesUtil.errorMessage(message);
+                StringBuilder errorStringBuilder = new StringBuilder();
+                for (String errorMessage : saveResult.getValidationKeys()) {
+                    errorStringBuilder.append(errorMessage);
+                    errorStringBuilder.append("<br>");
+                }
+                FacesUtil.errorMessage(errorStringBuilder.toString());
             }
 
         } else {
@@ -121,7 +126,12 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
                 if (updateResult.isSuccess()) {
                     FacesUtil.infoMessage(message);
                 } else {
-                    FacesUtil.errorMessage(message);
+                    StringBuilder errorStringBuilder = new StringBuilder();
+                    for (String errorMessage : updateResult.getValidationKeys()) {
+                        errorStringBuilder.append(errorMessage);
+                        errorStringBuilder.append("<br>");
+                    }
+                    FacesUtil.errorMessage(errorStringBuilder.toString());
                 }
             }
         }
@@ -137,17 +147,29 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
     }
 
     public String delete() {
-        ServiceActionResult serviceActionResult = categoryCRUDService.findById(getId());
+        ServiceActionResult<NewsletterCategory> serviceActionResult = categoryCRUDService.findById(getId());
         String message = "";
         if (serviceActionResult.isSuccess()) {
             NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
-            serviceActionResult = categoryCRUDService.delete(newsletterCategory);
-        }
-
-        if (serviceActionResult.isSuccess()) {
-            FacesUtil.infoMessage(message);
+            ServiceActionResult<NewsletterCategory> deleteActionResult = categoryCRUDService.delete(newsletterCategory);
+            
+            if(deleteActionResult.isSuccess()) {
+                FacesUtil.infoMessage(message);
+            } else {
+                StringBuilder errorStringBuilder = new StringBuilder();
+                for (String errorMessage : deleteActionResult.getValidationKeys()) {
+                    errorStringBuilder.append(errorMessage);
+                    errorStringBuilder.append("<br>");
+                }
+                FacesUtil.errorMessage(errorStringBuilder.toString());
+            }            
         } else {
-            FacesUtil.errorMessage(message);
+            StringBuilder errorStringBuilder = new StringBuilder();
+            for (String errorMessage : serviceActionResult.getValidationKeys()) {
+                errorStringBuilder.append(errorMessage);
+                errorStringBuilder.append("<br>");
+            }
+            FacesUtil.errorMessage(errorStringBuilder.toString());
         }
 
         return uiState.redirectAdmin();

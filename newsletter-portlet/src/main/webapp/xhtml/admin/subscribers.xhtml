@@ -1,15 +1,33 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"      
       xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:f="http://java.sun.com/jsf/core"      
       xmlns:ui="http://java.sun.com/jsf/facelets">
+    <f:loadBundle basename="Language" var="msg" />
     <h:head>
-        <title>Facelet Title</title>
+        <title><h:outputText value="#{msg['newsletter.admin.subscribers']}" /></title>
     </h:head>
-    <h:body>
-        <ui:composition>
-            Subscribers
-        </ui:composition>
+    <h:body>        
+        <h:form>
+            <h:panelGrid columns="2">                
+                <h:outputLabel value="#{msg['newsletter.admin.subscribers.only.show.subscribers.off']}:&nbsp;" />
+                <h:selectOneListbox>
+                    <f:selectItems var="item" value="#{categoryAdminManagedBean.categorys}">
+                        <f:selectItem itemLabel="#{item.name}" itemValue="#{item.id}"  />
+                    </f:selectItems>
+                </h:selectOneListbox>                
+            </h:panelGrid>
+        </h:form>
+        <hr/>
+        <p:dataTable var="item" value="#{subscriberAdminManagedBean.subscribers}">
+            <p:column>
+                <f:facet name="header">
+                    #{msg['newsletter.admin.general.id']}
+                </f:facet>
+                #{item.id}
+            </p:column>
+        </p:dataTable>
     </h:body>
 </html>
-

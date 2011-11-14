@@ -1,12 +1,12 @@
 package com.rcs.newsletter.core.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -38,9 +38,9 @@ public class NewsletterCategory extends NewsletterEntity {
     
     @Column(columnDefinition="bigint default -1")
     private long unsubscriptionArticleId;
-    
-    @OneToOne
-    private NewsletterMailing mailing;
+        
+    @OneToMany(mappedBy = "list")
+    private List<NewsletterMailing> mailings;
     
     public boolean getActive() {
         return active;

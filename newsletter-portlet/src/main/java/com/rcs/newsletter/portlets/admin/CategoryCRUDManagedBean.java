@@ -107,7 +107,8 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
         NewsletterCategory newsletterCategory = null;
         String message = "";
         FacesMessage.Severity messageSeverity = null;
-        if (getId() == 0) {
+        
+        if (getAction().equals(CRUDActionEnum.CREATE)) {
             newsletterCategory = new NewsletterCategory();
             fillNewsletterCategory(newsletterCategory);
             ServiceActionResult<NewsletterCategory> saveResult = categoryCRUDService.save(newsletterCategory);

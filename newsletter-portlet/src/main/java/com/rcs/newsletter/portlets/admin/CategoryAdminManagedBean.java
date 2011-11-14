@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Scope;
 public class CategoryAdminManagedBean {
     
     @Inject
-    NewsletterCategoryService categoryService;
+    NewsletterCategoryService categoryService;    
     
     List<NewsletterCategory> categorys;
     
@@ -28,7 +28,7 @@ public class CategoryAdminManagedBean {
         categorys = categoryService.findAllNewsletterCategorys(true);
     }
     
-    public List<NewsletterCategory> getCategorys() {
+    public List<NewsletterCategory> getCategorys() {        
         return categorys;
     }
     

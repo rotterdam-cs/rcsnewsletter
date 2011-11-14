@@ -2,7 +2,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <f:loadBundle basename="Language" var="msg" />
+    <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>
         <title>Category Admin</title>
     </h:head>
@@ -10,8 +13,8 @@
         <h:form id="edit-category-form">
             <h:panelGrid columns="2" style="margin-bottom:10px">
                 <h:inputHidden value="#{categoryCRUDManagedBean.id}"/>
-                <h:outputText value="" />
-                <h:outputLabel value="Name: " for="name"/>
+                <h:inputHidden value="#{categoryCRUDManagedBean.action}"/>
+                <h:outputLabel value="#{msg['newsletter.admin.general.name']}: " for="name"/>
                 <p:inputText id="name" value="#{categoryCRUDManagedBean.name}"/>
                 <h:outputLabel value="Description: " for="description"/> 
                 <p:inputTextarea id="description" value="#{categoryCRUDManagedBean.description}"/>
@@ -22,7 +25,7 @@
             </h:panelGrid>            
             <p:growl id="editCategoryMessages"/>            
             <p:commandButton value="#{categoryCRUDManagedBean.action.key}" update="editCategoryMessages" action="#{categoryCRUDManagedBean.save}" ajax="false"/>
-            <p:button outcome="admin" value="#{msg['newsletter.common.cancel']}" />
+            <p:button outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
         </h:form>
     </h:body>
 </html>

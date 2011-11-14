@@ -10,7 +10,7 @@
     </h:head>
     <h:body>
         <ui:composition>
-            <p:commandButton value="Add List" action="#{categoryCRUDManagedBean.redirectCreateCategory}" ajax="false"/>
+            <p:commandButton value="Add List" action="#{categoryCRUDManagedBean.redirectCreateCategory}"/>
             <hr/>
             <p:growl id="categoryMessages"/>
             <p:dataTable var="item" value="#{categoryAdminManagedBean.categorys}">

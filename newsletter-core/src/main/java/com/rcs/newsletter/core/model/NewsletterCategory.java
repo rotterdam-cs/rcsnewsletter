@@ -1,6 +1,7 @@
 package com.rcs.newsletter.core.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,14 +27,20 @@ public class NewsletterCategory extends NewsletterEntity {
     private String description;
     private String fromName;
     private String fromEmail;
+    
     @OneToMany
     @JoinColumn(name = "category_id")
     @Cascade(CascadeType.DELETE)
     private Set<NewsletterSubscription> subscriptions;    
+    
     @Column(columnDefinition="bigint default -1")
     private long subscriptionArticleId;    
+    
     @Column(columnDefinition="bigint default -1")
     private long unsubscriptionArticleId;
+        
+    @OneToMany(mappedBy = "list")
+    private List<NewsletterMailing> mailings;
     
     public boolean getActive() {
         return active;
@@ -100,5 +107,13 @@ public class NewsletterCategory extends NewsletterEntity {
 
     public void setUnsubscriptionArticleId(long unsubscriptionArticleId) {
         this.unsubscriptionArticleId = unsubscriptionArticleId;
+    }
+
+    public List<NewsletterMailing> getMailings() {
+        return mailings;
+    }
+
+    public void setMailings(List<NewsletterMailing> mailings) {
+        this.mailings = mailings;
     }
 }

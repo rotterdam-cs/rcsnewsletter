@@ -27,6 +27,7 @@ public class UserUiStateManagedBean implements Serializable {
     public static final int SUBSCRIBERS_TAB_INDEX = 1;
     public static final int MAILING_TAB_INDEX = 2;
     public static final int ARCHIVE_TAB_INDEX = 3;
+    private static final long serialVersionUID = 1L;
     
     private int adminActiveTabIndex;
     

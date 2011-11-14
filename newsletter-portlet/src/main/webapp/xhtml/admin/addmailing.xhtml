@@ -16,7 +16,11 @@
                 <h:outputLabel value="List:" />
                 <h:selectOneListbox />
                 <h:outputLabel value="Article:" />
-                <h:selectOneListbox />
+                <h:selectOneListbox>
+                    <f:selectItems var="item" value="#{newsletterMailingManagedBean.categories}">
+                        <f:selectItem itemLabel="#{item.name}" itemValue="#{item.id}"  />
+                    </f:selectItems>
+                </h:selectOneListbox>
                 <f:facet name="footer">
                     <p:button outcome="admin" value="Add mailing" />
                     <p:button outcome="admin" value="Cancel" />

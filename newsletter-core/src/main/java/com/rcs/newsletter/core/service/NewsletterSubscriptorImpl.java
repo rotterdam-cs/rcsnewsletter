@@ -2,7 +2,6 @@
 package com.rcs.newsletter.core.service;
 
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
-import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
@@ -19,7 +18,7 @@ import org.slf4j.Logger;
  */
 @Service
 @Transactional
-public class NewsletterSubscriptorImpl implements NewsletterSubscriptorService {
+public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscriptor> implements NewsletterSubscriptorService {
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -44,12 +43,5 @@ public class NewsletterSubscriptorImpl implements NewsletterSubscriptorService {
         }        
         
         return result;
-    }
-
-    @Override
-    public List<NewsletterSubscriptor> findAllNewsletterSubscriptors() {
-        List<NewsletterSubscriptor> result = sessionFactory.getCurrentSession().createCriteria(NewsletterSubscriptor.class).list();
-        return result;
-    }
-    
+    }    
 }

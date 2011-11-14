@@ -21,7 +21,7 @@ import org.slf4j.Logger;
  */
 @Service
 @Transactional
-public class NewsletterSubscriptionImpl implements NewsletterSubscriptionService {
+public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscription> implements NewsletterSubscriptionService {
 
     @Autowired
     private SessionFactory sessionFactory;

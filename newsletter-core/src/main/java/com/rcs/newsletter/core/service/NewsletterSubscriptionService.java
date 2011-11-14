@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
-public interface NewsletterSubscriptionService {    
+public interface NewsletterSubscriptionService extends CRUDService<NewsletterSubscription> {    
     
     NewsletterSubscription findBySubscriptor(NewsletterSubscriptor newsletterSubscriptor);
     

@@ -4,7 +4,8 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.prime.com.tr/ui"
       xmlns:f="http://java.sun.com/jsf/core"
->
+      
+      xmlns:ui="http://java.sun.com/jsf/facelets">
     <f:loadBundle basename="Language" var="msg" />
     <h:head>
         <title><h:outputText value="#{msg['newsletter.admin.administration']}" /></title>
@@ -13,63 +14,19 @@
         <h:form>
             <p:tabView>
                 <p:tab title="#{msg['newsletter.admin.lists']}">
-                    <p:commandButton value="#{msg['newsletter.admin.add.list']}" action="#{categoryCRUDManagedBean.redirectCreateCategory}" ajax="false"/>
-                    <hr/>       
-                    <p:growl id="categoryMessages"/>
-                    <p:dataTable var="item" value="#{categoryAdminManagedBean.categorys}">
-                        <p:column>
-                            <f:facet name="header">
-                                #{msg['newsletter.admin.general.id']}
-                            </f:facet>
-                            #{item.id}
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                #{msg['newsletter.admin.general.name']}
-                            </f:facet>
-                            #{item.name}
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                #{msg['newsletter.admin.general.description']}
-                            </f:facet>
-                            #{item.description}
-                        </p:column>
-                        <p:column>                            
-                            <f:facet name="header">
-                                #{msg['newsletter.admin.general.action']}
-                            </f:facet>
-                            <p:menu type="tiered" style="width:180px">  
-                                <p:submenu label="#{msg['newsletter.admin.general.actions']}">  
-                                    <p:menuitem value="#{msg['newsletter.admin.edit.list']}" action="#{categoryCRUDManagedBean.redirectEditCategory}" icon="ui-icon ui-icon-arrowrefresh-1-w">  
-                                        <f:setPropertyActionListener target="#{categoryCRUDManagedBean.id}" value="#{item.id}" />
-                                    </p:menuitem>
-                                    <p:menuitem value="#{msg['newsletter.admin.delete.list']}" action="#{categoryCRUDManagedBean.redirectDeleteCategory}" icon="ui-icon ui-icon-close">
-                                        <f:setPropertyActionListener target="#{categoryCRUDManagedBean.id}" value="#{item.id}" />
-                                    </p:menuitem>
-                                    <p:menuitem value="#{msg['newsletter.admin.edit.subscribe.mail']}" update="messages" ajax="false" icon="ui-icon ui-icon-star"/>  
-                                    <p:menuitem value="#{msg['newsletter.admin.edit.unsubscribe.mail']}" update="messages" ajax="false" icon="ui-icon ui-icon-star"/>  
-                                </p:submenu>
-                            </p:menu>                            
-                        </p:column>
-                    </p:dataTable>
+                    <ui:include src="lists.xhtml" />
                 </p:tab>
 
-                <p:tab title="#{msg['newsletter.admin.subscribers']}">                    
-                    <hr/>
-                    <p:growl id="subscribersMessages"/>
-                    <hr/>
-                    
-                    
-
+                <p:tab title="#{msg['newsletter.admin.subscribers']}">
+                    <ui:include src="subscribers.xhtml" />
                 </p:tab>
 
                 <p:tab title="#{msg['newsletter.admin.mailing']}">
-
+                    <ui:include src="mailing.xhtml" />
                 </p:tab>
 
                 <p:tab title="#{msg['newsletter.admin.archive']}">
-
+                    <ui:include src="archive.xhtml" />
                 </p:tab>
 
             </p:tabView>

@@ -48,7 +48,7 @@ public class NewsletterMailingManagedBean implements Serializable {
     }
     
     public String addMailing() {
-        uiState.setAdminActiveTabIndex(2);
+        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.MAILING_TAB_INDEX);
         return "editmailing";
     }
     

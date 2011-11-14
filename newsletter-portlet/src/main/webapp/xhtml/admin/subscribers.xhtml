@@ -9,18 +9,18 @@
     <h:head>
         <title><h:outputText value="#{msg['newsletter.admin.subscribers']}" /></title>
     </h:head>
-    <h:body>        
+    <h:body>
         <h:form>
             <h:panelGrid columns="2">                
-                <h:outputLabel value="#{msg['newsletter.admin.subscribers.only.show.subscribers.off']}:&nbsp;" />
-                <h:selectOneListbox>
-                    <f:selectItems var="item" value="#{categoryAdminManagedBean.categorys}">
-                        <f:selectItem itemLabel="#{item.name}" itemValue="#{item.id}"  />
-                    </f:selectItems>
-                </h:selectOneListbox>                
+                <h:outputLabel value="#{msg['newsletter.admin.subscribers.only.show.subscribers.off']}:&nbsp;" />                               
+                <h:selectOneMenu value="#{subscriptionEmailManagedBean.subscriptionEmailArticle}" valueChangeListener="#{categoryAdminManagedBean.changeCategory}">
+                    <f:selectItem itemLabel="All lists" itemValue="" />
+                    <f:selectItems value="#{categoryAdminManagedBean.categorys}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}"/>
+                </h:selectOneMenu>               
             </h:panelGrid>
-        </h:form>
-        <hr/>
+        </h:form>        
+        
+        <hr/>        
         <p:dataTable var="item" value="#{subscriberAdminManagedBean.subscribers}">
             <p:column>
                 <f:facet name="header">
@@ -32,7 +32,7 @@
                 <f:facet name="header">
                     #{msg['newsletter.admin.general.email']}
                 </f:facet>
-                <h:outputText value="#{row.email}" />
+                <h:outputText value="#{item.email}" />
             </p:column>
             <p:column>                            
                     <f:facet name="header">

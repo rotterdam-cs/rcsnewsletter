@@ -21,10 +21,10 @@ import org.springframework.context.annotation.Scope;
 @Scope("session")
 public class UserUiStateManagedBean {
     
-    private static final int LISTS_TAB_INDEX = 0;
-    private static final int SUBSCRIBERS_TAB_INDEX = 1;
-    private static final int MAILING_TAB_INDEX = 2;
-    private static final int ARCHIVE_TAB_INDEX = 3;
+    public static final int LISTS_TAB_INDEX = 0;
+    public static final int SUBSCRIBERS_TAB_INDEX = 1;
+    public static final int MAILING_TAB_INDEX = 2;
+    public static final int ARCHIVE_TAB_INDEX = 3;
     
     private int adminActiveTabIndex;
     

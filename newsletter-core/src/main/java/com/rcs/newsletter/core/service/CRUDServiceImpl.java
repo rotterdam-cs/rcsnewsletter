@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import javax.validation.ConstraintViolation;
 
 /**
  * Generic CRUD implementation
@@ -51,9 +52,10 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
         boolean success = true;
         List<String> validationKeys = new ArrayList<String>();
 
-        Set violations = validator.validate(entity);
+        Set<ConstraintViolation<NewsletterEntity>> violations = validator.validate(entity);
         if (!violations.isEmpty()) {
             success = false;
+            fillViolations(violations, validationKeys);
         } else {
             sessionFactory.getCurrentSession().save(entity);
         }
@@ -71,6 +73,7 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
         Set violations = validator.validate(entity);
         if (!violations.isEmpty()) {
             success = false;
+            fillViolations(violations, validationKeys);
         } else {
             sessionFactory.getCurrentSession().update(entity);
         }
@@ -88,6 +91,7 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
         Set violations = validator.validate(entity);
         if (!violations.isEmpty()) {
             success = false;
+            fillViolations(violations, validationKeys);
         } else {
             sessionFactory.getCurrentSession().delete(entity);
         }
@@ -132,5 +136,16 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
 
         return result;
         
+    }
+    
+    /**
+     * Fill the validation keys list with information from the validation messages
+     * @param violations
+     * @param validationKeys 
+     */
+    private void fillViolations(Set<ConstraintViolation<NewsletterEntity>> violations, List<String> validationKeys) {
+        for (ConstraintViolation<NewsletterEntity> constraintViolation : violations) {
+            validationKeys.add(constraintViolation.getPropertyPath()+" "+constraintViolation.getMessage());
+        }
     }
 }

@@ -23,13 +23,13 @@
                 <h:outputText value="I understand the risks involved in this action"/>
             </h:panelGrid> 
             <p:commandButton styleClass="confirm-delete-button" widgetVar="confirmDeleteButton" value="Yes, I Am Sure" action="#{categoryCRUDManagedBean.delete}" ajax="false"/>
-            <p:button outcome="admin" value="No, Please take me back" />            
+            <p:button outcome="admin" value="#{msg['newsletter.category.delete.cancel']}" />
         </h:form>        
 
         <script type="text/javascript">
-            $ = jQuery;
+            
             function enableDeleteButton(ob) {
-                var confirmButton = $(".confirm-delete-button");
+                var confirmButton = $j(".confirm-delete-button");
                 
                 if (confirmButton.attr('disabled')) {
                     confirmButton.removeAttr('disabled');
@@ -39,8 +39,8 @@
                 confirmButton.toggleClass("ui-button-disabled ui-state-disabled");                                
             }
             
-            $(document).ready(function(){
-                var confirmButton = $(".confirm-delete-button");
+            $j(document).ready(function(){
+                var confirmButton = $j(".confirm-delete-button");
                 confirmButton.attr('disabled', 'true');
                 confirmButton.addClass("ui-button-disabled ui-state-disabled");                
             });

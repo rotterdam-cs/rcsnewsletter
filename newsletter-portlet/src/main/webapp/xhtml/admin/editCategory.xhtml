@@ -22,7 +22,7 @@
             </h:panelGrid>            
             <p:growl id="editCategoryMessages"/>            
             <p:commandButton value="#{categoryCRUDManagedBean.action.key}" update="editCategoryMessages" action="#{categoryCRUDManagedBean.save}" ajax="false"/>
-            <p:commandButton value="Cancel" update="editCategoryMessages" action="#{categoryCRUDManagedBean.redirectCategoryList}" ajax="false"/>
+            <p:button outcome="admin" value="#{msg['newsletter.common.cancel']}" />
         </h:form>
     </h:body>
 </html>

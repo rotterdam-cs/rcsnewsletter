@@ -8,24 +8,24 @@
         <title>Edit Mails</title>
     </h:head>
     <h:body>
-        <h2>#{categoryCRUDManagedBean.subscriptionEmailType}</h2>
+        <h2>#{subscriptionEmailManagedBean.subscriptionEmailType}</h2>
         <br></br>
         <h:form id="edit-subscription-email-form">
-            <h:panelGrid columns="2" style="margin-bottom:10px">                
+            <h:panelGrid columns="2" style="margin-bottom:10px">
                 <h:outputLabel value=""/>
-                <h:inputHidden value="#{categoryCRUDManagedBean.id}"/>
+                <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>
                 <h:outputLabel value="Select Article: "/>
-                <h:selectOneMenu value="#{categoryCRUDManagedBean.subscriptionEmailArticle}" valueChangeListener="#{categoryCRUDManagedBean.changeArticle}">
+                <h:selectOneMenu value="#{subscriptionEmailManagedBean.subscriptionEmailArticle}" valueChangeListener="#{subscriptionEmailManagedBean.changeArticle}">
                     <f:selectItem itemLabel="Select Model" itemValue="" />
-                    <f:selectItems value="#{categoryCRUDManagedBean.articlesForSubscription}" var="article" itemLabel="#{article.title}"/>
+                    <f:selectItems value="#{userUiStateManagedBean.journalArticles}" var="article" itemLabel="#{article.title}" itemValue="#{article.id}"/>
                 </h:selectOneMenu>                
                 <h:outputLabel value="Email Text: "/>
-                <p:editor id="articleEditor" value="#{categoryCRUDManagedBean.subscriptionEmailBody}" />
+                <p:editor id="articleEditor" value="#{subscriptionEmailManagedBean.subscriptionEmailBody}" />
             </h:panelGrid>
             <br></br>
             <p:growl id="editSubscriptionMailMessage"/>
-            <p:commandButton value="Edit" update="editSubscriptionMailMessage" action="#{categoryCRUDManagedBean.editSubscriptionMail}" ajax="false"/>
-            <p:commandButton value="Cancel" update="editSubscriptionMailMessage" action="#{categoryCRUDManagedBean.redirectCategoryList}" ajax="false"/>
+            <p:commandButton value="Edit" update="editSubscriptionMailMessage" action="#{subscriptionEmailManagedBean.editSubscriptionMail}" ajax="false"/>
+            <p:button outcome="admin" value="#{msg['newsletter.common.cancel']}" />
         </h:form>
         <script type="text/javascript">
             $ = jQuery;

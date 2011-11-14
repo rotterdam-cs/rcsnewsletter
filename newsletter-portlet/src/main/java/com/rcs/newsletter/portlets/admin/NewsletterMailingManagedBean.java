@@ -49,7 +49,7 @@ public class NewsletterMailingManagedBean implements Serializable {
     
     public String addMailing() {
         uiState.setAdminActiveTabIndex(2);
-        return "addmailing";
+        return "editmailing";
     }
     
 }

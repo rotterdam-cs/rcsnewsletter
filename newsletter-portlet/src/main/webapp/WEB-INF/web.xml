@@ -4,6 +4,10 @@
         <description>Spring framework global application context.</description>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+    <!-- listener to let spring know about the web scopes -->
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
     <servlet>
         <servlet-name>ViewRendererServlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.ViewRendererServlet</servlet-class>

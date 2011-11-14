@@ -14,12 +14,12 @@
                 <h:outputLabel value="Name:" />
                 <h:inputText />
                 <h:outputLabel value="List:" />
-                <h:selectOneListbox />
+                <h:selectOneListbox size="1">
+                    <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
+                </h:selectOneListbox>
                 <h:outputLabel value="Article:" />
-                <h:selectOneListbox>
-                    <f:selectItems var="item" value="#{newsletterMailingManagedBean.categories}">
-                        <f:selectItem itemLabel="#{item.name}" itemValue="#{item.id}"  />
-                    </f:selectItems>
+                <h:selectOneListbox size="1">
+                    <f:selectItems var="item" value="#{newsletterMailingManagedBean.categories}" itemLabel="#{item.name}" itemValue="#{item.id}"  />
                 </h:selectOneListbox>
                 <f:facet name="footer">
                     <p:button outcome="admin" value="Add mailing" />

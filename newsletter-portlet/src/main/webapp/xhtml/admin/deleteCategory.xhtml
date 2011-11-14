@@ -23,7 +23,7 @@
                 <h:outputText value="I understand the risks involved in this action"/>
             </h:panelGrid> 
             <p:commandButton styleClass="confirm-delete-button" widgetVar="confirmDeleteButton" value="Yes, I Am Sure" action="#{categoryCRUDManagedBean.delete}" ajax="false"/>
-            <p:commandButton value="No, Please take me back" action="#{categoryCRUDManagedBean.redirectCategoryList}" ajax="false"/>            
+            <p:button outcome="admin" value="No, Please take me back" />            
         </h:form>        
 
         <script type="text/javascript">

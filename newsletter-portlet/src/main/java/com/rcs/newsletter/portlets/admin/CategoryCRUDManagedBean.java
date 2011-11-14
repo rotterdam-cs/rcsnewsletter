@@ -9,14 +9,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.journal.model.JournalArticle;
-import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.persistence.JournalArticleUtil;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
@@ -31,8 +25,13 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
 
     private static Log log = LogFactoryUtil.getLog(CategoryCRUDManagedBean.class);
     private static final String CATEGORY_ID_PARAM = "categoryId";
+    
     @Inject
     NewsletterCategoryService categoryCRUDService;
+    
+    @Inject
+    private UserUiStateManagedBean uiState;
+    
     private String name;
     private String fromName;
     private String fromEmail;
@@ -131,6 +130,7 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
     }
 
     public String redirectDeleteCategory() {
+        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
         return "deleteCategory";
     }
 
@@ -139,7 +139,7 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
         if (serviceActionResult.isSuccess()) {
             NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
             long articleId = newsletterCategory.getSubscriptionArticleId();
-            JournalArticle journalArticle = getJournalArticleByArticleId(articleId);
+            JournalArticle journalArticle = uiState.getJournalArticleByArticleId(String.valueOf(articleId));
             if(journalArticle != null) {
                 this.setSubscriptionEmailArticle(journalArticle);
                 this.setSubscriptionEmailBody(journalArticle.getContent());
@@ -155,7 +155,7 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
         if (serviceActionResult.isSuccess()) {
             NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
             long articleId = newsletterCategory.getUnsubscriptionArticleId();
-            JournalArticle journalArticle = getJournalArticleByArticleId(articleId);
+            JournalArticle journalArticle = uiState.getJournalArticleByArticleId(String.valueOf(articleId));
             if(journalArticle != null) {
                 this.setSubscriptionEmailArticle(journalArticle);
                 this.setSubscriptionEmailBody(journalArticle.getContent());
@@ -179,48 +179,12 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
     }
 
     public void changeArticle(ValueChangeEvent event) {
+        System.out.println("Change Event");
         this.subscriptionEmailArticle = (JournalArticle) event.getNewValue();
         
         this.subscriptionEmailBody = subscriptionEmailArticle.getContent();
-    }
-
-    public void testSubscription() {
-        System.out.println("Article: " + subscriptionEmailArticle);
-
-        if (subscriptionEmailArticle != null) {
-            System.out.println("Title: " + subscriptionEmailArticle.getTitle());
-        }
-
-    }
-
-    public JournalArticle getJournalArticleByArticleId(long articleId) {
-        JournalArticle result = null;
-        try {
-            result = JournalArticleLocalServiceUtil.getArticle(getThemeDisplay().getScopeGroupId(), "" + articleId);
-        } catch (Exception e) {
-        }
-
-        return result;
-    }
-
-    public List<JournalArticle> getArticlesForSubscription() {
-        List<JournalArticle> result = new ArrayList<JournalArticle>();
-        try {
-            result = JournalArticleLocalServiceUtil.getArticles(getThemeDisplay().getScopeGroupId());
-        } catch (Exception e) {
-        }
-
-        return result;
-    }
-
-    private ThemeDisplay getThemeDisplay() {
-        ThemeDisplay result = null;
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-
-        Map requestMap = facesContext.getExternalContext().getRequestMap();
-        result = (ThemeDisplay) requestMap.get(WebKeys.THEME_DISPLAY);
-
-        return result;
+        
+        System.out.println("EmailBody " + subscriptionEmailBody);
     }
 
     public String save() {

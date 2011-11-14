@@ -8,8 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
+import com.rcs.newsletter.util.FacesUtil;
 
 /**
  *
@@ -20,18 +19,15 @@ import javax.faces.context.FacesContext;
 public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
 
     private static Log log = LogFactoryUtil.getLog(CategoryCRUDManagedBean.class);
-    
     @Inject
     NewsletterCategoryService categoryCRUDService;
-    
     @Inject
     private UserUiStateManagedBean uiState;
-    
     private String name;
     private String fromName;
     private String fromEmail;
     private String description;
-    private boolean active;    
+    private boolean active;
 
     public String getFromEmail() {
         return fromEmail;
@@ -73,10 +69,6 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
         this.name = name;
     }
 
-    public String redirectCategoryList() {
-        return "admin?faces-redirect=true";
-    }
-
     public String redirectCreateCategory() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
         this.setAction(CRUDActionEnum.CREATE);
@@ -106,17 +98,16 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
     public String save() {
         NewsletterCategory newsletterCategory = null;
         String message = "";
-        FacesMessage.Severity messageSeverity = null;
-        
+
         if (getAction().equals(CRUDActionEnum.CREATE)) {
             newsletterCategory = new NewsletterCategory();
             fillNewsletterCategory(newsletterCategory);
             ServiceActionResult<NewsletterCategory> saveResult = categoryCRUDService.save(newsletterCategory);
 
             if (saveResult.isSuccess()) {
-                messageSeverity = FacesMessage.SEVERITY_INFO;
+                FacesUtil.infoMessage(message);
             } else {
-                messageSeverity = FacesMessage.SEVERITY_ERROR;
+                FacesUtil.errorMessage(message);
             }
 
         } else {
@@ -128,16 +119,14 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
                 ServiceActionResult<NewsletterCategory> updateResult = categoryCRUDService.update(newsletterCategory);
 
                 if (updateResult.isSuccess()) {
-                    messageSeverity = FacesMessage.SEVERITY_INFO;
+                    FacesUtil.infoMessage(message);
                 } else {
-                    messageSeverity = FacesMessage.SEVERITY_ERROR;
+                    FacesUtil.errorMessage(message);
                 }
             }
         }
 
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(messageSeverity, message, message));
-
-        return redirectCategoryList();
+        return uiState.redirectAdmin();
     }
 
     private void fillNewsletterCategory(NewsletterCategory newsletterCategory) {
@@ -149,7 +138,6 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
 
     public String delete() {
         ServiceActionResult serviceActionResult = categoryCRUDService.findById(getId());
-        FacesMessage.Severity messageSeverity = null;
         String message = "";
         if (serviceActionResult.isSuccess()) {
             NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
@@ -157,13 +145,11 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
         }
 
         if (serviceActionResult.isSuccess()) {
-            messageSeverity = FacesMessage.SEVERITY_INFO;
+            FacesUtil.infoMessage(message);
         } else {
-            messageSeverity = FacesMessage.SEVERITY_ERROR;
+            FacesUtil.errorMessage(message);
         }
 
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(messageSeverity, message, message));
-
-        return redirectCategoryList();
+        return uiState.redirectAdmin();
     }
 }

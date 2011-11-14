@@ -24,8 +24,8 @@
             </h:panelGrid>
             <br></br>
             <p:growl id="editSubscriptionMailMessage"/>
-            <p:commandButton value="Edit" update="editSubscriptionMailMessage" action="#{subscriptionEmailManagedBean.editSubscriptionMail}" ajax="false"/>
-            <p:button outcome="admin" value="#{msg['newsletter.common.cancel']}" />
+            <p:commandButton value="#{msg['newsletter.admin.general.edit']}" update="editSubscriptionMailMessage" action="#{subscriptionEmailManagedBean.updateSubscriptionMail}" ajax="false"/>
+            <p:button outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
         </h:form>
         <script type="text/javascript">
             $ = jQuery;

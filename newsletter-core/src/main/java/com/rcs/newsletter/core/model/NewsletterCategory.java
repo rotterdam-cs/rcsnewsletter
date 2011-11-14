@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.validator.constraints.Email;
 
 /**
  *
@@ -26,6 +27,7 @@ public class NewsletterCategory extends NewsletterEntity {
     private String name;
     private String description;
     private String fromName;
+    @Email
     private String fromEmail;
     
     @OneToMany

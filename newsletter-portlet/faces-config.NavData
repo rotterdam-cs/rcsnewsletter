@@ -9,11 +9,11 @@
         <Node id="xhtml/test.xhtml" x="400" y="150" zoom="true"/>
         <Node id="xhtml/admin/subscribers.xhtml" x="400" y="450" zoom="true"/>
         <Node id="xhtml/admin/editSubscriptionMail.xhtml" x="900" y="300" zoom="true"/>
-        <Node id="xhtml/admin/lists.xhtml" x="900" y="150" zoom="true"/>
         <Node id="xhtml/admin/archive.xhtml" x="650" y="300" zoom="true"/>
         <Node id="xhtml/admin/editmailing.xhtml" x="150" y="600" zoom="true"/>
-        <Node id="xhtml/admin/deleteCategory.xhtml" x="400" y="300" zoom="true"/>
+        <Node id="xhtml/admin/lists.xhtml" x="900" y="150" zoom="true"/>
         <Node id="xhtml/admin/editCategory.xhtml" x="1150" y="150" zoom="true"/>
+        <Node id="xhtml/admin/deleteCategory.xhtml" x="400" y="300" zoom="true"/>
     </Scope>
     <Scope Scope="All Faces Configurations"/>
 </Scene>

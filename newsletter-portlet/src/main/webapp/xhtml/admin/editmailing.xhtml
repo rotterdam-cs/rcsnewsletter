@@ -4,25 +4,27 @@
       xmlns:p="http://primefaces.prime.com.tr/ui"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core">
+    <f:loadBundle basename="Language" var="msg" />
+    <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>
         <title>Facelet Title</title>
     </h:head>
     <h:body>
-        <h1>Add Mailing</h1>
+        <h1>#{nlk[editMailingManagedBean.titleKey]}</h1>
         <h:form>
             <h:panelGrid columns="2">
                 <h:outputLabel value="Name:" />
                 <h:inputText />
                 <h:outputLabel value="List:" />
                 <h:selectOneListbox size="1">
-                    <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
+                    <f:selectItems var="item" value="#{newsletterMailingManagedBean.categories}" itemLabel="#{item.name}" itemValue="#{item.id}"  />
                 </h:selectOneListbox>
                 <h:outputLabel value="Article:" />
                 <h:selectOneListbox size="1">
-                    <f:selectItems var="item" value="#{newsletterMailingManagedBean.categories}" itemLabel="#{item.name}" itemValue="#{item.id}"  />
+                    <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
                 </h:selectOneListbox>
                 <f:facet name="footer">
-                    <p:button outcome="admin" value="Add mailing" />
+                    <p:button outcome="admin" value="#{nlk[editMailingManagedBean.saveButtonKey]}" />
                     <p:button outcome="admin" value="Cancel" />
                 </f:facet>
             </h:panelGrid>

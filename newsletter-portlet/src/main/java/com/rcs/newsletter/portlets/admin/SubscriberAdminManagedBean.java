@@ -2,6 +2,7 @@ package com.rcs.newsletter.portlets.admin;
 
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -24,7 +25,11 @@ public class SubscriberAdminManagedBean {
     
     @PostConstruct
     public void init() {
-        subscribers = subscriptorService.findAllNewsletterSubscriptors();
+        ServiceActionResult<List<NewsletterSubscriptor>> result = subscriptorService.findAll();
+        
+        if(result.isSuccess()) {
+            subscribers = result.getPayload();
+        }
         
     }
     

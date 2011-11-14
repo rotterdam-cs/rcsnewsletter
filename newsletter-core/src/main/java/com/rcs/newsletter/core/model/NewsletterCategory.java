@@ -108,4 +108,12 @@ public class NewsletterCategory extends NewsletterEntity {
     public void setUnsubscriptionArticleId(long unsubscriptionArticleId) {
         this.unsubscriptionArticleId = unsubscriptionArticleId;
     }
+
+    public List<NewsletterMailing> getMailings() {
+        return mailings;
+    }
+
+    public void setMailings(List<NewsletterMailing> mailings) {
+        this.mailings = mailings;
+    }
 }

@@ -1,18 +1,21 @@
 package com.rcs.newsletter.portlets.admin;
 
+import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.service.NewsletterMailingService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import com.rcs.newsletter.util.FacesUtil;
+import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
+import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
 
 /**
  *
  * @author juan
  */
-@ManagedBean
+@Named
 @Scope("session")
 public class EditMailingManagedBean {
     
@@ -20,6 +23,8 @@ public class EditMailingManagedBean {
     @Inject
     private NewsletterMailingService service;
     
+    @Inject
+    private NewsletterMailingManagedBean mailingManagedBean;
     
     /////////////// L10N KEYS //////////////////////
     public static final String CREATE_SAVE_BUTTON_KEY = "newsletter.admin.mailing.createbutton";
@@ -44,20 +49,39 @@ public class EditMailingManagedBean {
     }
     
     public String save() {
-        System.out.println(categoryId);
-        System.out.println(articleId);
-        System.out.println(mailingName);
         
         NewsletterMailing mailing = new NewsletterMailing();
+        
+        mailing.setArticleId(articleId);
+        mailing.setName(mailingName);
+        mailing.setList(findListById(categoryId));
         
         ServiceActionResult result = service.save(mailing);
         
         if (result.isSuccess()) {
+            mailingManagedBean.init();
             return "admin";
         } else {
-            
+            FacesUtil.errorMessage("Failed to create mailing");
+            List<String> validationKeys = result.getValidationKeys();
+            for (String key : validationKeys) {
+                FacesUtil.errorMessage(key);
+            }
         }
         
+        return null;
+    }
+    
+    private NewsletterCategory findListById(Long categoryId) {
+        if (categoryId == null) {
+            return null;
+        }
+        
+        for (NewsletterCategory newsletterCategory : mailingManagedBean.getCategories()) {
+            if (categoryId.equals(newsletterCategory.getId())) {
+                return newsletterCategory;
+            }
+        }
         return null;
     }
     
@@ -125,6 +149,5 @@ public class EditMailingManagedBean {
         
         return null;
     }
-    
     
 }

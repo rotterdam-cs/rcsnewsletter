@@ -44,7 +44,12 @@
                     <f:facet name="header">
                         Action
                     </f:facet>
-                    <h:outputText value="testing" />
+                    <p:menu type="tiered" style="width:180px">
+                        <p:submenu label="Actions">
+                            <p:submenu label="Edit Mailing" icon="ui-icon ui-icon-pencil" />
+                            <p:submenu label="Delete Mailing" icon="ui-icon ui-icon-close"/>
+                        </p:submenu>
+                    </p:menu>
                 </p:column>
             </p:dataTable>
             <p:inputText id="testEmail" /><p:button value="Send Test" /><br />

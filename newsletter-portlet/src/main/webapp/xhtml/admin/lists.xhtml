@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <p:commandButton value="Add List" action="#{categoryCRUDManagedBean.redirectCreateCategory}" ajax="false"/>
+            <hr/>
+            <p:growl id="categoryMessages"/>
+            <p:dataTable var="item" value="#{categoryAdminManagedBean.categorys}">
+                <p:column>
+                    <f:facet name="header">
+                        Id
+                    </f:facet>
+                    #{item.id}
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        Name
+                    </f:facet>
+                    #{item.name}
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        Description
+                    </f:facet>
+                    #{item.description}
+                </p:column>
+                <p:column>                            
+                    <f:facet name="header">
+                        Action
+                    </f:facet>
+                    <p:menu type="tiered" style="width:180px">  
+                        <p:submenu label="Actions">  
+                            <p:menuitem value="Edit List" action="#{categoryCRUDManagedBean.redirectEditCategory}" icon="ui-icon ui-icon-arrowrefresh-1-w">  
+                                <f:setPropertyActionListener target="#{categoryCRUDManagedBean.id}" value="#{item.id}" />
+                            </p:menuitem>
+                            <p:menuitem value="Delete List" action="#{categoryCRUDManagedBean.redirectDeleteCategory}" icon="ui-icon ui-icon-close">
+                                <f:setPropertyActionListener target="#{categoryCRUDManagedBean.id}" value="#{item.id}" />
+                            </p:menuitem>
+                            <p:menuitem value="Edit Subscribe Mail" action="#{categoryCRUDManagedBean.redirectEditSubscribeMail}" icon="ui-icon ui-icon-star">
+                                <f:setPropertyActionListener target="#{categoryCRUDManagedBean.id}" value="#{item.id}" />
+                            </p:menuitem>  
+                            <p:menuitem value="Edit Unsubscribe Mail" action="#{categoryCRUDManagedBean.redirectEditUnsubscribeMail}" icon="ui-icon ui-icon-star">
+                                <f:setPropertyActionListener target="#{categoryCRUDManagedBean.id}" value="#{item.id}" />
+                            </p:menuitem>
+                        </p:submenu>
+                    </p:menu>                            
+                </p:column>
+            </p:dataTable>
+        </ui:composition>
+    </h:body>
+</html>
+

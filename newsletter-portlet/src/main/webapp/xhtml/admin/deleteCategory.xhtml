@@ -26,7 +26,8 @@
             <p:commandButton value="No, Please take me back" action="#{categoryCRUDManagedBean.redirectCategoryList}" ajax="false"/>            
         </h:form>        
 
-        <script type="text/javascript">            
+        <script type="text/javascript">
+            $ = jQuery;
             function enableDeleteButton(ob) {
                 var confirmButton = $(".confirm-delete-button");
                 

@@ -1,12 +1,9 @@
 package com.rcs.newsletter.core.model;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -19,35 +16,25 @@ import org.hibernate.annotations.CascadeType;
  */
 @Entity
 @Table(name = "newsletter_category")
-public class NewsletterCategory implements Serializable, NewsletterEntity {
-
-    public static final String ID = "id";
+public class NewsletterCategory extends NewsletterEntity {
+    
     public static final String CATEGORY_KEY = "categoryKey";
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    
     private boolean active;
     private String name;
     private String description;
     private String fromName;
     private String fromEmail;
-    private long articleId;
     @OneToMany
     @JoinColumn(name = "category_id")
     @Cascade(CascadeType.DELETE)
-    private Set<NewsletterSubscription> subscriptions;
-
-    @Override
-    public long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(long id) {
-        this.id = id;
-    }
-
+    private Set<NewsletterSubscription> subscriptions;    
+    @Column(columnDefinition="bigint default -1")
+    private long subscriptionArticleId;    
+    @Column(columnDefinition="bigint default -1")
+    private long unsubscriptionArticleId;
+    
     public boolean getActive() {
         return active;
     }
@@ -88,14 +75,6 @@ public class NewsletterCategory implements Serializable, NewsletterEntity {
         this.fromName = fromName;
     }
 
-    public long getArticleId() {
-        return articleId;
-    }
-
-    public void setArticleId(long articleId) {
-        this.articleId = articleId;
-    }
-
     public Set<NewsletterSubscription> getSubscriptions() {
         if (subscriptions == null) {
             subscriptions = new HashSet<NewsletterSubscription>();
@@ -105,5 +84,21 @@ public class NewsletterCategory implements Serializable, NewsletterEntity {
 
     public void setSubscriptions(Set<NewsletterSubscription> subscriptions) {
         this.subscriptions = subscriptions;
+    }
+
+    public long getSubscriptionArticleId() {
+        return subscriptionArticleId;
+    }
+
+    public void setSubscriptionArticleId(long subscriptionArticleId) {
+        this.subscriptionArticleId = subscriptionArticleId;
+    }
+
+    public long getUnsubscriptionArticleId() {
+        return unsubscriptionArticleId;
+    }
+
+    public void setUnsubscriptionArticleId(long unsubscriptionArticleId) {
+        this.unsubscriptionArticleId = unsubscriptionArticleId;
     }
 }

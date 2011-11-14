@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <p:commandButton value="New Mailing" action="#{newsletterMailingManagedBean.addMailing}" />
+            <hr />
+            <p:dataTable var="row" value="#{newsletterMailingManagedBean.mailingList}">
+                <p:column>
+                    <h:selectOneRadio />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        Id
+                    </f:facet>
+                    <h:outputText value="#{row.articleId}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        Name
+                    </f:facet>
+                    <h:outputText value="#{row.name}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        List
+                    </f:facet>
+                    <h:outputText value="#{row.list.name}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        Article
+                    </f:facet>
+                    <h:outputText value="testing" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        Action
+                    </f:facet>
+                    <h:outputText value="testing" />
+                </p:column>
+            </p:dataTable>
+            <p:inputText id="testEmail" /><p:button value="Send Test" /><br />
+            <p:watermark for="testEmail" value="Fill test email here" />
+            <p:button value="Send Newsletter"/>
+        </ui:composition>
+    </h:body>
+</html>
+

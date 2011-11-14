@@ -30,7 +30,7 @@ public class ServiceActionResult<T> implements Serializable {
      * to aid on the lack of return types.
      * @return 
      */
-    public Object getPayload() {
+    public T getPayload() {
         return payload;
     }
 

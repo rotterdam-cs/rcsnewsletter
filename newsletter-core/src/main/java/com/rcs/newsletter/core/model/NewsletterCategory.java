@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -26,14 +27,20 @@ public class NewsletterCategory extends NewsletterEntity {
     private String description;
     private String fromName;
     private String fromEmail;
+    
     @OneToMany
     @JoinColumn(name = "category_id")
     @Cascade(CascadeType.DELETE)
     private Set<NewsletterSubscription> subscriptions;    
+    
     @Column(columnDefinition="bigint default -1")
     private long subscriptionArticleId;    
+    
     @Column(columnDefinition="bigint default -1")
     private long unsubscriptionArticleId;
+    
+    @OneToOne
+    private NewsletterMailing mailing;
     
     public boolean getActive() {
         return active;

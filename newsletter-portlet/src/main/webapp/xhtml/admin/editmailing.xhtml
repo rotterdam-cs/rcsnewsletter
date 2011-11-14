@@ -14,17 +14,17 @@
         <h:form>
             <h:panelGrid columns="2">
                 <h:outputLabel value="Name:" />
-                <h:inputText />
+                <h:inputText value="#{editMailingManagedBean.mailingName}" />
                 <h:outputLabel value="List:" />
-                <h:selectOneListbox size="1">
+                <h:selectOneListbox size="1" value="#{editMailingManagedBean.categoryId}">
                     <f:selectItems var="item" value="#{newsletterMailingManagedBean.categories}" itemLabel="#{item.name}" itemValue="#{item.id}"  />
                 </h:selectOneListbox>
                 <h:outputLabel value="Article:" />
-                <h:selectOneListbox size="1">
+                <h:selectOneListbox size="1" value="#{editMailingManagedBean.articleId}">
                     <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
                 </h:selectOneListbox>
                 <f:facet name="footer">
-                    <p:button outcome="admin" value="#{nlk[editMailingManagedBean.saveButtonKey]}" />
+                    <p:commandButton action="#{editMailingManagedBean.save}" value="#{nlk[editMailingManagedBean.saveButtonKey]}" />
                     <p:button outcome="admin" value="Cancel" />
                 </f:facet>
             </h:panelGrid>

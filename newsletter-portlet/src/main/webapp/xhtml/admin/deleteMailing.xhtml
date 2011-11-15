@@ -7,25 +7,24 @@
     <f:loadBundle basename="Language" var="msg" />
     <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>
-        <title>#{nlk['newsletter.admin.category.delete.title']}</title>
+        <title>#{nlk['newsletter.admin.mailing.delete.title']}</title>
     </h:head>
     <h:body>
         <h:form>
-            <h1>#{nlk['newsletter.admin.category.delete.title']}</h1>
+            <h1>#{nlk['newsletter.admin.mailing.delete.title']}</h1>
             <span>
-                #{nlk['newsletter.admin.category.delete.question']}
+                #{nlk['newsletter.admin.mailing.delete.question']}
             </span>
             <br></br>
             <span>
-                #{nlk['newsletter.admin.category.info']}
+                #{nlk['newsletter.admin.mailing.info']}
             </span>
             <br></br>
-            <h:panelGrid columns="3">
-                <h:inputHidden value="#{categoryCRUDManagedBean.id}"/>
+            <h:panelGrid columns="2">
                 <h:selectBooleanCheckbox onchange="enableDeleteButton(this)"/>
                 <h:outputText value="#{nlk['newsletter.admin.category.delete.risks.acept']}"/>
             </h:panelGrid> 
-            <p:commandButton styleClass="confirm-delete-button" widgetVar="confirmDeleteButton" value="#{nlk['newsletter.admin.category.delete.acept']}" action="#{categoryCRUDManagedBean.delete}" ajax="false"/>
+            <p:commandButton styleClass="confirm-delete-button" widgetVar="confirmDeleteButton" value="#{nlk['newsletter.admin.category.delete.acept']}" action="#{newsletterMailingManagedBean.confirmDeletion}" />
             <p:button outcome="admin" value="#{nlk['newsletter.admin.category.delete.cancel']}" />
         </h:form>        
 

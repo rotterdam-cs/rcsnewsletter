@@ -23,7 +23,6 @@ public class EditMailingManagedBean {
     @Inject
     private NewsletterMailingService service;
     
-    @Inject
     private NewsletterMailingManagedBean mailingManagedBean;
     
     /////////////// L10N KEYS //////////////////////
@@ -41,6 +40,7 @@ public class EditMailingManagedBean {
     private Long categoryId;
     private Long articleId;
     private String mailingName;
+    private Long mailingId;
     
     //////////////// METHODS //////////////////////
     @PostConstruct
@@ -50,14 +50,25 @@ public class EditMailingManagedBean {
     
     public String save() {
         
-        NewsletterMailing mailing = new NewsletterMailing();
+        NewsletterMailing mailing = null;
+        
+        if (currentAction == CRUDActionEnum.CREATE) {
+            mailing = new NewsletterMailing();
+        } else {
+            mailing = service.findById(mailingId).getPayload();
+        }
         
         mailing.setArticleId(articleId);
         mailing.setName(mailingName);
         mailing.setList(findListById(categoryId));
         
-        ServiceActionResult result = service.save(mailing);
+        ServiceActionResult result = null;
         
+        if (currentAction == CRUDActionEnum.CREATE) {
+            result = service.save(mailing);
+        } else {
+            result = service.update(mailing);
+        }
         if (result.isSuccess()) {
             mailingManagedBean.init();
             return "admin";
@@ -148,6 +159,35 @@ public class EditMailingManagedBean {
         }
         
         return null;
+    }
+
+    public Long getMailingId() {
+        return mailingId;
+    }
+    
+    /**
+     * Update the current mailing id and put values so the ui can display them
+     * @param mailingId 
+     */
+    public void setMailingId(Long mailingId) {
+        this.mailingId = mailingId;
+        
+        ServiceActionResult<NewsletterMailing> result = service.findById(mailingId);
+        
+        if (!result.isSuccess()) {
+            return;
+        }
+        
+        NewsletterMailing mailing = result.getPayload();
+        
+        this.mailingName = mailing.getName();
+        this.categoryId = mailing.getList().getId();
+        this.articleId = mailing.getArticleId();
+        
+    }
+
+    public void setMailingManagedBean(NewsletterMailingManagedBean mailingManagedBean) {
+        this.mailingManagedBean = mailingManagedBean;
     }
     
 }

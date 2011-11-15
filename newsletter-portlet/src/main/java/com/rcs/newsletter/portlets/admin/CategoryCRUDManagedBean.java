@@ -16,19 +16,41 @@ import com.rcs.newsletter.util.FacesUtil;
  */
 @Named
 @Scope("request")
-public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
+public class CategoryCRUDManagedBean {
 
     private static Log log = LogFactoryUtil.getLog(CategoryCRUDManagedBean.class);
     @Inject
     NewsletterCategoryService categoryCRUDService;
     @Inject
     private UserUiStateManagedBean uiState;
+    
+    /////////////// PROPERTIES ////////////////////
+    private long id;
+    private CRUDActionEnum action;
     private String name;
     private String fromName;
     private String fromEmail;
     private String description;
     private boolean active;
+    
 
+    /////////////// GETTERS && SETTERS ////////////////
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public CRUDActionEnum getAction() {
+        return action;
+    }
+
+    public void setAction(CRUDActionEnum action) {
+        this.action = action;
+    }
+    
     public String getFromEmail() {
         return fromEmail;
     }
@@ -68,7 +90,9 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
     public void setName(String name) {
         this.name = name;
     }
-
+    
+    //////////////// METHODS //////////////////////
+    
     public String redirectCreateCategory() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
         this.setAction(CRUDActionEnum.CREATE);
@@ -107,12 +131,7 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
             if (saveResult.isSuccess()) {
                 FacesUtil.infoMessage(message);
             } else {
-                StringBuilder errorStringBuilder = new StringBuilder();
-                for (String errorMessage : saveResult.getValidationKeys()) {
-                    errorStringBuilder.append(errorMessage);
-                    errorStringBuilder.append("<br>");
-                }
-                FacesUtil.errorMessage(errorStringBuilder.toString());
+                FacesUtil.errorMessage(saveResult.getValidationKeys());
             }
 
         } else {
@@ -126,12 +145,7 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
                 if (updateResult.isSuccess()) {
                     FacesUtil.infoMessage(message);
                 } else {
-                    StringBuilder errorStringBuilder = new StringBuilder();
-                    for (String errorMessage : updateResult.getValidationKeys()) {
-                        errorStringBuilder.append(errorMessage);
-                        errorStringBuilder.append("<br>");
-                    }
-                    FacesUtil.errorMessage(errorStringBuilder.toString());
+                    FacesUtil.errorMessage(updateResult.getValidationKeys());
                 }
             }
         }
@@ -156,20 +170,10 @@ public class CategoryCRUDManagedBean extends NewsletterCRUDManagedBean {
             if(deleteActionResult.isSuccess()) {
                 FacesUtil.infoMessage(message);
             } else {
-                StringBuilder errorStringBuilder = new StringBuilder();
-                for (String errorMessage : deleteActionResult.getValidationKeys()) {
-                    errorStringBuilder.append(errorMessage);
-                    errorStringBuilder.append("<br>");
-                }
-                FacesUtil.errorMessage(errorStringBuilder.toString());
+                FacesUtil.errorMessage(deleteActionResult.getValidationKeys());
             }            
         } else {
-            StringBuilder errorStringBuilder = new StringBuilder();
-            for (String errorMessage : serviceActionResult.getValidationKeys()) {
-                errorStringBuilder.append(errorMessage);
-                errorStringBuilder.append("<br>");
-            }
-            FacesUtil.errorMessage(errorStringBuilder.toString());
+            FacesUtil.errorMessage(serviceActionResult.getValidationKeys());
         }
 
         return uiState.redirectAdmin();

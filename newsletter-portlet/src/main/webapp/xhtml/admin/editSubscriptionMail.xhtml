@@ -4,6 +4,8 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.prime.com.tr/ui">
+    <f:loadBundle basename="Language" var="msg" />
+    <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>
         <title>Edit Mails</title>
     </h:head>
@@ -12,14 +14,12 @@
         <br></br>
         <h:form id="edit-subscription-email-form">
             <h:panelGrid columns="2" style="margin-bottom:10px">
-                <h:outputLabel value=""/>
-                <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>
-                <h:outputLabel value="Select Article: "/>
+                <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>                
                 <h:selectOneMenu value="#{subscriptionEmailManagedBean.subscriptionEmailArticle}" valueChangeListener="#{subscriptionEmailManagedBean.changeArticle}">
-                    <f:selectItem itemLabel="Select Model" itemValue="" />
+                    <f:selectItem itemLabel="#{nlk['newsletter.admin.category.article.select']}" itemValue="" />
                     <f:selectItems value="#{userUiStateManagedBean.journalArticles}" var="article" itemLabel="#{article.title}" itemValue="#{article.id}"/>
                 </h:selectOneMenu>                
-                <h:outputLabel value="Email Text: "/>
+                <h:outputLabel value="#{nlk['newsletter.admin.category.email.text']}: "/>
                 <p:editor id="articleEditor" value="#{subscriptionEmailManagedBean.subscriptionEmailBody}" />
             </h:panelGrid>
             <br></br>

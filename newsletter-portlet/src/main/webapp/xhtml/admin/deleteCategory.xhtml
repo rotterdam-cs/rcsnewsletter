@@ -2,28 +2,31 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"      
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <f:loadBundle basename="Language" var="msg" />
+    <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>
-        <title>Delete Category</title>
+        <title>#{nlk['newsletter.admin.category.delete.title']}</title>
     </h:head>
     <h:body>
         <h:form>
-            <h1>Remove List</h1>
+            <h1>#{nlk['newsletter.admin.category.delete.title']}</h1>
             <span>
-                Are you sure you want to remove the list and all of its subscribers?
+                #{nlk['newsletter.admin.category.delete.question']}
             </span>
             <br></br>
             <span>
-                (if the subscribers are also subscribed to other list only their subscribtion will be removed)
+                #{nlk['newsletter.admin.category.info']}
             </span>
             <br></br>
             <h:panelGrid columns="3">
                 <h:inputHidden value="#{categoryCRUDManagedBean.id}"/>
                 <h:selectBooleanCheckbox onchange="enableDeleteButton(this)"/>
-                <h:outputText value="I understand the risks involved in this action"/>
+                <h:outputText value="#{nlk['newsletter.admin.category.delete.risks.acept']}"/>
             </h:panelGrid> 
-            <p:commandButton styleClass="confirm-delete-button" widgetVar="confirmDeleteButton" value="Yes, I Am Sure" action="#{categoryCRUDManagedBean.delete}" ajax="false"/>
-            <p:button outcome="admin" value="#{msg['newsletter.category.delete.cancel']}" />
+            <p:commandButton styleClass="confirm-delete-button" widgetVar="confirmDeleteButton" value="#{nlk['newsletter.admin.category.delete.acept']}" action="#{categoryCRUDManagedBean.delete}" ajax="false"/>
+            <p:button outcome="admin" value="#{nlk['newsletter.admin.category.delete.cancel']}" />
         </h:form>        
 
         <script type="text/javascript">

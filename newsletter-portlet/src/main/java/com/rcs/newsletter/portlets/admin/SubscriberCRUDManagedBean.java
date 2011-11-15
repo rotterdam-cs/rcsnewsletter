@@ -25,6 +25,7 @@ public class SubscriberCRUDManagedBean {
     private String middleName;
     private String lastName;
     private String email;
+    private long listId;
     
     @Inject
     private UserUiStateManagedBean uiState;
@@ -80,6 +81,14 @@ public class SubscriberCRUDManagedBean {
     public void setMiddleName(String middleName) {
         this.middleName = middleName;
     }
+
+    public long getListId() {
+        return listId;
+    }
+
+    public void setListId(long listId) {
+        this.listId = listId;
+    }
     
     
     
@@ -103,8 +112,28 @@ public class SubscriberCRUDManagedBean {
             
             
     public String redirectDeleteSubscriber() {
-        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
+        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
         return "deleteSubscriber";
+    }
+    
+    
+     public String delete() {
+         log.error("*****************************" + getId());
+         log.error("*****************************" + getListId());
+//        ServiceActionResult serviceActionResult = categoryCRUDService.findById(getId());
+//        String message = "";
+//        if (serviceActionResult.isSuccess()) {
+//            NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
+//            serviceActionResult = categoryCRUDService.delete(newsletterCategory);
+//        }
+//
+//        if (serviceActionResult.isSuccess()) {
+//            FacesUtil.infoMessage(message);
+//        } else {
+//            FacesUtil.errorMessage(message);
+//        }
+//
+        return uiState.redirectAdmin();
     }
     
 }

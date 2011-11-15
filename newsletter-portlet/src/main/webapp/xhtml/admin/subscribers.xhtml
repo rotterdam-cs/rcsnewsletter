@@ -45,6 +45,7 @@
                             </p:menuitem>
                             <p:menuitem value="#{msg['newsletter.admin.general.remove']}" action="#{subscriberCRUDManagedBean.redirectDeleteSubscriber}" icon="ui-icon ui-icon-close">
                                 <f:setPropertyActionListener target="#{subscriberCRUDManagedBean.id}" value="#{item.id}" />
+                                <f:setPropertyActionListener target="#{categoryAdminManagedBean.subscriptorId}" value="#{item.id}" />
                             </p:menuitem>                            
                         </p:submenu>
                     </p:menu>                            

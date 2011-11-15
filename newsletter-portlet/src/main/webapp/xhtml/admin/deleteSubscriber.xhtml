@@ -6,36 +6,30 @@
       xmlns:f="http://java.sun.com/jsf/core"      
       xmlns:ui="http://java.sun.com/jsf/facelets">
     <f:loadBundle basename="Language" var="msg" />
+    <f:loadBundle basename="Newsletter" var="msgnews" />
     <h:head>
         <title><h:outputText value="#{msg['newsletter.admin.subscribers']}" /></title>
     </h:head>
-    <h:body>Delete
+    <h:body>        
         <h:form>
-            <h:inputText value="#{subscriberCRUDManagedBean.id}"/>            
-        </h:form>
-        
-        
-        <h:form>
-            <h1>#{msg['newsletter.admin.subscriber.remove']}</h1>
-            
-            <br></br>
+            <h1>#{msgnews['newsletter.admin.subscriber.remove']}</h1>
+                        
+            <h:panelGrid columns="2">
+                <h:outputLabel value="#{msgnews['newsletter.admin.subscriber.remove.select.list']}:&nbsp;" />                               
+                <h:selectOneMenu>                    
+                    <f:selectItem itemLabel="#{msgnews['newsletter.admin.subscriber.remove.from.all']}" itemValue="" />
+                    <f:selectItems value="#{categoryAdminManagedBean.subscriberCategorys}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}"/>                    
+                </h:selectOneMenu>
+            </h:panelGrid>    
+            <br />
+            <p:commandButton styleClass="confirm-delete-button" widgetVar="confirmDeleteButton" value="#{msgnews['newsletter.admin.delete.i.am.sure']}" action="#{subscriberCRUDManagedBean.delete}" ajax="false"/>
+            &nbsp;<p:button outcome="admin" value="#{msg['newsletter.common.cancel']}" />
             <h:panelGrid columns="3">
                 <h:inputHidden value="#{subscriberCRUDManagedBean.id}"/>
                 <h:selectBooleanCheckbox onchange="enableDeleteButton(this)"/>
-                <h:outputText value="I understand the risks involved in this action"/>
+                <h:outputText value="#{msgnews['newsletter.admin.delete.understand.risks']}"/>
             </h:panelGrid>
-            
-            <h:panelGrid columns="2">                
-                <h:outputLabel value="Select the list to remove the subscriptor:&nbsp;" />                               
-                <h:selectOneMenu value="#{subscriptionEmailManagedBean.subscriptionEmailArticle}">
-                    <f:selectItem itemLabel="#{msg['newsletter.admin.general.all.lists']}" itemValue="" />
-                    <f:selectItems value="#{categoryAdminManagedBean.categorys}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}"/>                    
-                </h:selectOneMenu>                
-            </h:panelGrid>
-            
-            <p:commandButton styleClass="confirm-delete-button" widgetVar="confirmDeleteButton" value="Yes, I Am Sure" action="#{subscriberCRUDManagedBean.delete}" ajax="false"/>
-            <p:button outcome="admin" value="#{msg['newsletter.common.cancel']}" />
-        </h:form>        
+        </h:form>     
 
         <script type="text/javascript">            
             function enableDeleteButton(ob) {

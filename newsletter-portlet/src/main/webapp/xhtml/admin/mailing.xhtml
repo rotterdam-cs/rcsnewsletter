@@ -46,7 +46,7 @@
                     </f:facet>
                     <p:menu type="tiered" style="width:180px">
                         <p:submenu label="Actions">
-                            <p:menuitem value="Edit Mailing" icon="ui-icon ui-icon-pencil" action="#{newsletterMailingManagedBean.beginDeletion}">
+                            <p:menuitem value="Edit Mailing" icon="ui-icon ui-icon-pencil" action="#{newsletterMailingManagedBean.editMailing}">
                                 <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{row.id}" />
                             </p:menuitem>
                             <p:menuitem value="Delete Mailing" icon="ui-icon ui-icon-close" action="#{newsletterMailingManagedBean.beginDeletion}">

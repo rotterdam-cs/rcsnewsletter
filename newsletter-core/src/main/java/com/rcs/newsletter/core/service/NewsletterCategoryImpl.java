@@ -3,6 +3,8 @@ package com.rcs.newsletter.core.service;
 
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
+import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -74,5 +76,27 @@ public class NewsletterCategoryImpl extends CRUDServiceImpl<NewsletterCategory> 
         List<NewsletterSubscription> subscriptions = subscriptionCriteria.list();
 
         return new HashSet(subscriptions);
+    }
+    
+    @Override
+    public List<NewsletterCategory> findNewsletterCategorysBySubscriber(NewsletterSubscriptor subscriptor) {
+        List<NewsletterCategory> result = new ArrayList<NewsletterCategory>();
+        List<NewsletterSubscription> newsletterSubscription = new ArrayList<NewsletterSubscription>();        
+        try {
+            Session currentSession = sessionFactory.getCurrentSession();
+            Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
+            criteria.add(Restrictions.eq(NewsletterSubscription.SUBSCRIPTOR, subscriptor));
+            newsletterSubscription = criteria.list();            
+            for (NewsletterSubscription nls : newsletterSubscription) {
+                result.add(nls.getCategory());
+            }            
+        } catch (NonUniqueResultException ex) {
+            String error = "Error loading categories by subscriber " + ex;
+            logger.error(error);
+        }
+
+
+
+        return result;
     }
 }

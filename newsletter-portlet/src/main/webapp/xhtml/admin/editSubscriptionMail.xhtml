@@ -7,36 +7,31 @@
     <f:loadBundle basename="Language" var="msg" />
     <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>
-        <title>Edit Mails</title>
+        <title>#{subscriptionEmailManagedBean.subscriptionType}</title>
     </h:head>
     <h:body>
-        <h2>#{subscriptionEmailManagedBean.subscriptionEmailType}</h2>
+        <h2>#{subscriptionEmailManagedBean.subscriptionType}</h2>
         <br></br>
         <h:form id="edit-subscription-email-form">
             <h:panelGrid columns="2" style="margin-bottom:10px">
-                <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>                
-                <h:selectOneMenu value="#{subscriptionEmailManagedBean.subscriptionEmailArticle}" valueChangeListener="#{subscriptionEmailManagedBean.changeArticle}">
+                <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>
+                <h:selectOneListbox size="1" value="#{subscriptionEmailManagedBean.subscriptionEmailArticleId}" >
                     <f:selectItem itemLabel="#{nlk['newsletter.admin.category.article.select']}" itemValue="" />
-                    <f:selectItems value="#{userUiStateManagedBean.journalArticles}" var="article" itemLabel="#{article.title}" itemValue="#{article.id}"/>
-                </h:selectOneMenu>                
+                    <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />                    
+                    <f:ajax event="change" listener="#{subscriptionEmailManagedBean.changeArticle}"/>
+                </h:selectOneListbox>
                 <h:outputLabel value="#{nlk['newsletter.admin.category.email.text']}: "/>
                 <p:editor id="articleEditor" value="#{subscriptionEmailManagedBean.subscriptionEmailBody}" />
             </h:panelGrid>
             <br></br>
             <p:growl id="editSubscriptionMailMessage"/>
-            <p:commandButton value="#{msg['newsletter.admin.general.edit']}" update="editSubscriptionMailMessage" action="#{subscriptionEmailManagedBean.updateSubscriptionMail}" ajax="false"/>
+            <p:commandButton value="#{msg['newsletter.admin.general.edit']}" update="editSubscriptionMailMessage" action="#{subscriptionEmailManagedBean.save}" ajax="false"/>
             <p:button outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
         </h:form>
-        <script type="text/javascript">
-            $ = jQuery;
-            
-            function updateEmailBody(content) {
-                alert(content);
-            }
-            
-            $(document).ready(function(){
+        <script type="text/javascript">            
+            function updateContent() {
                 
-            });
+            }
         </script>
     </h:body>
 </html>

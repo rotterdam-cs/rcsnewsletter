@@ -13,7 +13,7 @@
         <h:form>
             <h:panelGrid columns="2">                
                 <h:outputLabel value="#{msg['newsletter.admin.subscribers.only.show.subscribers.off']}:&nbsp;" />                               
-                <h:selectOneMenu value="#{subscriptionEmailManagedBean.subscriptionEmailArticle}" valueChangeListener="#{categoryAdminManagedBean.changeCategory}" onchange="submit()">
+                <h:selectOneMenu value="#{subscriptionEmailManagedBean.subscriptionEmailArticleId}" valueChangeListener="#{categoryAdminManagedBean.changeCategory}" onchange="submit()">
                     <f:selectItem itemLabel="#{msg['newsletter.admin.general.all.lists']}" itemValue="" />
                     <f:selectItems value="#{categoryAdminManagedBean.categorys}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}"/>                    
                 </h:selectOneMenu>                
@@ -45,6 +45,7 @@
                             </p:menuitem>
                             <p:menuitem value="#{msg['newsletter.admin.general.remove']}" action="#{subscriberCRUDManagedBean.redirectDeleteSubscriber}" icon="ui-icon ui-icon-close">
                                 <f:setPropertyActionListener target="#{subscriberCRUDManagedBean.id}" value="#{item.id}" />
+                                <f:setPropertyActionListener target="#{categoryAdminManagedBean.subscriptorId}" value="#{item.id}" />
                             </p:menuitem>                            
                         </p:submenu>
                     </p:menu>                            

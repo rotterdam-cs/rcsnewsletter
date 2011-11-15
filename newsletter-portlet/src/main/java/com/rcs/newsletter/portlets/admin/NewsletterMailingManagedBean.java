@@ -24,6 +24,9 @@ public class NewsletterMailingManagedBean implements Serializable {
     private UserUiStateManagedBean uiState;
     
     @Inject
+    private EditMailingManagedBean mailingBean;
+    
+    @Inject
     private NewsletterMailingService service;
     
     @Inject
@@ -31,6 +34,7 @@ public class NewsletterMailingManagedBean implements Serializable {
     
     private List<NewsletterMailing> mailingList;
     private List<NewsletterCategory> categories;
+    private Long mailingId;
     
     /**
      * Load the listings on this managed bean.
@@ -39,6 +43,30 @@ public class NewsletterMailingManagedBean implements Serializable {
     public void init() {
         mailingList = service.findAll().getPayload();
         categories = categoryService.findAll().getPayload();
+        //workaround for circular dependency injection.
+        mailingBean.setMailingManagedBean(this);
+    }
+    
+    public String addMailing() {
+        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.MAILING_TAB_INDEX);
+        mailingBean.setCurrentAction(CRUDActionEnum.CREATE);
+        return "editmailing";
+    }
+    
+    
+    public String editMailing() {
+        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.MAILING_TAB_INDEX);
+        mailingBean.setCurrentAction(CRUDActionEnum.UPDATE);
+        mailingBean.setMailingId(mailingId);
+        return "editmailing";
+    }
+    
+    public Long getMailingId() {
+        return mailingId;
+    }
+
+    public void setMailingId(Long mailingId) {
+        this.mailingId = mailingId;
     }
     
     //the mailing list.
@@ -49,10 +77,5 @@ public class NewsletterMailingManagedBean implements Serializable {
     public List<NewsletterCategory> getCategories() {
         return categories;
     }
-    
-    public String addMailing() {
-        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.MAILING_TAB_INDEX);
-        return "editmailing";
-    }
-    
+        
 }

@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Scope;
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
 @Named
-@Scope("request")
+@Scope("session")
 public class SubscriberCRUDManagedBean {    
     private static Log log = LogFactoryUtil.getLog(CategoryCRUDManagedBean.class);
     
@@ -25,7 +25,7 @@ public class SubscriberCRUDManagedBean {
     private String middleName;
     private String lastName;
     private String email;
-    private long listId;
+    private Long listId;
     
     @Inject
     private UserUiStateManagedBean uiState;
@@ -82,15 +82,13 @@ public class SubscriberCRUDManagedBean {
         this.middleName = middleName;
     }
 
-    public long getListId() {
+    public Long getListId() {
         return listId;
     }
 
-    public void setListId(long listId) {
+    public void setListId(Long listId) {
         this.listId = listId;
-    }
-    
-    
+    }    
     
     public String redirectEditSubscriber() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
@@ -119,7 +117,7 @@ public class SubscriberCRUDManagedBean {
     
      public String delete() {
          log.error("*****************************" + getId());
-         log.error("*****************************" + getListId());
+//         log.error("*****************************" + getListId());
 //        ServiceActionResult serviceActionResult = categoryCRUDService.findById(getId());
 //        String message = "";
 //        if (serviceActionResult.isSuccess()) {

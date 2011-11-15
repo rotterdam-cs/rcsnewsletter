@@ -49,7 +49,9 @@
                             <p:menuitem value="Edit Mailing" icon="ui-icon ui-icon-pencil" action="#{newsletterMailingManagedBean.editMailing}">
                                 <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{row.id}" />
                             </p:menuitem>
-                            <p:submenu label="Delete Mailing" icon="ui-icon ui-icon-close"/>
+                            <p:menuitem value="Delete Mailing" icon="ui-icon ui-icon-close" action="#{newsletterMailingManagedBean.beginDeletion}">
+                                <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{row.id}" />
+                            </p:menuitem>
                         </p:submenu>
                     </p:menu>
                 </p:column>

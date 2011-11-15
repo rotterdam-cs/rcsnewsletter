@@ -1,9 +1,11 @@
 package com.rcs.newsletter.portlets.admin;
 
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -57,16 +59,30 @@ public class UserUiStateManagedBean implements Serializable {
     
     public JournalArticle getJournalArticleByArticleId(String articleId) {
         JournalArticle result = null;
-        try {
-            result = JournalArticleLocalServiceUtil.getArticle(getThemeDisplay().getScopeGroupId(), articleId);
-        } catch (Exception e) {
-        }
 
+        try {            
+            result = JournalArticleLocalServiceUtil.getArticle(Long.parseLong(articleId));
+        } catch (Exception e) {
+            logger.error("Error while trying to get the journal article with id: " + articleId, e);
+        }
+        
         return result;
     }
     
     public List<JournalArticle> getJournalArticles() {
         return journalArticles;
+    }
+    
+    public String getContent(JournalArticle journalArticle) {
+        String result = null;
+        ThemeDisplay themeDisplay = getThemeDisplay();
+        result = JournalContentUtil.getContent(journalArticle.getGroupId(), 
+                                                journalArticle.getArticleId(), 
+                                                journalArticle.getTemplateId(), 
+                                                Constants.PRINT, 
+                                                themeDisplay.getLanguageId(), 
+                                                themeDisplay);        
+        return result;
     }
     
     private ThemeDisplay getThemeDisplay() {

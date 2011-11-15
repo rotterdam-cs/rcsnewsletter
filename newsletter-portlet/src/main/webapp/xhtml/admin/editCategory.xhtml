@@ -18,9 +18,9 @@
                 <p:inputText id="name" value="#{categoryCRUDManagedBean.name}"/>
                 <h:outputLabel value="#{msg['newsletter.admin.general.description']}: " for="description"/> 
                 <p:inputTextarea id="description" value="#{categoryCRUDManagedBean.description}"/>
-                <h:outputLabel value="#{msg['newsletter.admin.category.fromname']}" for="fromName"/> 
+                <h:outputLabel value="#{nlk['newsletter.admin.category.fromname']}" for="fromName"/> 
                 <p:inputText id="fromName" value="#{categoryCRUDManagedBean.fromName}"/>
-                <h:outputLabel value="#{msg['newsletter.admin.category.fromemail']}" for="fromEmail"/> 
+                <h:outputLabel value="#{nlk['newsletter.admin.category.fromemail']}" for="fromEmail"/> 
                 <p:inputText id="fromEmail" value="#{categoryCRUDManagedBean.fromEmail}"/>
             </h:panelGrid>
             <p:growl id="editCategoryMessages"/>

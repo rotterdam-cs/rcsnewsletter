@@ -57,11 +57,11 @@ public class UserUiStateManagedBean implements Serializable {
         System.out.println(adminActiveTabIndex);
     }
     
-    public JournalArticle getJournalArticleByArticleId(String articleId) {
+    public JournalArticle getJournalArticleByArticleId(long articleId) {
         JournalArticle result = null;
 
         try {            
-            result = JournalArticleLocalServiceUtil.getArticle(Long.parseLong(articleId));
+            result = JournalArticleLocalServiceUtil.getArticle(articleId);
         } catch (Exception e) {
             logger.error("Error while trying to get the journal article with id: " + articleId, e);
         }

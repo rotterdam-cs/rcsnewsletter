@@ -12,7 +12,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portlet.journal.service.JournalArticleLocalService;
 import com.rcs.newsletter.util.FacesUtil;
-import javax.faces.event.ValueChangeEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 
 /**
  *
@@ -94,7 +94,7 @@ public class SubscriptionEmailManagedBean {
         if (serviceActionResult.isSuccess()) {
             this.newsletterCategory = serviceActionResult.getPayload();
             long articleId = newsletterCategory.getSubscriptionArticleId();
-            JournalArticle journalArticle = uiState.getJournalArticleByArticleId(String.valueOf(articleId));
+            JournalArticle journalArticle = uiState.getJournalArticleByArticleId(articleId);
             if(journalArticle != null) {
                 this.subscriptionArticle = journalArticle;
                 this.setSubscriptionEmailArticleId(articleId);
@@ -112,7 +112,7 @@ public class SubscriptionEmailManagedBean {
         if (serviceActionResult.isSuccess()) {
             this.newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
             long articleId = newsletterCategory.getUnsubscriptionArticleId();
-            JournalArticle journalArticle = uiState.getJournalArticleByArticleId(String.valueOf(articleId));
+            JournalArticle journalArticle = uiState.getJournalArticleByArticleId(articleId);
             if(journalArticle != null) {
                 this.subscriptionArticle = journalArticle;
                 this.setSubscriptionEmailArticleId(articleId);
@@ -124,8 +124,9 @@ public class SubscriptionEmailManagedBean {
         return "editSubscriptionMail";
     }
     
-    public void changeArticle(ValueChangeEvent event) {
-        System.out.println("Lala " + event.getNewValue());
+    public void changeArticle(AjaxBehaviorEvent event) {
+        JournalArticle journalArticle = uiState.getJournalArticleByArticleId(getSubscriptionEmailArticleId());
+        this.setSubscriptionEmailBody(uiState.getContent(journalArticle));
     }
     
     public String save() {
@@ -138,7 +139,7 @@ public class SubscriptionEmailManagedBean {
         try {
             if(subscriptionArticle != null) {
                 subscriptionArticle.setContent(getSubscriptionEmailBody());
-                journalArticleLocalService.updateJournalArticle(subscriptionArticle);
+                journalArticleLocalService.updateJournalArticle(subscriptionArticle, true);
             }
         } catch(Exception ex) {
         }

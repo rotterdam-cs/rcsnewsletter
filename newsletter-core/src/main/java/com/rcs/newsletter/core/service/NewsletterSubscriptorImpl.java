@@ -52,14 +52,15 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
     @Override
     public List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory) {
         List <NewsletterSubscriptor> result = new ArrayList<NewsletterSubscriptor>();        
-        try {
-            
+        List<NewsletterSubscription> newsletterSubscription = new ArrayList<NewsletterSubscription>();
+        try {            
             Session currentSession = sessionFactory.getCurrentSession();
-            Criteria criteria = currentSession.createCriteria(NewsletterSubscriptor.class);
+            Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
             criteria.add(Restrictions.eq(NewsletterSubscription.CATEGORY, newsletterCategory));            
-            
-            result = criteria.list();
-            
+            newsletterSubscription = criteria.list();                    
+            for (NewsletterSubscription sls : newsletterSubscription) {
+                result.add(sls.getSubscriptor());
+            }            
         } catch (NonUniqueResultException ex) {
             String error = "Error loading Subscriptor by Category" + ex;
             logger.error(error);

@@ -48,10 +48,10 @@
                     <p:menu type="tiered" style="width:180px">
                         <p:submenu label="#{msg['newsletter.admin.general.actions']}">
                             <p:menuitem value="#{nlk['newsletter.admin.mailing.updatetitle']}" icon="ui-icon ui-icon-pencil" action="#{newsletterMailingManagedBean.editMailing}">
-                                <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{row.id}" />
+                                <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{row.mailing.id}" />
                             </p:menuitem>
                             <p:menuitem value="#{nlk['newsletter.admin.mailing.deletemailing']}" icon="ui-icon ui-icon-close" action="#{newsletterMailingManagedBean.beginDeletion}">
-                                <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{row.id}" />
+                                <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{row.mailing.id}" />
                             </p:menuitem>
                         </p:submenu>
                     </p:menu>

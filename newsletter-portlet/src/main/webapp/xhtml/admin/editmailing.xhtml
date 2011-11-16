@@ -14,19 +14,19 @@
         <h:form>
             <p:growl id="messages" />
             <h:panelGrid columns="2">
-                <h:outputLabel value="Name:" />
+                <h:outputLabel value="#{msg['newsletter.admin.general.name']}:" />
                 <h:inputText value="#{editMailingManagedBean.mailingName}" />
-                <h:outputLabel value="List:" />
+                <h:outputLabel value="#{msg['newsletter.admin.general.list']}:" />
                 <h:selectOneListbox size="1" value="#{editMailingManagedBean.categoryId}">
                     <f:selectItems var="item" value="#{newsletterMailingManagedBean.categories}" itemLabel="#{item.name}" itemValue="#{item.id}"  />
                 </h:selectOneListbox>
-                <h:outputLabel value="Article:" />
+                <h:outputLabel value="#{msg['newsletter.admin.article']}:" />
                 <h:selectOneListbox size="1" value="#{editMailingManagedBean.articleId}">
                     <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
                 </h:selectOneListbox>
                 <f:facet name="footer">
                     <p:commandButton action="#{editMailingManagedBean.save}" update="messages" value="#{nlk[editMailingManagedBean.saveButtonKey]}" />
-                    <p:button outcome="admin" value="Cancel" />
+                    <p:button outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
                 </f:facet>
             </h:panelGrid>
         </h:form>

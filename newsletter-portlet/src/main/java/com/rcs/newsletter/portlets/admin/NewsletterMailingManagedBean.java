@@ -5,8 +5,10 @@ import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterMailingService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import com.rcs.newsletter.portlets.admin.dto.MailingTableRow;
 import com.rcs.newsletter.util.FacesUtil;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -30,7 +32,7 @@ public class NewsletterMailingManagedBean implements Serializable {
     private NewsletterMailingService service;
     @Inject
     private NewsletterCategoryService categoryService;
-    private List<NewsletterMailing> mailingList;
+    private List<MailingTableRow> mailingList;
     private List<NewsletterCategory> categories;
     private Long mailingId;
     private String testEmail;
@@ -41,7 +43,7 @@ public class NewsletterMailingManagedBean implements Serializable {
      */
     @PostConstruct
     public void init() {
-        mailingList = service.findAll().getPayload();
+        mailingList = createMailingsList(service.findAll().getPayload());
         categories = categoryService.findAll().getPayload();
         //workaround for circular dependency injection.
         mailingBean.setMailingManagedBean(this);
@@ -109,7 +111,7 @@ public class NewsletterMailingManagedBean implements Serializable {
     }
 
     //the mailing list.
-    public List<NewsletterMailing> getMailingList() {
+    public List<MailingTableRow> getMailingList() {
         return mailingList;
     }
 
@@ -131,6 +133,16 @@ public class NewsletterMailingManagedBean implements Serializable {
 
     public void setTestEmail(String testEmail) {
         this.testEmail = testEmail;
+    }
+
+    private List<MailingTableRow> createMailingsList(List<NewsletterMailing> payload) {
+        List<MailingTableRow> ret = new LinkedList<MailingTableRow>();
+        
+        for (NewsletterMailing newsletterMailing : payload) {
+            ret.add(new MailingTableRow(newsletterMailing, uiState.getTitleByArticleId(newsletterMailing.getArticleId())));
+        }
+        
+        return ret;
     }
     
 }

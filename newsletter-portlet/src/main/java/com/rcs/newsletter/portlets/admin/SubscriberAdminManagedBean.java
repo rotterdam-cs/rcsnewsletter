@@ -21,12 +21,11 @@ import org.springframework.context.annotation.Scope;
  */
 @Named
 @Scope("session")
-public class SubscriberAdminManagedBean {
+public class SubscriberAdminManagedBean extends PaginationManagedBean {
     private static Log log = LogFactoryUtil.getLog(SubscriberAdminManagedBean.class);    
     private NewsletterCategory filterCategory;
     private Long categoryId;
-    private String test;
-    
+        
     @Inject
     NewsletterSubscriptorService subscriptorService;
     
@@ -72,29 +71,30 @@ public class SubscriberAdminManagedBean {
         this.categoryId = categoryId;        
     }
 
-    public String getTest() {
-        return test;
-    }
-
-    public void setTest(String test) {
-        this.test = test;
-    }
-    
-    
     public void changeCategory(AjaxBehaviorEvent event) {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
         log.error("Change Category************" + getCategoryId());
+        updateResults();
+    }
+    
+    private void updateResults() {
         try {
             if (getCategoryId() == 0) {
                 subscribers = subscriptorService.findAll().getPayload();
             }else{
                 filterCategory = categoryService.findById(categoryId).getPayload();
-                subscribers = subscriptorService.findByCategory(filterCategory);            
+                subscribers = subscriptorService.findByCategory(filterCategory, getPaginationStart(), getPaginationLimit());
+                setPaginationTotal(subscriptorService.findByCategoryCount(filterCategory));
             }
         } catch (Exception ex) {
             log.error("Error " + ex);
         }
-
+    }
+    
+    @Override
+    public void gotoPage() {
+        super.gotoPage();
+        updateResults();
     }
 
 }

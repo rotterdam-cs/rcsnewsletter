@@ -15,4 +15,8 @@ public interface NewsletterSubscriptorService extends CRUDService<NewsletterSubs
     
     List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory);
     
+    List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory, int start, int limit);
+    
+    int findByCategoryCount(NewsletterCategory newsletterCategory);
+    
 }

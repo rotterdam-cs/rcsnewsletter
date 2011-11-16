@@ -22,7 +22,24 @@
                     </h:selectOneMenu>
 
                 </h:panelGrid>           
-                <hr/>        
+                <hr/>
+                
+                <h:outputFormat value="#{nlk['newsletter.admin.pagination.showing.subscribers']}">
+                    <f:param value="#{subscriberAdminManagedBean.paginationShowingResults}" />
+                    <f:param value="#{subscriberAdminManagedBean.paginationTotal}" />
+                </h:outputFormat>
+                
+                <h:selectOneMenu value="#{subscriberAdminManagedBean.paginationCurrentPage}">
+                    <f:selectItems value="#{subscriberAdminManagedBean.paginationPagesList}" var="pagination" itemLabel="#{pagination+1}" itemValue="#{pagination}"/>                    
+                    <f:ajax event="change" listener="#{subscriberAdminManagedBean.gotoPage}" render="@form"/>
+                </h:selectOneMenu>
+                
+                <h:outputFormat value="#{nlk['newsletter.admin.pagination.of']}">                   
+                    <f:param value="#{subscriberAdminManagedBean.paginationPages}" />
+                </h:outputFormat>
+                
+                
+                
                 <p:dataTable id="subscribers-datatable" var="item" value="#{subscriberAdminManagedBean.subscribers}">
                     <p:column>
                         <f:facet name="header">

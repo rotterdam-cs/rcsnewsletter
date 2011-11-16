@@ -13,14 +13,18 @@
     <h:body>
         <h2>#{subscriptionEmailManagedBean.subscriptionType}</h2>
         <br></br>
-        <h:form id="edit-subscription-email-form">
-            <h:panelGrid columns="1" style="margin-bottom:10px">
-                <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>
+        <h:form id="edit-subscription-email-form">            
+            <p:dialog header="#{nlk['newsletter.admin.category.subscriptionmail.help']}" widgetVar="dlg3" showEffect="bounce" hideEffect="explode" height="200">  
+                <h:outputText value="#{nlk['newsletter.admin.category.subscriptionmail.info']}" />  
+            </p:dialog> 
+            <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>
+            <h:panelGrid columns="2" style="margin: 10px">                
                 <h:selectOneListbox size="1" value="#{subscriptionEmailManagedBean.subscriptionEmailArticleId}">
                     <f:selectItem itemLabel="#{nlk['newsletter.admin.category.article.select']}" itemValue="0" />
                     <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
                     <f:ajax event="change" listener="#{subscriptionEmailManagedBean.changeArticle}" render="@form"/>
                 </h:selectOneListbox>
+                <p:commandButton value="#{msg['newsletter.admin.category.general.help']}" onclick="dlg3.show();" type="button"/> 
             </h:panelGrid>
             <div class="article-viewer">
                 <h:outputText value="#{subscriptionEmailManagedBean.subscriptionEmailBody}" escape="false" /> 

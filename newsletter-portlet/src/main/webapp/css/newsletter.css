@@ -12,5 +12,6 @@
 .article-viewer {
     width: 700px;
     height: 300px;
-    overflow: auto; 
+    overflow: auto;
+    border: black thin solid;
 }

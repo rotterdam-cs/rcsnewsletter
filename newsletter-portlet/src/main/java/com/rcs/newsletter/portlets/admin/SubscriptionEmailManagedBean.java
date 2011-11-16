@@ -90,38 +90,45 @@ public class SubscriptionEmailManagedBean {
     
     public String redirectEditSubscribeMail() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
-        ServiceActionResult<NewsletterCategory> serviceActionResult = categoryService.findById(categoryId);
-        if (serviceActionResult.isSuccess()) {
-            this.newsletterCategory = serviceActionResult.getPayload();
-            long articleId = newsletterCategory.getSubscriptionArticleId();
-            JournalArticle journalArticle = uiState.getJournalArticleByArticleId(articleId);
-            if(journalArticle != null) {
-                this.subscriptionArticle = journalArticle;
-                this.setSubscriptionEmailArticleId(articleId);
-                this.setSubscriptionEmailBody(uiState.getContent(journalArticle));
-            }
-            this.subscriptionType = SubscriptionTypeEnum.SUBSCRIBE;
-        }
+        this.subscriptionType = SubscriptionTypeEnum.SUBSCRIBE;
+        fillData();
 
         return "editSubscriptionMail";
     }
 
-    public String redirectEditUnsubscribeMail() {
+    public String redirectEditUnsubscribeMail() {        
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
+        this.subscriptionType = SubscriptionTypeEnum.UNSUBSCRIBE;                
+        fillData();
+        
+        return "editSubscriptionMail";
+    }
+    
+    private void fillData() {
         ServiceActionResult serviceActionResult = categoryService.findById(categoryId);
         if (serviceActionResult.isSuccess()) {
             this.newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
-            long articleId = newsletterCategory.getUnsubscriptionArticleId();
+            long articleId = -1;
+            switch(getSubscriptionType()) {
+                case SUBSCRIBE:
+                    articleId = newsletterCategory.getSubscriptionArticleId();
+                    break;
+                case UNSUBSCRIBE:
+                    articleId = newsletterCategory.getUnsubscriptionArticleId();
+                    break;
+            }
+            
             JournalArticle journalArticle = uiState.getJournalArticleByArticleId(articleId);
             if(journalArticle != null) {
                 this.subscriptionArticle = journalArticle;
                 this.setSubscriptionEmailArticleId(articleId);
                 this.setSubscriptionEmailBody(uiState.getContent(journalArticle));
+            } else {
+                this.subscriptionArticle = null;
+                this.setSubscriptionEmailArticleId(-1l);
+                this.setSubscriptionEmailBody("");
             }
-            this.subscriptionType = SubscriptionTypeEnum.UNSUBSCRIBE;
         }
-
-        return "editSubscriptionMail";
     }
     
     public void changeArticle(AjaxBehaviorEvent event) {

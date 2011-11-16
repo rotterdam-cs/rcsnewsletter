@@ -21,8 +21,10 @@
                     <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
                     <f:ajax event="change" listener="#{subscriptionEmailManagedBean.changeArticle}" render="@form"/>
                 </h:selectOneListbox>
-                <h:outputLabel value="#{nlk['newsletter.admin.category.email.text']}: "/>
-                <p:editor id="articleEditor" value="#{subscriptionEmailManagedBean.subscriptionEmailBody}" />
+                <h:outputLabel value="#{nlk['newsletter.admin.category.email.preview']}: "/>
+                <h:panelGrid width="200">
+                    <h:outputText value="#{subscriptionEmailManagedBean.subscriptionEmailBody}" escape="false"/> 
+                </h:panelGrid>
             </h:panelGrid>            
             <br></br>
             <p:growl id="editSubscriptionMailMessage"/>

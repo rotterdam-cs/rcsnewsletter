@@ -29,12 +29,26 @@ public class LiferayMailingUtil {
      * @param subject
      * @param content 
      */
-    public void sendArticleByEmail(Long articleId, String to, String from) {
+    public void sendArticleByEmail(JournalArticle ja, String to, String from) {
         try {
-            JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(articleId);
             String content = ja.getContentByLocale(ja.getDefaultLocale());
             String title = ja.getTitle();
             sendEmail(from, to, title, content);
+        } catch (Exception ex) {
+            log.error("Error while trying to read article", ex);
+        }
+    }
+    
+    /**
+     * Send an article to an email address.
+     * @param articleId
+     * @param to
+     * @param from 
+     */
+    public void sendArticleByEmail(Long articleId, String to, String from) {
+        try {
+            JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(articleId);
+            sendArticleByEmail(ja, to, from);
         } catch (Exception ex) {
             log.error("Error while trying to read article", ex);
         }

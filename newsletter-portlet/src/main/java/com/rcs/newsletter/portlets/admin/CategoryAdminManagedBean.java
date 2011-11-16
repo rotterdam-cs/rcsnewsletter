@@ -5,7 +5,6 @@ import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
-import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -38,7 +37,7 @@ public class CategoryAdminManagedBean {
     }
     
     public List<NewsletterCategory> getCategorys() {        
-        return categorys;
+        return categoryService.findAllNewsletterCategorys(true);
     }
 
     public List<NewsletterCategory> getSubscriberCategorys() {

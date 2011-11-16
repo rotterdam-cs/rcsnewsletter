@@ -1,11 +1,14 @@
 package com.rcs.newsletter.core.service;
 
+import com.liferay.portlet.journal.model.JournalArticle;
+import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.service.util.LiferayMailingUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +23,9 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
 
     @Autowired
     private LiferayMailingUtil mailingUtil;
-    //TODO - INJECT PROPERTY
-    private String fromEmailAddress = "nobody@rotterdam-cs.com";
+    
+    @Value("${newsletter.mail.from}")
+    private String fromEmailAddress;
     private static final Logger logger = LoggerFactory.getLogger(NewsletterMailingServiceImpl.class);
 
     @Async
@@ -34,9 +38,15 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     @Async
     @Override
     public void sendMailing(Long mailingId) {
-        NewsletterMailing mailing = findById(mailingId).getPayload();
-        for (NewsletterSubscription newsletterSubscription : mailing.getList().getSubscriptions()) {
-            mailingUtil.sendArticleByEmail(mailing.getArticleId(), newsletterSubscription.getSubscriptor().getEmail(), fromEmailAddress);
+        try {
+            NewsletterMailing mailing = findById(mailingId).getPayload();
+            JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(mailing.getArticleId()); 
+            
+            for (NewsletterSubscription newsletterSubscription : mailing.getList().getSubscriptions()) {
+                mailingUtil.sendArticleByEmail(ja, newsletterSubscription.getSubscriptor().getEmail(), fromEmailAddress);
+            }
+        } catch (Exception ex) {
+            logger.error("Error while trying to read article", ex);
         }
     }
 }

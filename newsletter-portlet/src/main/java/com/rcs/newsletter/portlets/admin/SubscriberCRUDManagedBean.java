@@ -22,16 +22,8 @@ import org.springframework.context.annotation.Scope;
 @Named
 @Scope("session")
 public class SubscriberCRUDManagedBean {    
-    private static Log log = LogFactoryUtil.getLog(CategoryCRUDManagedBean.class);
     
-    private long id;
-    private CRUDActionEnum action;
-    
-    private String firstName;
-    private String middleName;
-    private String lastName;
-    private String email;
-    private Long categoryId;
+    private static Log log = LogFactoryUtil.getLog(CategoryCRUDManagedBean.class);    
     
     @Inject
     private UserUiStateManagedBean uiState;
@@ -48,7 +40,17 @@ public class SubscriberCRUDManagedBean {
     @Inject
     NewsletterSubscriptionService subscriptionService;
     
+    /////////////// PROPERTIES ////////////////////
+    private long id;
+    private CRUDActionEnum action;
     
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    private String email;
+    private Long categoryId;
+    
+    /////////////// GETTERS && SETTERS ////////////////    
     public long getId() {
         return id;
     }
@@ -105,6 +107,7 @@ public class SubscriberCRUDManagedBean {
         this.categoryId = categoryId;
     }
     
+    //////////////// METHODS //////////////////////
     
     /**
      * Redirect Action to Edit

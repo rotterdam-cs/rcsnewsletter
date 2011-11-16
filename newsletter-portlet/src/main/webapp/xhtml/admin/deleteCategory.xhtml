@@ -11,6 +11,7 @@
     </h:head>
     <h:body>
         <h:form>
+            <p:growl id="categoryDeleteMessages"/>
             <h1>#{nlk['newsletter.admin.category.delete.title']}</h1>
             <span>
                 #{nlk['newsletter.admin.category.delete.question']}
@@ -25,7 +26,7 @@
                 <h:selectBooleanCheckbox onchange="enableDeleteButton(this)"/>
                 <h:outputText value="#{nlk['newsletter.admin.category.delete.risks.acept']}"/>
             </h:panelGrid> 
-            <p:commandButton styleClass="confirm-delete-button" widgetVar="confirmDeleteButton" value="#{nlk['newsletter.admin.category.delete.acept']}" action="#{categoryCRUDManagedBean.delete}" ajax="false"/>
+            <p:commandButton styleClass="confirm-delete-button" widgetVar="confirmDeleteButton" update="categoryDeleteMessages" value="#{nlk['newsletter.admin.category.delete.acept']}" action="#{categoryCRUDManagedBean.delete}" ajax="false"/>
             <p:button outcome="admin" value="#{nlk['newsletter.admin.category.delete.cancel']}" />
         </h:form>        
 
@@ -45,7 +46,7 @@
             $j(document).ready(function(){
                 var confirmButton = $j(".confirm-delete-button");
                 confirmButton.attr('disabled', 'true');
-                confirmButton.addClass("ui-button-disabled ui-state-disabled");                
+                confirmButton.addClass("ui-button-disabled ui-state-disabled");                                
             });
         </script>
     </h:body>

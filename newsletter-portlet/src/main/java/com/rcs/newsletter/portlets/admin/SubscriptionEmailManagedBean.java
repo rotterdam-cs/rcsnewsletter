@@ -126,7 +126,7 @@ public class SubscriptionEmailManagedBean {
     
     public void changeArticle(AjaxBehaviorEvent event) {
         JournalArticle journalArticle = uiState.getJournalArticleByArticleId(getSubscriptionEmailArticleId());
-        this.setSubscriptionEmailBody(uiState.getContent(journalArticle));
+        this.subscriptionEmailBody = uiState.getContent(journalArticle);
     }
     
     public String save() {

@@ -4,6 +4,7 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.prime.com.tr/ui">
+    
     <f:loadBundle basename="Language" var="msg" />
     <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>
@@ -15,24 +16,19 @@
         <h:form id="edit-subscription-email-form">
             <h:panelGrid columns="2" style="margin-bottom:10px">
                 <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>
-                <h:selectOneListbox size="1" value="#{subscriptionEmailManagedBean.subscriptionEmailArticleId}" >
-                    <f:selectItem itemLabel="#{nlk['newsletter.admin.category.article.select']}" itemValue="" />
-                    <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />                    
-                    <f:ajax event="change" listener="#{subscriptionEmailManagedBean.changeArticle}"/>
+                <h:selectOneListbox size="1" value="#{subscriptionEmailManagedBean.subscriptionEmailArticleId}">
+                    <f:selectItem itemLabel="#{nlk['newsletter.admin.category.article.select']}" itemValue="0" />
+                    <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
+                    <f:ajax event="change" listener="#{subscriptionEmailManagedBean.changeArticle}" render="@form"/>
                 </h:selectOneListbox>
                 <h:outputLabel value="#{nlk['newsletter.admin.category.email.text']}: "/>
                 <p:editor id="articleEditor" value="#{subscriptionEmailManagedBean.subscriptionEmailBody}" />
-            </h:panelGrid>
+            </h:panelGrid>            
             <br></br>
             <p:growl id="editSubscriptionMailMessage"/>
             <p:commandButton value="#{msg['newsletter.admin.general.edit']}" update="editSubscriptionMailMessage" action="#{subscriptionEmailManagedBean.save}" ajax="false"/>
             <p:button outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
-        </h:form>
-        <script type="text/javascript">            
-            function updateContent() {
-                
-            }
-        </script>
+        </h:form>        
     </h:body>
 </html>
 

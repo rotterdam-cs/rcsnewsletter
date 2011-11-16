@@ -57,6 +57,11 @@ public class UserUiStateManagedBean implements Serializable {
         System.out.println(adminActiveTabIndex);
     }
     
+    /**
+     * Obtain an article by his id
+     * @param articleId
+     * @return 
+     */
     public JournalArticle getJournalArticleByArticleId(long articleId) {
         JournalArticle result = null;
 
@@ -73,6 +78,27 @@ public class UserUiStateManagedBean implements Serializable {
         return journalArticles;
     }
     
+    /**
+     * Obtain the title of the article by his id
+     * @param articleId
+     * @return 
+     */
+    public String getTitleByArticleId(long articleId) {
+        String result = "";
+        JournalArticle journalArticle = getJournalArticleByArticleId(articleId);
+        
+        if(journalArticle != null) {
+            result = journalArticle.getTitle();
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Obtain the content of the article
+     * @param journalArticle
+     * @return 
+     */
     public String getContent(JournalArticle journalArticle) {
         String result = null;
         ThemeDisplay themeDisplay = getThemeDisplay();

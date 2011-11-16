@@ -10,54 +10,56 @@
     </h:head>
     <h:body>
         <ui:composition>
+            <f:loadBundle basename="Newsletter" var="nlk" />
+            <f:loadBundle basename="Language" var="msg" />
             <p:growl id="infoMessages" />
-            <p:commandButton value="New Mailing" action="#{newsletterMailingManagedBean.addMailing}" />
+            <p:commandButton value="#{nlk['newsletter.admin.mailing.createtitle']}" action="#{newsletterMailingManagedBean.addMailing}" />
             <hr />
             <p:dataTable var="row" value="#{newsletterMailingManagedBean.mailingList}" selection="#{newsletterMailingManagedBean.selectedMailing}">
                 <p:column selectionMode="single"/>
                 <p:column>
                     <f:facet name="header">
-                        Id
+                        #{msg['newsletter.admin.general.id']}
                     </f:facet>
-                    <h:outputText value="#{row.id}" />
+                    <h:outputText value="#{row.mailing.id}" />
                 </p:column>
                 <p:column>
                     <f:facet name="header">
-                        Name
+                        #{msg['newsletter.admin.general.name']}
                     </f:facet>
-                    <h:outputText value="#{row.name}" />
+                    <h:outputText value="#{row.mailing.name}" />
                 </p:column>
                 <p:column>
                     <f:facet name="header">
-                        List
+                        #{msg['newsletter.admin.general.list']}
                     </f:facet>
-                    <h:outputText value="#{row.list.name}" />
+                    <h:outputText value="#{row.mailing.list.name}" />
                 </p:column>
                 <p:column>
                     <f:facet name="header">
-                        Article
+                        #{msg['newsletter.admin.article']}
                     </f:facet>
-                    <h:outputText value="#{row.articleId}" />
+                    <h:outputText value="#{row.articleTitle}" />
                 </p:column>
                 <p:column>
                     <f:facet name="header">
-                        Action
+                        #{msg['newsletter.admin.general.action']}
                     </f:facet>
                     <p:menu type="tiered" style="width:180px">
-                        <p:submenu label="Actions">
-                            <p:menuitem value="Edit Mailing" icon="ui-icon ui-icon-pencil" action="#{newsletterMailingManagedBean.editMailing}">
+                        <p:submenu label="#{msg['newsletter.admin.general.actions']}">
+                            <p:menuitem value="#{nlk['newsletter.admin.mailing.updatetitle']}" icon="ui-icon ui-icon-pencil" action="#{newsletterMailingManagedBean.editMailing}">
                                 <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{row.id}" />
                             </p:menuitem>
-                            <p:menuitem value="Delete Mailing" icon="ui-icon ui-icon-close" action="#{newsletterMailingManagedBean.beginDeletion}">
+                            <p:menuitem value="#{nlk['newsletter.admin.mailing.deletemailing']}" icon="ui-icon ui-icon-close" action="#{newsletterMailingManagedBean.beginDeletion}">
                                 <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{row.id}" />
                             </p:menuitem>
                         </p:submenu>
                     </p:menu>
                 </p:column>
             </p:dataTable>
-            <p:inputText id="testEmail" value="#{newsletterMailingManagedBean.testEmail}" /><p:commandButton value="Send Test" action="#{newsletterMailingManagedBean.sendTestMailing}" update="infoMessages" /><br />
-            <p:watermark for="testEmail" value="Fill test email here" />
-            <p:commandButton value="Send Newsletter" action="#{newsletterMailingManagedBean.sendMailing}" update="infoMessages"/>
+            <p:inputText id="testEmail" value="#{newsletterMailingManagedBean.testEmail}" /><p:commandButton value="#{nlk['newsletter.admin.mailing.sendtest']}" action="#{newsletterMailingManagedBean.sendTestMailing}" update="infoMessages" /><br />
+            <p:watermark for="testEmail" value="#{nlk['newsletter.admin.mailing.testfiller']}" />
+            <p:commandButton value="#{nlk['newsletter.admin.mailing.sendnewsletter']}" action="#{newsletterMailingManagedBean.sendMailing}" update="infoMessages"/>
         </ui:composition>
     </h:body>
 </html>

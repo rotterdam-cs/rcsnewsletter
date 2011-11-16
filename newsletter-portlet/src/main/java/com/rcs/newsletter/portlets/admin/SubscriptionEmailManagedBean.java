@@ -136,14 +136,6 @@ public class SubscriptionEmailManagedBean {
             newsletterCategory.setUnsubscriptionArticleId(subscriptionEmailArticleId);
         }
         
-        try {
-            if(subscriptionArticle != null) {
-                subscriptionArticle.setContent(getSubscriptionEmailBody());
-                journalArticleLocalService.updateJournalArticle(subscriptionArticle, true);
-            }
-        } catch(Exception ex) {
-        }
-        
         ServiceActionResult<NewsletterCategory> result = null;
         
         result = categoryService.update(newsletterCategory);

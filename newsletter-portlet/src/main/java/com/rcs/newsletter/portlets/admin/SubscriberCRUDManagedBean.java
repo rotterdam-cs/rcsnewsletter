@@ -106,6 +106,10 @@ public class SubscriberCRUDManagedBean {
     }
     
     
+    /**
+     * Redirect Action to Edit
+     * @return 
+     */
     public String redirectEditSubscriber() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
         ServiceActionResult serviceActionResult = subscriptorCRUDService.findById(getId());
@@ -123,19 +127,50 @@ public class SubscriberCRUDManagedBean {
 
         return "editSubscriber";
     }       
-            
-            
+        
+    
+    /**
+     * Save Subscriber
+     * @return 
+     */
+    public String save() {
+        NewsletterSubscriptor subscriptor = subscriptorService.findById(getId()).getPayload();
+        
+        subscriptor.setEmail(email);
+        subscriptor.setFirstName(firstName);
+        subscriptor.setMiddleName(middleName);
+        subscriptor.setLastName(lastName);
+        
+        String message = "";
+        if (subscriptorService.update(subscriptor).isSuccess()) {
+            FacesUtil.infoMessage(message);
+        } else {
+            FacesUtil.errorMessage(message);
+        }       
+        return uiState.redirectAdmin();
+    }
+    
+    
+    /**
+     * Redirect Action to Delete
+     * @return 
+     */
     public String redirectDeleteSubscriber() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
         return "deleteSubscriber";
     }
     
     
+    /**
+     * Delete Subscribtion and Subscriber
+     * @return 
+     */
     public String delete() {
         NewsletterSubscriptor subscriptor = subscriptorService.findById(getId()).getPayload();
         NewsletterCategory category = categoryService.findById(getCategoryId()).getPayload();
         String message = "";
         if (getCategoryId() == 0) {
+            
             List<NewsletterSubscription> nls = subscriptionService.findBySubscriptor(subscriptor);
             for (NewsletterSubscription newsletterSubscription : nls) {
                 log.error("Deleting Subscription :" + newsletterSubscription.getSubscriptor().getFirstName());
@@ -146,14 +181,20 @@ public class SubscriberCRUDManagedBean {
             } else {
                 FacesUtil.errorMessage(message);
             }
+            
         } else {
+            
             NewsletterSubscription nls = subscriptionService.findBySubscriptorAndCategory(subscriptor, category);
-            log.error("Deleting subscription for category " + category.getName());
+            log.error("Subscriptor: " + subscriptor.getFirstName());
+            log.error("category: " + category.getName());
+            log.error("*****Deleting subscription for category: " + nls.getCategory().getName());
+            log.error("*****Deleting subscription for Subscriptor: " + nls.getSubscriptor().getFirstName());
             if ( subscriptionService.delete(nls).isSuccess()) {
                 FacesUtil.infoMessage(message);
             } else {
                 FacesUtil.errorMessage(message);
             }
+            
         }
         return uiState.redirectAdmin();
     }

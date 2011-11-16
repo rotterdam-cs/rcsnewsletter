@@ -104,6 +104,14 @@ public class SubscriptionEmailManagedBean {
         return "editSubscriptionMail";
     }
     
+    /**
+     * Method that fill the data in the managed bean:
+     * JournalArticle
+     * JournalArticleId
+     * Subscription email body (article content viewer)
+     * In case that doesnt exists in the category, fills those 
+     * fields with empty values
+     */
     private void fillData() {
         ServiceActionResult serviceActionResult = categoryService.findById(categoryId);
         if (serviceActionResult.isSuccess()) {

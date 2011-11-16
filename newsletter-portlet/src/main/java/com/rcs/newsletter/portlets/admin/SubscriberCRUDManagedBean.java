@@ -185,10 +185,7 @@ public class SubscriberCRUDManagedBean {
         } else {
             
             NewsletterSubscription nls = subscriptionService.findBySubscriptorAndCategory(subscriptor, category);
-            log.error("Subscriptor: " + subscriptor.getFirstName());
-            log.error("category: " + category.getName());
-            log.error("*****Deleting subscription for category: " + nls.getCategory().getName());
-            log.error("*****Deleting subscription for Subscriptor: " + nls.getSubscriptor().getFirstName());
+            log.error("Deleting subscription for category: " + nls.getCategory().getName() + "and Subscriptor: " + nls.getSubscriptor().getFirstName());
             if ( subscriptionService.delete(nls).isSuccess()) {
                 FacesUtil.infoMessage(message);
             } else {

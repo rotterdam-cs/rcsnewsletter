@@ -38,7 +38,7 @@ public class NewsletterSubscription extends NewsletterEntity {
     private NewsletterSubscriptor subscriptor;
     
     @GsonExclude
-    @ManyToOne(cascade= CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="category_id")
     private NewsletterCategory category;
 

@@ -6,12 +6,35 @@
       xmlns:f="http://java.sun.com/jsf/core"      
       xmlns:ui="http://java.sun.com/jsf/facelets">
     <f:loadBundle basename="Language" var="msg" />
+    <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>
         <title><h:outputText value="#{msg['newsletter.admin.subscribers']}" /></title>
     </h:head>
-    <h:body>Edit
+    <h:body>
         <h:form>
-            <h:inputHidden value="#{subscriberCRUDManagedBean.id}"/>            
+            <p:growl id="messages" />
+            <h1>#{nlk['newsletter.admin.subscriber.remove']}</h1>
+            <h:inputHidden value="#{subscriberCRUDManagedBean.id}"/>
+            
+            <h:panelGrid columns="2">
+                <h:outputLabel value="#{msg['general.firstname']}" />
+                <h:inputText value="#{subscriberCRUDManagedBean.firstName}" />
+                
+                <h:outputLabel value="#{msg['general.middlename']}" />
+                <h:inputText value="#{subscriberCRUDManagedBean.middleName}" />
+                
+                <h:outputLabel value="#{msg['general.lastname']}" />
+                <h:inputText value="#{subscriberCRUDManagedBean.lastName}" />
+                
+                <h:outputLabel value="#{msg['general.email']}" />
+                <h:inputText value="#{subscriberCRUDManagedBean.email}" />
+                
+                <f:facet name="footer">
+                    <p:commandButton action="#{subscriberCRUDManagedBean.save}" value="#{msg['general.save']}" ajax="false" />
+                    <p:button outcome="admin" value="#{msg['newsletter.common.cancel']}" />
+                </f:facet>
+            </h:panelGrid>
+            
         </h:form>        
     </h:body>
 </html>

@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Scope;
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
 @Named
-@Scope("request")
+@Scope("session")
 public class CategoryAdminManagedBean {
     
     private NewsletterSubscriptor subscriptor;
@@ -41,7 +41,7 @@ public class CategoryAdminManagedBean {
         return categorys;
     }
 
-    public List<NewsletterCategory> getSubscriberCategorys() {        
+    public List<NewsletterCategory> getSubscriberCategorys() {
         categorys = categoryService.findNewsletterCategorysBySubscriber(subscriptor);
         return categorys;
     }

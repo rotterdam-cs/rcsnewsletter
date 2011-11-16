@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface NewsletterSubscriptionService extends CRUDService<NewsletterSubscription> {    
     
-    NewsletterSubscription findBySubscriptor(NewsletterSubscriptor newsletterSubscriptor);
+    List<NewsletterSubscription> findBySubscriptor(NewsletterSubscriptor newsletterSubscriptor);
     
     NewsletterSubscription findBySubscriptorAndCategory(NewsletterSubscriptor newsletterSubscriptor, NewsletterCategory newsletterCategory);    
     

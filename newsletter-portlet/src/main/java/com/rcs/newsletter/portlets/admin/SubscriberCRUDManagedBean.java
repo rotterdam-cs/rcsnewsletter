@@ -2,9 +2,15 @@ package com.rcs.newsletter.portlets.admin;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.rcs.newsletter.core.model.NewsletterCategory;
+import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import com.rcs.newsletter.core.service.NewsletterCategoryService;
+import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import com.rcs.newsletter.util.FacesUtil;
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
@@ -25,13 +31,22 @@ public class SubscriberCRUDManagedBean {
     private String middleName;
     private String lastName;
     private String email;
-    private Long listId;
+    private Long categoryId;
     
     @Inject
     private UserUiStateManagedBean uiState;
     
     @Inject
     NewsletterSubscriptorService subscriptorCRUDService;
+    
+    @Inject
+    NewsletterCategoryService categoryService;
+    
+    @Inject
+    NewsletterSubscriptorService subscriptorService;
+    
+    @Inject
+    NewsletterSubscriptionService subscriptionService;
     
     
     public long getId() {
@@ -82,16 +97,17 @@ public class SubscriberCRUDManagedBean {
         this.middleName = middleName;
     }
 
-    public Long getListId() {
-        return listId;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setListId(Long listId) {
-        this.listId = listId;
-    }    
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+    
     
     public String redirectEditSubscriber() {
-        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
+        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
         ServiceActionResult serviceActionResult = subscriptorCRUDService.findById(getId());
         
         if (serviceActionResult.isSuccess()) {
@@ -115,23 +131,30 @@ public class SubscriberCRUDManagedBean {
     }
     
     
-     public String delete() {
-         log.error("*****************************" + getId());
-//         log.error("*****************************" + getListId());
-//        ServiceActionResult serviceActionResult = categoryCRUDService.findById(getId());
-//        String message = "";
-//        if (serviceActionResult.isSuccess()) {
-//            NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
-//            serviceActionResult = categoryCRUDService.delete(newsletterCategory);
-//        }
-//
-//        if (serviceActionResult.isSuccess()) {
-//            FacesUtil.infoMessage(message);
-//        } else {
-//            FacesUtil.errorMessage(message);
-//        }
-//
+    public String delete() {
+        NewsletterSubscriptor subscriptor = subscriptorService.findById(getId()).getPayload();
+        NewsletterCategory category = categoryService.findById(getCategoryId()).getPayload();
+        String message = "";
+        if (getCategoryId() == 0) {
+            List<NewsletterSubscription> nls = subscriptionService.findBySubscriptor(subscriptor);
+            for (NewsletterSubscription newsletterSubscription : nls) {
+                log.error("Deleting Subscription :" + newsletterSubscription.getSubscriptor().getFirstName());
+                subscriptionService.delete(newsletterSubscription);
+            }            
+            if (subscriptorService.delete(subscriptor).isSuccess()) {
+                FacesUtil.infoMessage(message);
+            } else {
+                FacesUtil.errorMessage(message);
+            }
+        } else {
+            NewsletterSubscription nls = subscriptionService.findBySubscriptorAndCategory(subscriptor, category);
+            log.error("Deleting subscription for category " + category.getName());
+            if ( subscriptionService.delete(nls).isSuccess()) {
+                FacesUtil.infoMessage(message);
+            } else {
+                FacesUtil.errorMessage(message);
+            }
+        }
         return uiState.redirectAdmin();
     }
-    
 }

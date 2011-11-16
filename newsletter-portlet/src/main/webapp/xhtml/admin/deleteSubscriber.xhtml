@@ -13,22 +13,22 @@
     <h:body>        
         <h:form>
             <h1>#{nlk['newsletter.admin.subscriber.remove']}</h1>
-                        
-            <h:panelGrid columns="2">
-                <h:selectOneListbox size="1" value="#{subscriberCRUDManagedBean.listId}" >
+                     
+            <h:panelGrid columns="2" style="margin-bottom:10px">
+                <h:inputHidden value="#{subscriberCRUDManagedBean.id}"/>
+                <h:selectOneListbox size="1" value="#{subscriberCRUDManagedBean.categoryId}" >
                     <f:selectItem itemLabel="#{nlk['newsletter.admin.subscriber.remove.from.all']}" itemValue="0" />
-                    <f:selectItems var="item" value="#{categoryAdminManagedBean.subscriberCategorys}" itemLabel="#{item.name}" itemValue="#{item.id}" />                    
-                </h:selectOneListbox>
-            </h:panelGrid>    
+                    <f:selectItems var="item" value="#{categoryAdminManagedBean.subscriberCategorys}" itemLabel="#{item.name}" itemValue="#{item.id}" />                                        
+                </h:selectOneListbox>               
+            </h:panelGrid>            
             <br />
             <p:commandButton styleClass="confirm-delete-button" value="#{nlk['newsletter.admin.delete.i.am.sure']}" action="#{subscriberCRUDManagedBean.delete}" ajax="false"/>
             &nbsp;<p:button outcome="admin" value="#{msg['newsletter.common.cancel']}" />
-            <h:panelGrid columns="3">
-                <h:inputHidden value="#{subscriberCRUDManagedBean.id}"/>
+            <h:panelGrid columns="3">                
                 <h:selectBooleanCheckbox onchange="enableDeleteButton(this)"/>
                 <h:outputText value="#{nlk['newsletter.admin.delete.understand.risks']}"/>
             </h:panelGrid>
-        </h:form>     
+        </h:form>
 
         <script type="text/javascript">            
             function enableDeleteButton(ob) {
@@ -47,7 +47,6 @@
                 confirmButton.attr('disabled', 'true');
                 confirmButton.addClass("ui-button-disabled ui-state-disabled");                
             });
-        </script>
-        
+        </script>        
     </h:body>
 </html>

@@ -3,6 +3,7 @@ package com.rcs.newsletter.core.service;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
@@ -38,15 +39,13 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
     }
 
     @Override
-    public NewsletterSubscription findBySubscriptor(NewsletterSubscriptor newsletterSubscriptor) {
-        NewsletterSubscription result = null;
-
+    public List<NewsletterSubscription> findBySubscriptor(NewsletterSubscriptor newsletterSubscriptor) {
+        List<NewsletterSubscription> result = new ArrayList<NewsletterSubscription>();
         try {
-
             Session currentSession = sessionFactory.getCurrentSession();
             Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
             criteria.add(Restrictions.eq(NewsletterSubscription.SUBSCRIPTOR, newsletterSubscriptor));
-            result = (NewsletterSubscription) criteria.uniqueResult();
+            result = criteria.list();
 
         } catch (NonUniqueResultException ex) {
             String error = "Exists more than unique email";

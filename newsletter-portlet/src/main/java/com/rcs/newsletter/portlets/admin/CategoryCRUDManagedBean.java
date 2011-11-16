@@ -19,8 +19,10 @@ import com.rcs.newsletter.util.FacesUtil;
 public class CategoryCRUDManagedBean {
 
     private static Log log = LogFactoryUtil.getLog(CategoryCRUDManagedBean.class);
+    
     @Inject
     NewsletterCategoryService categoryCRUDService;
+    
     @Inject
     private UserUiStateManagedBean uiState;
     
@@ -32,7 +34,6 @@ public class CategoryCRUDManagedBean {
     private String fromEmail;
     private String description;
     private boolean active;
-    
 
     /////////////// GETTERS && SETTERS ////////////////
     public long getId() {
@@ -50,7 +51,7 @@ public class CategoryCRUDManagedBean {
     public void setAction(CRUDActionEnum action) {
         this.action = action;
     }
-    
+
     public String getFromEmail() {
         return fromEmail;
     }
@@ -90,9 +91,8 @@ public class CategoryCRUDManagedBean {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     //////////////// METHODS //////////////////////
-    
     public String redirectCreateCategory() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
         this.setAction(CRUDActionEnum.CREATE);
@@ -109,6 +109,8 @@ public class CategoryCRUDManagedBean {
             this.fromEmail = newsletterCategory.getFromEmail();
             this.fromName = newsletterCategory.getFromName();
             this.setAction(CRUDActionEnum.UPDATE);
+        } else {
+            return uiState.redirectAdmin();
         }
 
         return "editCategory";
@@ -123,31 +125,33 @@ public class CategoryCRUDManagedBean {
         NewsletterCategory newsletterCategory = null;
         String message = "";
 
-        if (getAction().equals(CRUDActionEnum.CREATE)) {
-            newsletterCategory = new NewsletterCategory();
-            fillNewsletterCategory(newsletterCategory);
-            ServiceActionResult<NewsletterCategory> saveResult = categoryCRUDService.save(newsletterCategory);
-
-            if (saveResult.isSuccess()) {
-                FacesUtil.infoMessage(message);
-            } else {
-                FacesUtil.errorMessage(saveResult.getValidationKeys());
-            }
-
-        } else {
-            ServiceActionResult serviceActionResult = categoryCRUDService.findById(getId());
-            if (serviceActionResult.isSuccess()) {
-                newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
+        switch (getAction()) {
+            case CREATE:
+                newsletterCategory = new NewsletterCategory();
                 fillNewsletterCategory(newsletterCategory);
+                ServiceActionResult<NewsletterCategory> saveResult = categoryCRUDService.save(newsletterCategory);
 
-                ServiceActionResult<NewsletterCategory> updateResult = categoryCRUDService.update(newsletterCategory);
-
-                if (updateResult.isSuccess()) {
+                if (saveResult.isSuccess()) {
                     FacesUtil.infoMessage(message);
                 } else {
-                    FacesUtil.errorMessage(updateResult.getValidationKeys());
+                    FacesUtil.errorMessage(saveResult.getValidationKeys());
                 }
-            }
+                break;
+            case UPDATE:
+                ServiceActionResult serviceActionResult = categoryCRUDService.findById(getId());
+                if (serviceActionResult.isSuccess()) {
+                    newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
+                    fillNewsletterCategory(newsletterCategory);
+
+                    ServiceActionResult<NewsletterCategory> updateResult = categoryCRUDService.update(newsletterCategory);
+
+                    if (updateResult.isSuccess()) {
+                        FacesUtil.infoMessage(message);
+                    } else {
+                        FacesUtil.errorMessage(updateResult.getValidationKeys());
+                    }
+                }
+                break;
         }
 
         return uiState.redirectAdmin();
@@ -166,12 +170,12 @@ public class CategoryCRUDManagedBean {
         if (serviceActionResult.isSuccess()) {
             NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
             ServiceActionResult<NewsletterCategory> deleteActionResult = categoryCRUDService.delete(newsletterCategory);
-            
-            if(deleteActionResult.isSuccess()) {
+
+            if (deleteActionResult.isSuccess()) {
                 FacesUtil.infoMessage(message);
             } else {
                 FacesUtil.errorMessage(deleteActionResult.getValidationKeys());
-            }            
+            }
         } else {
             FacesUtil.errorMessage(serviceActionResult.getValidationKeys());
         }

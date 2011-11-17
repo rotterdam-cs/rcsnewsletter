@@ -36,7 +36,7 @@ public class NewsletterMailingManagedBean implements Serializable {
     private List<NewsletterCategory> categories;
     private Long mailingId;
     private String testEmail;
-    private NewsletterMailing selectedMailing;
+    private MailingTableRow selectedMailing;
 
     /**
      * Load the listings on this managed bean.
@@ -89,7 +89,7 @@ public class NewsletterMailingManagedBean implements Serializable {
             FacesUtil.infoMessage("Please select one row to send the test email");
             return;
         }
-        service.sendTestMailing(selectedMailing.getId(), testEmail);
+        service.sendTestMailing(selectedMailing.getMailing().getId(), testEmail);
         FacesUtil.infoMessage("Test email is scheduled to be sent");
     }
     
@@ -98,7 +98,7 @@ public class NewsletterMailingManagedBean implements Serializable {
             FacesUtil.infoMessage("Please select one row to send the mailing");
             return;
         }
-        service.sendMailing(selectedMailing.getId());
+        service.sendMailing(selectedMailing.getMailing().getId());
         FacesUtil.infoMessage("Mailing scheduled to be sent.");
     }
     
@@ -119,11 +119,11 @@ public class NewsletterMailingManagedBean implements Serializable {
         return categories;
     }
 
-    public NewsletterMailing getSelectedMailing() {
+    public MailingTableRow getSelectedMailing() {
         return selectedMailing;
     }
 
-    public void setSelectedMailing(NewsletterMailing selectedMailing) {
+    public void setSelectedMailing(MailingTableRow selectedMailing) {
         this.selectedMailing = selectedMailing;
     }
 

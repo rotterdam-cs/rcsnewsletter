@@ -4,6 +4,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletRequest;
 
 /**
  * Utility methods for handling jsf common operations.
@@ -53,4 +54,9 @@ public class FacesUtil {
         FacesContext.getCurrentInstance().addMessage(null, fm);
     }
     
+    
+    public static String getPortletUniqueId() {
+        PortletRequest request = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        return request.getWindowID();
+    }
 }

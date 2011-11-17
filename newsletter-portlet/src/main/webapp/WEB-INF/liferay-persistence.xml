@@ -32,5 +32,7 @@
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
     
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate" p:sessionFactory-ref="sessionFactory" /> 
+    
     <tx:annotation-driven /> 
 </beans>

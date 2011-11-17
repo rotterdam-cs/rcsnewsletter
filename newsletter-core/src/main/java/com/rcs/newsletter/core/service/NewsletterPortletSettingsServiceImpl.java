@@ -68,6 +68,7 @@ public class NewsletterPortletSettingsServiceImpl implements NewsletterPortletSe
         config.setConfirmationEmailArticleId(data.getConfirmationEmailArticleId());
         config.setGreetingEmailArticleId(data.getGreetingEmailArticleId());
         config.setListId(data.getListId());
+        config.setDisableName(data.isDisableName());
         
         if (isNew) {
             template.save(config);

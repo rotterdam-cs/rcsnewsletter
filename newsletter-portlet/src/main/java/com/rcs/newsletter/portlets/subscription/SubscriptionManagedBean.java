@@ -33,6 +33,7 @@ public class SubscriptionManagedBean implements Serializable {
         currentConfig.setConfirmationEmailArticleId(conf.getConfirmationEmailArticleId());
         currentConfig.setGreetingEmailArticleId(conf.getGreetingEmailArticleId());
         currentConfig.setListId(conf.getListId());
+        currentConfig.setDisableName(conf.isDisableName());
     }
     
     @Inject

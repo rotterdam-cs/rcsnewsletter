@@ -2,10 +2,14 @@ package com.rcs.newsletter.portlets.admin;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 public class PaginationManagedBean {
-    protected int paginationStart = 0;
-    protected int paginationLimit = 3;
+    private static Log log = LogFactoryUtil.getLog(SubscriberAdminManagedBean.class);    
+    
+    protected int paginationStart = -1;
+    protected int paginationLimit = -1;
     protected int paginationTotal;
     protected int paginationPages;
     protected int paginationCurrentPage;
@@ -66,9 +70,11 @@ public class PaginationManagedBean {
     }
             
     public void setPaginationTotal(int paginationTotal) {
-        this.paginationTotal = paginationTotal;        
-        setPaginationPages((int) Math.ceil( paginationTotal/paginationLimit ));
-        setPaginationCurrentPage((int) Math.ceil( paginationStart/paginationLimit ));        
+        this.paginationTotal = paginationTotal;
+        double pagesDouble =  Double.parseDouble(Integer.toString(paginationTotal))/Double.parseDouble(Integer.toString(paginationLimit));
+        setPaginationPages((int) Math.ceil( pagesDouble ));
+        double currentPageDouble =  Double.parseDouble(Integer.toString(paginationStart))/Double.parseDouble(Integer.toString(paginationLimit));
+        setPaginationCurrentPage((int) Math.ceil( currentPageDouble ));        
         setPaginationShowingResults(( paginationCurrentPage * paginationLimit ) + paginationLimit);
         paginationPagesList = new ArrayList();
         for (int i = 0; i < paginationPages; i++) {
@@ -77,16 +83,18 @@ public class PaginationManagedBean {
     }
     
     public void nextPage() {
-        if (getPaginationCurrentPage() < getPaginationPages()) {
+        if (getPaginationCurrentPage()+1 < getPaginationPages()) {
             setPaginationStart( paginationStart + paginationLimit );
-            setPaginationCurrentPage((int) Math.ceil(paginationStart/paginationLimit));
+            double currentPageDouble =  Double.parseDouble(Integer.toString(paginationStart))/Double.parseDouble(Integer.toString(paginationLimit));
+            setPaginationCurrentPage((int) Math.ceil(currentPageDouble));
         }
     }
     
     public void prevPage() {
-        if (getPaginationCurrentPage() > 1) {
+        if (getPaginationCurrentPage() > 0) {
             setPaginationStart(paginationStart - paginationLimit);
-            setPaginationCurrentPage((int) Math.ceil(paginationStart/paginationLimit));
+            double currentPageDouble =  Double.parseDouble(Integer.toString(paginationStart))/Double.parseDouble(Integer.toString(paginationLimit));
+            setPaginationCurrentPage((int) Math.ceil(currentPageDouble));
         }
     }
     
@@ -94,5 +102,13 @@ public class PaginationManagedBean {
         if (getPaginationCurrentPage() >= 0 && getPaginationCurrentPage() <= getPaginationPages()) {
             setPaginationStart(getPaginationCurrentPage() * getPaginationLimit());            
         }
+    }
+    
+    public void gotoFirstPage() {        
+        setPaginationStart(0);        
+    }
+    
+    public void gotoLastPage() {        
+        setPaginationStart(getPaginationPages()+1);            
     }
 }

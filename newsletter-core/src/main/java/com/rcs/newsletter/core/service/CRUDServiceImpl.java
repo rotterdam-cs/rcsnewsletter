@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import javax.validation.ConstraintViolation;
+import org.hibernate.Session;
 
 /**
  * Generic CRUD implementation
@@ -128,14 +129,7 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
 
     @Override
     public ServiceActionResult<List<E>> findAll() {
-        List<E> entities = sessionFactory.getCurrentSession().createCriteria(getEntityClass()).list();
-        boolean success = true;
-        List<String> validationKeys = new ArrayList<String>();
-        
-        ServiceActionResult<List<E>> result = new ServiceActionResult<List<E>>(success, entities, validationKeys);
-
-        return result;
-        
+        return findAll(-1, -1);        
     }
     
     /**
@@ -147,5 +141,43 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
         for (ConstraintViolation<NewsletterEntity> constraintViolation : violations) {
             validationKeys.add(constraintViolation.getPropertyPath()+" "+constraintViolation.getMessage());
         }
+    }
+    
+    @Override
+    public ServiceActionResult<List<E>> findAll(int start, int limit) {       
+        Session currentSession = sessionFactory.getCurrentSession();
+        Criteria criteria = currentSession.createCriteria(getEntityClass());
+        
+        if (start != -1) {
+            criteria.setFirstResult(start);
+        }
+        if (limit != -1) {
+            criteria.setMaxResults(limit);
+        }
+        
+        List<E> entities = criteria.list();
+        
+        boolean success = true;
+        List<String> validationKeys = new ArrayList<String>();
+        
+        ServiceActionResult<List<E>> result = new ServiceActionResult<List<E>>(success, entities, validationKeys);
+
+        return result;
+        
+    }
+
+    @Override
+    public int findAllCount() {
+        int result = 0;
+        try {            
+            Session currentSession = sessionFactory.getCurrentSession();
+            Criteria criteria = currentSession.createCriteria(getEntityClass());           
+            result = criteria.list().size();                    
+                        
+        } catch (NonUniqueResultException ex) {
+            String error = "Error in findAllCount" + ex;
+            logger.error(error);
+        }   
+        return result;
     }
 }

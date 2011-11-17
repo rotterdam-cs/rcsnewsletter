@@ -6,7 +6,6 @@ import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
-import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -17,14 +16,14 @@ import org.springframework.context.annotation.Scope;
 
 /**
  *
- * @author Ariel Parra <ariel@rotterdam-cs.com>
+ * @author Prj.M@x <pablo.rendon@rotterdam-cs.com>
  */
 @Named
 @Scope("session")
 public class SubscriberAdminManagedBean extends PaginationManagedBean {
     private static Log log = LogFactoryUtil.getLog(SubscriberAdminManagedBean.class);    
     private NewsletterCategory filterCategory;
-    private Long categoryId;
+    private int categoryId = 0;
         
     @Inject
     NewsletterSubscriptorService subscriptorService;
@@ -38,17 +37,17 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     List<NewsletterSubscriptor> subscribers;
     
     @PostConstruct
-    public void init() {        
+    public void init() {
+        
+        setPaginationStart(0);
+        setPaginationLimit(5);
+        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
         if (filterCategory == null) {        
-            ServiceActionResult<List<NewsletterSubscriptor>> result = subscriptorService.findAll();
-
-            if(result.isSuccess()) {
-                subscribers = result.getPayload();
-            }
+            subscribers = subscriptorService.findAll(getPaginationStart(), getPaginationLimit()).getPayload();
+            setPaginationTotal(subscriptorService.findAllCount());            
         } else {
             subscribers = subscriptorService.findByCategory(filterCategory);            
-        }
-        
+        }        
     }
     
     public List<NewsletterSubscriptor> getSubscribers() {
@@ -63,31 +62,31 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
         this.filterCategory = filterCategory;
     }
 
-    public Long getCategoryId() {
+    public int getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Long categoryId) {
+    public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;        
     }
 
     public void changeCategory(AjaxBehaviorEvent event) {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
-        log.error("Change Category************" + getCategoryId());
-        updateResults();
+        this.gotoFirstPage();
     }
     
     private void updateResults() {
         try {
             if (getCategoryId() == 0) {
-                subscribers = subscriptorService.findAll().getPayload();
+                subscribers = subscriptorService.findAll(getPaginationStart(), getPaginationLimit()).getPayload();
+                setPaginationTotal(subscriptorService.findAllCount());
             }else{
                 filterCategory = categoryService.findById(categoryId).getPayload();
                 subscribers = subscriptorService.findByCategory(filterCategory, getPaginationStart(), getPaginationLimit());
                 setPaginationTotal(subscriptorService.findByCategoryCount(filterCategory));
             }
         } catch (Exception ex) {
-            log.error("Error " + ex);
+            log.error(ex);
         }
     }
     
@@ -95,6 +94,30 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     public void gotoPage() {
         super.gotoPage();
         updateResults();
+    }
+    
+    @Override
+    public void nextPage() {        
+        super.nextPage();        
+        updateResults();
+    }
+    
+    @Override
+    public void prevPage() {        
+        super.prevPage();        
+        updateResults();
+    }
+    
+    @Override
+    public void gotoFirstPage() {        
+        super.gotoFirstPage();        
+        updateResults();        
+    }
+    
+    @Override
+    public void gotoLastPage() {        
+        super.gotoLastPage();        
+        updateResults();         
     }
 
 }

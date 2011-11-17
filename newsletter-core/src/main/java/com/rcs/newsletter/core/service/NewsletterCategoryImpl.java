@@ -5,9 +5,7 @@ import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
@@ -69,13 +67,13 @@ public class NewsletterCategoryImpl extends CRUDServiceImpl<NewsletterCategory> 
      * @param categoryId
      * @return 
      */
-    private Set<NewsletterSubscription> getNewsletterSubscriptionsByCategoryId(NewsletterCategory newsletterCategory) {
+    private List<NewsletterSubscription> getNewsletterSubscriptionsByCategoryId(NewsletterCategory newsletterCategory) {
         Criteria subscriptionCriteria = sessionFactory.getCurrentSession().createCriteria(NewsletterSubscription.class);
         subscriptionCriteria.add(Restrictions.eq(NewsletterSubscription.CATEGORY, newsletterCategory));
 
         List<NewsletterSubscription> subscriptions = subscriptionCriteria.list();
 
-        return new HashSet(subscriptions);
+        return subscriptions;
     }
     
     @Override

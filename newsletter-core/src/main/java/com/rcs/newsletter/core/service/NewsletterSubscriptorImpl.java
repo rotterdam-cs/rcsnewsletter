@@ -51,12 +51,25 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
 
     @Override
     public List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory) {
+       return findByCategory(newsletterCategory, -1, -1);
+    }
+
+    @Override
+    public List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory, int start, int limit) {
         List <NewsletterSubscriptor> result = new ArrayList<NewsletterSubscriptor>();        
         List<NewsletterSubscription> newsletterSubscription = new ArrayList<NewsletterSubscription>();
         try {            
             Session currentSession = sessionFactory.getCurrentSession();
             Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
-            criteria.add(Restrictions.eq(NewsletterSubscription.CATEGORY, newsletterCategory));            
+            criteria.add(Restrictions.eq(NewsletterSubscription.CATEGORY, newsletterCategory));
+            
+            if (start != -1) {
+                criteria.setFirstResult(start);
+            }
+            if (limit != -1) {
+                criteria.setMaxResults(limit);
+            }
+            
             newsletterSubscription = criteria.list();                    
             for (NewsletterSubscription sls : newsletterSubscription) {
                 result.add(sls.getSubscriptor());
@@ -68,4 +81,23 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
         
         return result;
     }
+
+    @Override
+    public int findByCategoryCount(NewsletterCategory newsletterCategory) {
+        int result = 0;
+        try {            
+            Session currentSession = sessionFactory.getCurrentSession();
+            Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
+            criteria.add(Restrictions.eq(NewsletterSubscription.CATEGORY, newsletterCategory));            
+            result = criteria.list().size();                    
+                        
+        } catch (NonUniqueResultException ex) {
+            String error = "Error loading Subscriptor by Category Count" + ex;
+            logger.error(error);
+        }   
+        return result;
+    }
+    
+    
+    
 }

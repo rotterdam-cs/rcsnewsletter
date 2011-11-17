@@ -25,6 +25,31 @@
             <keywords>newsletter Portlet</keywords>
         </portlet-info>
     </portlet>
+
+    <portlet>
+        <portlet-name>Newsletter-Registration</portlet-name>
+        <display-name>Admin Faces</display-name>
+        <portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+        <init-param>
+            <name>javax.portlet.faces.defaultViewId.view</name>
+            <value>/xhtml/registration.xhtml</value>
+        </init-param>
+        <init-param>
+            <name>javax.portlet.faces.defaultViewId.edit</name>
+            <value>/xhtml/registration-edit.xhtml</value>
+        </init-param>
+        <expiration-cache>0</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
+            <portlet-mode>edit</portlet-mode>
+        </supports>
+        <portlet-info>
+            <title>Newsletter Registration</title>
+            <short-title>Registration</short-title>
+            <keywords>newsletter registration</keywords>
+        </portlet-info>
+    </portlet>
     
     <portlet>
         <portlet-name>Newsletter-Test</portlet-name>

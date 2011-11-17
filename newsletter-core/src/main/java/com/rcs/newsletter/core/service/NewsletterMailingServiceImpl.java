@@ -1,5 +1,6 @@
 package com.rcs.newsletter.core.service;
 
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.rcs.newsletter.core.model.NewsletterMailing;
@@ -30,23 +31,25 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
 
     @Async
     @Override
-    public void sendTestMailing(Long mailingId, String testEmail) {
+    public void sendTestMailing(Long mailingId, String testEmail, ThemeDisplay themeDisplay) {
         NewsletterMailing mailing = findById(mailingId).getPayload();
-        mailingUtil.sendArticleByEmail(mailing.getArticleId(), testEmail, fromEmailAddress);
+        mailingUtil.sendArticleByEmail(mailing.getArticleId(), themeDisplay, testEmail, fromEmailAddress);
     }
 
     @Async
     @Override
-    public void sendMailing(Long mailingId) {
+    public void sendMailing(Long mailingId, ThemeDisplay themeDisplay) {
         try {
             NewsletterMailing mailing = findById(mailingId).getPayload();
             JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(mailing.getArticleId()); 
             
             for (NewsletterSubscription newsletterSubscription : mailing.getList().getSubscriptions()) {
-                mailingUtil.sendArticleByEmail(ja, newsletterSubscription.getSubscriptor().getEmail(), fromEmailAddress);
+                mailingUtil.sendArticleByEmail(ja, themeDisplay, newsletterSubscription.getSubscriptor().getEmail(), fromEmailAddress);
             }
         } catch (Exception ex) {
             logger.error("Error while trying to read article", ex);
         }
     }
+    
+    
 }

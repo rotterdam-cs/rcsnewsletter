@@ -13,6 +13,15 @@
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
         <footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
     </portlet> 
+
+    <portlet>            
+        <portlet-name>Newsletter-Registration</portlet-name>            
+        <icon>/icon.png</icon>
+        <instanceable>true</instanceable>                        
+        <ajaxable>false</ajaxable>                    
+        <header-portlet-css>/css/newsletter.css</header-portlet-css>
+        <footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+    </portlet> 
         
     <portlet>            
         <portlet-name>Newsletter-Test</portlet-name>            

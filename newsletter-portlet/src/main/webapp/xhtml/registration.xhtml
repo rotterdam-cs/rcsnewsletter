@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h1>Newsletter Registration</h1>
+        <hr />
+        <h:form>
+            <p:growl id="messages" />
+            <h:panelGrid columns="2" style="width: 100%">
+                <h:outputLabel value="Name:" />
+                <h:inputText value="#{subscriptionManagedBean.name}" />
+                <h:outputLabel value="Last:" />
+                <h:inputText value="#{subscriptionManagedBean.lastName}" />
+                <h:outputLabel value="Email:" />
+                <h:inputText value="#{subscriptionManagedBean.email}" />
+                <f:facet name="footer">
+                    <div style="text-align: right">
+                        <h:commandButton value="Register" action="#{subscriptionManagedBean.doRegister}">
+                            <f:ajax execute="@form" render="messages" />
+                        </h:commandButton>
+                    </div>
+                </f:facet>
+            </h:panelGrid>
+        </h:form>
+    </h:body>
+</html>
+

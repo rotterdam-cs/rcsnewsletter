@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:portlet="http://java.sun.com/portlet_2_0">
+      xmlns:p="http://primefaces.prime.com.tr/ui">
     <f:loadBundle basename="Language" var="msg" />
     <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>
@@ -13,14 +13,25 @@
         <h2>Newsletter Registration Settings</h2>
         <hr />
         <h:form>
+            <p:growl id="messages" />
             <h:panelGrid columns="2" style="width: 100%">
                 <h:outputLabel value="#{msg['newsletter.admin.general.list']}:" />
-                <h:selectOneListbox size="1" value="#{editMailingManagedBean.categoryId}">
+                <h:selectOneListbox size="1" value="#{subscriptionManagedBean.currentConfig.listId}">
                     <f:selectItems var="item" value="#{newsletterMailingManagedBean.categories}" itemLabel="#{item.name}" itemValue="#{item.id}"  />
+                </h:selectOneListbox>
+                <h:outputLabel value="Confirmation Email:" />
+                <h:selectOneListbox size="1" value="#{subscriptionManagedBean.currentConfig.confirmationEmailArticleId}">
+                    <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
+                </h:selectOneListbox>
+                <h:outputLabel value="Greeting Email:" />
+                <h:selectOneListbox size="1" value="#{subscriptionManagedBean.currentConfig.greetingEmailArticleId}">
+                    <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
                 </h:selectOneListbox>
                 <f:facet name="footer">
                     <div style="text-align: right">
-                        <h:commandButton value="Save Settings" action="#{subscriptionManagedBean.doRegister}" />
+                        <h:commandButton value="Save Settings" action="#{subscriptionManagedBean.doSaveSettings}">
+                            <f:ajax execute="@form" render="messages" />
+                        </h:commandButton>
                     </div>
                 </f:facet>
             </h:panelGrid>

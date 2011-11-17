@@ -46,7 +46,7 @@ public class NewsletterPortletSettingsServiceImpl implements NewsletterPortletSe
         
         Set violations = validator.validate(data);
         
-        if (violations.isEmpty()) {
+        if (!violations.isEmpty()) {
             return ServiceActionResult.buildFailure(null);
         }
         

@@ -15,3 +15,6 @@
     overflow: auto;
     border: black thin solid;
 }
+#paginator span{
+    padding: 2px;
+}

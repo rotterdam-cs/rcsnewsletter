@@ -31,7 +31,7 @@ public class SubscriptionEmailManagedBean {
     private UserUiStateManagedBean uiState;
     
     @Inject
-    JournalArticleLocalService journalArticleLocalService;
+    JournalArticleLocalService journalArticleLocalService;    
     
     private int categoryId;
     private NewsletterCategory newsletterCategory;
@@ -113,6 +113,7 @@ public class SubscriptionEmailManagedBean {
      * fields with empty values
      */
     private void fillData() {
+        uiState.refresh();
         ServiceActionResult serviceActionResult = categoryService.findById(categoryId);
         if (serviceActionResult.isSuccess()) {
             this.newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();

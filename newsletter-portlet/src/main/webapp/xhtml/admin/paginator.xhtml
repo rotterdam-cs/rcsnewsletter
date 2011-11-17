@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <f:loadBundle basename="Language" var="msg" />
+    <f:loadBundle basename="Newsletter" var="nlk" />
+    <h:body>
+        <ui:composition>
+            <script type="text/javascript">  
+            //<![CDATA[ 
+                jQuery(document).ready(function() {
+                    var paginatorPages = parseInt(#{subscriberAdminManagedBean.paginationPages}, 10);
+                    var paginatorCurrentPage = parseInt(#{subscriberAdminManagedBean.paginationCurrentPage}, 10) + 1;
+                    if (paginatorPages < 2) {
+                        $j('#paginator').hide();
+                    } else {
+                        $j('#paginator').show();
+                    }
+                    if (paginatorCurrentPage == paginatorPages) {
+                        $j('.paginator-last-button').attr('disabled', true).addClass("ui-button-disabled ui-state-disabled");
+                        $j('.paginator-next-button').attr('disabled', true).addClass("ui-button-disabled ui-state-disabled");
+                    } else {
+                        $j('.paginator-last-button').attr('disabled', false).removeClass("ui-button-disabled ui-state-disabled");
+                        $j('.paginator-next-button').attr('disabled', false).removeClass("ui-button-disabled ui-state-disabled");
+                    }
+                    if (paginatorCurrentPage == 1) {
+                        $j('.paginator-first-button').attr('disabled', true).addClass("ui-button-disabled ui-state-disabled");
+                        $j('.paginator-previous-button').attr('disabled', true).addClass("ui-button-disabled ui-state-disabled");
+                    } else {
+                        $j('.paginator-first-button').attr('disabled', false).removeClass("ui-button-disabled ui-state-disabled");
+                        $j('.paginator-previous-button').attr('disabled', false).removeClass("ui-button-disabled ui-state-disabled");
+                    }
+                });
+            //]]>  
+            </script> 
+            <div id="paginator">
+                <h:inputHidden id="paginatorPagesValue" value="#{subscriberAdminManagedBean.paginationPages}"/>
+                <h:inputHidden id="paginatorCurrentPageValue" value="#{subscriberAdminManagedBean.paginationCurrentPage}"/>
+                <span id="paginator-showing-info">
+                    <h:outputFormat value="#{nlk['newsletter.admin.pagination.showing.subscribers']}">
+                        <f:param value="#{subscriberAdminManagedBean.paginationShowingResults}" />
+                        <f:param value="#{subscriberAdminManagedBean.paginationTotal}" />
+                    </h:outputFormat>
+                </span>
+
+                <span id="paginator-pages-combo">
+                    <h:selectOneMenu value="#{subscriberAdminManagedBean.paginationCurrentPage}">
+                        <f:selectItems value="#{subscriberAdminManagedBean.paginationPagesList}" var="pagination" itemLabel="#{pagination+1}" itemValue="#{pagination}"/>                    
+                        <f:ajax event="change" listener="#{subscriberAdminManagedBean.gotoPage}" render="@form"/>
+                    </h:selectOneMenu>
+                </span>
+
+                <span id="paginator-of-info">
+                    <h:outputFormat value="#{nlk['newsletter.admin.pagination.of']}">                   
+                        <f:param value="#{subscriberAdminManagedBean.paginationPages}" />
+                    </h:outputFormat>
+                </span>
+
+                <span id="paginator-first">                    
+                    <p:commandButton styleClass="paginator-first-button" value="#{msg['general.first']}" action="#{subscriberAdminManagedBean.gotoFirstPage}" ajax="true" update="@form" >
+                        <f:ajax event="click" render="@form"/>
+                    </p:commandButton>
+                </span>
+
+                <span id="paginator-previous">
+                    <p:commandButton styleClass="paginator-previous-button" value="#{msg['general.previous']}" action="#{subscriberAdminManagedBean.prevPage}" ajax="true" update="@form" >
+                        <f:ajax event="click" render="@form"/>
+                    </p:commandButton>
+                </span>
+
+                <span id="paginator-next">
+                    <p:commandButton styleClass="paginator-next-button" value="#{msg['general.next']}" action="#{subscriberAdminManagedBean.nextPage}" ajax="true" update="@form" >
+                        <f:ajax event="click" render="@form"/>
+                    </p:commandButton>
+                </span>                
+
+                <span id="paginator-last">
+                    <p:commandButton styleClass="paginator-last-button" value="#{msg['general.last']}" action="#{subscriberAdminManagedBean.gotoLastPage}" ajax="true" update="@form" >
+                        <f:ajax event="click" render="@form"/>
+                    </p:commandButton>
+                </span>
+            </div>
+        </ui:composition>
+    </h:body>
+</html>

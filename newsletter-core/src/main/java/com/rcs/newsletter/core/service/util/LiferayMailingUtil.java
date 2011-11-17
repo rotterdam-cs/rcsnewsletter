@@ -1,7 +1,10 @@
 package com.rcs.newsletter.core.service.util;
 
+import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.util.mail.MailEngine;
 import com.liferay.util.mail.MailEngineException;
 import javax.mail.internet.AddressException;
@@ -29,9 +32,16 @@ public class LiferayMailingUtil {
      * @param subject
      * @param content 
      */
-    public void sendArticleByEmail(JournalArticle ja, String to, String from) {
+    public void sendArticleByEmail(JournalArticle ja, ThemeDisplay themeDisplay, String to, String from) {
         try {
             String content = ja.getContentByLocale(ja.getDefaultLocale());
+            content = JournalContentUtil.getContent(ja.getGroupId(), 
+                                                    ja.getArticleId(), 
+                                                    ja.getTemplateId(), 
+                                                    Constants.PRINT, 
+                                                    themeDisplay.getLanguageId(), 
+                                                    themeDisplay);        
+            
             String title = ja.getTitle();
             sendEmail(from, to, title, content);
         } catch (Exception ex) {
@@ -45,10 +55,10 @@ public class LiferayMailingUtil {
      * @param to
      * @param from 
      */
-    public void sendArticleByEmail(Long articleId, String to, String from) {
+    public void sendArticleByEmail(Long articleId, ThemeDisplay themeDisplay, String to, String from) {
         try {
             JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(articleId);
-            sendArticleByEmail(ja, to, from);
+            sendArticleByEmail(ja, themeDisplay, to, from);
         } catch (Exception ex) {
             log.error("Error while trying to read article", ex);
         }

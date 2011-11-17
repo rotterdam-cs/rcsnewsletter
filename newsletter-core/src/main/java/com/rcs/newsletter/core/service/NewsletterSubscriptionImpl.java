@@ -29,16 +29,6 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
     private final static Logger logger = LoggerFactory.getLogger(NewsletterSubscriptionImpl.class);
 
     @Override
-    public List<NewsletterSubscription> findSubscriptionByKey(String s) {
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(NewsletterSubscription.class);
-
-        criteria.add(Restrictions.or(Restrictions.eq(NewsletterSubscription.CONFIRMATION_KEY, s),
-                Restrictions.eq(NewsletterSubscription.CANCELLATION_KEY, s)));
-
-        return criteria.list();
-    }
-
-    @Override
     public List<NewsletterSubscription> findBySubscriptor(NewsletterSubscriptor newsletterSubscriptor) {
         List<NewsletterSubscription> result = new ArrayList<NewsletterSubscription>();
         try {

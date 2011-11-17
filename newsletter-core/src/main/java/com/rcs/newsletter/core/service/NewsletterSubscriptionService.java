@@ -13,8 +13,5 @@ public interface NewsletterSubscriptionService extends CRUDService<NewsletterSub
     
     List<NewsletterSubscription> findBySubscriptor(NewsletterSubscriptor newsletterSubscriptor);
     
-    NewsletterSubscription findBySubscriptorAndCategory(NewsletterSubscriptor newsletterSubscriptor, NewsletterCategory newsletterCategory);    
-    
-    List<NewsletterSubscription> findSubscriptionByKey(String s);
-    
+    NewsletterSubscription findBySubscriptorAndCategory(NewsletterSubscriptor newsletterSubscriptor, NewsletterCategory newsletterCategory);
 }

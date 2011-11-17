@@ -21,16 +21,12 @@ public class NewsletterSubscription extends NewsletterEntity {
     
     public static final String SUBSCRIPTOR = "subscriptor";
     public static final String CATEGORY = "category";
-    public static final String CONFIRMATION_KEY = "confirmationKey";
-    public static final String CANCELLATION_KEY = "cancellationKey";
 
     private static final long serialVersionUID = 1L;
     
     @NotNull
     @Enumerated(EnumType.STRING)
     private SubscriptionStatus status;
-    private String confirmationKey;
-    private String cancellationKey;
     
     @NotNull
     @ManyToOne(cascade= CascadeType.PERSIST)
@@ -50,28 +46,12 @@ public class NewsletterSubscription extends NewsletterEntity {
         this.status = status;
     }
 
-    public String getCancellationKey() {
-        return cancellationKey;
-    }
-
-    public void setCancellationKey(String cancellationKey) {
-        this.cancellationKey = cancellationKey;
-    }
-
     public NewsletterCategory getCategory() {
         return category;
     }
 
     public void setCategory(NewsletterCategory category) {
         this.category = category;
-    }
-
-    public String getConfirmationKey() {
-        return confirmationKey;
-    }
-
-    public void setConfirmationKey(String confirmationKey) {
-        this.confirmationKey = confirmationKey;
     }
 
     public NewsletterSubscriptor getSubscriptor() {

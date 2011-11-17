@@ -13,10 +13,10 @@
         <h:form>
             <p:growl id="messages" />
             <h:panelGrid columns="2" style="width: 100%">
-                <h:outputLabel value="Name:" />
-                <h:inputText value="#{subscriptionManagedBean.name}" />
-                <h:outputLabel value="Last:" />
-                <h:inputText value="#{subscriptionManagedBean.lastName}" />
+                <h:outputLabel rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="Name:" />
+                <h:inputText rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="#{subscriptionManagedBean.name}" />
+                <h:outputLabel rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="Last:" />
+                <h:inputText rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="#{subscriptionManagedBean.lastName}" />    
                 <h:outputLabel value="Email:" />
                 <h:inputText value="#{subscriptionManagedBean.email}" />
                 <f:facet name="footer">

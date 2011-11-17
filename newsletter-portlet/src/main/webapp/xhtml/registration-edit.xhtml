@@ -14,19 +14,17 @@
         <hr />
         <h:form>
             <p:growl id="messages" />
-            <h:panelGrid columns="2" style="width: 100%">
+            <h:panelGrid columns="2">
                 <h:outputLabel value="#{msg['newsletter.admin.general.list']}:" />
                 <h:selectOneListbox size="1" value="#{subscriptionManagedBean.currentConfig.listId}">
                     <f:selectItems var="item" value="#{newsletterMailingManagedBean.categories}" itemLabel="#{item.name}" itemValue="#{item.id}"  />
-                </h:selectOneListbox>
-                <h:outputLabel value="Confirmation Email:" />
-                <h:selectOneListbox size="1" value="#{subscriptionManagedBean.currentConfig.confirmationEmailArticleId}">
-                    <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
                 </h:selectOneListbox>
                 <h:outputLabel value="Greeting Email:" />
                 <h:selectOneListbox size="1" value="#{subscriptionManagedBean.currentConfig.greetingEmailArticleId}">
                     <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
                 </h:selectOneListbox>
+                <h:outputLabel value="Name is Disabled:" />
+                <h:selectBooleanCheckbox value="#{subscriptionManagedBean.currentConfig.disableName}" />
                 <f:facet name="footer">
                     <div style="text-align: right">
                         <h:commandButton value="Save Settings" action="#{subscriptionManagedBean.doSaveSettings}">

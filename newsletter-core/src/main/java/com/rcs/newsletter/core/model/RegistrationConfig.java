@@ -21,12 +21,15 @@ public class RegistrationConfig implements Serializable {
     @NotNull
     private Long listId;
     
-    @NotNull
     private Long confirmationEmailArticleId;
     
     @NotNull
     private Long greetingEmailArticleId;
-
+    
+    
+    private boolean disableName;
+        
+        
     public Long getConfirmationEmailArticleId() {
         return confirmationEmailArticleId;
     }
@@ -59,6 +62,14 @@ public class RegistrationConfig implements Serializable {
         this.listId = listId;
     }
 
+    public boolean isDisableName() {
+        return disableName;
+    }
+
+    public void setDisableName(boolean disableName) {
+        this.disableName = disableName;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -80,6 +91,5 @@ public class RegistrationConfig implements Serializable {
         hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
         return hash;
     }
-    
     
 }

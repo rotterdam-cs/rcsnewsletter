@@ -1,7 +1,7 @@
 package com.rcs.newsletter.portlets.subscription;
 
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
-import com.rcs.newsletter.util.MailingHelper;
+import com.rcs.newsletter.core.service.util.LiferayMailingUtil;
 import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -82,6 +82,6 @@ public class NewsletterSubscriptionExpert {
         
         String from = NEWSLETTER_ADMIN;
 
-        MailingHelper.sendEmail(email, from, title, body, true);
+        LiferayMailingUtil.sendEmail(from, email, title, body);        
     }
 }

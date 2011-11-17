@@ -111,7 +111,7 @@ public class UserUiStateManagedBean implements Serializable {
         return result;
     }
     
-    private ThemeDisplay getThemeDisplay() {
+    public ThemeDisplay getThemeDisplay() {
         ThemeDisplay result = null;
         FacesContext facesContext = FacesContext.getCurrentInstance();
 

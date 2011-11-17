@@ -89,7 +89,7 @@ public class NewsletterMailingManagedBean implements Serializable {
             FacesUtil.infoMessage("Please select one row to send the test email");
             return;
         }
-        service.sendTestMailing(selectedMailing.getMailing().getId(), testEmail);
+        service.sendTestMailing(selectedMailing.getMailing().getId(), testEmail, uiState.getThemeDisplay());
         FacesUtil.infoMessage("Test email is scheduled to be sent");
     }
     
@@ -98,7 +98,7 @@ public class NewsletterMailingManagedBean implements Serializable {
             FacesUtil.infoMessage("Please select one row to send the mailing");
             return;
         }
-        service.sendMailing(selectedMailing.getMailing().getId());
+        service.sendMailing(selectedMailing.getMailing().getId(), uiState.getThemeDisplay());
         FacesUtil.infoMessage("Mailing scheduled to be sent.");
     }
     

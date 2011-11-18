@@ -1,6 +1,5 @@
 package com.rcs.newsletter.portlets.subscription;
 
-import org.springframework.beans.factory.annotation.Value;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
@@ -123,6 +122,7 @@ public class SubscriptionManagedBean implements Serializable {
                     String link = newsletterConfirmationLink.replace("{0}", portletUrl);
 
                     content = content.replace(CONFIRMATION_LINK_TOKEN, link);
+                    content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
 
                     LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
 

@@ -4,7 +4,10 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
+import javax.portlet.RenderResponse;
 
 /**
  * Utility methods for handling jsf common operations.
@@ -58,5 +61,17 @@ public class FacesUtil {
     public static String getPortletUniqueId() {
         PortletRequest request = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         return request.getWindowID();
+    }
+    
+    public static String getActionUrl() {
+        PortletResponse response = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+        
+        if (!(response instanceof RenderResponse)) {
+            return "null";
+        }
+        
+        RenderResponse rresp = (RenderResponse) response;
+        
+        return rresp.createActionURL().toString();
     }
 }

@@ -17,6 +17,7 @@ import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
 import com.rcs.newsletter.util.FacesUtil;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
@@ -35,6 +36,7 @@ public class SubscriptionManagedBean implements Serializable {
     private String name;
     private String lastName;
     private String email;
+    private String portletUrl;
     
     private RegistrationConfig currentConfig;
     
@@ -44,7 +46,7 @@ public class SubscriptionManagedBean implements Serializable {
         RegistrationConfig conf = settingsService.findConfig(FacesUtil.getPortletUniqueId());
         currentConfig.setListId(conf.getListId());
         currentConfig.setDisableName(conf.isDisableName());        
-        
+        portletUrl = FacesUtil.getActionUrl();
         clearData();
     }
     
@@ -75,6 +77,8 @@ public class SubscriptionManagedBean implements Serializable {
     public String doRegister() { 
         String result = null;
         ServiceActionResult<NewsletterCategory> categoryResult = categoryService.findById(currentConfig.getListId());
+        
+        String url = FacesUtil.getActionUrl();
         
         if(categoryResult.isSuccess()) {            
             NewsletterCategory newsletterCategory = categoryResult.getPayload();            
@@ -138,6 +142,10 @@ public class SubscriptionManagedBean implements Serializable {
         return result;
     }
     
+    public void doConfirmRegistration(ValueChangeEvent event) {
+        //TODO perform confirmation
+    }
+    
     private void clearData() {
         this.name = "";
         this.lastName = "";
@@ -175,6 +183,14 @@ public class SubscriptionManagedBean implements Serializable {
 
     public void setCurrentConfig(RegistrationConfig currentConfig) {
         this.currentConfig = currentConfig;
+    }
+
+    public String getPortletUrl() {
+        return portletUrl;
+    }
+
+    public void setPortletUrl(String portletUrl) {
+        this.portletUrl = portletUrl;
     }
     
 }

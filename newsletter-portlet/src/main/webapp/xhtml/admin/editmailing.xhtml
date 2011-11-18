@@ -13,22 +13,24 @@
         <h1>#{nlk[editMailingManagedBean.titleKey]}</h1>
         <h:form>
             <p:growl id="messages" />
-            <h:panelGrid columns="2">
+            <h:panelGrid columns="2" styleClass="newsletter-forms-form" columnClasses="newsletter-forms-column-left,newsletter-forms-column-right">
+                
                 <h:outputLabel value="#{msg['newsletter.admin.general.name']}:" />
-                <h:inputText value="#{editMailingManagedBean.mailingName}" />
+                <h:inputText styleClass="newsletter-forms-input-text" value="#{editMailingManagedBean.mailingName}" />
+                
                 <h:outputLabel value="#{msg['newsletter.admin.general.list']}:" />
-                <h:selectOneListbox size="1" value="#{editMailingManagedBean.categoryId}">
+                <h:selectOneListbox size="1"  styleClass="newsletter-forms-input-text" value="#{editMailingManagedBean.categoryId}">
                     <f:selectItems var="item" value="#{newsletterMailingManagedBean.categories}" itemLabel="#{item.name}" itemValue="#{item.id}"  />
                 </h:selectOneListbox>
+                
                 <h:outputLabel value="#{msg['newsletter.admin.article']}:" />
-                <h:selectOneListbox size="1" value="#{editMailingManagedBean.articleId}">
+                <h:selectOneListbox size="1" styleClass="newsletter-forms-input-text" value="#{editMailingManagedBean.articleId}">
                     <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
-                </h:selectOneListbox>
-                <f:facet name="footer">
-                    <p:commandButton action="#{editMailingManagedBean.save}" update="messages" value="#{nlk[editMailingManagedBean.saveButtonKey]}" />
-                    <p:button outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
-                </f:facet>
+                </h:selectOneListbox>                
+                   
             </h:panelGrid>
+            <p:commandButton styleClass="newsletter-forms-button" action="#{editMailingManagedBean.save}" update="messages" value="#{nlk[editMailingManagedBean.saveButtonKey]}" />
+            <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
         </h:form>
     </h:body>
 </html>

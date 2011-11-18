@@ -16,22 +16,22 @@
             <h1>#{nlk['newsletter.admin.subscriber.remove']}</h1>
             <h:inputHidden value="#{subscriberCRUDManagedBean.id}"/>
             
-            <h:panelGrid columns="2">
-                <h:outputLabel value="#{msg['general.firstname']}" />
-                <h:inputText value="#{subscriberCRUDManagedBean.firstName}" />
+            <h:panelGrid columns="2" styleClass="newsletter-forms-form"  columnClasses="newsletter-forms-column-left,newsletter-forms-column-right">
+                <h:outputLabel value="#{msg['general.firstname']}: " />
+                <h:inputText styleClass="newsletter-forms-input-text" value="#{subscriberCRUDManagedBean.firstName}" />
                 
-                <h:outputLabel value="#{msg['general.middlename']}" />
-                <h:inputText value="#{subscriberCRUDManagedBean.middleName}" />
+                <h:outputLabel value="#{msg['general.middlename']}: " />
+                <h:inputText styleClass="newsletter-forms-input-text" value="#{subscriberCRUDManagedBean.middleName}" />
                 
-                <h:outputLabel value="#{msg['general.lastname']}" />
-                <h:inputText value="#{subscriberCRUDManagedBean.lastName}" />
+                <h:outputLabel value="#{msg['general.lastname']}: " />
+                <h:inputText styleClass="newsletter-forms-input-text" value="#{subscriberCRUDManagedBean.lastName}" />
                 
-                <h:outputLabel value="#{msg['general.email']}" />
-                <h:inputText value="#{subscriberCRUDManagedBean.email}" />
+                <h:outputLabel value="#{msg['general.email']}: " />
+                <h:inputText styleClass="newsletter-forms-input-text" value="#{subscriberCRUDManagedBean.email}" />
                 
                 <f:facet name="footer">
-                    <p:commandButton action="#{subscriberCRUDManagedBean.save}" value="#{msg['general.save']}" ajax="false" />
-                    <p:button outcome="admin" value="#{msg['newsletter.common.cancel']}" />
+                    <p:commandButton styleClass="newsletter-forms-button" action="#{subscriberCRUDManagedBean.save}" value="#{msg['general.save']}" ajax="false" />
+                    <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.common.cancel']}" />
                 </f:facet>
             </h:panelGrid>
             

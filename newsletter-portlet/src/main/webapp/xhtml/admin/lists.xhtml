@@ -58,7 +58,9 @@
                             <p:menuitem styleClass="newsletter-panel-action-submenu" value="Edit Unsubscribe Mail" action="#{subscriptionEmailManagedBean.redirectEditUnsubscribeMail}" icon="ui-icon ui-icon-star">
                                 <f:setPropertyActionListener target="#{subscriptionEmailManagedBean.categoryId}" value="#{item.id}" />
                             </p:menuitem>
-                            
+                            <p:menuitem value="Edit Greeting Mail" action="#{subscriptionEmailManagedBean.redirectEditGreetingMail}" icon="ui-icon ui-icon-star">
+                                <f:setPropertyActionListener target="#{subscriptionEmailManagedBean.categoryId}" value="#{item.id}" />
+                            </p:menuitem>
                         </p:submenu>
                     </p:menu>                            
                 </p:column>

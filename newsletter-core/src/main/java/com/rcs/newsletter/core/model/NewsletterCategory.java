@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.Email;
@@ -27,6 +28,7 @@ public class NewsletterCategory extends NewsletterEntity {
     private String description;
     private String fromName;
     @Email
+    @NotNull
     private String fromEmail;
     
     @OneToMany
@@ -39,6 +41,9 @@ public class NewsletterCategory extends NewsletterEntity {
     
     @Column(columnDefinition="bigint default -1")
     private long unsubscriptionArticleId;
+    
+    @Column(columnDefinition="bigint default -1")
+    private long greetingMailArticleId;
         
     @OneToMany(mappedBy = "list")
     private List<NewsletterMailing> mailings;
@@ -116,5 +121,13 @@ public class NewsletterCategory extends NewsletterEntity {
 
     public void setMailings(List<NewsletterMailing> mailings) {
         this.mailings = mailings;
+    }
+
+    public long getGreetingMailArticleId() {
+        return greetingMailArticleId;
+    }
+
+    public void setGreetingMailArticleId(long greetingMailArticleId) {
+        this.greetingMailArticleId = greetingMailArticleId;
     }
 }

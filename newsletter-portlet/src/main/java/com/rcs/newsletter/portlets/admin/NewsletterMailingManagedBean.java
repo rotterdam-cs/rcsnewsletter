@@ -44,7 +44,6 @@ public class NewsletterMailingManagedBean implements Serializable {
     @PostConstruct
     public void init() {
         mailingList = createMailingsList(service.findAll().getPayload());
-        categories = categoryService.findAll().getPayload();
         //workaround for circular dependency injection.
         mailingBean.setMailingManagedBean(this);
     }
@@ -116,7 +115,7 @@ public class NewsletterMailingManagedBean implements Serializable {
     }
 
     public List<NewsletterCategory> getCategories() {
-        return categories;
+        return categoryService.findAll().getPayload();
     }
 
     public MailingTableRow getSelectedMailing() {

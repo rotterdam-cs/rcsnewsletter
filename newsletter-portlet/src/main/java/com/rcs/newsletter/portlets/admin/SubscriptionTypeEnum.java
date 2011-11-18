@@ -7,7 +7,8 @@ package com.rcs.newsletter.portlets.admin;
  */
 public enum SubscriptionTypeEnum {
     SUBSCRIBE("newsletter.admin.category.subscribe")
-    ,UNSUBSCRIBE("newsletter.admin.category.unsubscribe");
+    ,UNSUBSCRIBE("newsletter.admin.category.unsubscribe")
+    ,GREETING("newsletter.admin.category.greeting");
     
     private String key;
 

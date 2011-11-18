@@ -21,9 +21,7 @@
                 <h:inputText value="#{subscriptionManagedBean.email}" />
                 <f:facet name="footer">
                     <div style="text-align: right">
-                        <h:commandButton value="Register" action="#{subscriptionManagedBean.doRegister}">
-                            <f:ajax execute="@form" render="messages" />
-                        </h:commandButton>
+                        <p:commandButton value="Register" action="#{subscriptionManagedBean.doRegister}" update="message" ajax="false"/>
                     </div>
                 </f:facet>
             </h:panelGrid>

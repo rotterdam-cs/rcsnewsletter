@@ -18,7 +18,6 @@
 #paginator span{
     padding: 2px;
 }
-
 .newsletter-panel-action-submenu {
     width: 40px;
 }
@@ -64,4 +63,8 @@
 
 .newsletter-forms-button {
     margin-right: 10px!important;
+}
+
+.registration-sucess {
+    font-size: medium;
 }

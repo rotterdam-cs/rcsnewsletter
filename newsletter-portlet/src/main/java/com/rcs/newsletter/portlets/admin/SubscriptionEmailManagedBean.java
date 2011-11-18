@@ -104,6 +104,14 @@ public class SubscriptionEmailManagedBean {
         return "editSubscriptionMail";
     }
     
+    public String redirectEditGreetingMail() {        
+        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
+        this.subscriptionType = SubscriptionTypeEnum.GREETING;                
+        fillData();
+        
+        return "editSubscriptionMail";
+    }
+    
     /**
      * Method that fill the data in the managed bean:
      * JournalArticle
@@ -124,6 +132,9 @@ public class SubscriptionEmailManagedBean {
                     break;
                 case UNSUBSCRIBE:
                     articleId = newsletterCategory.getUnsubscriptionArticleId();
+                    break;
+                case GREETING:
+                    articleId = newsletterCategory.getGreetingMailArticleId();
                     break;
             }
             
@@ -146,10 +157,17 @@ public class SubscriptionEmailManagedBean {
     }
     
     public String save() {
-        if(subscriptionType.equals(SubscriptionTypeEnum.SUBSCRIBE)) {
-            newsletterCategory.setSubscriptionArticleId(subscriptionEmailArticleId);
-        } else {
-            newsletterCategory.setUnsubscriptionArticleId(subscriptionEmailArticleId);
+        
+        switch(subscriptionType) {
+            case SUBSCRIBE:
+                newsletterCategory.setSubscriptionArticleId(subscriptionEmailArticleId);
+                break;
+            case UNSUBSCRIBE:
+                newsletterCategory.setUnsubscriptionArticleId(subscriptionEmailArticleId);
+                break;
+            case GREETING:
+                newsletterCategory.setGreetingMailArticleId(subscriptionEmailArticleId);
+                break;
         }
         
         ServiceActionResult<NewsletterCategory> result = null;

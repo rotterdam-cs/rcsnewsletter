@@ -36,19 +36,16 @@ public class SubscriptionManagedBean implements Serializable {
     private String lastName;
     private String email;
     
-//    @Value("${newsletter.mail.from}")
-//    private String fromEmailAddress;
-    
     private RegistrationConfig currentConfig;
     
     @PostConstruct
     public void init() {
         currentConfig = new RegistrationConfig();
         RegistrationConfig conf = settingsService.findConfig(FacesUtil.getPortletUniqueId());
-        currentConfig.setConfirmationEmailArticleId(conf.getConfirmationEmailArticleId());
-        currentConfig.setGreetingEmailArticleId(conf.getGreetingEmailArticleId());
         currentConfig.setListId(conf.getListId());
-        currentConfig.setDisableName(conf.isDisableName());
+        currentConfig.setDisableName(conf.isDisableName());        
+        
+        clearData();
     }
     
     @Inject
@@ -68,7 +65,6 @@ public class SubscriptionManagedBean implements Serializable {
     
     public void doSaveSettings() {
         ServiceActionResult result = settingsService.updateConfig(FacesUtil.getPortletUniqueId(), currentConfig);
-        
         if (result.isSuccess()) {
             FacesUtil.infoMessage("Settings updated successfully");
         } else {
@@ -76,16 +72,15 @@ public class SubscriptionManagedBean implements Serializable {
         }
     }
     
-    public void doRegister() {
-        ServiceActionResult<NewsletterCategory> result = categoryService.findById(currentConfig.getListId());
+    public String doRegister() { 
+        String result = null;
+        ServiceActionResult<NewsletterCategory> categoryResult = categoryService.findById(currentConfig.getListId());
         
-        if(result.isSuccess()) {            
-            NewsletterCategory newsletterCategory = result.getPayload();
+        if(categoryResult.isSuccess()) {            
+            NewsletterCategory newsletterCategory = categoryResult.getPayload();            
             JournalArticle subscriptionJournalArticle = uiState.getJournalArticleByArticleId(newsletterCategory.getSubscriptionArticleId());
-            
             if(subscriptionJournalArticle != null) {
-                NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);
-                
+                NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);                
                 if(subscriptor == null) {
                     subscriptor = new NewsletterSubscriptor();
                     subscriptor.setEmail(email);
@@ -104,11 +99,12 @@ public class SubscriptionManagedBean implements Serializable {
                     subscription.setStatus(SubscriptionStatus.INVITED);
                 
                     subscription = subscriptionService.save(subscription).getPayload();
-                }               
+                }
                 
                 //Depending on the actual status we send or not the registration email
                 boolean sendEmail = true;
                 if(subscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
+                    FacesUtil.errorMessage("You already belong to this list");
                     sendEmail = false;
                 } else if(subscription.getStatus().equals(SubscriptionStatus.INACTIVE)) {
                     subscription.setStatus(SubscriptionStatus.ACTIVE);
@@ -125,18 +121,27 @@ public class SubscriptionManagedBean implements Serializable {
                     String link = "confirmation link";
                     
                     content = content.replace(CONFIRMATION_LINK_TOKEN, link);
-
-                    //TODO: email From obtain from properties
-                    LiferayMailingUtil.sendEmail("admin@liferay.com", email, subject, content);
+                    
+                    LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
                     
                     FacesUtil.infoMessage("A mail was send to your direction. Please check it to confirm the registration");
+                    
+                    result = "registrationSucess";
                 }
                 
             } else {
                 FacesUtil.errorMessage("Could not register. Please contact the administrator");
             }
-        }
+        }        
         
+        clearData();        
+        return result;
+    }
+    
+    private void clearData() {
+        this.name = "";
+        this.lastName = "";
+        this.email = "";
     }
     
     ////////////////// GETTERS AND SETTERS /////////////////////

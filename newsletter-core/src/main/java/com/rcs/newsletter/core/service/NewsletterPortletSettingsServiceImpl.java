@@ -55,18 +55,15 @@ public class NewsletterPortletSettingsServiceImpl implements NewsletterPortletSe
         }
         
         RegistrationConfig config = template.get(RegistrationConfig.class, portletId);
-        
-        
+                
         boolean isNew = false;
         if (config == null) {
             config = new RegistrationConfig();
             config.setId(portletId);
             isNew = true;
-        }
-        
+        }        
         
         config.setConfirmationEmailArticleId(data.getConfirmationEmailArticleId());
-        config.setGreetingEmailArticleId(data.getGreetingEmailArticleId());
         config.setListId(data.getListId());
         config.setDisableName(data.isDisableName());
         

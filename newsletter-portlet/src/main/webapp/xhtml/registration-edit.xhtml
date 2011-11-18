@@ -18,18 +18,14 @@
                 <h:outputLabel value="#{msg['newsletter.admin.general.list']}:" />
                 <h:selectOneListbox size="1" value="#{subscriptionManagedBean.currentConfig.listId}">
                     <f:selectItems var="item" value="#{newsletterMailingManagedBean.categories}" itemLabel="#{item.name}" itemValue="#{item.id}"  />
-                </h:selectOneListbox>
-                <h:outputLabel value="Greeting Email:" />
-                <h:selectOneListbox size="1" value="#{subscriptionManagedBean.currentConfig.greetingEmailArticleId}">
-                    <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
-                </h:selectOneListbox>
+                </h:selectOneListbox>                
                 <h:outputLabel value="Name is Disabled:" />
                 <h:selectBooleanCheckbox value="#{subscriptionManagedBean.currentConfig.disableName}" />
                 <f:facet name="footer">
                     <div style="text-align: right">
                         <h:commandButton value="Save Settings" action="#{subscriptionManagedBean.doSaveSettings}">
                             <f:ajax execute="@form" render="messages" />
-                        </h:commandButton>
+                        </h:commandButton>                        
                     </div>
                 </f:facet>
             </h:panelGrid>

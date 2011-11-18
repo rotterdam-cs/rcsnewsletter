@@ -1,6 +1,6 @@
-
 package com.rcs.newsletter.portlets.subscription;
 
+import org.springframework.beans.factory.annotation.Value;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
@@ -31,40 +31,36 @@ import static com.rcs.newsletter.NewsletterConstants.*;
 @Named
 @Scope("session")
 public class SubscriptionManagedBean implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private String name;
     private String lastName;
     private String email;
     private String portletUrl;
-    
+    //@Value("${newsletter.registration.confirmation.link}")
+    private String newsletterConfirmationLink = "<a href=\"{0}\">Click here to confirm your registration</a>";
     private RegistrationConfig currentConfig;
-    
+
     @PostConstruct
     public void init() {
         currentConfig = new RegistrationConfig();
         RegistrationConfig conf = settingsService.findConfig(FacesUtil.getPortletUniqueId());
         currentConfig.setListId(conf.getListId());
-        currentConfig.setDisableName(conf.isDisableName());        
+        currentConfig.setDisableName(conf.isDisableName());
         portletUrl = FacesUtil.getActionUrl();
         clearData();
     }
-    
     @Inject
     private NewsletterPortletSettingsService settingsService;
-    
     @Inject
     private NewsletterCategoryService categoryService;
-    
     @Inject
     private NewsletterSubscriptorService subscriptorService;
-    
     @Inject
     private NewsletterSubscriptionService subscriptionService;
-    
     @Inject
     private UserUiStateManagedBean uiState;
-    
+
     public void doSaveSettings() {
         ServiceActionResult result = settingsService.updateConfig(FacesUtil.getPortletUniqueId(), currentConfig);
         if (result.isSuccess()) {
@@ -73,70 +69,68 @@ public class SubscriptionManagedBean implements Serializable {
             FacesUtil.errorMessage("Could not update settings");
         }
     }
-    
-    public String doRegister() { 
+
+    public String doRegister() {
         String result = null;
         ServiceActionResult<NewsletterCategory> categoryResult = categoryService.findById(currentConfig.getListId());
-        
-        String url = FacesUtil.getActionUrl();
-        
-        if(categoryResult.isSuccess()) {            
-            NewsletterCategory newsletterCategory = categoryResult.getPayload();            
+
+        if (categoryResult.isSuccess()) {
+            NewsletterCategory newsletterCategory = categoryResult.getPayload();
             JournalArticle subscriptionJournalArticle = uiState.getJournalArticleByArticleId(newsletterCategory.getSubscriptionArticleId());
-            
-            if(subscriptionJournalArticle != null) {
-                NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);                
+
+            if (subscriptionJournalArticle != null) {
+                NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);
                 //If the subscriptor doesnt exists we should create it
-                if(subscriptor == null) {
+                if (subscriptor == null) {
                     subscriptor = new NewsletterSubscriptor();
                     subscriptor.setEmail(email);
                     subscriptor.setFirstName(name);
                     subscriptor.setLastName(lastName);
-                    
+
                     subscriptorService.save(subscriptor);
                 }
-                
+
                 NewsletterSubscription subscription = subscriptionService.findBySubscriptorAndCategory(subscriptor, newsletterCategory);
                 //If the subscription for this subscriptor and category 
                 //does not exists we should create it
-                if(subscription == null) {
+                if (subscription == null) {
                     subscription = new NewsletterSubscription();
                     subscription.setSubscriptor(subscriptor);
                     subscription.setCategory(newsletterCategory);
                     subscription.setStatus(SubscriptionStatus.INVITED);
-                
+
                     subscription = subscriptionService.save(subscription).getPayload();
                 }
-                
+
                 //Depending on the actual status of the subscription we send or not the registration email
                 boolean sendEmail = true;
-                if(subscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
+                if (subscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
                     FacesUtil.errorMessage("You already belong to this list");
                     sendEmail = false;
-                } else if(subscription.getStatus().equals(SubscriptionStatus.INACTIVE)) {
+                } else if (subscription.getStatus().equals(SubscriptionStatus.INACTIVE)) {
                     subscription.setStatus(SubscriptionStatus.ACTIVE);
                     subscriptionService.update(subscription);
                     sendEmail = true;
-                } else if(subscription.getStatus().equals(SubscriptionStatus.INVITED)) {
+                } else if (subscription.getStatus().equals(SubscriptionStatus.INVITED)) {
                     sendEmail = true;
-                }                
-                
-                if(sendEmail) {
+                }
+
+                if (sendEmail) {
                     String content = uiState.getContent(subscriptionJournalArticle);
                     String subject = subscriptionJournalArticle.getTitle();
-                    
-                    //TODO: confirmation link
-                    String link = "confirmation link";
-                    
+
+                    portletUrl += "&subscriptionId=" + subscription.getId();
+                    String link = newsletterConfirmationLink.replace("{0}", portletUrl);
+
                     content = content.replace(CONFIRMATION_LINK_TOKEN, link);
-                    
+
                     LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
-                    
+
                     FacesUtil.infoMessage("A mail was send to your direction. Please check it to confirm the registration");
-                    
+
                     result = "registrationSucess";
                 }
-                
+
             } else {
                 //could not retrieve the subscription email
                 FacesUtil.errorMessage("Could not register. Please contact the administrator");
@@ -145,21 +139,42 @@ public class SubscriptionManagedBean implements Serializable {
             //could not retrieve the category
             FacesUtil.errorMessage("Could not register. Please contact the administrator");
         }
-        
-        clearData();        
+
+        clearData();
         return result;
     }
-    
+
     public void doConfirmRegistration(ValueChangeEvent event) {
-        //TODO perform confirmation
+        try {
+            long subscriptionId = (Long.parseLong((String) event.getNewValue()));
+            ServiceActionResult<NewsletterSubscription> subscriptionResult = subscriptionService.findById(subscriptionId);
+
+            if (subscriptionResult.isSuccess()) {
+                NewsletterSubscription subscription = subscriptionResult.getPayload();
+
+                subscription.setStatus(SubscriptionStatus.ACTIVE);
+
+                subscriptionResult = subscriptionService.update(subscription);
+
+                if (subscriptionResult.isSuccess()) {
+                    FacesUtil.infoMessage("newsletter.registration.confirmed.msg");
+                } else {
+                    FacesUtil.errorMessage("newsletter.registration.unconfirmed.msg");
+                }
+            } else {
+                FacesUtil.errorMessage("newsletter.registration.unconfirmed.msg");
+            }
+        } catch (Exception ex) {
+            FacesUtil.errorMessage("newsletter.registration.unconfirmed.msg");
+        }
     }
-    
+
     private void clearData() {
         this.name = "";
         this.lastName = "";
         this.email = "";
     }
-    
+
     ////////////////// GETTERS AND SETTERS /////////////////////
     public String getEmail() {
         return email;
@@ -200,5 +215,4 @@ public class SubscriptionManagedBean implements Serializable {
     public void setPortletUrl(String portletUrl) {
         this.portletUrl = portletUrl;
     }
-    
 }

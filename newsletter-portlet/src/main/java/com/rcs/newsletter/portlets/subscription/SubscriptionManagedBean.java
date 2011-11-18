@@ -12,6 +12,7 @@ import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.core.service.util.LiferayMailingUtil;
+import com.rcs.newsletter.portlets.admin.SubscriptionTypeEnum;
 import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
 import com.rcs.newsletter.util.FacesUtil;
 import java.io.Serializable;
@@ -37,7 +38,8 @@ public class SubscriptionManagedBean implements Serializable {
     private String email;
     private String portletUrl;
     //@Value("${newsletter.registration.confirmation.link}")
-    private String newsletterConfirmationLink = "<a href=\"{0}\">Click here to confirm your registration</a>";
+    private String subscriptionConfirmationLink = "<a href=\"{0}\">Click here to confirm your registration</a>";
+    private String unsubscriptionConfirmationLink = "<a href=\"{0}\">Click here to confirm your unregistration</a>";
     private RegistrationConfig currentConfig;
 
     @PostConstruct
@@ -118,8 +120,11 @@ public class SubscriptionManagedBean implements Serializable {
                     String content = uiState.getContent(subscriptionJournalArticle);
                     String subject = subscriptionJournalArticle.getTitle();
 
-                    portletUrl += "&subscriptionId=" + subscription.getId();
-                    String link = newsletterConfirmationLink.replace("{0}", portletUrl);
+                    StringBuilder stringBuilder = new StringBuilder(portletUrl);
+                    stringBuilder.append("&subscriptionId=");
+                    stringBuilder.append(subscription.getId());
+
+                    String link = subscriptionConfirmationLink.replace("{0}", stringBuilder.toString());
 
                     content = content.replace(CONFIRMATION_LINK_TOKEN, link);
                     content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
@@ -144,6 +149,54 @@ public class SubscriptionManagedBean implements Serializable {
         return result;
     }
 
+    public String doUnregister() {
+        String result = null;
+        try {
+            ServiceActionResult<NewsletterCategory> categoryResult = categoryService.findById(currentConfig.getListId());
+
+            if (categoryResult.isSuccess()) {
+                NewsletterCategory newsletterCategory = categoryResult.getPayload();
+                JournalArticle unsubscriptionArticle = uiState.getJournalArticleByArticleId(newsletterCategory.getUnsubscriptionArticleId());
+                
+                if (unsubscriptionArticle != null) {
+                    NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);                    
+
+                    if (subscriptor == null) {
+                        FacesUtil.errorMessage("Could not complet your unregistration. Please try again or contact the administrator");
+                    } else {
+                        NewsletterSubscription subscription =
+                                subscriptionService.findBySubscriptorAndCategory(subscriptor, newsletterCategory);                        
+                        if (subscription != null) {
+                            String content = uiState.getContent(unsubscriptionArticle);
+                            String subject = unsubscriptionArticle.getTitle();
+
+                            StringBuilder stringBuilder = new StringBuilder(portletUrl);
+                            stringBuilder.append("&unsubscriptionId=");
+                            stringBuilder.append(subscription.getId());
+
+                            String link = unsubscriptionConfirmationLink.replace("{0}", stringBuilder.toString());
+
+                            content = content.replace(CONFIRMATION_LINK_TOKEN, link);
+                            content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
+
+                            LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
+
+                            FacesUtil.infoMessage("A mail was send to your direction. Please check it to confirm the registration");
+
+                            result = "unregistrationSucess";
+                        } else {
+                            FacesUtil.errorMessage("Could not complet your unregistration. Please try again or contact the administrator");
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            FacesUtil.errorMessage("Could not complet your unregistration. Please try again or contact the administrator");
+        }
+
+        return result;
+    }
+
     public void doConfirmRegistration(ValueChangeEvent event) {
         try {
             long subscriptionId = (Long.parseLong((String) event.getNewValue()));
@@ -156,16 +209,60 @@ public class SubscriptionManagedBean implements Serializable {
 
                 subscriptionResult = subscriptionService.update(subscription);
 
+                //Send the greeting mail
                 if (subscriptionResult.isSuccess()) {
-                    FacesUtil.infoMessage("newsletter.registration.confirmed.msg");
+                    NewsletterCategory category = subscription.getCategory();
+                    JournalArticle greetingJournalArticle =
+                            uiState.getJournalArticleByArticleId(category.getGreetingMailArticleId());
+                    String content = uiState.getContent(greetingJournalArticle);
+                    String subject = greetingJournalArticle.getTitle();
+
+                    content = content.replace(LIST_NAME_TOKEN, category.getName());
+
+                    LiferayMailingUtil.sendEmail(category.getFromEmail(), subscription.getSubscriptor().getEmail(), subject, content);
+
+                    //resource bundle: newsletter.registration.confirmed.msg
+                    FacesUtil.infoMessage("You are succesfully subscribed to the newsletter");
                 } else {
-                    FacesUtil.errorMessage("newsletter.registration.unconfirmed.msg");
+                    //resource bundle: newsletter.registration.unconfirmed.msg
+                    FacesUtil.errorMessage("Could not complet your registration. Please try again or contact the administrator");
                 }
             } else {
-                FacesUtil.errorMessage("newsletter.registration.unconfirmed.msg");
+                //resource bundle: newsletter.registration.unconfirmed.msg
+                FacesUtil.errorMessage("Could not complet your registration. Please try again or contact the administrator");
             }
         } catch (Exception ex) {
-            FacesUtil.errorMessage("newsletter.registration.unconfirmed.msg");
+            //resource bundle: newsletter.registration.unconfirmed.msg
+            FacesUtil.errorMessage("Could not complet your registration. Please try again or contact the administrator");
+        }
+    }
+
+    public void doConfirmUnregistration(ValueChangeEvent event) {
+        try {
+            long subscriptionId = (Long.parseLong((String) event.getNewValue()));
+            ServiceActionResult<NewsletterSubscription> subscriptionResult = subscriptionService.findById(subscriptionId);
+
+            if (subscriptionResult.isSuccess()) {
+                NewsletterSubscription subscription = subscriptionResult.getPayload();
+
+                subscription.setStatus(SubscriptionStatus.INACTIVE);
+
+                subscriptionResult = subscriptionService.update(subscription);
+
+                //Send the greeting mail
+                if (subscriptionResult.isSuccess()) {
+                    FacesUtil.infoMessage("You are succesfully unsubscribed to the newsletter");
+                } else {
+                    //resource bundle: newsletter.registration.unconfirmed.msg
+                    FacesUtil.errorMessage("Could not complet your unregistration. Please try again or contact the administrator");
+                }
+            } else {
+                //resource bundle: newsletter.registration.unconfirmed.msg
+                FacesUtil.errorMessage("Could not complet your unregistration. Please try again or contact the administrator");
+            }
+        } catch (Exception ex) {
+            //resource bundle: newsletter.registration.unconfirmed.msg
+            FacesUtil.errorMessage("Could not complet your unregistration. Please try again or contact the administrator");
         }
     }
 

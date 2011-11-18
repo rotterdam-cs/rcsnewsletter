@@ -77,7 +77,10 @@
     margin-top: 5px;
 }
 
-
 .registration-sucess {
     font-size: medium;
+}
+
+.registration-form {
+    width: 400px;
 }

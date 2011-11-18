@@ -42,6 +42,14 @@
     margin-bottom: 10px;
 }
 
+.newsletter-forms-form-panel {
+   margin: 10px; 
+}
+
+.newsletter-forms-form-listbox{
+    margin-right: 10px!important;
+}
+
 .newsletter-forms-input-text {
     width: 250px!important;
 }
@@ -64,6 +72,11 @@
 .newsletter-forms-button {
     margin-right: 10px!important;
 }
+
+.newsletter-forms-confirmation-delete-panel{
+    margin-top: 5px;
+}
+
 
 .registration-sucess {
     font-size: medium;

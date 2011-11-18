@@ -11,27 +11,30 @@
     </h:head>
     <h:body>
         <h:form>
+            <h:inputHidden value="#{categoryCRUDManagedBean.id}"/>
             <p:growl id="categoryDeleteMessages"/>
             <h1>#{nlk['newsletter.admin.category.delete.title']}</h1>
             <span>
                 #{nlk['newsletter.admin.category.delete.question']}
             </span>
-            <br></br>
+            <br />
             <span>
                 #{nlk['newsletter.admin.category.info']}
             </span>
-            <br></br>
-            <h:panelGrid columns="3">
-                <h:inputHidden value="#{categoryCRUDManagedBean.id}"/>
+            <br /><br />
+            
+            <p:commandButton styleClass="confirm-delete-button newsletter-forms-button" widgetVar="confirmDeleteButton" update="categoryDeleteMessages" value="#{nlk['newsletter.admin.category.delete.acept']}" action="#{categoryCRUDManagedBean.delete}" ajax="false"/>
+            <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{nlk['newsletter.admin.category.delete.cancel']}" />
+            
+            <h:panelGrid columns="2" styleClass="newsletter-forms-confirmation-delete-panel">                
                 <h:selectBooleanCheckbox onchange="enableDeleteButton(this)"/>
                 <h:outputText value="#{nlk['newsletter.admin.category.delete.risks.acept']}"/>
             </h:panelGrid> 
-            <p:commandButton styleClass="confirm-delete-button" widgetVar="confirmDeleteButton" update="categoryDeleteMessages" value="#{nlk['newsletter.admin.category.delete.acept']}" action="#{categoryCRUDManagedBean.delete}" ajax="false"/>
-            <p:button outcome="admin" value="#{nlk['newsletter.admin.category.delete.cancel']}" />
+            
         </h:form>        
 
         <script type="text/javascript">
-            
+        //<![CDATA[     
             function enableDeleteButton(ob) {
                 var confirmButton = $j(".confirm-delete-button");
                 
@@ -41,13 +44,13 @@
                     confirmButton.attr('disabled', 'disabled');
                 }
                 confirmButton.toggleClass("ui-button-disabled ui-state-disabled");                                
-            }
-            
+            }            
             $j(document).ready(function(){
                 var confirmButton = $j(".confirm-delete-button");
                 confirmButton.attr('disabled', 'true');
                 confirmButton.addClass("ui-button-disabled ui-state-disabled");                                
             });
+        //]]> 
         </script>
     </h:body>
 </html>

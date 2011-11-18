@@ -23,15 +23,18 @@
                 </h:selectOneListbox>               
             </h:panelGrid>            
             <br />
-            <p:commandButton styleClass="confirm-delete-button" value="#{nlk['newsletter.admin.delete.i.am.sure']}" action="#{subscriberCRUDManagedBean.delete}" ajax="false"/>
-            &nbsp;<p:button outcome="admin" value="#{msg['newsletter.common.cancel']}" />
-            <h:panelGrid columns="3">                
+            
+            <p:commandButton styleClass="confirm-delete-button newsletter-forms-button" value="#{nlk['newsletter.admin.delete.i.am.sure']}" action="#{subscriberCRUDManagedBean.delete}" ajax="false"/>
+            <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.common.cancel']}" />
+            
+            <h:panelGrid columns="2" styleClass="newsletter-forms-confirmation-delete-panel">                
                 <h:selectBooleanCheckbox onchange="enableDeleteButton(this)"/>
                 <h:outputText value="#{nlk['newsletter.admin.delete.understand.risks']}"/>
             </h:panelGrid>
         </h:form>
 
-        <script type="text/javascript">            
+        <script type="text/javascript">  
+        //<![CDATA[
             function enableDeleteButton(ob) {
                 var confirmButton = $j(".confirm-delete-button");
                 
@@ -41,13 +44,13 @@
                     confirmButton.attr('disabled', 'disabled');
                 }
                 confirmButton.toggleClass("ui-button-disabled ui-state-disabled");                                
-            }
-            
+            }            
             $j(document).ready(function(){
                 var confirmButton = $j(".confirm-delete-button");
                 confirmButton.attr('disabled', 'true');
                 confirmButton.addClass("ui-button-disabled ui-state-disabled");                
             });
+        //]]> 
         </script>        
     </h:body>
 </html>

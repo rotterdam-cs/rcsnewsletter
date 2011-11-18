@@ -79,8 +79,10 @@ public class SubscriptionManagedBean implements Serializable {
         if(categoryResult.isSuccess()) {            
             NewsletterCategory newsletterCategory = categoryResult.getPayload();            
             JournalArticle subscriptionJournalArticle = uiState.getJournalArticleByArticleId(newsletterCategory.getSubscriptionArticleId());
+            
             if(subscriptionJournalArticle != null) {
                 NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);                
+                //If the subscriptor doesnt exists we should create it
                 if(subscriptor == null) {
                     subscriptor = new NewsletterSubscriptor();
                     subscriptor.setEmail(email);
@@ -91,7 +93,8 @@ public class SubscriptionManagedBean implements Serializable {
                 }
                 
                 NewsletterSubscription subscription = subscriptionService.findBySubscriptorAndCategory(subscriptor, newsletterCategory);
-                
+                //If the subscription for this subscriptor and category 
+                //does not exists we should create it
                 if(subscription == null) {
                     subscription = new NewsletterSubscription();
                     subscription.setSubscriptor(subscriptor);
@@ -101,13 +104,14 @@ public class SubscriptionManagedBean implements Serializable {
                     subscription = subscriptionService.save(subscription).getPayload();
                 }
                 
-                //Depending on the actual status we send or not the registration email
+                //Depending on the actual status of the subscription we send or not the registration email
                 boolean sendEmail = true;
                 if(subscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
                     FacesUtil.errorMessage("You already belong to this list");
                     sendEmail = false;
                 } else if(subscription.getStatus().equals(SubscriptionStatus.INACTIVE)) {
                     subscription.setStatus(SubscriptionStatus.ACTIVE);
+                    subscriptionService.update(subscription);
                     sendEmail = true;
                 } else if(subscription.getStatus().equals(SubscriptionStatus.INVITED)) {
                     sendEmail = true;
@@ -130,9 +134,13 @@ public class SubscriptionManagedBean implements Serializable {
                 }
                 
             } else {
+                //could not retrieve the subscription email
                 FacesUtil.errorMessage("Could not register. Please contact the administrator");
             }
-        }        
+        } else {
+            //could not retrieve the category
+            FacesUtil.errorMessage("Could not register. Please contact the administrator");
+        }
         
         clearData();        
         return result;

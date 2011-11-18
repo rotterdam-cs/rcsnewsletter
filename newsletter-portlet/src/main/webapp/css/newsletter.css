@@ -18,7 +18,53 @@
 #paginator span{
     padding: 2px;
 }
+.newsletter-panel-action-submenu {
+    width: 40px;
+}
+
+.newsletter-panel-column-action {    
+    width: 70px!important;
+}
+
+.newsletter-panel-column-email, newsletter-panel-column-name, newsletter-panel-column-description {
+    width: 200px;
+}
+.newsletter-panel-column-list, newsletter-panel-column-article {
+    width: 100px;
+}
+
+.newsletter-panel-column-id{
+    width: 10px;
+}
+
+
+.newsletter-forms-form {
+    margin-bottom: 10px;
+}
+
+.newsletter-forms-input-text {
+    width: 250px!important;
+}
+.newsletter-forms-input-textarea {
+    width: 245px!important;
+}
+
+.newsletter-forms-form td {
+    padding: 2px;
+}
+
+.newsletter-forms-column-left{
+   width: 120px
+}
+
+.newsletter-forms-column-right{
+    width: 280px;
+}
+
+.newsletter-forms-button {
+    margin-right: 10px!important;
+}
 
 .registration-sucess {
-    font-size: medium;    
+    font-size: medium;
 }

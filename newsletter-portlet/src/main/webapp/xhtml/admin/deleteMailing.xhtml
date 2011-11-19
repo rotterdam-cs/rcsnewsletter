@@ -15,17 +15,20 @@
             <span>
                 #{nlk['newsletter.admin.mailing.delete.question']}
             </span>
-            <br></br>
+            <br/>
             <span>
                 #{nlk['newsletter.admin.mailing.info']}
             </span>
-            <br></br>
-            <h:panelGrid columns="2">
+            <br/><br/>
+            
+            <p:commandButton styleClass="confirm-delete-button newsletter-forms-button" widgetVar="confirmDeleteButton" value="#{nlk['newsletter.admin.category.delete.acept']}" action="#{newsletterMailingManagedBean.confirmDeletion}" />
+            <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{nlk['newsletter.admin.category.delete.cancel']}" />
+            
+            <h:panelGrid columns="2" styleClass="newsletter-forms-confirmation-delete-panel">
                 <h:selectBooleanCheckbox onchange="enableDeleteButton(this)"/>
                 <h:outputText value="#{nlk['newsletter.admin.category.delete.risks.acept']}"/>
             </h:panelGrid> 
-            <p:commandButton styleClass="confirm-delete-button" widgetVar="confirmDeleteButton" value="#{nlk['newsletter.admin.category.delete.acept']}" action="#{newsletterMailingManagedBean.confirmDeletion}" />
-            <p:button outcome="admin" value="#{nlk['newsletter.admin.category.delete.cancel']}" />
+            
         </h:form>        
 
         <script type="text/javascript">

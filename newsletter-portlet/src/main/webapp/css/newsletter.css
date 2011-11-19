@@ -18,6 +18,10 @@
 #paginator span{
     padding: 2px;
 }
+#paginator{
+    margin-bottom: 10px;
+}
+
 .newsletter-panel-action-submenu {
     width: 40px;
 }
@@ -62,7 +66,7 @@
 }
 
 .newsletter-forms-column-left{
-   width: 120px
+   width: 120px;
 }
 
 .newsletter-forms-column-right{
@@ -77,10 +81,36 @@
     margin-top: 5px;
 }
 
+
+/*Registartion Styles*/
 .registration-sucess {
     font-size: medium;
 }
 
 .registration-form {
     width: 400px;
+}
+
+.newsletter-registration-column-left{
+    width: 30%;
+}
+
+.newsletter-registration-column-right{
+    width: 70%;
+}
+
+.registration-form-buttons {
+    text-align: right;
+}
+
+.registration-form-buttons-left{
+    text-align: left;
+}
+
+.newsletter-registration-input-text {
+    width: 250px!important;
+}
+
+.newletter-registration-settings {
+    text-align: left;
 }

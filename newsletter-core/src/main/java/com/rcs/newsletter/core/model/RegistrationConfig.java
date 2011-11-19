@@ -23,7 +23,7 @@ public class RegistrationConfig implements Serializable {
     
     private Long confirmationEmailArticleId;
     
-    @NotNull
+    //@NotNull  TODO ARIEL
     private Long greetingEmailArticleId;
     
     

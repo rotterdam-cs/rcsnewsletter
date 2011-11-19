@@ -65,9 +65,12 @@
                 </p:column>
                 
             </p:dataTable>
-            <p:inputText id="testEmail" value="#{newsletterMailingManagedBean.testEmail}" /><p:commandButton value="#{nlk['newsletter.admin.mailing.sendtest']}" action="#{newsletterMailingManagedBean.sendTestMailing}" update="infoMessages" /><br />
+            
+            <p:inputText id="testEmail" styleClass="newsletter-forms-input-text newsletter-forms-button newsletter-forms-confirmation-delete-panel"  value="#{newsletterMailingManagedBean.testEmail}" />
+            <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendtest']}" action="#{newsletterMailingManagedBean.sendTestMailing}" update="infoMessages" /><br />
             <p:watermark for="testEmail" value="#{nlk['newsletter.admin.mailing.testfiller']}" />
-            <p:commandButton value="#{nlk['newsletter.admin.mailing.sendnewsletter']}" action="#{newsletterMailingManagedBean.sendMailing}" update="infoMessages"/>
+            <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendnewsletter']}" action="#{newsletterMailingManagedBean.sendMailing}" update="infoMessages"/>
+            
         </ui:composition>
     </h:body>
 </html>

@@ -21,6 +21,8 @@ import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 import static com.rcs.newsletter.NewsletterConstants.*;
 
@@ -31,7 +33,7 @@ import static com.rcs.newsletter.NewsletterConstants.*;
 @Named
 @Scope("session")
 public class SubscriptionManagedBean implements Serializable {
-
+    private static Log log = LogFactoryUtil.getLog(SubscriptionManagedBean.class); 
     private static final long serialVersionUID = 1L;
     private String name;
     private String lastName;
@@ -44,8 +46,9 @@ public class SubscriptionManagedBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        currentConfig = new RegistrationConfig();
+        currentConfig = new RegistrationConfig();        
         RegistrationConfig conf = settingsService.findConfig(FacesUtil.getPortletUniqueId());
+        //log.error("***********************" + conf.getListId());  TODO ARIEL
         currentConfig.setListId(conf.getListId());
         currentConfig.setDisableName(conf.isDisableName());
         portletUrl = FacesUtil.getActionUrl();
@@ -63,89 +66,101 @@ public class SubscriptionManagedBean implements Serializable {
     private UserUiStateManagedBean uiState;
 
     public void doSaveSettings() {
+        log.error("Updating Config PortletId: " + FacesUtil.getPortletUniqueId());
         ServiceActionResult result = settingsService.updateConfig(FacesUtil.getPortletUniqueId(), currentConfig);
         if (result.isSuccess()) {
+            log.error("Settings updated successfully");
             FacesUtil.infoMessage("Settings updated successfully");
         } else {
+            log.error("Could not update settings");
             FacesUtil.errorMessage("Could not update settings");
         }
     }
 
     public String doRegister() {
+                
+        //log.error("ENTRANDO A REGISTER************* currentConfig.getListId()" + currentConfig.getListId()); TODO ARIEL
         String result = null;
-        ServiceActionResult<NewsletterCategory> categoryResult = categoryService.findById(currentConfig.getListId());
+        
+        if (null == currentConfig.getListId()) {            
+            FacesUtil.errorMessage("The Newsletter is not configured yet");
+            
+        } else {        
+            
+            ServiceActionResult<NewsletterCategory> categoryResult = categoryService.findById(currentConfig.getListId());
 
-        if (categoryResult.isSuccess()) {
-            NewsletterCategory newsletterCategory = categoryResult.getPayload();
-            JournalArticle subscriptionJournalArticle = uiState.getJournalArticleByArticleId(newsletterCategory.getSubscriptionArticleId());
+            if (categoryResult.isSuccess()) {
+                NewsletterCategory newsletterCategory = categoryResult.getPayload();
+                JournalArticle subscriptionJournalArticle = uiState.getJournalArticleByArticleId(newsletterCategory.getSubscriptionArticleId());
 
-            if (subscriptionJournalArticle != null) {
-                NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);
-                //If the subscriptor doesnt exists we should create it
-                if (subscriptor == null) {
-                    subscriptor = new NewsletterSubscriptor();
-                    subscriptor.setEmail(email);
-                    subscriptor.setFirstName(name);
-                    subscriptor.setLastName(lastName);
+                if (subscriptionJournalArticle != null) {
+                    NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);
+                    //If the subscriptor doesnt exists we should create it
+                    if (subscriptor == null) {
+                        subscriptor = new NewsletterSubscriptor();
+                        subscriptor.setEmail(email);
+                        subscriptor.setFirstName(name);
+                        subscriptor.setLastName(lastName);
 
-                    subscriptorService.save(subscriptor);
+                        subscriptorService.save(subscriptor);
+                    }
+
+                    NewsletterSubscription subscription = subscriptionService.findBySubscriptorAndCategory(subscriptor, newsletterCategory);
+                    //If the subscription for this subscriptor and category 
+                    //does not exists we should create it
+                    if (subscription == null) {
+                        subscription = new NewsletterSubscription();
+                        subscription.setSubscriptor(subscriptor);
+                        subscription.setCategory(newsletterCategory);
+                        subscription.setStatus(SubscriptionStatus.INVITED);
+
+                        subscription = subscriptionService.save(subscription).getPayload();
+                    }
+
+                    //Depending on the actual status of the subscription we send or not the registration email
+                    boolean sendEmail = true;
+                    if (subscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
+                        FacesUtil.errorMessage("You already belong to this list");
+                        sendEmail = false;
+                    } else if (subscription.getStatus().equals(SubscriptionStatus.INACTIVE)) {
+                        subscription.setStatus(SubscriptionStatus.ACTIVE);
+                        subscriptionService.update(subscription);
+                        sendEmail = true;
+                    } else if (subscription.getStatus().equals(SubscriptionStatus.INVITED)) {
+                        sendEmail = true;
+                    }
+
+                    if (sendEmail) {
+                        String content = uiState.getContent(subscriptionJournalArticle);
+                        String subject = subscriptionJournalArticle.getTitle();
+
+                        StringBuilder stringBuilder = new StringBuilder(portletUrl);
+                        stringBuilder.append("&subscriptionId=");
+                        stringBuilder.append(subscription.getId());
+
+                        String link = subscriptionConfirmationLink.replace("{0}", stringBuilder.toString());
+
+                        content = content.replace(CONFIRMATION_LINK_TOKEN, link);
+                        content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
+
+                        LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
+
+                        FacesUtil.infoMessage("A mail was send to your direction. Please check it to confirm the registration");
+
+                        result = "registrationSucess";
+                    }
+
+                } else {
+                    //could not retrieve the subscription email
+                    FacesUtil.errorMessage("Could not register. Please contact the administrator");
                 }
-
-                NewsletterSubscription subscription = subscriptionService.findBySubscriptorAndCategory(subscriptor, newsletterCategory);
-                //If the subscription for this subscriptor and category 
-                //does not exists we should create it
-                if (subscription == null) {
-                    subscription = new NewsletterSubscription();
-                    subscription.setSubscriptor(subscriptor);
-                    subscription.setCategory(newsletterCategory);
-                    subscription.setStatus(SubscriptionStatus.INVITED);
-
-                    subscription = subscriptionService.save(subscription).getPayload();
-                }
-
-                //Depending on the actual status of the subscription we send or not the registration email
-                boolean sendEmail = true;
-                if (subscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
-                    FacesUtil.errorMessage("You already belong to this list");
-                    sendEmail = false;
-                } else if (subscription.getStatus().equals(SubscriptionStatus.INACTIVE)) {
-                    subscription.setStatus(SubscriptionStatus.ACTIVE);
-                    subscriptionService.update(subscription);
-                    sendEmail = true;
-                } else if (subscription.getStatus().equals(SubscriptionStatus.INVITED)) {
-                    sendEmail = true;
-                }
-
-                if (sendEmail) {
-                    String content = uiState.getContent(subscriptionJournalArticle);
-                    String subject = subscriptionJournalArticle.getTitle();
-
-                    StringBuilder stringBuilder = new StringBuilder(portletUrl);
-                    stringBuilder.append("&subscriptionId=");
-                    stringBuilder.append(subscription.getId());
-
-                    String link = subscriptionConfirmationLink.replace("{0}", stringBuilder.toString());
-
-                    content = content.replace(CONFIRMATION_LINK_TOKEN, link);
-                    content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
-
-                    LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
-
-                    FacesUtil.infoMessage("A mail was send to your direction. Please check it to confirm the registration");
-
-                    result = "registrationSucess";
-                }
-
             } else {
-                //could not retrieve the subscription email
+                //could not retrieve the category
                 FacesUtil.errorMessage("Could not register. Please contact the administrator");
             }
-        } else {
-            //could not retrieve the category
-            FacesUtil.errorMessage("Could not register. Please contact the administrator");
-        }
 
-        clearData();
+            clearData();
+        }
         return result;
     }
 

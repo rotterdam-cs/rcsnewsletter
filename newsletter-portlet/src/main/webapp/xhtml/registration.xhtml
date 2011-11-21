@@ -11,18 +11,18 @@
     <h:head>
         <title><h:outputText value="#{nlk['newsletter.registration.title']}" /></title>
     </h:head>
-    <h:body>
+    <h:body>        
         <f:loadBundle basename="Language" var="msg" />
         <f:loadBundle basename="Newsletter" var="nlk" />        
         <h:form>
             <p:growl id="messages" />
             <h:panelGrid columns="2" styleClass="registration-form" columnClasses="newsletter-registration-column-left,newsletter-registration-column-right">
                 
-                <h:outputLabel rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="#{msg['general.firstname']}:" />
-                <h:inputText styleClass="newsletter-registration-input-text" rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="#{subscriptionManagedBean.name}" />
+                <h:outputLabel styleClass="infohidden" rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="#{msg['general.firstname']}:" />
+                <h:inputText styleClass="infohidden newsletter-registration-input-text" rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="#{subscriptionManagedBean.name}" />
                 
-                <h:outputLabel rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="#{msg['general.lastname']}: " />
-                <h:inputText styleClass="newsletter-registration-input-text" rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="#{subscriptionManagedBean.lastName}" />    
+                <h:outputLabel styleClass="infohidden" rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="#{msg['general.lastname']}: " />
+                <h:inputText styleClass="infohidden newsletter-registration-input-text" rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="#{subscriptionManagedBean.lastName}" />    
                 
                 <h:outputLabel value="#{msg['newsletter.admin.general.email']}: " />
                 <h:inputText styleClass="newsletter-registration-input-text" value="#{subscriptionManagedBean.email}" />
@@ -30,8 +30,11 @@
             </h:panelGrid>
             
             <div class="registration-form-buttons-left">
-                <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.unregister']}" action="#{subscriptionManagedBean.doUnregister}" update="message" ajax="false" />
-                <p:commandButton styleClass="newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.register']}" action="#{subscriptionManagedBean.doRegister}" update="message" ajax="false" />
+                <a href="javascript:void(0);" id="unregister-link">#{nlk['newsletter.registration.unregister']}</a>
+                <a href="javascript:void(0);" id="register-link" style="display: none;">#{nlk['newsletter.registration.register']}</a>
+                &nbsp;
+                <p:commandButton style="display: none;" styleClass="unregister-button newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.unregister']}" action="#{subscriptionManagedBean.doUnregister}" update="message" ajax="false" />
+                <p:commandButton styleClass="register-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.register']}" action="#{subscriptionManagedBean.doRegister}" update="message" ajax="false" />
             </div>
             
         </h:form>

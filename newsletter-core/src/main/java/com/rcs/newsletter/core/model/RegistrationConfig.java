@@ -11,25 +11,18 @@ import javax.validation.constraints.NotNull;
  * @author juan
  */
 @Entity
-@Table(name="newsletter_registration_portlet_config")
+@Table(name = "newsletter_registration_portlet_config")
 public class RegistrationConfig implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    
     @Id
     private String id;
-    
     @NotNull
     private Long listId;
-    
     private Long confirmationEmailArticleId;
-    
-    //@NotNull  TODO ARIEL
     private Long greetingEmailArticleId;
-    
-    
     private boolean disableName;
-        
-        
+
     public Long getConfirmationEmailArticleId() {
         return confirmationEmailArticleId;
     }
@@ -69,7 +62,7 @@ public class RegistrationConfig implements Serializable {
     public void setDisableName(boolean disableName) {
         this.disableName = disableName;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -91,5 +84,4 @@ public class RegistrationConfig implements Serializable {
         hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
         return hash;
     }
-    
 }

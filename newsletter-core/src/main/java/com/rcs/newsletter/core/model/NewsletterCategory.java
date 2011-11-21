@@ -2,7 +2,6 @@ package com.rcs.newsletter.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -11,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -27,8 +27,10 @@ public class NewsletterCategory extends NewsletterEntity {
     private String name;
     private String description;
     private String fromName;
-    @Email
+    
     @NotNull
+    @NotEmpty
+    @Email    
     private String fromEmail;
     
     @OneToMany
@@ -36,14 +38,11 @@ public class NewsletterCategory extends NewsletterEntity {
     @Cascade(CascadeType.DELETE)
     private List<NewsletterSubscription> subscriptions;    
     
-    @Column(columnDefinition="bigint default -1")
-    private long subscriptionArticleId;    
+    private String subscriptionEmail;
     
-    @Column(columnDefinition="bigint default -1")
-    private long unsubscriptionArticleId;
+    private String unsubscriptionEmail;
     
-    @Column(columnDefinition="bigint default -1")
-    private long greetingMailArticleId;
+    private String greetingEmail;
         
     @OneToMany(mappedBy = "list")
     private List<NewsletterMailing> mailings;
@@ -99,22 +98,6 @@ public class NewsletterCategory extends NewsletterEntity {
         this.subscriptions = subscriptions;
     }
 
-    public long getSubscriptionArticleId() {
-        return subscriptionArticleId;
-    }
-
-    public void setSubscriptionArticleId(long subscriptionArticleId) {
-        this.subscriptionArticleId = subscriptionArticleId;
-    }
-
-    public long getUnsubscriptionArticleId() {
-        return unsubscriptionArticleId;
-    }
-
-    public void setUnsubscriptionArticleId(long unsubscriptionArticleId) {
-        this.unsubscriptionArticleId = unsubscriptionArticleId;
-    }
-
     public List<NewsletterMailing> getMailings() {
         return mailings;
     }
@@ -123,11 +106,27 @@ public class NewsletterCategory extends NewsletterEntity {
         this.mailings = mailings;
     }
 
-    public long getGreetingMailArticleId() {
-        return greetingMailArticleId;
+    public String getGreetingEmail() {
+        return greetingEmail;
     }
 
-    public void setGreetingMailArticleId(long greetingMailArticleId) {
-        this.greetingMailArticleId = greetingMailArticleId;
+    public void setGreetingEmail(String greetingEmail) {
+        this.greetingEmail = greetingEmail;
+    }
+
+    public String getSubscriptionEmail() {
+        return subscriptionEmail;
+    }
+
+    public void setSubscriptionEmail(String subscriptionEmail) {
+        this.subscriptionEmail = subscriptionEmail;
+    }
+
+    public String getUnsubscriptionEmail() {
+        return unsubscriptionEmail;
+    }
+
+    public void setUnsubscriptionEmail(String unsubscriptionEmail) {
+        this.unsubscriptionEmail = unsubscriptionEmail;
     }
 }

@@ -40,6 +40,15 @@ public class SubscriptionManagedBean implements Serializable {
     private String email;
     private String portletUrl;
     private RegistrationConfig currentConfig;
+    
+    @Inject
+    private NewsletterPortletSettingsService settingsService;
+    @Inject
+    private NewsletterCategoryService categoryService;
+    @Inject
+    private NewsletterSubscriptorService subscriptorService;
+    @Inject
+    private NewsletterSubscriptionService subscriptionService;
 
     @PostConstruct
     public void init() {
@@ -52,23 +61,18 @@ public class SubscriptionManagedBean implements Serializable {
         portletUrl = FacesUtil.getActionUrl();
         clearData();
     }
-    @Inject
-    private NewsletterPortletSettingsService settingsService;
-    @Inject
-    private NewsletterCategoryService categoryService;
-    @Inject
-    private NewsletterSubscriptorService subscriptorService;
-    @Inject
-    private NewsletterSubscriptionService subscriptionService;
-
+    
     public void doSaveSettings() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         ServiceActionResult result = settingsService.updateConfig(FacesUtil.getPortletUniqueId(), currentConfig);
-        if (result.isSuccess()) {
+        if (result.isSuccess()) {            
+            String infoMessage = serverMessageBundle.getString("newsletter.registration.settings.save.successfully");
+            FacesUtil.infoMessage(infoMessage);
             log.error("Settings updated successfully");
-            FacesUtil.infoMessage("Settings updated successfully");
-        } else {
-            log.error("Could not update settings");
-            FacesUtil.errorMessage("Could not update settings");
+        } else {            
+            String errorMessage = serverMessageBundle.getString("newsletter.registration.settings.save.error");
+            FacesUtil.errorMessage(errorMessage);
         }
     }
     
@@ -123,7 +127,8 @@ public class SubscriptionManagedBean implements Serializable {
                         //Depending on the actual status of the subscription we send or not the registration email
                         boolean sendEmail = true;
                         if (subscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
-                            FacesUtil.errorMessage("You already belong to this list");
+                            String errorMessage = serverMessageBundle.getString("newsletter.registration.alreadysubscribed");
+                            FacesUtil.errorMessage(errorMessage);
                             sendEmail = false;
                         } else if (subscription.getStatus().equals(SubscriptionStatus.INACTIVE)) {
                             subscription.setStatus(SubscriptionStatus.ACTIVE);

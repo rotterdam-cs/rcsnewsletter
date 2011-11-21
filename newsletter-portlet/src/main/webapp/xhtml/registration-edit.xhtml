@@ -25,9 +25,7 @@
                 
             </h:panelGrid>            
             <div class="registration-form-buttons-left">
-                <h:commandButton styleClass="newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.config.save']}" action="#{subscriptionManagedBean.doSaveSettings}">
-                    <f:ajax execute="@form" render="messages" />
-                </h:commandButton>                        
+                <p:commandButton update="messages" styleClass="newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.config.save']}" action="#{subscriptionManagedBean.doSaveSettings}"/>                
             </div>
         </h:form>
     </h:body>

@@ -1,5 +1,7 @@
 package com.rcs.newsletter.portlets.subscription;
 
+import javax.faces.context.FacesContext;
+import java.util.ResourceBundle;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
@@ -30,22 +32,23 @@ import static com.rcs.newsletter.NewsletterConstants.*;
 @Named
 @Scope("session")
 public class SubscriptionManagedBean implements Serializable {
-    private static Log log = LogFactoryUtil.getLog(SubscriptionManagedBean.class); 
+
+    private static Log log = LogFactoryUtil.getLog(SubscriptionManagedBean.class);
     private static final long serialVersionUID = 1L;
     private String name;
     private String lastName;
     private String email;
     private String portletUrl;
-    
     private RegistrationConfig currentConfig;
 
     @PostConstruct
     public void init() {
-        currentConfig = new RegistrationConfig();        
-        RegistrationConfig conf = settingsService.findConfig(FacesUtil.getPortletUniqueId());
-        //log.error("***********************" + conf.getListId());  TODO ARIEL
-        currentConfig.setListId(conf.getListId());
-        currentConfig.setDisableName(conf.isDisableName());
+        currentConfig = new RegistrationConfig();
+        RegistrationConfig registrationConfig = settingsService.findConfig(FacesUtil.getPortletUniqueId());
+        if (registrationConfig != null) {
+            currentConfig.setListId(registrationConfig.getListId());
+            currentConfig.setDisableName(registrationConfig.isDisableName());
+        }
         portletUrl = FacesUtil.getActionUrl();
         clearData();
     }
@@ -68,111 +71,135 @@ public class SubscriptionManagedBean implements Serializable {
             FacesUtil.errorMessage("Could not update settings");
         }
     }
+    
+    protected String getActionURL(FacesContext facesContext) {
+      String actionURL = facesContext.getApplication().getViewHandler().getActionURL(facesContext, facesContext.getViewRoot().getViewId());
+      
+      return facesContext.getExternalContext().encodeResourceURL(actionURL);
+   }
 
     public String doRegister() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle newsletterBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
+        ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
+
         String result = null;
-        
-        if (null == currentConfig.getListId()) {            
-            FacesUtil.errorMessage("The Newsletter is not configured yet");            
-        } else {        
-            
-            ServiceActionResult<NewsletterCategory> categoryResult = categoryService.findById(currentConfig.getListId());
-
-            if (categoryResult.isSuccess()) {
-                NewsletterCategory newsletterCategory = categoryResult.getPayload();
-                String subscriptionEmail = newsletterCategory.getSubscriptionEmail();
-
-                if (subscriptionEmail != null) {
-                    NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);
-                    //If the subscriptor doesnt exists we should create it
-                    if (subscriptor == null) {
-                        subscriptor = new NewsletterSubscriptor();
-                        subscriptor.setEmail(email);
-                        subscriptor.setFirstName(name);
-                        subscriptor.setLastName(lastName);
-
-                        subscriptorService.save(subscriptor);
-                    }
-
-                    NewsletterSubscription subscription = subscriptionService.findBySubscriptorAndCategory(subscriptor, newsletterCategory);
-                    //If the subscription for this subscriptor and category 
-                    //does not exists we should create it
-                    if (subscription == null) {
-                        subscription = new NewsletterSubscription();
-                        subscription.setSubscriptor(subscriptor);
-                        subscription.setCategory(newsletterCategory);
-                        subscription.setStatus(SubscriptionStatus.INVITED);
-
-                        subscription = subscriptionService.save(subscription).getPayload();
-                    }
-
-                    //Depending on the actual status of the subscription we send or not the registration email
-                    boolean sendEmail = true;
-                    if (subscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
-                        FacesUtil.errorMessage("You already belong to this list");
-                        sendEmail = false;
-                    } else if (subscription.getStatus().equals(SubscriptionStatus.INACTIVE)) {
-                        subscription.setStatus(SubscriptionStatus.ACTIVE);
-                        subscriptionService.update(subscription);
-                        sendEmail = true;
-                    } else if (subscription.getStatus().equals(SubscriptionStatus.INVITED)) {
-                        sendEmail = true;
-                    }
-
-                    if (sendEmail) {
-                        String content = subscriptionEmail;
-                        //TODO Ariel
-                        String subject = "subject";
-
-                        StringBuilder stringBuilder = new StringBuilder(portletUrl);
-                        stringBuilder.append("&subscriptionId=");
-                        stringBuilder.append(subscription.getId());
-
-                        content = content.replace(CONFIRMATION_LINK_TOKEN, stringBuilder.toString());
-                        content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
-
-                        LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
-
-                        FacesUtil.infoMessage("A mail was send to your direction. Please check it to confirm the registration");
-
-                        result = "registrationSucess";
-                    }
-
-                } else {
-                    //could not retrieve the subscription email
-                    FacesUtil.errorMessage("Could not register. Please contact the administrator");
-                }
+        try {
+            if (null == currentConfig.getListId()) {
+                String errorMessage = serverMessageBundle.getString("newsletter.registration.notconfigured");
+                FacesUtil.errorMessage(errorMessage);
             } else {
-                //could not retrieve the category
-                FacesUtil.errorMessage("Could not register. Please contact the administrator");
+
+                ServiceActionResult<NewsletterCategory> categoryResult = categoryService.findById(currentConfig.getListId());
+
+                if (categoryResult.isSuccess()) {
+                    NewsletterCategory newsletterCategory = categoryResult.getPayload();
+                    String subscriptionEmail = newsletterCategory.getSubscriptionEmail();
+
+                    if (subscriptionEmail != null) {
+                        NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);
+                        //If the subscriptor doesnt exists we should create it
+                        if (subscriptor == null) {
+                            subscriptor = new NewsletterSubscriptor();
+                            subscriptor.setEmail(email);
+                            subscriptor.setFirstName(name);
+                            subscriptor.setLastName(lastName);
+
+                            subscriptorService.save(subscriptor);
+                        }
+
+                        NewsletterSubscription subscription = subscriptionService.findBySubscriptorAndCategory(subscriptor, newsletterCategory);
+                        //If the subscription for this subscriptor and category 
+                        //does not exists we should create it
+                        if (subscription == null) {
+                            subscription = new NewsletterSubscription();
+                            subscription.setSubscriptor(subscriptor);
+                            subscription.setCategory(newsletterCategory);
+                            subscription.setStatus(SubscriptionStatus.INVITED);
+
+                            subscription = subscriptionService.save(subscription).getPayload();
+                        }
+
+                        //Depending on the actual status of the subscription we send or not the registration email
+                        boolean sendEmail = true;
+                        if (subscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
+                            FacesUtil.errorMessage("You already belong to this list");
+                            sendEmail = false;
+                        } else if (subscription.getStatus().equals(SubscriptionStatus.INACTIVE)) {
+                            subscription.setStatus(SubscriptionStatus.ACTIVE);
+                            subscriptionService.update(subscription);
+                            sendEmail = true;
+                        } else if (subscription.getStatus().equals(SubscriptionStatus.INVITED)) {
+                            sendEmail = true;
+                        }
+
+                        if (sendEmail) {
+                            String content = subscriptionEmail;
+                            String subject = newsletterBundle.getString("newsletter.subscription.mail.subject");
+                            
+                            StringBuilder stringBuilder = new StringBuilder(portletUrl);
+                            stringBuilder.append("&subscriptionId=");
+                            stringBuilder.append(subscription.getId());
+
+                            content = content.replace(CONFIRMATION_LINK_TOKEN, stringBuilder.toString());
+                            content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
+
+                            LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
+
+                            String infoMessage = serverMessageBundle.getString("newsletter.registration.success");
+                            FacesUtil.infoMessage(infoMessage);
+
+                            result = "registrationSucess";
+                        }
+
+                    } else {
+                        log.error("could not retrieve the subscription email");
+                        String errorMessage = serverMessageBundle.getString("newsletter.registration.generalerror");
+                        FacesUtil.errorMessage(errorMessage);
+                    }
+                } else {
+                    log.error("could not retrieve the category");
+                    String errorMessage = serverMessageBundle.getString("newsletter.registration.generalerror");
+                    FacesUtil.errorMessage(errorMessage);
+                }
             }
 
-            clearData();
+        } catch (Exception e) {
+            String errorMessage = serverMessageBundle.getString("newsletter.unregistration.generalerror");
+            FacesUtil.errorMessage(errorMessage);
         }
+
+        clearData();
         return result;
     }
 
     public String doUnregister() {
         String result = null;
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle newsletterBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
+        ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
+
         try {
             ServiceActionResult<NewsletterCategory> categoryResult = categoryService.findById(currentConfig.getListId());
 
             if (categoryResult.isSuccess()) {
                 NewsletterCategory newsletterCategory = categoryResult.getPayload();
                 String unsubscriptionEmail = newsletterCategory.getUnsubscriptionEmail();
-                
+
                 if (unsubscriptionEmail != null) {
-                    NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);                    
+                    NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);
 
                     if (subscriptor == null) {
-                        FacesUtil.errorMessage("Could not complet your unregistration. Please try again or contact the administrator");
+                        String errorMessage = serverMessageBundle.getString("newsletter.unregistration.generalerror");
+                        FacesUtil.errorMessage(errorMessage);
                     } else {
                         NewsletterSubscription subscription =
-                                subscriptionService.findBySubscriptorAndCategory(subscriptor, newsletterCategory);                        
+                                subscriptionService.findBySubscriptorAndCategory(subscriptor, newsletterCategory);
                         if (subscription != null) {
-                            String content = unsubscriptionEmail;
-                            String subject = "subject";
 
+                            String content = unsubscriptionEmail;
+                            String subject = newsletterBundle.getString("newsletter.unsubscription.mail.subject");
+                            
                             StringBuilder stringBuilder = new StringBuilder(portletUrl);
                             stringBuilder.append("&unsubscriptionId=");
                             stringBuilder.append(subscription.getId());
@@ -182,23 +209,29 @@ public class SubscriptionManagedBean implements Serializable {
 
                             LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
 
-                            FacesUtil.infoMessage("A mail was send to your direction. Please check it to confirm the registration");
+                            String infoMessage = serverMessageBundle.getString("newsletter.registration.success.info");
+                            FacesUtil.infoMessage(infoMessage);
 
                             result = "unregistrationSucess";
                         } else {
-                            FacesUtil.errorMessage("Could not complet your unregistration. Please try again or contact the administrator");
+                            String errorMessage = serverMessageBundle.getString("newsletter.unregistration.generalerror");
+                            FacesUtil.errorMessage(errorMessage);
                         }
                     }
                 }
             }
         } catch (Exception e) {
-            FacesUtil.errorMessage("Could not complet your unregistration. Please try again or contact the administrator");
+            String errorMessage = serverMessageBundle.getString("newsletter.unregistration.generalerror");
+            FacesUtil.errorMessage(errorMessage);
         }
 
         return result;
     }
 
     public void doConfirmRegistration(ValueChangeEvent event) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();        
+        ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
+        ResourceBundle newsletterBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
         try {
             long subscriptionId = (Long.parseLong((String) event.getNewValue()));
             ServiceActionResult<NewsletterSubscription> subscriptionResult = subscriptionService.findById(subscriptionId);
@@ -213,31 +246,33 @@ public class SubscriptionManagedBean implements Serializable {
                 //Send the greeting mail
                 if (subscriptionResult.isSuccess()) {
                     NewsletterCategory category = subscription.getCategory();
-                    String greetingEmail = category.getGreetingEmail();                            
-                    String content = greetingEmail;
-                    String subject = "subject";
+                    String greetingEmail = category.getGreetingEmail();
+                    String content = greetingEmail;                    
+                    String subject = newsletterBundle.getString("newsletter.greetings.mail.subject");
 
                     content = content.replace(LIST_NAME_TOKEN, category.getName());
 
                     LiferayMailingUtil.sendEmail(category.getFromEmail(), subscription.getSubscriptor().getEmail(), subject, content);
 
-                    //resource bundle: newsletter.registration.confirmed.msg
-                    FacesUtil.infoMessage("You are succesfully subscribed to the newsletter");
-                } else {
-                    //resource bundle: newsletter.registration.unconfirmed.msg
-                    FacesUtil.errorMessage("Could not complet your registration. Please try again or contact the administrator");
+                    String infoMesage = serverMessageBundle.getString("newsletter.registration.confirmed.msg");
+                    FacesUtil.infoMessage(infoMesage);
+                } else {                    
+                    String errorMessage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
+                    FacesUtil.errorMessage(errorMessage);
                 }
-            } else {
-                //resource bundle: newsletter.registration.unconfirmed.msg
-                FacesUtil.errorMessage("Could not complet your registration. Please try again or contact the administrator");
+            } else {                
+                String errorMessage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
+                FacesUtil.errorMessage(errorMessage);
             }
         } catch (Exception ex) {
-            //resource bundle: newsletter.registration.unconfirmed.msg
-            FacesUtil.errorMessage("Could not complet your registration. Please try again or contact the administrator");
+            String errorMessage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
+            FacesUtil.errorMessage(errorMessage);
         }
     }
 
     public void doConfirmUnregistration(ValueChangeEvent event) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();        
+        ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         try {
             long subscriptionId = (Long.parseLong((String) event.getNewValue()));
             ServiceActionResult<NewsletterSubscription> subscriptionResult = subscriptionService.findById(subscriptionId);
@@ -251,18 +286,19 @@ public class SubscriptionManagedBean implements Serializable {
 
                 //Send the greeting mail
                 if (subscriptionResult.isSuccess()) {
-                    FacesUtil.infoMessage("You are succesfully unsubscribed to the newsletter");
+                    String infoMesage = serverMessageBundle.getString("newsletter.unregistration.confirmed.msg");
+                    FacesUtil.infoMessage(infoMesage);
                 } else {
-                    //resource bundle: newsletter.registration.unconfirmed.msg
-                    FacesUtil.errorMessage("Could not complet your unregistration. Please try again or contact the administrator");
+                    String errorMessage = serverMessageBundle.getString("newsletter.unregistration.unconfirmed.msg");
+                    FacesUtil.errorMessage(errorMessage);
                 }
             } else {
-                //resource bundle: newsletter.registration.unconfirmed.msg
-                FacesUtil.errorMessage("Could not complet your unregistration. Please try again or contact the administrator");
+                String errorMessage = serverMessageBundle.getString("newsletter.unregistration.unconfirmed.msg");
+            FacesUtil.errorMessage(errorMessage);
             }
         } catch (Exception ex) {
-            //resource bundle: newsletter.registration.unconfirmed.msg
-            FacesUtil.errorMessage("Could not complet your unregistration. Please try again or contact the administrator");
+            String errorMessage = serverMessageBundle.getString("newsletter.unregistration.unconfirmed.msg");
+            FacesUtil.errorMessage(errorMessage);
         }
     }
 
@@ -303,13 +339,5 @@ public class SubscriptionManagedBean implements Serializable {
 
     public void setCurrentConfig(RegistrationConfig currentConfig) {
         this.currentConfig = currentConfig;
-    }
-
-    public String getPortletUrl() {
-        return portletUrl;
-    }
-
-    public void setPortletUrl(String portletUrl) {
-        this.portletUrl = portletUrl;
     }
 }

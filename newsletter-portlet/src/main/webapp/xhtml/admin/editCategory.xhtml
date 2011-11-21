@@ -26,9 +26,8 @@
                 
                 <h:outputLabel value="#{nlk['newsletter.admin.category.fromemail']}: " for="fromEmail"/> 
                 <p:inputText styleClass="newsletter-forms-input-text" id="fromEmail" value="#{categoryCRUDManagedBean.fromEmail}"/>
-            </h:panelGrid>
-            
-            <p:growl id="editCategoryMessages"/>
+            </h:panelGrid>            
+            <p:growl id="categoryMessages"/>
             <p:commandButton styleClass="newsletter-forms-button" value="#{categoryCRUDManagedBean.action.key}" update="categoryMessages" action="#{categoryCRUDManagedBean.save}" ajax="false"/>
             <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
         </h:form>

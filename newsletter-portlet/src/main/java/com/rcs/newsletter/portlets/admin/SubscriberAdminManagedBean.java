@@ -41,7 +41,6 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
         
         setPaginationStart(0);
         setPaginationLimit(5);
-        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
         if (filterCategory == null) {        
             subscribers = subscriptorService.findAll(getPaginationStart(), getPaginationLimit()).getPayload();
             setPaginationTotal(subscriptorService.findAllCount());            

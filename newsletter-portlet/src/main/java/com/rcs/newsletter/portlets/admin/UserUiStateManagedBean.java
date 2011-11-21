@@ -48,7 +48,7 @@ public class UserUiStateManagedBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        adminActiveTabIndex = 0;
+        adminActiveTabIndex = LISTS_TAB_INDEX;
         refresh();
     }
 

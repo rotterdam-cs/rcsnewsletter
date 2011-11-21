@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
 
-
 /**
  *
  * @author Ariel Parra <ariel@rotterdam-cs.com>
@@ -60,8 +59,5 @@ public class CategoryAdminManagedBean {
     public void setSubscriptorId(long subscriptorId) {
         this.subscriptorId = subscriptorId;
         subscriptor = subscriptorService.findById(subscriptorId).getPayload();
-    }
-    
-    
-    
+    }    
 }

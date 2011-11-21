@@ -1,6 +1,5 @@
 package com.rcs.newsletter.portlets.subscription;
 
-import com.liferay.portlet.journal.model.JournalArticle;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
@@ -12,8 +11,6 @@ import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.core.service.util.LiferayMailingUtil;
-import com.rcs.newsletter.portlets.admin.SubscriptionTypeEnum;
-import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
 import com.rcs.newsletter.util.FacesUtil;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
@@ -39,9 +36,7 @@ public class SubscriptionManagedBean implements Serializable {
     private String lastName;
     private String email;
     private String portletUrl;
-    //@Value("${newsletter.registration.confirmation.link}")
-    private String subscriptionConfirmationLink = "<a href=\"{0}\">Click here to confirm your registration</a>";
-    private String unsubscriptionConfirmationLink = "<a href=\"{0}\">Click here to confirm your unregistration</a>";
+    
     private RegistrationConfig currentConfig;
 
     @PostConstruct
@@ -62,11 +57,8 @@ public class SubscriptionManagedBean implements Serializable {
     private NewsletterSubscriptorService subscriptorService;
     @Inject
     private NewsletterSubscriptionService subscriptionService;
-    @Inject
-    private UserUiStateManagedBean uiState;
 
     public void doSaveSettings() {
-        log.error("Updating Config PortletId: " + FacesUtil.getPortletUniqueId());
         ServiceActionResult result = settingsService.updateConfig(FacesUtil.getPortletUniqueId(), currentConfig);
         if (result.isSuccess()) {
             log.error("Settings updated successfully");
@@ -78,22 +70,19 @@ public class SubscriptionManagedBean implements Serializable {
     }
 
     public String doRegister() {
-                
-        //log.error("ENTRANDO A REGISTER************* currentConfig.getListId()" + currentConfig.getListId()); TODO ARIEL
         String result = null;
         
         if (null == currentConfig.getListId()) {            
-            FacesUtil.errorMessage("The Newsletter is not configured yet");
-            
+            FacesUtil.errorMessage("The Newsletter is not configured yet");            
         } else {        
             
             ServiceActionResult<NewsletterCategory> categoryResult = categoryService.findById(currentConfig.getListId());
 
             if (categoryResult.isSuccess()) {
                 NewsletterCategory newsletterCategory = categoryResult.getPayload();
-                JournalArticle subscriptionJournalArticle = uiState.getJournalArticleByArticleId(newsletterCategory.getSubscriptionArticleId());
+                String subscriptionEmail = newsletterCategory.getSubscriptionEmail();
 
-                if (subscriptionJournalArticle != null) {
+                if (subscriptionEmail != null) {
                     NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);
                     //If the subscriptor doesnt exists we should create it
                     if (subscriptor == null) {
@@ -131,16 +120,15 @@ public class SubscriptionManagedBean implements Serializable {
                     }
 
                     if (sendEmail) {
-                        String content = uiState.getContent(subscriptionJournalArticle);
-                        String subject = subscriptionJournalArticle.getTitle();
+                        String content = subscriptionEmail;
+                        //TODO Ariel
+                        String subject = "subject";
 
                         StringBuilder stringBuilder = new StringBuilder(portletUrl);
                         stringBuilder.append("&subscriptionId=");
                         stringBuilder.append(subscription.getId());
 
-                        String link = subscriptionConfirmationLink.replace("{0}", stringBuilder.toString());
-
-                        content = content.replace(CONFIRMATION_LINK_TOKEN, link);
+                        content = content.replace(CONFIRMATION_LINK_TOKEN, stringBuilder.toString());
                         content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
 
                         LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
@@ -171,9 +159,9 @@ public class SubscriptionManagedBean implements Serializable {
 
             if (categoryResult.isSuccess()) {
                 NewsletterCategory newsletterCategory = categoryResult.getPayload();
-                JournalArticle unsubscriptionArticle = uiState.getJournalArticleByArticleId(newsletterCategory.getUnsubscriptionArticleId());
+                String unsubscriptionEmail = newsletterCategory.getUnsubscriptionEmail();
                 
-                if (unsubscriptionArticle != null) {
+                if (unsubscriptionEmail != null) {
                     NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);                    
 
                     if (subscriptor == null) {
@@ -182,16 +170,14 @@ public class SubscriptionManagedBean implements Serializable {
                         NewsletterSubscription subscription =
                                 subscriptionService.findBySubscriptorAndCategory(subscriptor, newsletterCategory);                        
                         if (subscription != null) {
-                            String content = uiState.getContent(unsubscriptionArticle);
-                            String subject = unsubscriptionArticle.getTitle();
+                            String content = unsubscriptionEmail;
+                            String subject = "subject";
 
                             StringBuilder stringBuilder = new StringBuilder(portletUrl);
                             stringBuilder.append("&unsubscriptionId=");
                             stringBuilder.append(subscription.getId());
 
-                            String link = unsubscriptionConfirmationLink.replace("{0}", stringBuilder.toString());
-
-                            content = content.replace(CONFIRMATION_LINK_TOKEN, link);
+                            content = content.replace(CONFIRMATION_LINK_TOKEN, stringBuilder.toString());
                             content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
 
                             LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
@@ -227,10 +213,9 @@ public class SubscriptionManagedBean implements Serializable {
                 //Send the greeting mail
                 if (subscriptionResult.isSuccess()) {
                     NewsletterCategory category = subscription.getCategory();
-                    JournalArticle greetingJournalArticle =
-                            uiState.getJournalArticleByArticleId(category.getGreetingMailArticleId());
-                    String content = uiState.getContent(greetingJournalArticle);
-                    String subject = greetingJournalArticle.getTitle();
+                    String greetingEmail = category.getGreetingEmail();                            
+                    String content = greetingEmail;
+                    String subject = "subject";
 
                     content = content.replace(LIST_NAME_TOKEN, category.getName());
 

@@ -13,9 +13,7 @@
     </h:head>
     <h:body>
         <f:loadBundle basename="Language" var="msg" />
-        <f:loadBundle basename="Newsletter" var="nlk" />
-        <div class="registration-form-title">#{nlk['newsletter.registration.title']}</div>
-        <hr />
+        <f:loadBundle basename="Newsletter" var="nlk" />        
         <h:form>
             <p:growl id="messages" />
             <h:panelGrid columns="2" styleClass="registration-form" columnClasses="newsletter-registration-column-left,newsletter-registration-column-right">
@@ -31,7 +29,7 @@
                 
             </h:panelGrid>
             
-            <div class="registration-form-buttons">
+            <div class="registration-form-buttons-left">
                 <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.unregister']}" action="#{subscriptionManagedBean.doUnregister}" update="message" ajax="false" />
                 <p:commandButton styleClass="newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.register']}" action="#{subscriptionManagedBean.doRegister}" update="message" ajax="false" />
             </div>

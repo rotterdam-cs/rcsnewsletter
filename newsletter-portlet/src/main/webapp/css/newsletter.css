@@ -88,7 +88,7 @@
 }
 
 .registration-form {
-    width: 400px;
+    width: 90%;
 }
 
 .newsletter-registration-column-left{
@@ -108,7 +108,7 @@
 }
 
 .newsletter-registration-input-text {
-    width: 250px!important;
+    width: 90%!important;
 }
 
 .newletter-registration-settings {

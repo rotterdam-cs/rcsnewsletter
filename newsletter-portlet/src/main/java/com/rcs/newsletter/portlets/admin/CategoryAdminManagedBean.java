@@ -40,7 +40,6 @@ public class CategoryAdminManagedBean {
     }
 
     public List<NewsletterCategory> getSubscriberCategorys() {
-        categorys = categoryService.findNewsletterCategorysBySubscriber(subscriptor);
         return categorys;
     }
 

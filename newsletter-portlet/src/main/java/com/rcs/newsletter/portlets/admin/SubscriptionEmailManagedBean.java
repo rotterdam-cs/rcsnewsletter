@@ -66,7 +66,7 @@ public class SubscriptionEmailManagedBean {
     
     public String redirectEditSubscribeMail() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
-        this.subscriptionType = SubscriptionTypeEnum.SUBSCRIBE;
+        this.setSubscriptionType(SubscriptionTypeEnum.SUBSCRIBE);
         fillData();
 
         return "editSubscriptionMail";
@@ -74,7 +74,7 @@ public class SubscriptionEmailManagedBean {
 
     public String redirectEditUnsubscribeMail() {        
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
-        this.subscriptionType = SubscriptionTypeEnum.UNSUBSCRIBE;                
+        this.setSubscriptionType(SubscriptionTypeEnum.UNSUBSCRIBE);
         fillData();
         
         return "editSubscriptionMail";
@@ -82,7 +82,7 @@ public class SubscriptionEmailManagedBean {
     
     public String redirectEditGreetingMail() {        
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
-        this.subscriptionType = SubscriptionTypeEnum.GREETING;                
+        this.setSubscriptionType(SubscriptionTypeEnum.GREETING);
         fillData();
         
         return "editSubscriptionMail";
@@ -107,7 +107,7 @@ public class SubscriptionEmailManagedBean {
                     emailContentBody = newsletterCategory.getSubscriptionEmail();
                     break;
                 case UNSUBSCRIBE:
-                    emailContentBody = newsletterCategory.getUnsubscriptionEmail();
+                    emailContentBody = newsletterCategory.getSubscriptionEmail();
                     break;
                 case GREETING:
                     emailContentBody = newsletterCategory.getGreetingEmail();
@@ -118,8 +118,7 @@ public class SubscriptionEmailManagedBean {
     }
     
     public String save() {
-        
-        switch(subscriptionType) {
+        switch(getSubscriptionType()) {
             case SUBSCRIBE:
                 newsletterCategory.setSubscriptionEmail(getSubscriptionEmailBody());
                 break;

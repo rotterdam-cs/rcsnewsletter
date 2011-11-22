@@ -178,6 +178,7 @@ public class SubscriptionManagedBean implements Serializable {
             }
 
         } catch (Exception e) {
+            log.error("could not retrieve the category", e);
             String errorMessage = serverMessageBundle.getString("newsletter.unregistration.generalerror");
             FacesUtil.errorMessage(errorMessage);
         }
@@ -271,7 +272,7 @@ public class SubscriptionManagedBean implements Serializable {
                 subscriptionResult = subscriptionService.update(subscription);
 
                 //Send the greeting mail
-                if (subscriptionResult.isSuccess()) {
+                if (subscriptionResult.isSuccess() && subscription.getCategory().getGreetingEmail() != null) {
                     NewsletterCategory category = subscription.getCategory();
                     String greetingEmail = category.getGreetingEmail();
                     String content = greetingEmail;
@@ -284,14 +285,17 @@ public class SubscriptionManagedBean implements Serializable {
                     String infoMesage = serverMessageBundle.getString("newsletter.registration.confirmed.msg");
                     FacesUtil.infoMessage(infoMesage);
                 } else {
+                    log.error("Could not retrieve the subscription.");
                     String errorMessage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
                     FacesUtil.errorMessage(errorMessage);
                 }
             } else {
+                log.error("Could not retrieve the subscription or the greeting mail is null");
                 String errorMessage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
                 FacesUtil.errorMessage(errorMessage);
             }
         } catch (Exception ex) {
+            log.error("Error", ex);
             String errorMessage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
             FacesUtil.errorMessage(errorMessage);
         }

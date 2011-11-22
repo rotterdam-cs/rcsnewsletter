@@ -93,9 +93,11 @@ public class CategoryCRUDManagedBean {
     }
 
     //////////////// METHODS //////////////////////
+    
     public String redirectCreateCategory() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
         this.setAction(CRUDActionEnum.CREATE);
+        
         return "editCategory";
     }
 
@@ -118,6 +120,7 @@ public class CategoryCRUDManagedBean {
 
     public String redirectDeleteCategory() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
+        
         return "deleteCategory";
     }
 

@@ -33,6 +33,10 @@
 .newsletter-panel-column-email, newsletter-panel-column-name, newsletter-panel-column-description {
     width: 200px;
 }
+
+.newsletter-panel-column-date {
+    width: 100px;
+}
 .newsletter-panel-column-list, newsletter-panel-column-article {
     width: 100px;
 }

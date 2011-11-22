@@ -101,6 +101,12 @@ public class UserUiStateManagedBean implements Serializable {
 
         return result;
     }
+    
+    public String getContent(long journalArticleId) {
+        JournalArticle journalArticle = getJournalArticleByArticleId(journalArticleId);
+        
+        return getContent(journalArticle);
+    }
 
     /**
      * Obtain the content of the article

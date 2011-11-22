@@ -19,7 +19,7 @@ public class NewsletterMailing extends NewsletterEntity{
     @NotBlank
     //mailing properties.
     private String name;
-    
+        
     @NotNull
     @ManyToOne
     private NewsletterCategory list;

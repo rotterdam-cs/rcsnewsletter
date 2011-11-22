@@ -44,7 +44,7 @@ public class NewsletterCategory extends NewsletterEntity {
     
     private String greetingEmail;
         
-    @OneToMany(mappedBy = "list")
+    @OneToMany(mappedBy = "list", orphanRemoval=true)    
     private List<NewsletterMailing> mailings;
     
     public boolean getActive() {

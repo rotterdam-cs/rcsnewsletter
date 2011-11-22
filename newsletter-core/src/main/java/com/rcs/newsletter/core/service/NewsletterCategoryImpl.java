@@ -92,9 +92,7 @@ public class NewsletterCategoryImpl extends CRUDServiceImpl<NewsletterCategory> 
             String error = "Error loading categories by subscriber " + ex;
             logger.error(error);
         }
-
-
-
+        
         return result;
     }
 }

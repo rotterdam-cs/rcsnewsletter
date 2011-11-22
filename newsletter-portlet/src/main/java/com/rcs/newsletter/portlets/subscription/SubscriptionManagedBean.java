@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Scope;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
+import com.liferay.portal.kernel.util.Validator;
 import static com.rcs.newsletter.NewsletterConstants.*;
 
 /**
@@ -40,7 +41,6 @@ public class SubscriptionManagedBean implements Serializable {
     private String email;
     private String portletUrl;
     private RegistrationConfig currentConfig;
-    
     @Inject
     private NewsletterPortletSettingsService settingsService;
     @Inject
@@ -61,26 +61,20 @@ public class SubscriptionManagedBean implements Serializable {
         portletUrl = FacesUtil.getActionUrl();
         clearData();
     }
-    
+
     public void doSaveSettings() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         ServiceActionResult result = settingsService.updateConfig(FacesUtil.getPortletUniqueId(), currentConfig);
-        if (result.isSuccess()) {            
+        if (result.isSuccess()) {
             String infoMessage = serverMessageBundle.getString("newsletter.registration.settings.save.successfully");
             FacesUtil.infoMessage(infoMessage);
             log.error("Settings updated successfully");
-        } else {            
+        } else {
             String errorMessage = serverMessageBundle.getString("newsletter.registration.settings.save.error");
             FacesUtil.errorMessage(errorMessage);
         }
     }
-    
-    protected String getActionURL(FacesContext facesContext) {
-      String actionURL = facesContext.getApplication().getViewHandler().getActionURL(facesContext, facesContext.getViewRoot().getViewId());
-      
-      return facesContext.getExternalContext().encodeResourceURL(actionURL);
-   }
 
     public String doRegister() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -92,6 +86,9 @@ public class SubscriptionManagedBean implements Serializable {
             if (null == currentConfig.getListId()) {
                 String errorMessage = serverMessageBundle.getString("newsletter.registration.notconfigured");
                 FacesUtil.errorMessage(errorMessage);
+            } else if (!Validator.isEmailAddress(email)) {
+                String errorMessage = serverMessageBundle.getString("newsletter.registration.invalidemail");
+                FacesUtil.errorMessage(errorMessage);
             } else {
 
                 ServiceActionResult<NewsletterCategory> categoryResult = categoryService.findById(currentConfig.getListId());
@@ -101,15 +98,26 @@ public class SubscriptionManagedBean implements Serializable {
                     String subscriptionEmail = newsletterCategory.getSubscriptionEmail();
 
                     if (subscriptionEmail != null) {
-                        NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);
+                        NewsletterSubscriptor subscriptor = null;
+                        ServiceActionResult<NewsletterSubscriptor> subscriptorResult;
+                        subscriptorResult = subscriptorService.findByEmail(email);
                         //If the subscriptor doesnt exists we should create it
-                        if (subscriptor == null) {
+                        if (!subscriptorResult.isSuccess()) {
                             subscriptor = new NewsletterSubscriptor();
                             subscriptor.setEmail(email);
                             subscriptor.setFirstName(name);
                             subscriptor.setLastName(lastName);
 
-                            subscriptorService.save(subscriptor);
+                            subscriptorResult = subscriptorService.save(subscriptor);
+
+                            //If the subscriptor does not exists
+                            //and we could not create it, we abort the process
+                            if (!subscriptorResult.isSuccess()) {
+                                FacesUtil.errorMessage(subscriptorResult.getValidationKeys());
+                                return result;
+                            }
+                        } else {
+                            subscriptor = subscriptorResult.getPayload();
                         }
 
                         NewsletterSubscription subscription = subscriptionService.findBySubscriptorAndCategory(subscriptor, newsletterCategory);
@@ -141,7 +149,7 @@ public class SubscriptionManagedBean implements Serializable {
                         if (sendEmail) {
                             String content = subscriptionEmail;
                             String subject = newsletterBundle.getString("newsletter.subscription.mail.subject");
-                            
+
                             StringBuilder stringBuilder = new StringBuilder(portletUrl);
                             stringBuilder.append("&subscriptionId=");
                             stringBuilder.append(subscription.getId());
@@ -187,24 +195,33 @@ public class SubscriptionManagedBean implements Serializable {
         try {
             ServiceActionResult<NewsletterCategory> categoryResult = categoryService.findById(currentConfig.getListId());
 
-            if (categoryResult.isSuccess()) {
+            if (!categoryResult.isSuccess()) {
+                String errorMessage = serverMessageBundle.getString("newsletter.registration.notconfigured");
+                FacesUtil.errorMessage(errorMessage);
+            } else if (!Validator.isEmailAddress(email)) {
+                String errorMessage = serverMessageBundle.getString("newsletter.registration.invalidemail");
+                FacesUtil.errorMessage(errorMessage);
+            } else {
                 NewsletterCategory newsletterCategory = categoryResult.getPayload();
                 String unsubscriptionEmail = newsletterCategory.getUnsubscriptionEmail();
 
                 if (unsubscriptionEmail != null) {
-                    NewsletterSubscriptor subscriptor = subscriptorService.findByEmail(email);
+                    ServiceActionResult<NewsletterSubscriptor> subscriptorResult;
+                    subscriptorResult = subscriptorService.findByEmail(email);
 
-                    if (subscriptor == null) {
+                    if (!subscriptorResult.isSuccess()) {
                         String errorMessage = serverMessageBundle.getString("newsletter.unregistration.generalerror");
                         FacesUtil.errorMessage(errorMessage);
                     } else {
+                        NewsletterSubscriptor subscriptor = subscriptorResult.getPayload();
                         NewsletterSubscription subscription =
                                 subscriptionService.findBySubscriptorAndCategory(subscriptor, newsletterCategory);
+
                         if (subscription != null) {
 
                             String content = unsubscriptionEmail;
                             String subject = newsletterBundle.getString("newsletter.unsubscription.mail.subject");
-                            
+
                             StringBuilder stringBuilder = new StringBuilder(portletUrl);
                             stringBuilder.append("&unsubscriptionId=");
                             stringBuilder.append(subscription.getId());
@@ -223,6 +240,10 @@ public class SubscriptionManagedBean implements Serializable {
                             FacesUtil.errorMessage(errorMessage);
                         }
                     }
+                } else {
+                    log.error("could not retrieve the unsubscription email");
+                    String errorMessage = serverMessageBundle.getString("newsletter.registration.generalerror");
+                    FacesUtil.errorMessage(errorMessage);
                 }
             }
         } catch (Exception e) {
@@ -230,11 +251,12 @@ public class SubscriptionManagedBean implements Serializable {
             FacesUtil.errorMessage(errorMessage);
         }
 
+        clearData();
         return result;
     }
 
     public void doConfirmRegistration(ValueChangeEvent event) {
-        FacesContext facesContext = FacesContext.getCurrentInstance();        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         ResourceBundle newsletterBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
         try {
@@ -252,7 +274,7 @@ public class SubscriptionManagedBean implements Serializable {
                 if (subscriptionResult.isSuccess()) {
                     NewsletterCategory category = subscription.getCategory();
                     String greetingEmail = category.getGreetingEmail();
-                    String content = greetingEmail;                    
+                    String content = greetingEmail;
                     String subject = newsletterBundle.getString("newsletter.greetings.mail.subject");
 
                     content = content.replace(LIST_NAME_TOKEN, category.getName());
@@ -261,11 +283,11 @@ public class SubscriptionManagedBean implements Serializable {
 
                     String infoMesage = serverMessageBundle.getString("newsletter.registration.confirmed.msg");
                     FacesUtil.infoMessage(infoMesage);
-                } else {                    
+                } else {
                     String errorMessage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
                     FacesUtil.errorMessage(errorMessage);
                 }
-            } else {                
+            } else {
                 String errorMessage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
                 FacesUtil.errorMessage(errorMessage);
             }
@@ -276,7 +298,7 @@ public class SubscriptionManagedBean implements Serializable {
     }
 
     public void doConfirmUnregistration(ValueChangeEvent event) {
-        FacesContext facesContext = FacesContext.getCurrentInstance();        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         try {
             long subscriptionId = (Long.parseLong((String) event.getNewValue()));
@@ -299,7 +321,7 @@ public class SubscriptionManagedBean implements Serializable {
                 }
             } else {
                 String errorMessage = serverMessageBundle.getString("newsletter.unregistration.unconfirmed.msg");
-            FacesUtil.errorMessage(errorMessage);
+                FacesUtil.errorMessage(errorMessage);
             }
         } catch (Exception ex) {
             String errorMessage = serverMessageBundle.getString("newsletter.unregistration.unconfirmed.msg");

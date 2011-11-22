@@ -23,7 +23,6 @@ public class NewsletterCategory extends NewsletterEntity {
     public static final String CATEGORY_KEY = "categoryKey";
     private static final long serialVersionUID = 1L;
     
-    private boolean active;
     private String name;
     private String description;
     private String fromName;
@@ -46,14 +45,6 @@ public class NewsletterCategory extends NewsletterEntity {
         
     @OneToMany(mappedBy = "list", orphanRemoval=true)    
     private List<NewsletterMailing> mailings;
-    
-    public boolean getActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
 
     public String getDescription() {
         return description;

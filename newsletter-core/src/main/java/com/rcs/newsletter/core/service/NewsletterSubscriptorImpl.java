@@ -2,8 +2,10 @@
 package com.rcs.newsletter.core.service;
 
 import com.rcs.newsletter.core.model.NewsletterCategory;
+import com.rcs.newsletter.core.model.NewsletterEntity;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
@@ -30,21 +32,31 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
     private final static Logger logger = LoggerFactory.getLogger(NewsletterSubscriptionImpl.class);
 
     @Override
-    public NewsletterSubscriptor findByEmail(String email) {
-        NewsletterSubscriptor result = null;
+    public ServiceActionResult<NewsletterSubscriptor> findByEmail(String email) {
+        boolean success = true;
+        List<String> validationKeys = new ArrayList<String>();
+        NewsletterSubscriptor newsletterSubscriptor = null;
         
-        try {
-            
+        try {            
             Session currentSession = sessionFactory.getCurrentSession();
             Criteria criteria = currentSession.createCriteria(NewsletterSubscriptor.class);
             criteria.add(Restrictions.eq(NewsletterSubscriptor.EMAIL, email));            
             
-            result = (NewsletterSubscriptor) criteria.uniqueResult();
+            Object uniqueObject = criteria.uniqueResult();
             
+            if(uniqueObject != null) {
+                newsletterSubscriptor = (NewsletterSubscriptor) uniqueObject;
+            } else {
+                success = false;
+            }
         } catch (NonUniqueResultException ex) {
             String error = "Exists more than unique email";
             logger.error(error);
+            success = false;
         }        
+        
+        ServiceActionResult<NewsletterSubscriptor> result = 
+                new ServiceActionResult<NewsletterSubscriptor>(success, newsletterSubscriptor, validationKeys);
         
         return result;
     }

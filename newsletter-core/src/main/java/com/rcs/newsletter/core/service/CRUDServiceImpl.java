@@ -137,7 +137,7 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
      * @param violations
      * @param validationKeys 
      */
-    private void fillViolations(Set<ConstraintViolation<NewsletterEntity>> violations, List<String> validationKeys) {
+    protected void fillViolations(Set<ConstraintViolation<NewsletterEntity>> violations, List<String> validationKeys) {
         for (ConstraintViolation<NewsletterEntity> constraintViolation : violations) {
             validationKeys.add(constraintViolation.getPropertyPath()+" "+constraintViolation.getMessage());
         }

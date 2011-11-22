@@ -3,6 +3,7 @@ package com.rcs.newsletter.core.service;
 
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public interface NewsletterSubscriptorService extends CRUDService<NewsletterSubscriptor> {
     
-    NewsletterSubscriptor findByEmail(String email);   
+    ServiceActionResult<NewsletterSubscriptor> findByEmail(String email);   
     
     List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory);
     

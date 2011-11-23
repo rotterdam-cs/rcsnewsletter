@@ -9,11 +9,11 @@
         <title><h:outputText value="#{msg['newsletter.admin.lists']}" /></title>
     </h:head>
     <h:body>
-        <ui:composition>
+        <ui:composition id="list-composition-id">
             <f:loadBundle basename="Newsletter" var="nlk" />
             <p:commandButton value="#{nlk['newsletter.admin.lists.add']}" action="#{categoryCRUDManagedBean.redirectCreateCategory}"/>
             <hr/>
-            <p:growl id="categoryMessages"/>
+            <p:messages />
             <p:dataTable var="item" value="#{categoryAdminManagedBean.categorys}">
                 
                 <p:column styleClass="newsletter-panel-column-id">

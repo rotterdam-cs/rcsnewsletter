@@ -15,7 +15,7 @@
         <f:loadBundle basename="Language" var="msg" />
         <f:loadBundle basename="Newsletter" var="nlk" />        
         <h:form>
-            <p:growl id="messages" />
+            <p:messages />
             <h:panelGrid columns="2" styleClass="registration-form" columnClasses="newsletter-registration-column-left,newsletter-registration-column-right">
                 
                 <h:outputLabel styleClass="infohidden" rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="#{msg['general.firstname']}:" />

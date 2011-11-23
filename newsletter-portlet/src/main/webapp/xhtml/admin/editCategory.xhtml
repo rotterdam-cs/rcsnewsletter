@@ -10,26 +10,28 @@
         <title><h:outputText value="#{nlk['newsletter.admin.category.edit']}" /></title>
     </h:head>
     <h:body>        
-        <h:form id="edit-category-form">
+        <h:form>
             <h:inputHidden value="#{categoryCRUDManagedBean.id}"/>
             <h:inputHidden value="#{categoryCRUDManagedBean.action}"/>
-            <h:panelGrid columns="2" styleClass="newsletter-forms-form" columnClasses="newsletter-forms-column-left,newsletter-forms-column-right">                
-                
-                <h:outputLabel value="#{msg['newsletter.admin.general.name']}: " for="name"/>
+            <h:panelGrid columns="2" styleClass="newsletter-forms-form" columnClasses="newsletter-forms-column-left,newsletter-forms-column-right">                                
+            
+                <h:outputLabel value="#{msg['newsletter.admin.general.name']}: "/>
                 <p:inputText styleClass="newsletter-forms-input-text" id="name" value="#{categoryCRUDManagedBean.name}"/>
                 
-                <h:outputLabel value="#{msg['newsletter.admin.general.description']}: " for="description"/> 
+                <h:outputLabel value="#{msg['newsletter.admin.general.description']}: "/> 
                 <p:inputTextarea styleClass="newsletter-forms-input-textarea" id="description" value="#{categoryCRUDManagedBean.description}"/>
                 
-                <h:outputLabel value="#{nlk['newsletter.admin.category.fromname']}: " for="fromName"/>                
+                <h:outputLabel value="#{nlk['newsletter.admin.category.fromname']}: "/>                
                 <p:inputText styleClass="newsletter-forms-input-text" id="fromName" value="#{categoryCRUDManagedBean.fromName}"/>
                 
-                <h:outputLabel value="#{nlk['newsletter.admin.category.fromemail']}: " for="fromEmail"/> 
+                <h:outputLabel value="#{nlk['newsletter.admin.category.fromemail']}: "/> 
                 <p:inputText styleClass="newsletter-forms-input-text" id="fromEmail" value="#{categoryCRUDManagedBean.fromEmail}"/>
+                
+                <f:facet name="footer">
+                    <p:commandButton update="list-composition-id" styleClass="newsletter-forms-button" value="#{categoryCRUDManagedBean.action.key}" action="#{categoryCRUDManagedBean.save}" ajax="false"/>
+                    <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
+                </f:facet>
             </h:panelGrid>            
-            <p:growl id="categoryMessages"/>
-            <p:commandButton styleClass="newsletter-forms-button" value="#{categoryCRUDManagedBean.action.key}" update="categoryMessages" action="#{categoryCRUDManagedBean.save}" ajax="false"/>
-            <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
         </h:form>
     </h:body>
 </html>

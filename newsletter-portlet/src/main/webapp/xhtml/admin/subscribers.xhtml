@@ -69,8 +69,8 @@
                 <br></br>
                 <p:commandButton value="#{nlk['newsletter.admin.subscribers.export']}" onclick="dlg.show();"/>
                 <p:dialog header="#{nlk['newsletter.admin.subscribers.export.title']}" widgetVar="dlg" showEffect="bounce" hideEffect="explode" height="150" width="350" resizable="false">  
-                    
-                </p:dialog> 
+                    <p:commandButton value="#{nlk['newsletter.admin.subscribers.export']}" action="#{subscriberExportManagedBean.reportData}"/>
+                </p:dialog>
         </ui:composition>
     </h:body>
 </html>

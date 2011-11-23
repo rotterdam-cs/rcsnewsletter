@@ -9,6 +9,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -37,10 +38,13 @@ public class NewsletterCategory extends NewsletterEntity {
     @Cascade(CascadeType.DELETE)
     private List<NewsletterSubscription> subscriptions;    
     
+    @Type(type="text")
     private String subscriptionEmail;
     
+    @Type(type="text")
     private String unsubscriptionEmail;
     
+    @Type(type="text")
     private String greetingEmail;
         
     @OneToMany(mappedBy = "list", orphanRemoval=true)    

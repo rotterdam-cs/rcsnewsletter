@@ -29,6 +29,16 @@ public class NewsletterArchiveManagedBean implements Serializable {
     
     private List<NewsletterArchive> archives;
     
+    private String emailContentBody;
+
+    public String getEmailContentBody() {
+        return emailContentBody;
+    }
+
+    public void setEmailContentBody(String emailContentBody) {
+        this.emailContentBody = emailContentBody;
+    }
+    
     @PostConstruct
     public void init() {
         archives = archiveService.findAll().getPayload();
@@ -36,5 +46,9 @@ public class NewsletterArchiveManagedBean implements Serializable {
 
     public List<NewsletterArchive> getArchives() {
         return archives;
+    }
+    
+    public String redirectPreviewContent() {
+        return "previewArchiveMail";
     }
 }

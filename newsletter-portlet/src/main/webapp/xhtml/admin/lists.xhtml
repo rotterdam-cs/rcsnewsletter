@@ -11,7 +11,7 @@
     <h:body>
         <ui:composition>
             <f:loadBundle basename="Newsletter" var="nlk" />
-            <p:commandButton value="Add List" action="#{categoryCRUDManagedBean.redirectCreateCategory}"/>
+            <p:commandButton value="#{nlk['newsletter.admin.lists.add']}" action="#{categoryCRUDManagedBean.redirectCreateCategory}"/>
             <hr/>
             <p:growl id="categoryMessages"/>
             <p:dataTable var="item" value="#{categoryAdminManagedBean.categorys}">

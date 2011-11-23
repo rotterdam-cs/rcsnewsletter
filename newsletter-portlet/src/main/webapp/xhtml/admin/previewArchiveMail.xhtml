@@ -1,12 +1,19 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html">
+    <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>
-        <title>Facelet Title</title>
     </h:head>
-    <h:body>
-        Hello from Facelets
+    <h:body>        
+        <h2>#{nlk['newsletter.admin.archive.preview.title']}</h2>
+        <div class="archive-content-body">
+            <h:outputText value="#{newsletterArchiveManagedBean.emailContentBody}" escape="false"/>
+        </div>
+        <br></br>
+        <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.back']}" />
     </h:body>
 </html>
 

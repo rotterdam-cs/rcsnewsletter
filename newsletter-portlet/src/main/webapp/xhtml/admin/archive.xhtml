@@ -47,13 +47,13 @@
                     </f:facet>
                     <p:menu type="tiered" styleClass="newsletter-panel-column-action">  
                         <p:submenu label="#{msg['newsletter.admin.general.actions']}">
-                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.archive.preview']}" icon="ui-icon ui-icon-arrowrefresh-1-w">  
-                                
+                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.archive.preview']}" action="#{newsletterArchiveManagedBean.redirectPreviewContent}" icon="ui-icon ui-icon-arrowrefresh-1-w">  
+                                <f:setPropertyActionListener target="#{newsletterArchiveManagedBean.emailContentBody}" value="#{item.emailBody}" />
                             </p:menuitem>
                         </p:submenu>
                     </p:menu>                            
                 </p:column>
-            </p:dataTable>            
+            </p:dataTable>
         </ui:component>
     </h:body>
 </html>

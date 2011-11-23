@@ -1,4 +1,3 @@
-
 package com.rcs.newsletter.portlets.admin;
 
 import com.rcs.newsletter.core.model.NewsletterCategory;
@@ -10,23 +9,24 @@ import org.springframework.context.annotation.Scope;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.rcs.newsletter.util.FacesUtil;
+import java.util.ResourceBundle;
+import javax.faces.context.FacesContext;
+
+import static com.rcs.newsletter.NewsletterConstants.*;
 
 /**
  *
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
 @Named
-@Scope("session")
+@Scope("request")
 public class SubscriptionEmailManagedBean {
-    
+
     private static Log log = LogFactoryUtil.getLog(SubscriptionEmailManagedBean.class);
-    
     @Inject
     NewsletterCategoryService categoryService;
-    
     @Inject
     private UserUiStateManagedBean uiState;
-    
     private int categoryId;
     private NewsletterCategory newsletterCategory;
     private SubscriptionTypeEnum subscriptionType;
@@ -63,7 +63,7 @@ public class SubscriptionEmailManagedBean {
     public void setSubscriptionType(SubscriptionTypeEnum subscriptionType) {
         this.subscriptionType = subscriptionType;
     }
-    
+
     public String redirectEditSubscribeMail() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
         this.setSubscriptionType(SubscriptionTypeEnum.SUBSCRIBE);
@@ -72,22 +72,22 @@ public class SubscriptionEmailManagedBean {
         return "editSubscriptionMail";
     }
 
-    public String redirectEditUnsubscribeMail() {        
+    public String redirectEditUnsubscribeMail() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
         this.setSubscriptionType(SubscriptionTypeEnum.UNSUBSCRIBE);
         fillData();
-        
+
         return "editSubscriptionMail";
     }
-    
-    public String redirectEditGreetingMail() {        
+
+    public String redirectEditGreetingMail() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
         this.setSubscriptionType(SubscriptionTypeEnum.GREETING);
         fillData();
-        
+
         return "editSubscriptionMail";
     }
-    
+
     /**
      * Method that fill the data in the managed bean:
      * JournalArticle
@@ -102,44 +102,56 @@ public class SubscriptionEmailManagedBean {
         if (serviceActionResult.isSuccess()) {
             this.newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
             String emailContentBody = "";
-            switch(getSubscriptionType()) {
+            switch (getSubscriptionType()) {
                 case SUBSCRIBE:
                     emailContentBody = newsletterCategory.getSubscriptionEmail();
                     break;
                 case UNSUBSCRIBE:
-                    emailContentBody = newsletterCategory.getSubscriptionEmail();
+                    emailContentBody = newsletterCategory.getUnsubscriptionEmail();
                     break;
                 case GREETING:
                     emailContentBody = newsletterCategory.getGreetingEmail();
                     break;
             }
-            this.setSubscriptionEmailBody(emailContentBody);            
+            this.setSubscriptionEmailBody(emailContentBody);
         }
     }
-    
+
     public String save() {
-        switch(getSubscriptionType()) {
-            case SUBSCRIBE:
-                newsletterCategory.setSubscriptionEmail(getSubscriptionEmailBody());
-                break;
-            case UNSUBSCRIBE:
-                newsletterCategory.setUnsubscriptionEmail(getSubscriptionEmailBody());
-                break;
-            case GREETING:
-                newsletterCategory.setGreetingEmail(getSubscriptionEmailBody());
-                break;
-        }
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         
-        ServiceActionResult<NewsletterCategory> result = null;
-        
-        result = categoryService.update(newsletterCategory);
-        
-        if(result.isSuccess()) {
-            FacesUtil.infoMessage("Saved succesfully");
+        ServiceActionResult<NewsletterCategory> serviceActionResult = categoryService.findById(categoryId);
+        if (serviceActionResult.isSuccess()) {
+            newsletterCategory = serviceActionResult.getPayload();
+            switch (getSubscriptionType()) {
+                case SUBSCRIBE:
+                    newsletterCategory.setSubscriptionEmail(getSubscriptionEmailBody());
+                    break;
+                case UNSUBSCRIBE:
+                    newsletterCategory.setUnsubscriptionEmail(getSubscriptionEmailBody());
+                    break;
+                case GREETING:
+                    newsletterCategory.setGreetingEmail(getSubscriptionEmailBody());
+                    break;
+            }
+
+            ServiceActionResult<NewsletterCategory> result = null;
+
+            result = categoryService.update(newsletterCategory);
+
+            if (result.isSuccess()) {
+                String infoMsg = serverMessageBundle.getString("newsletter.admin.subscriptionmail.saved");
+                FacesUtil.infoMessage(infoMsg);
+            } else {
+                String errorMsg = serverMessageBundle.getString("newsletter.admin.subscriptionmail.notsaved");
+                FacesUtil.errorMessage(errorMsg);
+            }
         } else {
-            FacesUtil.errorMessage(result.getValidationKeys());
+            String errorMsg = serverMessageBundle.getString("newsletter.admin.subscriptionmail.notsaved");
+            FacesUtil.errorMessage(errorMsg);
         }
-        
+
         return uiState.redirectAdmin();
     }
 }

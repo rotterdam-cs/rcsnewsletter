@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Scope;
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
 @Named
-@Scope("session")
+@Scope("request")
 public class CategoryAdminManagedBean {
     
     private NewsletterSubscriptor subscriptor;

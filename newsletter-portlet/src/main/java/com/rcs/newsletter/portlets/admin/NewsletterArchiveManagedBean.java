@@ -1,7 +1,6 @@
 
 package com.rcs.newsletter.portlets.admin;
 
-
 import com.rcs.newsletter.core.model.NewsletterArchive;
 import com.rcs.newsletter.core.service.NewsletterArchiveService;
 import java.io.Serializable;
@@ -49,6 +48,8 @@ public class NewsletterArchiveManagedBean implements Serializable {
     }
     
     public String redirectPreviewContent() {
+        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.ARCHIVE_TAB_INDEX);
+        
         return "previewArchiveMail";
     }
 }

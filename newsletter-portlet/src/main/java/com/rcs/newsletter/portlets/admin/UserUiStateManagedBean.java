@@ -83,6 +83,7 @@ public class UserUiStateManagedBean implements Serializable {
     }
 
     public List<JournalArticle> getJournalArticles() {
+        refresh();
         return journalArticles;
     }
 

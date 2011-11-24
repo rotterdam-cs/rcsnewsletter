@@ -17,8 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.rcs.newsletter.NewsletterConstants;
 import javax.validation.ConstraintViolation;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 
 /**
  * Generic CRUD implementation
@@ -132,6 +134,11 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
         return findAll(-1, -1);        
     }
     
+    @Override
+    public ServiceActionResult<List<E>> findAll(int start, int limit) {
+        return findAll(-1, -1, "", "");        
+    }
+    
     /**
      * Fill the validation keys list with information from the validation messages
      * @param violations
@@ -144,7 +151,7 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
     }
     
     @Override
-    public ServiceActionResult<List<E>> findAll(int start, int limit) {       
+    public ServiceActionResult<List<E>> findAll(int start, int limit, String ordercrit, String order) {       
         Session currentSession = sessionFactory.getCurrentSession();
         Criteria criteria = currentSession.createCriteria(getEntityClass());
         
@@ -154,7 +161,13 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
         if (limit != -1) {
             criteria.setMaxResults(limit);
         }
-        
+        if (!ordercrit.isEmpty()) {                
+            if (NewsletterConstants.ORDER_BY_DESC.equals(order)) {
+                criteria.addOrder(Order.desc(ordercrit)); 
+            } else {
+                criteria.addOrder(Order.asc(ordercrit)); 
+            }
+        }
         List<E> entities = criteria.list();
         
         boolean success = true;

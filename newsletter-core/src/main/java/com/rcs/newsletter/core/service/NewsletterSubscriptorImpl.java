@@ -1,6 +1,7 @@
 
 package com.rcs.newsletter.core.service;
 
+import com.rcs.newsletter.NewsletterConstants;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterEntity;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
@@ -12,6 +13,7 @@ import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,9 +67,15 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
     public List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory) {
        return findByCategory(newsletterCategory, -1, -1);
     }
-
+    
+    
     @Override
     public List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory, int start, int limit) {
+       return findByCategory(newsletterCategory, -1, -1, "", "");
+    }
+    
+    @Override
+    public List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory, int start, int limit, String ordercrit, String order) {
         List <NewsletterSubscriptor> result = new ArrayList<NewsletterSubscriptor>();        
         List<NewsletterSubscription> newsletterSubscription = new ArrayList<NewsletterSubscription>();
         try {            
@@ -80,6 +88,13 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
             }
             if (limit != -1) {
                 criteria.setMaxResults(limit);
+            }
+            if (!ordercrit.isEmpty()) {                
+                if (NewsletterConstants.ORDER_BY_DESC.equals(order)) {
+                    criteria.addOrder(Order.desc(ordercrit)); 
+                } else {
+                    criteria.addOrder(Order.asc(ordercrit)); 
+                }
             }
             
             newsletterSubscription = criteria.list();                    

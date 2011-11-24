@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Scope;
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
 @Named
-@Scope("session")
+@Scope("request")
 public class SubscriberCRUDManagedBean {    
     
     private static Log log = LogFactoryUtil.getLog(CategoryCRUDManagedBean.class);    
@@ -114,8 +114,7 @@ public class SubscriberCRUDManagedBean {
      * @return 
      */
     public String redirectEditSubscriber() {
-        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
-        ServiceActionResult serviceActionResult = subscriptorCRUDService.findById(getId());
+        ServiceActionResult serviceActionResult = subscriptorCRUDService.findById(this.getId());        
         
         if (serviceActionResult.isSuccess()) {
             NewsletterSubscriptor newsletterSubscriptor = (NewsletterSubscriptor) serviceActionResult.getPayload();
@@ -127,7 +126,7 @@ public class SubscriberCRUDManagedBean {
             
             this.setAction(CRUDActionEnum.UPDATE);
         }
-
+        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
         return "editSubscriber";
     }       
         
@@ -149,7 +148,7 @@ public class SubscriberCRUDManagedBean {
             FacesUtil.infoMessage(message);
         } else {
             FacesUtil.errorMessage(message);
-        }       
+        }
         return uiState.redirectAdmin();
     }
     

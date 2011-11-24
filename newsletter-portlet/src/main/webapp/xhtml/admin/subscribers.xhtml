@@ -12,65 +12,65 @@
         <title><h:outputText value="#{msg['newsletter.admin.subscribers']}" /></title>
     </h:head>
     <h:body>
-        <ui:composition>            
-                <h:panelGrid columns="2">                
-                    <h:outputLabel value="#{msg['newsletter.admin.subscribers.only.show.subscribers.off']}:&nbsp;" />                               
-                    <h:selectOneMenu value="#{subscriberAdminManagedBean.categoryId}">
-                        <f:selectItem itemLabel="#{msg['newsletter.admin.general.all.lists']}" itemValue="0" />
-                        <f:selectItems value="#{categoryAdminManagedBean.categorys}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}"/>                    
-                        <f:ajax event="change" listener="#{subscriberAdminManagedBean.changeCategory}" render="@form"/>
-                    </h:selectOneMenu>
+        <ui:composition>             
+            <h:panelGrid columns="2">                
+                <h:outputLabel value="#{msg['newsletter.admin.subscribers.only.show.subscribers.off']}:&nbsp;" />                               
+                <h:selectOneMenu value="#{subscriberAdminManagedBean.categoryId}">
+                    <f:selectItem itemLabel="#{msg['newsletter.admin.general.all.lists']}" itemValue="0" />
+                    <f:selectItems value="#{categoryAdminManagedBean.categorys}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}"/>                    
+                    <f:ajax event="change" listener="#{subscriberAdminManagedBean.changeCategory}" render="@form"/>
+                </h:selectOneMenu>
 
-                </h:panelGrid>           
-                <hr/>
-                
-                <ui:include src="paginator.xhtml" />               
-                
-                <p:dataTable id="subscribers-datatable" var="item" value="#{subscriberAdminManagedBean.subscribers}">
-                    <p:column styleClass="newsletter-panel-column-id" >
-                        <f:facet name="header">
-                            #{msg['newsletter.admin.general.id']}
-                        </f:facet>
-                        #{item.id}
-                    </p:column>
-                    
-                    <p:column styleClass="newsletter-panel-column-name" >
-                        <f:facet name="header">
-                            #{msg['newsletter.admin.general.name']}
-                        </f:facet>
-                        #{item.firstName} #{item.middleName} #{item.lastName}
-                    </p:column>
-                    
-                    <p:column styleClass="newsletter-panel-column-email" >
-                        <f:facet name="header">
-                            #{msg['newsletter.admin.general.email']}
-                        </f:facet>
-                        <h:outputText value="#{item.email}" />
-                    </p:column>
-                    
-                    <p:column styleClass="newsletter-panel-column-action" >                            
-                        <f:facet name="header">
-                            #{msg['newsletter.admin.general.action']}
-                        </f:facet>
-                        <p:menu type="tiered" styleClass="newsletter-panel-column-action">  
-                            <p:submenu label="#{msg['newsletter.admin.general.actions']}">  
-                                <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{msg['newsletter.admin.general.edit']}" action="#{subscriberCRUDManagedBean.redirectEditSubscriber}" icon="ui-icon ui-icon-arrowrefresh-1-w">  
-                                    <f:setPropertyActionListener target="#{subscriberCRUDManagedBean.id}" value="#{item.id}" />
-                                </p:menuitem>
-                                <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{msg['newsletter.admin.general.remove']}" action="#{subscriberCRUDManagedBean.redirectDeleteSubscriber}" icon="ui-icon ui-icon-close">
-                                    <f:setPropertyActionListener target="#{subscriberCRUDManagedBean.id}" value="#{item.id}" />
-                                    <f:setPropertyActionListener target="#{categoryAdminManagedBean.subscriptorId}" value="#{item.id}" />
-                                </p:menuitem>                            
-                            </p:submenu>
-                        </p:menu>                            
-                    </p:column>
-                    
-                </p:dataTable>
-                <br></br>
-                <p:commandButton value="#{nlk['newsletter.admin.subscribers.export']}" onclick="dlg.show();"/>
-                <p:dialog header="#{nlk['newsletter.admin.subscribers.export.title']}" widgetVar="dlg" showEffect="bounce" hideEffect="explode" height="150" width="350" resizable="false">  
-                    <p:commandButton value="#{nlk['newsletter.admin.subscribers.export']}" action="#{subscriberExportManagedBean.reportData}"/>
-                </p:dialog>
+            </h:panelGrid>           
+            <hr/>
+
+            <ui:include src="paginator.xhtml" />               
+
+            <p:dataTable id="subscribers-datatable" var="item" value="#{subscriberAdminManagedBean.subscribers}">
+                <p:column styleClass="newsletter-panel-column-id" >
+                    <f:facet name="header">
+                        #{msg['newsletter.admin.general.id']}
+                    </f:facet>
+                    #{item.id}
+                </p:column>
+
+                <p:column styleClass="newsletter-panel-column-name" >
+                    <f:facet name="header">
+                        #{msg['newsletter.admin.general.name']}
+                    </f:facet>
+                    #{item.firstName} #{item.middleName} #{item.lastName}
+                </p:column>
+
+                <p:column styleClass="newsletter-panel-column-email" >
+                    <f:facet name="header">
+                        #{msg['newsletter.admin.general.email']}
+                    </f:facet>
+                    <h:outputText value="#{item.email}" />
+                </p:column>
+
+                <p:column styleClass="newsletter-panel-column-action" >                            
+                    <f:facet name="header">
+                        #{msg['newsletter.admin.general.action']}
+                    </f:facet>
+                    <p:menu type="tiered" styleClass="newsletter-panel-column-action">  
+                        <p:submenu label="#{msg['newsletter.admin.general.actions']}">  
+                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{msg['newsletter.admin.general.edit']}" action="#{subscriberCRUDManagedBean.redirectEditSubscriber}" icon="ui-icon ui-icon-arrowrefresh-1-w">  
+                                <f:setPropertyActionListener target="#{subscriberCRUDManagedBean.id}" value="#{item.id}" />
+                            </p:menuitem>
+                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{msg['newsletter.admin.general.remove']}" action="#{subscriberCRUDManagedBean.redirectDeleteSubscriber}" icon="ui-icon ui-icon-close">
+                                <f:setPropertyActionListener target="#{subscriberCRUDManagedBean.id}" value="#{item.id}" />
+                                <f:setPropertyActionListener target="#{categoryAdminManagedBean.subscriptorId}" value="#{item.id}" />
+                            </p:menuitem>                            
+                        </p:submenu>
+                    </p:menu>                            
+                </p:column>
+
+            </p:dataTable>
+            <br></br>
+            <p:commandButton value="#{nlk['newsletter.admin.subscribers.export']}" onclick="dlg.show();"/>
+            <p:dialog header="#{nlk['newsletter.admin.subscribers.export.title']}" widgetVar="dlg" showEffect="bounce" hideEffect="explode" height="150" width="350" resizable="false">  
+                <p:commandButton value="#{nlk['newsletter.admin.subscribers.export']}" action="#{subscriberExportManagedBean.reportData}"/>
+            </p:dialog>
         </ui:composition>
     </h:body>
 </html>

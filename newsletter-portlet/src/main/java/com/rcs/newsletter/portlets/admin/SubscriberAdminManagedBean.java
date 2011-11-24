@@ -2,6 +2,7 @@ package com.rcs.newsletter.portlets.admin;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.rcs.newsletter.NewsletterConstants;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
@@ -38,18 +39,13 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     
     @PostConstruct
     public void init() {
-        
-        setPaginationStart(0);
-        setPaginationLimit(5);
-        if (filterCategory == null) {        
-            subscribers = subscriptorService.findAll(getPaginationStart(), getPaginationLimit()).getPayload();
-            setPaginationTotal(subscriptorService.findAllCount());            
-        } else {
-            subscribers = subscriptorService.findByCategory(filterCategory);            
-        }        
+        setPaginationStart(NewsletterConstants.PAGINATION_DEFAULT_START);
+        setPaginationLimit(NewsletterConstants.PAGINATION_DEFAULT_LIMIT);
+        updateSubscriptors();
     }
     
     public List<NewsletterSubscriptor> getSubscribers() {
+        updateSubscriptors();
         return subscribers;
     }
 
@@ -70,18 +66,22 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     }
 
     public void changeCategory(AjaxBehaviorEvent event) {
-        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
         this.gotoFirstPage();
     }
     
     private void updateResults() {
+        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
+        updateSubscriptors();
+    }
+    
+    private void updateSubscriptors() {
         try {
             if (getCategoryId() == 0) {
-                subscribers = subscriptorService.findAll(getPaginationStart(), getPaginationLimit()).getPayload();
+                subscribers = subscriptorService.findAll(getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC).getPayload();
                 setPaginationTotal(subscriptorService.findAllCount());
             }else{
                 filterCategory = categoryService.findById(categoryId).getPayload();
-                subscribers = subscriptorService.findByCategory(filterCategory, getPaginationStart(), getPaginationLimit());
+                subscribers = subscriptorService.findByCategory(filterCategory, getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC);
                 setPaginationTotal(subscriptorService.findByCategoryCount(filterCategory));
             }
         } catch (Exception ex) {

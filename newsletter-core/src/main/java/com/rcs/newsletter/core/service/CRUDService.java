@@ -21,8 +21,10 @@ public interface CRUDService<E extends NewsletterEntity> {
     
     public ServiceActionResult<List<E>> findAll();
     
-    public ServiceActionResult<List<E>> findAll(int start, int limit); 
+    public ServiceActionResult<List<E>> findAll(int start, int limit);
     
+    public ServiceActionResult<List<E>> findAll(int start, int limit, String ordercrit, String order );
+        
     public int findAllCount();
     
 }

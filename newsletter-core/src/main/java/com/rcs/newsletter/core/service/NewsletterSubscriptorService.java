@@ -18,6 +18,8 @@ public interface NewsletterSubscriptorService extends CRUDService<NewsletterSubs
     
     List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory, int start, int limit);
     
+    List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory, int start, int limit, String ordercrit, String order);
+    
     int findByCategoryCount(NewsletterCategory newsletterCategory);
     
 }

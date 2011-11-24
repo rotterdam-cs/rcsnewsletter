@@ -18,4 +18,10 @@ public interface NewsletterConstants {
     public static final String LANGUAGE_BUNDLE = "Language";
     public static final String SERVER_MESSAGE_BUNDLE = "ServerMessages";
     
+    public static final String ORDER_BY_ASC = "asc";
+    public static final String ORDER_BY_DESC = "desc";
+    
+    public static final int PAGINATION_DEFAULT_START = 0;
+    public static final int PAGINATION_DEFAULT_LIMIT = 5;
+    
 }

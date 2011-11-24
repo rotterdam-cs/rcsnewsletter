@@ -42,7 +42,7 @@
                         #{msg['newsletter.admin.general.action']}
                     </f:facet>
                     <p:menu type="tiered" styleClass="newsletter-panel-column-action">  
-                        <p:submenu label="#{msg['newsletter.admin.general.actions']}">
+                        <p:submenu label="#{msg['newsletter.admin.general.actions']}" >
                             <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.list.menu.edit']}" action="#{categoryCRUDManagedBean.redirectEditCategory}" icon="ui-icon ui-icon-arrowrefresh-1-w">  
                                 <f:setPropertyActionListener target="#{categoryCRUDManagedBean.id}" value="#{item.id}" />
                             </p:menuitem>

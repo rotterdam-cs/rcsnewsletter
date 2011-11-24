@@ -17,9 +17,8 @@
                 <h:outputText value="#{nlk['newsletter.admin.category.subscriptionmail.info']}" escape="false"/>  
             </p:dialog> 
             <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>
-            <h:panelGrid columns="2" styleClass="newsletter-forms-form-panel" >                
-                <p:commandButton styleClass="newsletter-forms-button" value="#{msg['newsletter.admin.category.general.help']}" onclick="dlg3.show();" type="button"/> 
-                <br></br>
+            <p:commandButton styleClass="newsletter-forms-button" value="#{msg['newsletter.admin.category.general.help']}" onclick="dlg3.show();" type="button"/> 
+            <h:panelGrid columns="2" styleClass="newsletter-forms-form-panel" >                                
                 <p:editor value="#{subscriptionEmailManagedBean.subscriptionEmailBody}"/> 
             </h:panelGrid>
             <p:growl id="editSubscriptionMailMessage"/>

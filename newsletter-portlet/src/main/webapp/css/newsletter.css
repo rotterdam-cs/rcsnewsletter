@@ -51,7 +51,9 @@
 }
 
 .newsletter-forms-form-panel {
-   margin: 10px; 
+   margin-top: 10px;
+   margin-bottom: 10px;
+   
 }
 
 .newsletter-forms-form-listbox{
@@ -117,4 +119,8 @@
 
 .newletter-registration-settings {
     text-align: left;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-parent .wijmo-wijmenu-child {
+    width: 200px!important;
 }

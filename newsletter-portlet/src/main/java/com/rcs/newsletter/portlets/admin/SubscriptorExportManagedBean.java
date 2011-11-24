@@ -70,7 +70,7 @@ public class SubscriptorExportManagedBean {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             PortletResponse portletResponse = (PortletResponse) facesContext.getExternalContext().getResponse();
             HttpServletResponse response = PortalUtil.getHttpServletResponse(portletResponse);
-
+            
             byte[] bin = workbook.getBytes();
 
             response.addHeader("Content-Length", "" + bin.length);
@@ -82,7 +82,6 @@ public class SubscriptorExportManagedBean {
 
             try {
                 workbook.write(response.getOutputStream());
-                response.getOutputStream().write(bin);
                 response.getOutputStream().flush();
                 response.getOutputStream().close();
             } catch (Exception e) {

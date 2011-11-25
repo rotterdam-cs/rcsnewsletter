@@ -1,6 +1,5 @@
 package com.rcs.newsletter.core.model;
 
-import com.rcs.newsletter.core.json.GsonExclude;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -23,7 +22,7 @@ public class NewsletterSubscription extends NewsletterEntity {
     public static final String CATEGORY = "category";
 
     private static final long serialVersionUID = 1L;
-    
+        
     @NotNull
     @Enumerated(EnumType.STRING)
     private SubscriptionStatus status;
@@ -33,11 +32,29 @@ public class NewsletterSubscription extends NewsletterEntity {
     @JoinColumn(name="subscriptor_id")
     private NewsletterSubscriptor subscriptor;
     
-    @GsonExclude
     @ManyToOne
     @JoinColumn(name="category_id")
     private NewsletterCategory category;
 
+    private String activationKey;
+    private String deactivationKey;
+
+    public String getActivationKey() {
+        return activationKey;
+    }
+
+    public void setActivationKey(String activationKey) {
+        this.activationKey = activationKey;
+    }
+
+    public String getDeactivationKey() {
+        return deactivationKey;
+    }
+
+    public void setDeactivationKey(String deactivationKey) {
+        this.deactivationKey = deactivationKey;
+    }
+    
     public SubscriptionStatus getStatus() {
         return status;
     }

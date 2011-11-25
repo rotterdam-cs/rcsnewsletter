@@ -1,5 +1,8 @@
 package com.rcs.newsletter.portlets.subscription;
 
+import javax.servlet.http.HttpServletRequestWrapper;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.faces.context.FacesContext;
 import java.util.ResourceBundle;
 import com.rcs.newsletter.core.model.NewsletterCategory;
@@ -337,6 +340,23 @@ public class SubscriptionManagedBean implements Serializable {
         this.name = "";
         this.lastName = "";
         this.email = "";
+    }
+    
+    public String getActivationkey() {
+        String result = "";        
+        Object outcome = null;
+        Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+        if (map != null) {
+            for (String key : map.keySet()) {
+                if (map.get(key) instanceof HttpServletRequestWrapper) {
+                    HttpServletRequest request = (HttpServletRequest) ((HttpServletRequestWrapper) map.get(key)).getRequest();
+                    outcome = request.getParameter("activationkey");
+                    break;
+                }
+            }
+        }
+        result = (String) outcome;
+        return result;
     }
 
     ////////////////// GETTERS AND SETTERS /////////////////////

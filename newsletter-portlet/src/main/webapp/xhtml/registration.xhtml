@@ -24,10 +24,12 @@
                 <h:outputLabel styleClass="infohidden" rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="#{msg['general.lastname']}: " />
                 <h:inputText styleClass="infohidden newsletter-registration-input-text" rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="#{subscriptionManagedBean.lastName}" />    
                 
-                <h:outputLabel value="#{msg['newsletter.admin.general.email']} * : " />
-                <h:inputText styleClass="newsletter-registration-input-text" value="#{subscriptionManagedBean.email}" />
+                <h:outputLabel styleClass="infonohidden" value="#{msg['newsletter.admin.general.email']} * : " />
+                <h:inputText styleClass="infonohidden newsletter-registration-input-text" value="#{subscriptionManagedBean.email}" />
                 
             </h:panelGrid>
+                
+            <h:inputText styleClass="activationkey" value="#{subscriptionManagedBean.activationkey}" />
             
             <div class="registration-form-buttons-left">
                 <a href="javascript:void(0);" id="unregister-link">#{nlk['newsletter.registration.unregister']}</a>

@@ -3,7 +3,7 @@
 
 <display>
     <category name="rcs">
-            <portlet id="Newsletter-Test" />
+            <portlet id="Newsletter-Registration-Confirm" />
             <portlet id="Newsletter-Registration" />
     </category>
 </display>

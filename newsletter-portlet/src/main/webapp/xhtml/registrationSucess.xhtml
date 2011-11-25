@@ -8,7 +8,10 @@
         <title>Facelet Title</title>
     </h:head>
     <h:body>
-        <h:outputText styleClass="registration-sucess" value="#{nlk['newsletter.registration.success.msg']}" escape="false"/>  
+        <h:inputText styleClass="activationkey" value="#{subscriptionManagedBean.activationkey}" size="1" />
+        <div class="registration-sucess" style="display: none;">
+            <h:outputText styleClass="registration-sucess" value="#{nlk['newsletter.registration.success.msg']}" escape="false"/>          
+        </div>
     </h:body>
 </html>
 

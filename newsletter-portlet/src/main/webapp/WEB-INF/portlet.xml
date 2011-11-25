@@ -53,12 +53,12 @@
     </portlet>
     
     <portlet>
-        <portlet-name>Newsletter-Test</portlet-name>
-        <display-name>JSF Portlet</display-name>
+        <portlet-name>Newsletter-Registration-Confirm</portlet-name>
+        <display-name>Registration Confirmation</display-name>
         <portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
         <init-param>
             <name>javax.portlet.faces.defaultViewId.view</name>
-            <value>/xhtml/test.xhtml</value>
+            <value>/xhtml/registrationSucess.xhtml</value>
         </init-param>
         <expiration-cache>0</expiration-cache>
         <supports>
@@ -67,8 +67,8 @@
                 <!--<resource-bundle>Language</resource-bundle> -->
         <portlet-info>
             <title>lrfaces Portlet</title>
-            <short-title>lrfaces Portlet</short-title>
-            <keywords>lrfaces Portlet</keywords>
+            <short-title>Registration Confirmation</short-title>
+            <keywords>Registration Confirmation</keywords>
         </portlet-info>
     </portlet>
         

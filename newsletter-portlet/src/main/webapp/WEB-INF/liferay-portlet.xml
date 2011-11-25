@@ -24,7 +24,7 @@
     </portlet> 
         
     <portlet>            
-        <portlet-name>Newsletter-Test</portlet-name>            
+        <portlet-name>Newsletter-Registration-Confirm</portlet-name>            
         <icon>/icon.png</icon>
         <instanceable>true</instanceable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>

@@ -1,5 +1,6 @@
 package com.rcs.newsletter.portlets.subscription;
 
+import java.util.UUID;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 import com.liferay.portal.kernel.util.Validator;
+import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
 import static com.rcs.newsletter.NewsletterConstants.*;
 
 /**
@@ -42,7 +44,6 @@ public class SubscriptionManagedBean implements Serializable {
     private String name;
     private String lastName;
     private String email;
-    private String portletUrl;
     private RegistrationConfig currentConfig;
     @Inject
     private NewsletterPortletSettingsService settingsService;
@@ -52,6 +53,8 @@ public class SubscriptionManagedBean implements Serializable {
     private NewsletterSubscriptorService subscriptorService;
     @Inject
     private NewsletterSubscriptionService subscriptionService;
+    @Inject
+    private UserUiStateManagedBean uiStateManagedBean;
 
     @PostConstruct
     public void init() {
@@ -61,7 +64,6 @@ public class SubscriptionManagedBean implements Serializable {
             currentConfig.setListId(registrationConfig.getListId());
             currentConfig.setDisableName(registrationConfig.isDisableName());
         }
-        portletUrl = FacesUtil.getActionUrl();
         clearData();
     }
 
@@ -84,7 +86,6 @@ public class SubscriptionManagedBean implements Serializable {
         ResourceBundle newsletterBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
 
-        String result = null;
         try {
             if (null == currentConfig.getListId()) {
                 String errorMessage = serverMessageBundle.getString("newsletter.registration.notconfigured");
@@ -117,7 +118,7 @@ public class SubscriptionManagedBean implements Serializable {
                             //and we could not create it, we abort the process
                             if (!subscriptorResult.isSuccess()) {
                                 FacesUtil.errorMessage(subscriptorResult.getValidationKeys());
-                                return result;
+                                return null;
                             }
                         } else {
                             subscriptor = subscriptorResult.getPayload();
@@ -131,6 +132,7 @@ public class SubscriptionManagedBean implements Serializable {
                             subscription.setSubscriptor(subscriptor);
                             subscription.setCategory(newsletterCategory);
                             subscription.setStatus(SubscriptionStatus.INVITED);
+                            subscription.setActivationKey(getUniqueKey());
 
                             subscription = subscriptionService.save(subscription).getPayload();
                         }
@@ -153,19 +155,21 @@ public class SubscriptionManagedBean implements Serializable {
                             String content = subscriptionEmail;
                             String subject = newsletterBundle.getString("newsletter.subscription.mail.subject");
 
-                            StringBuilder stringBuilder = new StringBuilder(portletUrl);
+                            String portalUrl = uiStateManagedBean.getThemeDisplay().getPortalURL();
+                            
+                            StringBuilder stringBuilder = new StringBuilder(portalUrl);
                             stringBuilder.append("&subscriptionId=");
                             stringBuilder.append(subscription.getId());
+                            stringBuilder.append("&activationkey=");
+                            stringBuilder.append(subscription.getActivationKey());
 
                             content = content.replace(CONFIRMATION_LINK_TOKEN, stringBuilder.toString());
                             content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
 
                             LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
 
-                            String infoMessage = serverMessageBundle.getString("newsletter.registration.success");
+                            String infoMessage = serverMessageBundle.getString("newsletter.registration.success.msg");
                             FacesUtil.infoMessage(infoMessage);
-
-                            result = "registrationSucess";
                         }
 
                     } else {
@@ -187,7 +191,7 @@ public class SubscriptionManagedBean implements Serializable {
         }
 
         clearData();
-        return result;
+        return null;
     }
 
     public String doUnregister() {
@@ -222,13 +226,20 @@ public class SubscriptionManagedBean implements Serializable {
                                 subscriptionService.findBySubscriptorAndCategory(subscriptor, newsletterCategory);
 
                         if (subscription != null) {
-
+                            
+                            subscription.setDeactivationKey(getUniqueKey());
+                            subscriptionService.update(subscription);
+                            
                             String content = unsubscriptionEmail;
                             String subject = newsletterBundle.getString("newsletter.unsubscription.mail.subject");
 
-                            StringBuilder stringBuilder = new StringBuilder(portletUrl);
+                            String portalUrl = uiStateManagedBean.getThemeDisplay().getPortalURL();
+                            
+                            StringBuilder stringBuilder = new StringBuilder(portalUrl);
                             stringBuilder.append("&unsubscriptionId=");
                             stringBuilder.append(subscription.getId());
+                            stringBuilder.append("&deactivationkey=");
+                            stringBuilder.append(subscription.getDeactivationKey());
 
                             content = content.replace(CONFIRMATION_LINK_TOKEN, stringBuilder.toString());
                             content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
@@ -342,10 +353,12 @@ public class SubscriptionManagedBean implements Serializable {
         this.email = "";
     }
     
-    public String getActivationkey() {
+    public String getActivationkey() {        
         String result = "";        
         Object outcome = null;
-        Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        Map<String, Object> map = facesContext.getExternalContext().getRequestMap();
+        System.out.println("VI 1" + facesContext.getViewRoot());
         if (map != null) {
             for (String key : map.keySet()) {
                 if (map.get(key) instanceof HttpServletRequestWrapper) {
@@ -355,7 +368,19 @@ public class SubscriptionManagedBean implements Serializable {
                 }
             }
         }
-        result = (String) outcome;
+        if(outcome != null) {
+            result = (String) outcome;
+        }
+        System.out.println("VI " + facesContext.getViewRoot());
+        return result;
+    }
+    
+    private static String getUniqueKey() {
+        String result = "";
+        UUID uuid = UUID.randomUUID();
+        
+        result = uuid.toString();
+        
         return result;
     }
 

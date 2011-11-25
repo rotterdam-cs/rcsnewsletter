@@ -20,12 +20,13 @@ jQuery(document).ready(function() {
     var activationkey = $j(".activationkey").val();
     $j(".activationkey").hide();
     if (activationkey != "") {
-       $j('.unregister-button').hide();
-       $j('.register-button').hide();
-       $j('#unregister-link').hide();
-       $j('#register-link').hide();
-       $j('.infohidden').hide();
-       $j('.infonohidden').hide();
+       $j('.registration-sucess').show();
+       
+//       $j('.register-button').hide();
+//       $j('#unregister-link').hide();
+//       $j('#register-link').hide();
+//       $j('.infohidden').hide();
+//       $j('.infonohidden').hide();
     }
     
 });

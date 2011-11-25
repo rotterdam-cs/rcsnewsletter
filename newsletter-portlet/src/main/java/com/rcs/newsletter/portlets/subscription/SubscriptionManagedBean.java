@@ -158,7 +158,7 @@ public class SubscriptionManagedBean implements Serializable {
                             String portalUrl = uiStateManagedBean.getThemeDisplay().getPortalURL();
                             
                             StringBuilder stringBuilder = new StringBuilder(portalUrl);
-                            stringBuilder.append("&subscriptionId=");
+                            stringBuilder.append("?subscriptionId=");
                             stringBuilder.append(subscription.getId());
                             stringBuilder.append("&activationkey=");
                             stringBuilder.append(subscription.getActivationKey());
@@ -236,7 +236,7 @@ public class SubscriptionManagedBean implements Serializable {
                             String portalUrl = uiStateManagedBean.getThemeDisplay().getPortalURL();
                             
                             StringBuilder stringBuilder = new StringBuilder(portalUrl);
-                            stringBuilder.append("&unsubscriptionId=");
+                            stringBuilder.append("?unsubscriptionId=");
                             stringBuilder.append(subscription.getId());
                             stringBuilder.append("&deactivationkey=");
                             stringBuilder.append(subscription.getDeactivationKey());

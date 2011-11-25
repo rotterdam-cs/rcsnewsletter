@@ -3,14 +3,10 @@ package com.rcs.newsletter.commons;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
-import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.portlets.admin.SubscriberAdminManagedBean;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.inject.Inject;
 import javax.portlet.PortletException;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
@@ -20,9 +16,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.portletfaces.bridge.GenericFacesPortlet;
 
 public class NewsletterResourcePortlet extends GenericFacesPortlet {
-
-    @Inject
-    NewsletterCategoryService categoryService;
 
     @Override
     public void serveResource(ResourceRequest request, ResourceResponse response)

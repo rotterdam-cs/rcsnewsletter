@@ -124,3 +124,7 @@
 .wijmo-wijmenu .wijmo-wijmenu-parent .wijmo-wijmenu-child {
     width: 200px!important;
 }
+
+.activationkey{
+    display: none;
+}

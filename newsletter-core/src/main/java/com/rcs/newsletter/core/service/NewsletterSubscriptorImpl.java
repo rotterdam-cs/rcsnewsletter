@@ -66,8 +66,7 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
     @Override
     public List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory) {
        return findByCategory(newsletterCategory, -1, -1);
-    }
-    
+    }    
     
     @Override
     public List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory, int start, int limit) {

@@ -4,9 +4,13 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.NewsletterConstants;
 import com.rcs.newsletter.core.model.NewsletterCategory;
+import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
+import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -34,6 +38,9 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     
     @Inject
     private UserUiStateManagedBean uiState;
+    
+    @Inject
+    NewsletterSubscriptionService subscriptionService;
     
     List<NewsletterSubscriptor> subscribers;
     
@@ -79,7 +86,10 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
             if (getCategoryId() == 0) {
                 subscribers = subscriptorService.findAll(getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC).getPayload();
                 setPaginationTotal(subscriptorService.findAllCount());
-            }else{
+            } else if (getCategoryId() == -1) {
+                subscribers = subscriptorService.findAll(getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC).getPayload();
+                setPaginationTotal(subscriptorService.findAllCount());
+            }else {
                 filterCategory = categoryService.findById(categoryId).getPayload();
                 subscribers = subscriptorService.findByCategory(filterCategory, getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC);
                 setPaginationTotal(subscriptorService.findByCategoryCount(filterCategory));

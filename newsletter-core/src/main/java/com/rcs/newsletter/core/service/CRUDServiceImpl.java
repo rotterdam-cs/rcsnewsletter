@@ -114,9 +114,11 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
             Criteria criteria = sessionFactory.getCurrentSession().createCriteria(getEntityClass());
             criteria.add(Restrictions.eq(NewsletterEntity.ID, entityId));
             criteria.setMaxResults(1);
-
-            entity = (E) criteria.uniqueResult();
-            success = true;
+            Object entityObject = criteria.uniqueResult();
+            if(entityObject != null) {
+                entity = (E) entityObject;
+                success = true;
+            }
         } catch (NonUniqueResultException ex) {
             String error = "Exists more than unique id";
             logger.error(error, ex);

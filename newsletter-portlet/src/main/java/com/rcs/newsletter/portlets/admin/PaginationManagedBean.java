@@ -6,6 +6,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 public class PaginationManagedBean {
+    
     private static Log log = LogFactoryUtil.getLog(SubscriberAdminManagedBean.class);    
     
     protected int paginationStart = -1;

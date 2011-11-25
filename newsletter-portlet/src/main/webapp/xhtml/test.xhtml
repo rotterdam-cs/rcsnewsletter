@@ -7,7 +7,15 @@
         <title>Facelet Title</title>
     </h:head>
     <h:body>
-        <p:button value="testing"/>
+        <h:form id="ajaxDemoForm">
+             <h:outputLink value="#"
+               onclick="#{javaScriptPortletSessionBean.ajaxDataURL}">
+                  <h:outputText value="Invoke Portlet Data API via Ajax"/>
+             </h:outputLink>             
+<!--             <div id="<%=portletns%>_xprDiv" style="background-color: #ffcccc;">replace me
+             </div>-->
+
+           </h:form>
     </h:body>
 </html>
 

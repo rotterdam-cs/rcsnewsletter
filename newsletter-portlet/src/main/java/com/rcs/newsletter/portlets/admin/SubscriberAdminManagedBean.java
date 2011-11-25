@@ -4,13 +4,10 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.NewsletterConstants;
 import com.rcs.newsletter.core.model.NewsletterCategory;
-import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
-import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -26,6 +23,7 @@ import org.springframework.context.annotation.Scope;
 @Named
 @Scope("session")
 public class SubscriberAdminManagedBean extends PaginationManagedBean {
+    
     private static Log log = LogFactoryUtil.getLog(SubscriberAdminManagedBean.class);    
     private NewsletterCategory filterCategory;
     private int categoryId = 0;
@@ -70,6 +68,10 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;        
+    }
+    
+    public String getCategoryIdAsString() {
+        return String.valueOf(categoryId);
     }
 
     public void changeCategory(AjaxBehaviorEvent event) {

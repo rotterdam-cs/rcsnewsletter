@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:portlet="http://java.sun.com/portlet_2_0"
       xmlns:p="http://primefaces.prime.com.tr/ui"
       xmlns:ui="http://java.sun.com/jsf/facelets">
     
@@ -18,7 +19,6 @@
                 <h:outputLabel value="#{msg['newsletter.admin.subscribers.only.show.subscribers.off']}:&nbsp;" />                               
                 <h:selectOneMenu value="#{subscriberAdminManagedBean.categoryId}">
                     <f:selectItem itemLabel="#{msg['newsletter.admin.general.all.lists']}" itemValue="0" />
-<!--                    <f:selectItem itemLabel="#{nlk['newsletter.admin.lists.deactivate.subscribers']}" itemValue="-1" />-->
                     <f:selectItems value="#{categoryAdminManagedBean.categorys}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}"/>                    
                     <f:ajax event="change" listener="#{subscriberAdminManagedBean.changeCategory}" render="@form"/>
                 </h:selectOneMenu>
@@ -68,12 +68,13 @@
                 </p:column>
 
             </p:dataTable>
-            <br></br>
-                
-            <h:commandButton action="#{subscriptorExportManagedBean.generateReport}" value="Excel Report">
-                <f:setPropertyActionListener target="#{subscriptorExportManagedBean.categoryId}" value="#{subscriberAdminManagedBean.categoryId}" />
-            </h:commandButton>
-                
+            <br></br>            
+            
+            <portlet:resourceURL var="resUrl">
+                <portlet:param id="type" name="type" value="#{subscriptorExportManagedBean.resourceType}"/>
+            </portlet:resourceURL>            
+            <a href="#{resUrl}">#{nlk['newsletter.admin.subscribers.export']}</a>            
+            
         </ui:composition>
     </h:body>
 </html>

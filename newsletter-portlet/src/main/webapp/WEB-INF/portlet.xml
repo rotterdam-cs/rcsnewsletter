@@ -9,7 +9,8 @@
     <portlet>
         <portlet-name>Newsletter-Admin-Faces</portlet-name>
         <display-name>Admin Faces</display-name>
-        <portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+        <portlet-class>com.rcs.newsletter.commons.NewsletterResourcePortlet</portlet-class>
+        
         <init-param>
             <name>javax.portlet.faces.defaultViewId.view</name>
             <value>/xhtml/admin/admin.xhtml</value>

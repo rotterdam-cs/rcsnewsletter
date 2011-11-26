@@ -44,6 +44,10 @@ public class SubscriptionManagedBean implements Serializable {
     private String name;
     private String lastName;
     private String email;
+    private String requestedActivationKey = null;
+    private String requestedsubscriptionId = null;
+    private String requestedDeactivationKey = null;
+    
     private RegistrationConfig currentConfig;
     @Inject
     private NewsletterPortletSettingsService settingsService;
@@ -270,81 +274,101 @@ public class SubscriptionManagedBean implements Serializable {
         return result;
     }
 
-    public void doConfirmRegistration(ValueChangeEvent event) {
+    public String doConfirmRegistration(ValueChangeEvent event) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         ResourceBundle newsletterBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
+        String infoMesage = "";
         try {
-            long subscriptionId = (Long.parseLong((String) event.getNewValue()));
+            //long subscriptionId = (Long.parseLong((String) event.getNewValue()));
+            long subscriptionId = Long.parseLong(getRequestedsubscriptionId()); //Ariel TODO
             ServiceActionResult<NewsletterSubscription> subscriptionResult = subscriptionService.findById(subscriptionId);
 
             if (subscriptionResult.isSuccess()) {
                 NewsletterSubscription subscription = subscriptionResult.getPayload();
+                
+                if (subscription.getActivationKey().equals(getRequestedActivationKey())) {
 
-                subscription.setStatus(SubscriptionStatus.ACTIVE);
+                    subscription.setStatus(SubscriptionStatus.ACTIVE);
 
-                subscriptionResult = subscriptionService.update(subscription);
+                    subscriptionResult = subscriptionService.update(subscription);
 
-                //Send the greeting mail
-                if (subscriptionResult.isSuccess() && subscription.getCategory().getGreetingEmail() != null) {
-                    NewsletterCategory category = subscription.getCategory();
-                    String greetingEmail = category.getGreetingEmail();
-                    String content = greetingEmail;
-                    String subject = newsletterBundle.getString("newsletter.greetings.mail.subject");
+                    //Send the greeting mail
+                    if (subscriptionResult.isSuccess() && subscription.getCategory().getGreetingEmail() != null) {
+                        NewsletterCategory category = subscription.getCategory();
+                        String greetingEmail = category.getGreetingEmail();
+                        String content = greetingEmail;
+                        String subject = newsletterBundle.getString("newsletter.greetings.mail.subject");
 
-                    content = content.replace(LIST_NAME_TOKEN, category.getName());
+                        content = content.replace(LIST_NAME_TOKEN, category.getName());
 
-                    LiferayMailingUtil.sendEmail(category.getFromEmail(), subscription.getSubscriptor().getEmail(), subject, content);
+                        LiferayMailingUtil.sendEmail(category.getFromEmail(), subscription.getSubscriptor().getEmail(), subject, content);
 
-                    String infoMesage = serverMessageBundle.getString("newsletter.registration.confirmed.msg");
-                    FacesUtil.infoMessage(infoMesage);
+                        infoMesage = serverMessageBundle.getString("newsletter.registration.confirmed.msg");
+                        FacesUtil.infoMessage(infoMesage);
+                    } else {
+                        log.error("Could not retrieve the subscription.");
+                        infoMesage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
+                        FacesUtil.errorMessage(infoMesage);
+                    }
                 } else {
-                    log.error("Could not retrieve the subscription.");
-                    String errorMessage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
-                    FacesUtil.errorMessage(errorMessage);
+                    log.error("Invalid Key " + subscription.getActivationKey() + "!=" + getRequestedActivationKey());
+                    infoMesage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
+                    FacesUtil.errorMessage(infoMesage);
                 }
             } else {
                 log.error("Could not retrieve the subscription or the greeting mail is null");
-                String errorMessage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
-                FacesUtil.errorMessage(errorMessage);
+                infoMesage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
+                FacesUtil.errorMessage(infoMesage);
             }
+            
         } catch (Exception ex) {
             log.error("Error", ex);
             String errorMessage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
             FacesUtil.errorMessage(errorMessage);
         }
+        return infoMesage;
     }
 
-    public void doConfirmUnregistration(ValueChangeEvent event) {
+    public String doConfirmUnregistration(ValueChangeEvent event) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
+        String infoMesage = "";
         try {
-            long subscriptionId = (Long.parseLong((String) event.getNewValue()));
+            //long subscriptionId = (Long.parseLong((String) event.getNewValue()));
+            long subscriptionId = Long.parseLong(getRequestedsubscriptionId()); //Ariel TODO
             ServiceActionResult<NewsletterSubscription> subscriptionResult = subscriptionService.findById(subscriptionId);
 
             if (subscriptionResult.isSuccess()) {
+                
                 NewsletterSubscription subscription = subscriptionResult.getPayload();
 
-                subscription.setStatus(SubscriptionStatus.INACTIVE);
-
-                subscriptionResult = subscriptionService.update(subscription);
-
-                //Send the greeting mail
-                if (subscriptionResult.isSuccess()) {
-                    String infoMesage = serverMessageBundle.getString("newsletter.unregistration.confirmed.msg");
-                    FacesUtil.infoMessage(infoMesage);
+                if (subscription.getActivationKey().equals(getRequestedActivationKey())) {                
+                    subscription.setStatus(SubscriptionStatus.INACTIVE);
+                    subscriptionResult = subscriptionService.update(subscription);
+                    //Send the greeting mail
+                    if (subscriptionResult.isSuccess()) {
+                        infoMesage = serverMessageBundle.getString("newsletter.unregistration.confirmed.msg");
+                        FacesUtil.infoMessage(infoMesage);
+                    } else {
+                        infoMesage = serverMessageBundle.getString("newsletter.unregistration.unconfirmed.msg");
+                        FacesUtil.errorMessage(infoMesage);
+                    }                
                 } else {
-                    String errorMessage = serverMessageBundle.getString("newsletter.unregistration.unconfirmed.msg");
-                    FacesUtil.errorMessage(errorMessage);
+                    log.error("Invalid Key " + subscription.getActivationKey() + "!=" + getRequestedActivationKey());
+                    infoMesage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
+                    FacesUtil.errorMessage(infoMesage);
                 }
+                
             } else {
-                String errorMessage = serverMessageBundle.getString("newsletter.unregistration.unconfirmed.msg");
-                FacesUtil.errorMessage(errorMessage);
+                infoMesage = serverMessageBundle.getString("newsletter.unregistration.unconfirmed.msg");
+                FacesUtil.errorMessage(infoMesage);
             }
         } catch (Exception ex) {
-            String errorMessage = serverMessageBundle.getString("newsletter.unregistration.unconfirmed.msg");
-            FacesUtil.errorMessage(errorMessage);
+            infoMesage = serverMessageBundle.getString("newsletter.unregistration.unconfirmed.msg");
+            FacesUtil.errorMessage(infoMesage);
         }
+        return infoMesage;
     }
 
     private void clearData() {
@@ -354,24 +378,32 @@ public class SubscriptionManagedBean implements Serializable {
     }
     
     public String getActivationkey() {        
-        String result = "";        
-        Object outcome = null;
+        String result = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Map<String, Object> map = facesContext.getExternalContext().getRequestMap();
-        System.out.println("VI 1" + facesContext.getViewRoot());
         if (map != null) {
             for (String key : map.keySet()) {
                 if (map.get(key) instanceof HttpServletRequestWrapper) {
                     HttpServletRequest request = (HttpServletRequest) ((HttpServletRequestWrapper) map.get(key)).getRequest();
-                    outcome = request.getParameter("activationkey");
+                    setRequestedActivationKey((String) request.getParameter("activationkey"));
+                    setRequestedsubscriptionId((String) request.getParameter("subscriptionid"));
+                    setRequestedDeactivationKey((String) request.getParameter("deactivationkey"));
                     break;
                 }
             }
         }
-        if(outcome != null) {
-            result = (String) outcome;
+        //To activate the subscription 
+        if(getRequestedActivationKey() != null && getRequestedsubscriptionId() != null) {
+            result = doConfirmRegistration(null);
+            setRequestedActivationKey(null);
+            setRequestedsubscriptionId(null);
+        //to deactivate the subscription
+        } else if(getRequestedDeactivationKey() != null && getRequestedsubscriptionId() != null) {
+            result = doConfirmUnregistration(null);
+            setRequestedActivationKey(null);
+            setRequestedDeactivationKey(null);
         }
-        System.out.println("VI " + facesContext.getViewRoot());
+        log.error("******** getRequestedActivationKey:" + getRequestedActivationKey() + " getRequestedsubscriptionId:" + getRequestedsubscriptionId());                
         return result;
     }
     
@@ -416,4 +448,30 @@ public class SubscriptionManagedBean implements Serializable {
     public void setCurrentConfig(RegistrationConfig currentConfig) {
         this.currentConfig = currentConfig;
     }
+
+    public String getRequestedActivationKey() {
+        return requestedActivationKey;
+    }
+
+    public void setRequestedActivationKey(String requestedActivationKey) {
+        this.requestedActivationKey = requestedActivationKey;
+    }
+
+    public String getRequestedsubscriptionId() {
+        return requestedsubscriptionId;
+    }
+
+    public void setRequestedsubscriptionId(String requestedsubscriptionId) {
+        this.requestedsubscriptionId = requestedsubscriptionId;
+    }
+
+    public String getRequestedDeactivationKey() {
+        return requestedDeactivationKey;
+    }
+
+    public void setRequestedDeactivationKey(String requestedDeactivationKey) {
+        this.requestedDeactivationKey = requestedDeactivationKey;
+    }
+    
+    
 }

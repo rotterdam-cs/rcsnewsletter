@@ -9,7 +9,7 @@
     <modules>
         <module>newsletter-core</module>
         <module>newsletter-portlet</module>
-    </modules>
+  </modules>
   
     <build>
         <plugins>

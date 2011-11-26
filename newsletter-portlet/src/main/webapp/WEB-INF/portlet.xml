@@ -66,7 +66,7 @@
         </supports>
                 <!--<resource-bundle>Language</resource-bundle> -->
         <portlet-info>
-            <title>lrfaces Portlet</title>
+            <title>Newsletter Confirmation Portlet</title>
             <short-title>Registration Confirmation</short-title>
             <keywords>Registration Confirmation</keywords>
         </portlet-info>

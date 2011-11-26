@@ -5,13 +5,10 @@
       xmlns:h="http://java.sun.com/jsf/html">
     <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>
-        <title>Facelet Title</title>
+        <title>Registration</title>
     </h:head>
     <h:body>
-        <h:inputText styleClass="activationkey" value="#{subscriptionManagedBean.activationkey}" size="1" />
-        <div class="registration-sucess" style="display: none;">
-            <h:outputText styleClass="registration-sucess" value="#{nlk['newsletter.registration.success.msg']}" escape="false"/>          
-        </div>
+        <h:outputText  value="#{subscriptionManagedBean.activationkey}" escape="false"/>
     </h:body>
 </html>
 

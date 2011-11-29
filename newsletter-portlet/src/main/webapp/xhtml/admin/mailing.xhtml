@@ -66,10 +66,15 @@
             </p:dataTable>
             
             <p:inputText id="testEmail" styleClass="newsletter-forms-input-text newsletter-forms-button newsletter-forms-confirmation-delete-panel"  value="#{newsletterMailingManagedBean.testEmail}" />
-            <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendtest']}" action="#{newsletterMailingManagedBean.sendTestMailing}" update="infoMessages" /><br />
+            <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendtest']}" action="#{newsletterMailingManagedBean.sendTestMailing}" update="messages" >
+                <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{newsletterMailingManagedBean.selectedMailing.mailing.id}" />
+            </p:commandButton>                
+            <br />
             <p:watermark for="testEmail" value="#{nlk['newsletter.admin.mailing.testfiller']}" />
             
-            <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendnewsletter']}" action="#{newsletterMailingManagedBean.redirectConfirmSend}" update="infoMessages"/>            
+            <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendnewsletter']}" action="#{newsletterMailingManagedBean.redirectConfirmSend}" update="messages">
+                <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{newsletterMailingManagedBean.selectedMailing.mailing.id}" />
+            </p:commandButton>
         </ui:composition>
     </h:body>
 </html>

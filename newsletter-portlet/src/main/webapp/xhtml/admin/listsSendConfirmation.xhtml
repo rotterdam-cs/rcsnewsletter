@@ -11,6 +11,7 @@
     </h:head>
     <h:body>
         <h:form>
+            <h:inputHidden value="#{newsletterMailingManagedBean.mailingId}"/>
             <h1>#{nlk['newsletter.admin.mailing.sendnewsletter']}</h1>
             <p>
                <h:outputFormat value="#{nlk['newsletter.admin.mailing.send.confirmation.l1']}" escape="false">

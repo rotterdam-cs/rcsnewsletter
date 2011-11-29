@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Scope;
  * @author juan
  */
 @Named
-@Scope("session")
+@Scope("request")
 public class EditMailingManagedBean {
     
     //////////////// DEPENDENCIES //////////////////

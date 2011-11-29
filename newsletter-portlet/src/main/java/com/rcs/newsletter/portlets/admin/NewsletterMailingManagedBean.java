@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Scope;
  * @author juan
  */
 @Named
-@Scope("session")
+@Scope("request")
 public class NewsletterMailingManagedBean implements Serializable {
     private static Log log = LogFactoryUtil.getLog(NewsletterMailingManagedBean.class);  
     private static final long serialVersionUID = 1L;
@@ -81,7 +81,6 @@ public class NewsletterMailingManagedBean implements Serializable {
     }
 
     public String confirmDeletion() {
-
         ServiceActionResult<NewsletterMailing> result = service.findById(mailingId);
         if (!result.isSuccess()) {
             FacesUtil.errorMessage("Could not find mailing to delete");
@@ -99,15 +98,21 @@ public class NewsletterMailingManagedBean implements Serializable {
     
     public void sendTestMailing() {
         if (selectedMailing == null) {
-            FacesUtil.infoMessage("Please select one row to send the test email");
+            FacesUtil.errorMessage("Please select one row to send the test email");
             return;
         }
         service.sendTestMailing(selectedMailing.getMailing().getId(), testEmail, uiState.getThemeDisplay());
         FacesUtil.infoMessage("Test email is scheduled to be sent");
     }
     
-    public String sendMailing() {
-        NewsletterMailing mailing = selectedMailing.getMailing();
+    public String sendMailing() {        
+        ServiceActionResult<NewsletterMailing> result = service.findById(mailingId);
+        if (!result.isSuccess()) {
+            FacesUtil.errorMessage("Could not find mailing to send");
+            return "admin";
+        }
+        
+        NewsletterMailing mailing = result.getPayload();
         service.sendMailing(mailing.getId(), uiState.getThemeDisplay());
         
         //we are going to save this version of the mailing
@@ -116,6 +121,7 @@ public class NewsletterMailingManagedBean implements Serializable {
         saveArchiveForMailing(mailing.getName(), mailing.getList().getName(), article.getTitle(), emailContent);
         
         FacesUtil.infoMessage("Mailing scheduled to be sent.");
+        
         return "admin";
     }
     

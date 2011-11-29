@@ -13,7 +13,7 @@
         <h2>#{nlk['newsletter.registration.config.title']}</h2>
         <hr />
         <h:form>
-            <p:growl id="messages" />
+            <p:messages id="messages" />
             <h:panelGrid columns="2" styleClass="newsletter-forms-form" columnClasses="newletter-registration-settings,newletter-registration-settings">
                 <h:outputLabel value="#{msg['newsletter.admin.general.list']}:" />
                 <h:selectOneListbox size="1" value="#{subscriptionManagedBean.currentConfig.listId}">

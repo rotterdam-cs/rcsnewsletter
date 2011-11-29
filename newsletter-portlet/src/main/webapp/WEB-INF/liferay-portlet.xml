@@ -29,6 +29,7 @@
         <instanceable>true</instanceable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
         <footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+        <css-class-wrapper>newsletter-confirmation-msg</css-class-wrapper>
     </portlet>
         
     <role-mapper>

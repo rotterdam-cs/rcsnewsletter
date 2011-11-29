@@ -15,5 +15,5 @@ jQuery(document).ready(function() {
        $j('#unregister-link').toggle();
        $j('#register-link').toggle();
        $j('.infohidden').toggle();
-    });    
+    });
 });

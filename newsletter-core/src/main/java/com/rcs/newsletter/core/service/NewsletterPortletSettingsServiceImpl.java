@@ -44,7 +44,8 @@ public class NewsletterPortletSettingsServiceImpl implements NewsletterPortletSe
     }
 
     @Override
-    public ServiceActionResult updateConfig(String portletId, RegistrationConfig data) {        
+    public ServiceActionResult updateConfig(String portletId, RegistrationConfig data) {  
+        
         Set violations = validator.validate(data);
         
         if (!violations.isEmpty()) {
@@ -71,9 +72,8 @@ public class NewsletterPortletSettingsServiceImpl implements NewsletterPortletSe
         config.setDisableName(data.isDisableName());
         
         if (isNew) {
-            template.save(config);
-        }
-                        
+            Object a = template.save(config);
+        }            
         return ServiceActionResult.buildSuccess(null);
     }
     

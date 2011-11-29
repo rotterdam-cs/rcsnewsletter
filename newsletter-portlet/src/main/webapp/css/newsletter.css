@@ -125,10 +125,21 @@
     width: 200px!important;
 }
 
-.activationkey{
+.activationkey {
     display: none;
 }
 
 .registration-confirmation-messages {
     font-size: large;
+    background-color: #BDE5F8;
+    color: #00529B;
+    
+    border: 1px solid;
+    margin: 10px 0;
+    padding: 10px;
+}
+
+.newsletter-confirmation-msg {    
+    text-align: center!important;
+    display: none;
 }

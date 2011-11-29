@@ -5,14 +5,15 @@
       xmlns:p="http://primefaces.prime.com.tr/ui"
       xmlns:h="http://java.sun.com/jsf/html">
     <f:loadBundle basename="Newsletter" var="nlk" />
-    <h:head>
-        <title>Registration</title>
-    </h:head>
     <h:body>
-        <h:form>
-            <p:messages />
-            <h:outputText styleClass="registration-confirmation-messages" value="#{subscriptionManagedBean.activationkey}" escape="false"/>
-        </h:form>
+        <script type="text/javascript">
+            jQuery(document).ready(function() {                
+                var msg = jQuery(".registration-confirmation-messages").html();
+                if (msg != "") {
+                    jQuery(".newsletter-confirmation-msg").show();
+                }
+            });            
+        </script>
+       <h:outputText styleClass="registration-confirmation-messages" value="#{subscriptionManagedBean.activationkey}" escape="false"/>
     </h:body>
 </html>
-

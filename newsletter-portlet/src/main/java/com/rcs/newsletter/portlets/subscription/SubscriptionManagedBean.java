@@ -80,7 +80,8 @@ public class SubscriptionManagedBean implements Serializable {
             log.error("Settings updated successfully");
         } else {
             String errorMessage = serverMessageBundle.getString("newsletter.registration.settings.save.error");
-            FacesUtil.errorMessage(errorMessage);
+            FacesUtil.errorMessage(errorMessage);            
+            log.error("Error");
         }
     }
 

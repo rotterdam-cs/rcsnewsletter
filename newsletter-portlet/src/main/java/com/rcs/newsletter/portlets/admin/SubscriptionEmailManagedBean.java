@@ -173,6 +173,6 @@ public class SubscriptionEmailManagedBean {
             FacesUtil.errorMessage(errorMsg);
         }
 
-        return uiState.redirectAdmin();
+        return "admin";
     }
 }

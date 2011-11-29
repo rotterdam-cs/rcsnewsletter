@@ -149,7 +149,7 @@ public class SubscriberCRUDManagedBean {
         } else {
             FacesUtil.errorMessage(message);
         }
-        return uiState.redirectAdmin();
+        return "admin";
     }
     
     
@@ -195,6 +195,6 @@ public class SubscriberCRUDManagedBean {
             }
             
         }
-        return uiState.redirectAdmin();
+        return "admin";
     }
 }

@@ -13,7 +13,6 @@
             <f:loadBundle basename="Newsletter" var="nlk" />
             <p:commandButton value="#{nlk['newsletter.admin.lists.add']}" action="#{categoryCRUDManagedBean.redirectCreateCategory}"/>
             <hr/>
-            <p:messages />
             <p:dataTable var="item" value="#{categoryAdminManagedBean.categorys}">
                 
                 <p:column styleClass="newsletter-panel-column-id">

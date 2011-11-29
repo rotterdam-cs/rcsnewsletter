@@ -9,6 +9,10 @@ import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.util.FacesUtil;
+import java.util.ResourceBundle;
+import javax.faces.context.FacesContext;
+
+import static com.rcs.newsletter.NewsletterConstants.*;
 
 /**
  *
@@ -112,7 +116,7 @@ public class CategoryCRUDManagedBean {
             this.fromName = newsletterCategory.getFromName();
             this.setAction(CRUDActionEnum.UPDATE);
         } else {
-            return uiState.redirectAdmin();
+            return "admin";
         }
 
         return "editCategory";
@@ -126,6 +130,8 @@ public class CategoryCRUDManagedBean {
 
     public String save() {
         NewsletterCategory newsletterCategory = null;
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         String message = "";
 
         switch (getAction()) {
@@ -135,9 +141,11 @@ public class CategoryCRUDManagedBean {
                 ServiceActionResult<NewsletterCategory> saveResult = categoryCRUDService.save(newsletterCategory);
 
                 if (saveResult.isSuccess()) {
+                    message = serverMessageBundle.getString("newsletter.admin.category.save.success");
                     FacesUtil.infoMessage(message);
                 } else {
-                    FacesUtil.errorMessage(saveResult.getValidationKeys());
+                    message = serverMessageBundle.getString("newsletter.admin.category.save.failure");
+                    FacesUtil.errorMessage(message);
                 }
                 break;
             case UPDATE:
@@ -149,15 +157,17 @@ public class CategoryCRUDManagedBean {
                     ServiceActionResult<NewsletterCategory> updateResult = categoryCRUDService.update(newsletterCategory);
 
                     if (updateResult.isSuccess()) {
+                        message = serverMessageBundle.getString("newsletter.admin.category.update.success");
                         FacesUtil.infoMessage(message);
                     } else {
-                        FacesUtil.errorMessage(updateResult.getValidationKeys());
+                        message = serverMessageBundle.getString("newsletter.admin.category.update.failure");
+                        FacesUtil.errorMessage(message);
                     }
                 }
                 break;
         }
-
-        return uiState.redirectAdmin();
+        
+        return "admin";
     }
 
     private void fillNewsletterCategory(NewsletterCategory newsletterCategory) {
@@ -170,19 +180,25 @@ public class CategoryCRUDManagedBean {
     public String delete() {
         ServiceActionResult<NewsletterCategory> serviceActionResult = categoryCRUDService.findById(getId());
         String message = "";
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
+        
         if (serviceActionResult.isSuccess()) {
             NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
             ServiceActionResult<NewsletterCategory> deleteActionResult = categoryCRUDService.delete(newsletterCategory);
 
             if (deleteActionResult.isSuccess()) {
+                message = serverMessageBundle.getString("newsletter.admin.category.delete.success");
                 FacesUtil.infoMessage(message);
             } else {
-                FacesUtil.errorMessage(deleteActionResult.getValidationKeys());
+                message = serverMessageBundle.getString("newsletter.admin.category.delete.failure");
+                FacesUtil.errorMessage(message);
             }
         } else {
-            FacesUtil.errorMessage(serviceActionResult.getValidationKeys());
+            message = serverMessageBundle.getString("newsletter.admin.category.delete.failure");
+            FacesUtil.errorMessage(message);
         }
 
-        return uiState.redirectAdmin();
+        return "admin";
     }
 }

@@ -1,14 +1,10 @@
 package com.rcs.newsletter.portlets.admin;
 
-import com.liferay.portlet.journal.model.JournalArticle;
-import com.rcs.newsletter.core.model.NewsletterArchive;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterMailing;
-import com.rcs.newsletter.core.service.NewsletterArchiveService;
 import com.rcs.newsletter.core.service.NewsletterMailingService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.util.FacesUtil;
-import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -26,12 +22,6 @@ public class EditMailingManagedBean {
     //////////////// DEPENDENCIES //////////////////
     @Inject
     private NewsletterMailingService service;
-    
-    @Inject
-    private NewsletterArchiveService archiveService;
-    
-    @Inject
-    private UserUiStateManagedBean uiState;
     
     private NewsletterMailingManagedBean mailingManagedBean;
     
@@ -87,12 +77,7 @@ public class EditMailingManagedBean {
         }
         
         if (result.isSuccess()) {
-            mailingManagedBean.init();
-            JournalArticle article = uiState.getJournalArticleByArticleId(articleId);
-            String emailContent = uiState.getContent(article);
-            //we save this version of the mailing
-            saveArchiveForMailing(mailing.getName(), mailing.getList().getName(), article.getTitle(), emailContent);
-            
+            mailingManagedBean.init();            
             return "admin";
         } else {
             FacesUtil.errorMessage("Failed to create mailing");
@@ -103,24 +88,7 @@ public class EditMailingManagedBean {
         }
         
         return null;
-    }
-    
-    /**
-     * Save this version of the Mailing
-     * @param mailingName
-     * @param categoryName
-     * @param emailBody 
-     */
-    private void saveArchiveForMailing(String mailingName, String categoryName, String articleTitle, String emailBody) {
-        NewsletterArchive archive = new NewsletterArchive();
-        archive.setDate(new Date());
-        archive.setCategoryName(categoryName);
-        archive.setArticleTitle(articleTitle);
-        archive.setEmailBody(emailBody);
-        archive.setName(mailingName);        
-
-        archiveService.save(archive);
-    }
+    }    
     
     private NewsletterCategory findListById(Long categoryId) {
         if (categoryId == null) {

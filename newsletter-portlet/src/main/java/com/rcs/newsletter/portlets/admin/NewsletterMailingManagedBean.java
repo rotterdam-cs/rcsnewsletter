@@ -2,8 +2,11 @@ package com.rcs.newsletter.portlets.admin;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portlet.journal.model.JournalArticle;
+import com.rcs.newsletter.core.model.NewsletterArchive;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterMailing;
+import com.rcs.newsletter.core.service.NewsletterArchiveService;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterMailingService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
@@ -12,6 +15,7 @@ import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.portlets.admin.dto.MailingTableRow;
 import com.rcs.newsletter.util.FacesUtil;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -40,8 +44,10 @@ public class NewsletterMailingManagedBean implements Serializable {
     NewsletterSubscriptionService subscriptionService;
     @Inject
     NewsletterSubscriptorService subscriptorService;
+    @Inject
+    private NewsletterArchiveService archiveService;
+    
     private List<MailingTableRow> mailingList;
-    private List<NewsletterCategory> categories;
     private Long mailingId;
     private String testEmail;
     private MailingTableRow selectedMailing;
@@ -101,9 +107,33 @@ public class NewsletterMailingManagedBean implements Serializable {
     }
     
     public String sendMailing() {
-        service.sendMailing(selectedMailing.getMailing().getId(), uiState.getThemeDisplay());
+        NewsletterMailing mailing = selectedMailing.getMailing();
+        service.sendMailing(mailing.getId(), uiState.getThemeDisplay());
+        
+        //we are going to save this version of the mailing
+        JournalArticle article = uiState.getJournalArticleByArticleId(mailing.getArticleId());
+        String emailContent = uiState.getContent(article);        
+        saveArchiveForMailing(mailing.getName(), mailing.getList().getName(), article.getTitle(), emailContent);
+        
         FacesUtil.infoMessage("Mailing scheduled to be sent.");
         return "admin";
+    }
+    
+    /**
+     * Save this version of the Mailing
+     * @param mailingName
+     * @param categoryName
+     * @param emailBody 
+     */
+    private void saveArchiveForMailing(String mailingName, String categoryName, String articleTitle, String emailBody) {
+        NewsletterArchive archive = new NewsletterArchive();
+        archive.setDate(new Date());
+        archive.setCategoryName(categoryName);
+        archive.setArticleTitle(articleTitle);
+        archive.setEmailBody(emailBody);
+        archive.setName(mailingName);        
+
+        archiveService.save(archive);
     }
     
      public String redirectConfirmSend() {

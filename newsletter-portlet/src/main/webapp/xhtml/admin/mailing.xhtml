@@ -69,8 +69,7 @@
             <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendtest']}" action="#{newsletterMailingManagedBean.sendTestMailing}" update="infoMessages" /><br />
             <p:watermark for="testEmail" value="#{nlk['newsletter.admin.mailing.testfiller']}" />
             
-            <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendnewsletter']}" action="#{newsletterMailingManagedBean.redirectConfirmSend}" update="infoMessages"/>
-            <p:messages id="infoMessages" />
+            <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendnewsletter']}" action="#{newsletterMailingManagedBean.redirectConfirmSend}" update="infoMessages"/>            
         </ui:composition>
     </h:body>
 </html>

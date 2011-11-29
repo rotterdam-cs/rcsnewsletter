@@ -11,8 +11,7 @@
     <h:body>
         <ui:composition>
             <f:loadBundle basename="Newsletter" var="nlk" />
-            <f:loadBundle basename="Language" var="msg" />
-            <p:growl id="infoMessages" />
+            <f:loadBundle basename="Language" var="msg" />            
             <p:commandButton value="#{nlk['newsletter.admin.mailing.createtitle']}" action="#{newsletterMailingManagedBean.addMailing}" />
             <hr />
             <p:dataTable var="row" value="#{newsletterMailingManagedBean.mailingList}" selection="#{newsletterMailingManagedBean.selectedMailing}">
@@ -70,7 +69,7 @@
             <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendtest']}" action="#{newsletterMailingManagedBean.sendTestMailing}" update="infoMessages" /><br />
             <p:watermark for="testEmail" value="#{nlk['newsletter.admin.mailing.testfiller']}" />
             <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendnewsletter']}" action="#{newsletterMailingManagedBean.sendMailing}" update="infoMessages"/>
-            
+            <p:messages id="infoMessages" />
         </ui:composition>
     </h:body>
 </html>

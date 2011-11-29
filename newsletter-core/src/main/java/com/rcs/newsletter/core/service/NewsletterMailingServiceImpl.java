@@ -5,6 +5,7 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
+import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.util.LiferayMailingUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,9 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
             JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(mailing.getArticleId()); 
             
             for (NewsletterSubscription newsletterSubscription : mailing.getList().getSubscriptions()) {
-                mailingUtil.sendArticleByEmail(ja, themeDisplay, newsletterSubscription.getSubscriptor().getEmail(), fromEmailAddress);
+                if(newsletterSubscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
+                    mailingUtil.sendArticleByEmail(ja, themeDisplay, newsletterSubscription.getSubscriptor().getEmail(), fromEmailAddress);
+                }
             }
         } catch (Exception ex) {
             logger.error("Error while trying to read article", ex);

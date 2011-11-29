@@ -128,3 +128,7 @@
 .activationkey{
     display: none;
 }
+
+.registration-confirmation-messages {
+    font-size: large;
+}

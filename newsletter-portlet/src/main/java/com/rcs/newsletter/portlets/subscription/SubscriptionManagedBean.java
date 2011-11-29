@@ -20,7 +20,6 @@ import com.rcs.newsletter.core.service.util.LiferayMailingUtil;
 import com.rcs.newsletter.util.FacesUtil;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
-import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
@@ -36,7 +35,7 @@ import static com.rcs.newsletter.NewsletterConstants.*;
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
 @Named
-@Scope("session")
+@Scope("request")
 public class SubscriptionManagedBean implements Serializable {
 
     private static Log log = LogFactoryUtil.getLog(SubscriptionManagedBean.class);
@@ -274,16 +273,14 @@ public class SubscriptionManagedBean implements Serializable {
         return result;
     }
 
-    public String doConfirmRegistration(ValueChangeEvent event) {
+    public String doConfirmRegistration() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         ResourceBundle newsletterBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
         String infoMesage = "";
-        try {
-            //long subscriptionId = (Long.parseLong((String) event.getNewValue()));
-            long subscriptionId = Long.parseLong(getRequestedsubscriptionId()); //Ariel TODO
+        try {            
+            long subscriptionId = Long.parseLong(getRequestedsubscriptionId());
             ServiceActionResult<NewsletterSubscription> subscriptionResult = subscriptionService.findById(subscriptionId);
-
             if (subscriptionResult.isSuccess()) {
                 NewsletterSubscription subscription = subscriptionResult.getPayload();
                 
@@ -330,13 +327,12 @@ public class SubscriptionManagedBean implements Serializable {
         return infoMesage;
     }
 
-    public String doConfirmUnregistration(ValueChangeEvent event) {
+    public String doConfirmUnregistration() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         String infoMesage = "";
         try {
-            //long subscriptionId = (Long.parseLong((String) event.getNewValue()));
-            long subscriptionId = Long.parseLong(getRequestedsubscriptionId()); //Ariel TODO
+            long subscriptionId = Long.parseLong(getRequestedsubscriptionId());
             ServiceActionResult<NewsletterSubscription> subscriptionResult = subscriptionService.findById(subscriptionId);
 
             if (subscriptionResult.isSuccess()) {
@@ -377,6 +373,11 @@ public class SubscriptionManagedBean implements Serializable {
         this.email = "";
     }
     
+    /**
+     * Method that is launched when the registration-confirm portlet receive
+     * the params from the URL
+     * @return 
+     */
     public String getActivationkey() {        
         String result = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -386,7 +387,7 @@ public class SubscriptionManagedBean implements Serializable {
                 if (map.get(key) instanceof HttpServletRequestWrapper) {
                     HttpServletRequest request = (HttpServletRequest) ((HttpServletRequestWrapper) map.get(key)).getRequest();
                     setRequestedActivationKey((String) request.getParameter("activationkey"));
-                    setRequestedsubscriptionId((String) request.getParameter("subscriptionid"));
+                    setRequestedsubscriptionId((String) request.getParameter("subscriptionId"));
                     setRequestedDeactivationKey((String) request.getParameter("deactivationkey"));
                     break;
                 }
@@ -394,16 +395,13 @@ public class SubscriptionManagedBean implements Serializable {
         }
         //To activate the subscription 
         if(getRequestedActivationKey() != null && getRequestedsubscriptionId() != null) {
-            result = doConfirmRegistration(null);
-            setRequestedActivationKey(null);
-            setRequestedsubscriptionId(null);
+            result = doConfirmRegistration();
         //to deactivate the subscription
         } else if(getRequestedDeactivationKey() != null && getRequestedsubscriptionId() != null) {
-            result = doConfirmUnregistration(null);
-            setRequestedActivationKey(null);
-            setRequestedDeactivationKey(null);
+            result = doConfirmUnregistration();
         }
-        log.error("******** getRequestedActivationKey:" + getRequestedActivationKey() + " getRequestedsubscriptionId:" + getRequestedsubscriptionId());                
+        log.error("******** getRequestedActivationKey:" + getRequestedActivationKey() + " getRequestedsubscriptionId:" + getRequestedsubscriptionId());
+        
         return result;
     }
     

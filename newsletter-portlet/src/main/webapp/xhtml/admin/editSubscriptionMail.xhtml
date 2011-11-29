@@ -14,7 +14,7 @@
         <h:form id="edit-subscription-email-form">
             <h:inputHidden value="#{subscriptionEmailManagedBean.subscriptionType}"/>
             <p:dialog header="#{nlk['newsletter.admin.category.subscriptionmail.help']}" widgetVar="dlg3" showEffect="bounce" hideEffect="explode" height="150" width="350" resizable="false">  
-                <h:outputText value="#{nlk['newsletter.admin.category.subscriptionmail.info']}" escape="false"/>  
+                <h:outputText value="#{subscriptionEmailManagedBean.helpPageText}" escape="false"/>  
             </p:dialog> 
             <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>
             <p:commandButton styleClass="newsletter-forms-button" value="#{msg['newsletter.admin.category.general.help']}" onclick="dlg3.show();" type="button"/> 

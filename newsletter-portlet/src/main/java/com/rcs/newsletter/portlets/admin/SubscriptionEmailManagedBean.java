@@ -23,6 +23,11 @@ import static com.rcs.newsletter.NewsletterConstants.*;
 public class SubscriptionEmailManagedBean {
 
     private static Log log = LogFactoryUtil.getLog(SubscriptionEmailManagedBean.class);
+    
+    private static final String GREETING_MAIL_INFO = "newsletter.admin.category.greetingmail.info";
+    private static final String SUBSCRIPTION_MAIL_INFO = "newsletter.admin.category.subscriptionmail.info";
+    private static final String UNSUBSCRIPTION_MAIL_INFO = "newsletter.admin.category.unsubscriptionmail.info";
+    
     @Inject
     NewsletterCategoryService categoryService;
     @Inject
@@ -31,6 +36,7 @@ public class SubscriptionEmailManagedBean {
     private NewsletterCategory newsletterCategory;
     private SubscriptionTypeEnum subscriptionType;
     private String subscriptionEmailBody;
+    private String helpPageText;
 
     public int getCategoryId() {
         return categoryId;
@@ -62,6 +68,14 @@ public class SubscriptionEmailManagedBean {
 
     public void setSubscriptionType(SubscriptionTypeEnum subscriptionType) {
         this.subscriptionType = subscriptionType;
+    }
+
+    public String getHelpPageText() {
+        return helpPageText;
+    }
+
+    public void setHelpPageText(String helpPageText) {
+        this.helpPageText = helpPageText;
     }
 
     public String redirectEditSubscribeMail() {
@@ -99,21 +113,28 @@ public class SubscriptionEmailManagedBean {
     private void fillData() {
         uiState.refresh();
         ServiceActionResult serviceActionResult = categoryService.findById(categoryId);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
         if (serviceActionResult.isSuccess()) {
             this.newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
             String emailContentBody = "";
+            String helpText = "";
             switch (getSubscriptionType()) {
                 case SUBSCRIBE:
                     emailContentBody = newsletterCategory.getSubscriptionEmail();
+                    helpText = newsletterMessageBundle.getString(SUBSCRIPTION_MAIL_INFO);
                     break;
                 case UNSUBSCRIBE:
                     emailContentBody = newsletterCategory.getUnsubscriptionEmail();
+                    helpText = newsletterMessageBundle.getString(UNSUBSCRIPTION_MAIL_INFO);
                     break;
                 case GREETING:
                     emailContentBody = newsletterCategory.getGreetingEmail();
+                    helpText = newsletterMessageBundle.getString(GREETING_MAIL_INFO);
                     break;
             }
             this.setSubscriptionEmailBody(emailContentBody);
+            this.setHelpPageText(helpText);
         }
     }
 

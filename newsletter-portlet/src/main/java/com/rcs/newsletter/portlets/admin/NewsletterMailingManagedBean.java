@@ -1,9 +1,13 @@
 package com.rcs.newsletter.portlets.admin;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterMailingService;
+import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
+import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.portlets.admin.dto.MailingTableRow;
 import com.rcs.newsletter.util.FacesUtil;
@@ -22,7 +26,7 @@ import org.springframework.context.annotation.Scope;
 @Named
 @Scope("session")
 public class NewsletterMailingManagedBean implements Serializable {
-
+    private static Log log = LogFactoryUtil.getLog(NewsletterMailingManagedBean.class);  
     private static final long serialVersionUID = 1L;
     @Inject
     private UserUiStateManagedBean uiState;
@@ -32,6 +36,10 @@ public class NewsletterMailingManagedBean implements Serializable {
     private NewsletterMailingService service;
     @Inject
     private NewsletterCategoryService categoryService;
+    @Inject
+    NewsletterSubscriptionService subscriptionService;
+    @Inject
+    NewsletterSubscriptorService subscriptorService;
     private List<MailingTableRow> mailingList;
     private List<NewsletterCategory> categories;
     private Long mailingId;
@@ -92,14 +100,52 @@ public class NewsletterMailingManagedBean implements Serializable {
         FacesUtil.infoMessage("Test email is scheduled to be sent");
     }
     
-    public void sendMailing() {
-        if (selectedMailing == null) {
-            FacesUtil.infoMessage("Please select one row to send the mailing");
-            return;
-        }
+    public String sendMailing() {
         service.sendMailing(selectedMailing.getMailing().getId(), uiState.getThemeDisplay());
         FacesUtil.infoMessage("Mailing scheduled to be sent.");
+        return "admin";
     }
+    
+     public String redirectConfirmSend() {
+        if (selectedMailing == null) {
+            FacesUtil.infoMessage("Please select one row to send the mailing");
+            return null;
+        } else {
+            uiState.setAdminActiveTabIndex(UserUiStateManagedBean.MAILING_TAB_INDEX);
+            return "listsSendConfirmation";
+        }
+    }
+     
+    public String getSelectedListName(){
+        if (selectedMailing == null) {            
+            return null;
+        }else{
+            return selectedMailing.getMailing().getList().getName();
+        }
+    }
+    public String getSelectedMailingName(){
+        if (selectedMailing == null) {            
+            return null;
+        }else{
+            return selectedMailing.getMailing().getName();
+        }
+    }
+    public String getSelectedArticleName(){
+        if (selectedMailing == null) {            
+            return null;
+        }else{
+            return selectedMailing.getArticleTitle();
+        }
+    }
+    public int getSelectedListCountMembers(){
+        if (selectedMailing == null) {            
+            return 0;
+        }else{            
+            NewsletterCategory filterCategory = selectedMailing.getMailing().getList();
+            return subscriptorService.findByCategoryCount(filterCategory);
+        }
+    }
+    
     
     public Long getMailingId() {
         return mailingId;

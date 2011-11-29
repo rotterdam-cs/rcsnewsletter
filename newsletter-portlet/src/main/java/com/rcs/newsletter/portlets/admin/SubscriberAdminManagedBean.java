@@ -101,6 +101,18 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
         }
     }
     
+    public List<NewsletterSubscriptor> getSubscriptorsByFilterCategory() {
+        List<NewsletterSubscriptor> result = null;
+        NewsletterCategory category = getFilterCategory();
+        if(category != null) {
+            result = subscriptorService.findByCategory(getFilterCategory());
+        } else {
+            result = subscriptorService.findAll().getPayload();
+        }
+        
+        return result;
+    }
+    
     @Override
     public void gotoPage() {
         super.gotoPage();

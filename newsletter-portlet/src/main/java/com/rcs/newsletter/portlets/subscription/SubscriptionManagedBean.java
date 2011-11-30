@@ -161,11 +161,13 @@ public class SubscriptionManagedBean implements Serializable {
                             stringBuilder.append("&activationkey=");
                             stringBuilder.append(subscription.getActivationKey());
                             
-                            String subscriptorName = subscriptor.getFirstName() != null ? subscriptor.getFirstName() : "";
-
+                            String subscriptorFirstName = subscriptor.getFirstName() != null ? subscriptor.getFirstName() : "";
+                            String subscriptorLastName = subscriptor.getLastName() != null ? subscriptor.getLastName() : "";
+                            
                             content = content.replace(CONFIRMATION_LINK_TOKEN, stringBuilder.toString());
                             content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
-                            content = content.replace(USER_NAME_TOKEN, subscriptorName);
+                            content = content.replace(FIRST_NAME_TOKEN, subscriptorFirstName);
+                            content = content.replace(LAST_NAME_TOKEN, subscriptorLastName);
 
                             LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
 
@@ -242,11 +244,12 @@ public class SubscriptionManagedBean implements Serializable {
                             stringBuilder.append("&deactivationkey=");
                             stringBuilder.append(subscription.getDeactivationKey());
 
-                            String subscriptorName = subscriptor.getFirstName() != null ? subscriptor.getFirstName() : "";
-                            
-                            content = content.replace(CONFIRMATION_LINK_TOKEN, stringBuilder.toString());
+                            String subscriptorFirstName = subscriptor.getFirstName() != null ? subscriptor.getFirstName() : "";
+                            String subscriptorLastName = subscriptor.getLastName() != null ? subscriptor.getLastName() : "";
+
                             content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
-                            content = content.replace(USER_NAME_TOKEN, subscriptorName);
+                            content = content.replace(FIRST_NAME_TOKEN, subscriptorFirstName);
+                            content = content.replace(LAST_NAME_TOKEN, subscriptorLastName);
                             
                             LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
 
@@ -299,10 +302,13 @@ public class SubscriptionManagedBean implements Serializable {
                         String subject = newsletterBundle.getString("newsletter.greetings.mail.subject");
                         
                         NewsletterSubscriptor subscriptor = subscription.getSubscriptor();
-                        String subscriptorName = subscriptor.getFirstName() != null ? subscriptor.getFirstName() : "";
+                        String subscriptorFirstName = subscriptor.getFirstName() != null ? subscriptor.getFirstName() : "";
+                        String subscriptorLastName = subscriptor.getLastName() != null ? subscriptor.getLastName() : "";
                         
                         content = content.replace(LIST_NAME_TOKEN, category.getName());
-                        content = content.replace(USER_NAME_TOKEN, subscriptorName);
+                        content = content.replace(FIRST_NAME_TOKEN, subscriptorFirstName);
+                        content = content.replace(LAST_NAME_TOKEN, subscriptorLastName);
+                        
                         
                         LiferayMailingUtil.sendEmail(category.getFromEmail(), subscription.getSubscriptor().getEmail(), subject, content);
 

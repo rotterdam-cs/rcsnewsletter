@@ -18,10 +18,14 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
+
+import static com.rcs.newsletter.NewsletterConstants.*;
 
 /**
  *
@@ -105,7 +109,11 @@ public class NewsletterMailingManagedBean implements Serializable {
         FacesUtil.infoMessage("Test email is scheduled to be sent");
     }
     
-    public String sendMailing() {        
+    public String sendMailing() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
+        String message = "";
+        
         ServiceActionResult<NewsletterMailing> result = service.findById(mailingId);
         if (!result.isSuccess()) {
             FacesUtil.errorMessage("Could not find mailing to send");
@@ -120,7 +128,18 @@ public class NewsletterMailingManagedBean implements Serializable {
         String emailContent = uiState.getContent(article);        
         saveArchiveForMailing(mailing.getName(), mailing.getList().getName(), article.getTitle(), emailContent);
         
-        FacesUtil.infoMessage("Mailing scheduled to be sent.");
+        //We remove the mailing that is already sent
+        result = service.delete(mailing);
+        
+        if (result.isSuccess()) {
+            init();
+        } else {
+            message = serverMessageBundle.getString("newsletter.admin.mailing.delete.failure");        
+            FacesUtil.infoMessage(message);
+        }
+        
+        message = serverMessageBundle.getString("newsletter.admin.mailing.sent.succesfully");        
+        FacesUtil.infoMessage(message);
         
         return "admin";
     }

@@ -103,11 +103,10 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     
     public List<NewsletterSubscriptor> getSubscriptorsByFilterCategory() {
         List<NewsletterSubscriptor> result = null;
-        NewsletterCategory category = getFilterCategory();
-        if(category != null) {
-            result = subscriptorService.findByCategory(getFilterCategory());
-        } else {
+        if (getCategoryId() == 0) {
             result = subscriptorService.findAll().getPayload();
+        } else {
+            result = subscriptorService.findByCategory(getFilterCategory());            
         }
         
         return result;

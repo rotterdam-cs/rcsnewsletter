@@ -1,17 +1,13 @@
 package com.rcs.newsletter.core.model.enums;
 
 /**
- * Flow of this Status:
- * INVITED -> ACTIVE
- * ACTIVE -> INACTIVE
- * INACTIVE -> INVITED
+ * Status of the subscription
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
 public enum SubscriptionStatus {
 
     ACTIVE("subscriptionstatus.activekey"),
-    INACTIVE("subscriptionstatus.inactivekey"),
-    INVITED("subscriptionstatus.invitedkey");
+    INACTIVE("subscriptionstatus.inactivekey");
     
     private String key;
 

@@ -136,7 +136,7 @@ public class SubscriptionManagedBean implements Serializable {
                             subscription = new NewsletterSubscription();
                             subscription.setSubscriptor(subscriptor);
                             subscription.setCategory(newsletterCategory);
-                            subscription.setStatus(SubscriptionStatus.INVITED);
+                            subscription.setStatus(SubscriptionStatus.INACTIVE);
                             subscription.setActivationKey(getUniqueKey());
 
                             subscription = subscriptionService.save(subscription).getPayload();
@@ -148,12 +148,6 @@ public class SubscriptionManagedBean implements Serializable {
                             String errorMessage = serverMessageBundle.getString("newsletter.registration.alreadysubscribed");
                             FacesUtil.errorMessage(errorMessage);
                             sendEmail = false;
-                        } else if (subscription.getStatus().equals(SubscriptionStatus.INACTIVE)) {
-                            subscription.setStatus(SubscriptionStatus.ACTIVE);
-                            subscriptionService.update(subscription);
-                            sendEmail = true;
-                        } else if (subscription.getStatus().equals(SubscriptionStatus.INVITED)) {
-                            sendEmail = true;
                         }
 
                         if (sendEmail) {
@@ -349,10 +343,12 @@ public class SubscriptionManagedBean implements Serializable {
             if (subscriptionResult.isSuccess()) {
                 NewsletterSubscription subscription = subscriptionResult.getPayload();
 
-                if (subscription.getDeactivationKey().equals(getRequestedDeactivationKey())) {
-                    subscription.setStatus(SubscriptionStatus.INACTIVE);
-                    subscriptionResult = subscriptionService.update(subscription);
-                    //Send the greeting mail
+
+                if (subscription.getDeactivationKey().equals(getRequestedDeactivationKey())) {               
+                    
+                    subscriptionResult = subscriptionService.delete(subscription);
+                    
+
                     if (subscriptionResult.isSuccess()) {
                         infoMesage = serverMessageBundle.getString("newsletter.unregistration.confirmed.msg");
                         FacesUtil.infoMessage(infoMesage);

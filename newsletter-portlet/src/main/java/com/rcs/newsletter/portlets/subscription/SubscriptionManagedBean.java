@@ -46,6 +46,7 @@ public class SubscriptionManagedBean implements Serializable {
     private String requestedActivationKey = null;
     private String requestedsubscriptionId = null;
     private String requestedDeactivationKey = null;
+    private String requestedUnsubscriptionId = null;
     
     private RegistrationConfig currentConfig;
     @Inject
@@ -343,14 +344,12 @@ public class SubscriptionManagedBean implements Serializable {
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         String infoMesage = "";
         try {
-            long subscriptionId = Long.parseLong(getRequestedsubscriptionId());
+            long subscriptionId = Long.parseLong(getRequestedUnsubscriptionId());
             ServiceActionResult<NewsletterSubscription> subscriptionResult = subscriptionService.findById(subscriptionId);
-
             if (subscriptionResult.isSuccess()) {
-                
                 NewsletterSubscription subscription = subscriptionResult.getPayload();
 
-                if (subscription.getActivationKey().equals(getRequestedActivationKey())) {                
+                if (subscription.getDeactivationKey().equals(getRequestedDeactivationKey())) {
                     subscription.setStatus(SubscriptionStatus.INACTIVE);
                     subscriptionResult = subscriptionService.update(subscription);
                     //Send the greeting mail
@@ -362,7 +361,7 @@ public class SubscriptionManagedBean implements Serializable {
                         FacesUtil.errorMessage(infoMesage);
                     }                
                 } else {
-                    log.error("Invalid Key " + subscription.getActivationKey() + "!=" + getRequestedActivationKey());
+                    log.error("Invalid Key " + subscription.getDeactivationKey() + "!=" + getRequestedDeactivationKey());
                     infoMesage = serverMessageBundle.getString("newsletter.registration.unconfirmed.msg");
                     FacesUtil.errorMessage(infoMesage);
                 }
@@ -400,6 +399,7 @@ public class SubscriptionManagedBean implements Serializable {
                     setRequestedActivationKey((String) request.getParameter("activationkey"));
                     setRequestedsubscriptionId((String) request.getParameter("subscriptionId"));
                     setRequestedDeactivationKey((String) request.getParameter("deactivationkey"));
+                    setRequestedUnsubscriptionId((String) request.getParameter("unsubscriptionId"));
                     break;
                 }
             }
@@ -408,11 +408,11 @@ public class SubscriptionManagedBean implements Serializable {
         if(getRequestedActivationKey() != null && getRequestedsubscriptionId() != null) {
             result = doConfirmRegistration();
         //to deactivate the subscription
-        } else if(getRequestedDeactivationKey() != null && getRequestedsubscriptionId() != null) {
+        } else if(getRequestedDeactivationKey() != null && getRequestedUnsubscriptionId() != null) {
             result = doConfirmUnregistration();
         }
         log.error("******** getRequestedActivationKey:" + getRequestedActivationKey() + " getRequestedsubscriptionId:" + getRequestedsubscriptionId());
-        
+        log.error("******** getRequestedDeactivationKey:" + getRequestedDeactivationKey() + " getRequestedUnsubscriptionId:" + getRequestedUnsubscriptionId());
         return result;
     }
     
@@ -480,6 +480,14 @@ public class SubscriptionManagedBean implements Serializable {
 
     public void setRequestedDeactivationKey(String requestedDeactivationKey) {
         this.requestedDeactivationKey = requestedDeactivationKey;
+    }
+
+    public String getRequestedUnsubscriptionId() {
+        return requestedUnsubscriptionId;
+    }
+
+    public void setRequestedUnsubscriptionId(String requestedUnsubscriptionId) {
+        this.requestedUnsubscriptionId = requestedUnsubscriptionId;
     }
     
     

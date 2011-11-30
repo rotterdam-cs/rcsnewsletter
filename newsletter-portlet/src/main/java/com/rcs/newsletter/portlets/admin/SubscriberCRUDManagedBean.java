@@ -11,9 +11,13 @@ import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.util.FacesUtil;
 import java.util.List;
+import java.util.ResourceBundle;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
+
+import static com.rcs.newsletter.NewsletterConstants.*;
 
 /**
  *
@@ -45,7 +49,6 @@ public class SubscriberCRUDManagedBean {
     private CRUDActionEnum action;
     
     private String firstName;
-    private String middleName;
     private String lastName;
     private String email;
     private Long categoryId;
@@ -91,14 +94,6 @@ public class SubscriberCRUDManagedBean {
         this.lastName = lastName;
     }
 
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
     public Long getCategoryId() {
         return categoryId;
     }
@@ -121,7 +116,6 @@ public class SubscriberCRUDManagedBean {
             
             this.email = newsletterSubscriptor.getEmail();
             this.firstName = newsletterSubscriptor.getFirstName();
-            this.middleName = newsletterSubscriptor.getMiddleName();
             this.lastName = newsletterSubscriptor.getLastName();           
             
             this.setAction(CRUDActionEnum.UPDATE);
@@ -136,17 +130,21 @@ public class SubscriberCRUDManagedBean {
      * @return 
      */
     public String save() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
+        
         NewsletterSubscriptor subscriptor = subscriptorService.findById(getId()).getPayload();
         
         subscriptor.setEmail(email);
         subscriptor.setFirstName(firstName);
-        subscriptor.setMiddleName(middleName);
         subscriptor.setLastName(lastName);
         
         String message = "";
         if (subscriptorService.update(subscriptor).isSuccess()) {
+            message = serverMessageBundle.getString("newsletter.admin.subscriptor.update.succesfull");
             FacesUtil.infoMessage(message);
         } else {
+            message = serverMessageBundle.getString("newsletter.admin.subscriptor.update.failure");
             FacesUtil.errorMessage(message);
         }
         return "admin";
@@ -168,6 +166,9 @@ public class SubscriberCRUDManagedBean {
      * @return 
      */
     public String delete() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
+        
         NewsletterSubscriptor subscriptor = subscriptorService.findById(getId()).getPayload();
         NewsletterCategory category = categoryService.findById(getCategoryId()).getPayload();
         String message = "";
@@ -179,8 +180,10 @@ public class SubscriberCRUDManagedBean {
                 subscriptionService.delete(newsletterSubscription);
             }            
             if (subscriptorService.delete(subscriptor).isSuccess()) {
+                message = serverMessageBundle.getString("newsletter.admin.subscriptor.delete.succesfull");
                 FacesUtil.infoMessage(message);
             } else {
+                message = serverMessageBundle.getString("newsletter.admin.subscriptor.delete.failure");
                 FacesUtil.errorMessage(message);
             }
             
@@ -188,9 +191,11 @@ public class SubscriberCRUDManagedBean {
             
             NewsletterSubscription nls = subscriptionService.findBySubscriptorAndCategory(subscriptor, category);
             log.error("Deleting subscription for category: " + nls.getCategory().getName() + "and Subscriptor: " + nls.getSubscriptor().getFirstName());
-            if ( subscriptionService.delete(nls).isSuccess()) {
+            if (subscriptionService.delete(nls).isSuccess()) {
+                message = serverMessageBundle.getString("newsletter.admin.subscriptor.delete.succesfull");                
                 FacesUtil.infoMessage(message);
             } else {
+                message = serverMessageBundle.getString("newsletter.admin.subscriptor.delete.failure");
                 FacesUtil.errorMessage(message);
             }
             

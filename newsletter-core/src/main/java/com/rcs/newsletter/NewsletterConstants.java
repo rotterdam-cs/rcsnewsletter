@@ -13,7 +13,8 @@ public interface NewsletterConstants {
     
     public static final String CONFIRMATION_LINK_TOKEN = "{LINK}";
     public static final String LIST_NAME_TOKEN = "{LIST}";
-    public static final String USER_NAME_TOKEN = "{NAME}";
+    public static final String FIRST_NAME_TOKEN = "{FIRSTNAME}";
+    public static final String LAST_NAME_TOKEN = "{LASTNAME}";
     
     public static final String NEWSLETTER_BUNDLE = "Newsletter";
     public static final String LANGUAGE_BUNDLE = "Language";

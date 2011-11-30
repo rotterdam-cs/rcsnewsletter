@@ -12,14 +12,12 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name = "newsletter_subscriptor")
 public class NewsletterSubscriptor extends NewsletterEntity {
-
-    public static final String ID = "id";
+    
     public static final String EMAIL = "email";
     
     private static final long serialVersionUID = 1L;
 
     private String firstName;
-    private String middleName;
     private String lastName;
     @NotBlank
     @Email
@@ -47,13 +45,5 @@ public class NewsletterSubscriptor extends NewsletterEntity {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
     }
 }

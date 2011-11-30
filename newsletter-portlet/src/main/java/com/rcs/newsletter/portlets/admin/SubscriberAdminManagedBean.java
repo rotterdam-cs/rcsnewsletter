@@ -5,6 +5,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.NewsletterConstants;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
@@ -27,6 +28,8 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     private static Log log = LogFactoryUtil.getLog(SubscriberAdminManagedBean.class);    
     private NewsletterCategory filterCategory;
     private int categoryId = 0;
+    private Boolean onlyActive = true;
+    private SubscriptionStatus status = null;
         
     @Inject
     NewsletterSubscriptorService subscriptorService;
@@ -69,6 +72,14 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;        
     }
+
+    public Boolean getOnlyActive() {
+        return onlyActive;
+    }
+
+    public void setOnlyActive(Boolean onlyActive) {
+        this.onlyActive = onlyActive;
+    }    
     
     public String getCategoryIdAsString() {
         return String.valueOf(categoryId);
@@ -85,16 +96,19 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     
     private void updateSubscriptors() {
         try {
-            if (getCategoryId() == 0) {
-                subscribers = subscriptorService.findAll(getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC).getPayload();
-                setPaginationTotal(subscriptorService.findAllCount());
-            } else if (getCategoryId() == -1) {
-                subscribers = subscriptorService.findAll(getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC).getPayload();
-                setPaginationTotal(subscriptorService.findAllCount());
-            }else {
+            if (onlyActive) {
+                status= SubscriptionStatus.ACTIVE;
+            } else {
+                status= null;
+            }
+            if (getCategoryId() == 0) {                
+                subscribers = subscriptorService.findAllByStatus(getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC, status);                
+                setPaginationTotal(subscriptorService.findAllByStatusCount(status));
+                
+            } else {
                 filterCategory = categoryService.findById(categoryId).getPayload();
-                subscribers = subscriptorService.findByCategory(filterCategory, getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC);
-                setPaginationTotal(subscriptorService.findByCategoryCount(filterCategory));
+                subscribers = subscriptorService.findByCategoryAndStatus(filterCategory, getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC, status);
+                setPaginationTotal(subscriptorService.findByCategoryAndStatusCount(filterCategory, status));
             }
         } catch (Exception ex) {
             log.error(ex);
@@ -102,11 +116,12 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     }
     
     public List<NewsletterSubscriptor> getSubscriptorsByFilterCategory() {
+        
         List<NewsletterSubscriptor> result = null;
         if (getCategoryId() == 0) {
-            result = subscriptorService.findAll().getPayload();
+            result = subscriptorService.findAllByStatus(getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC, status);
         } else {
-            result = subscriptorService.findByCategory(getFilterCategory());            
+            result = subscriptorService.findByCategoryAndStatus(getFilterCategory(), getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC, status);            
         }
         
         return result;

@@ -23,7 +23,11 @@ public interface NewsletterSubscriptorService extends CRUDService<NewsletterSubs
     
     List<NewsletterSubscriptor> findByCategoryAndStatus(NewsletterCategory newsletterCategory, int start, int limit, String ordercrit, String order, SubscriptionStatus status);
     
+    List<NewsletterSubscriptor> findByCategoryAndStatus(NewsletterCategory newsletterCategory, SubscriptionStatus status);
+    
     List<NewsletterSubscriptor> findAllByStatus(int start, int limit, String ordercrit, String order, SubscriptionStatus status);
+    
+    List<NewsletterSubscriptor> findAllByStatus(SubscriptionStatus status);    
     
     int findAllByStatusCount(SubscriptionStatus status);
     

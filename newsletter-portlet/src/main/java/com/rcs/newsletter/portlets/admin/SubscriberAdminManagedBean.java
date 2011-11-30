@@ -119,9 +119,9 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
         
         List<NewsletterSubscriptor> result = null;
         if (getCategoryId() == 0) {
-            result = subscriptorService.findAllByStatus(getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC, status);
+            result = subscriptorService.findAllByStatus(SubscriptionStatus.ACTIVE);
         } else {
-            result = subscriptorService.findByCategoryAndStatus(getFilterCategory(), getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC, status);            
+            result = subscriptorService.findByCategoryAndStatus(getFilterCategory(), SubscriptionStatus.ACTIVE);            
         }
         
         return result;

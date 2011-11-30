@@ -117,6 +117,31 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
         
         return result;
     }
+    
+    @Override
+    public List<NewsletterSubscriptor> findByCategoryAndStatus(NewsletterCategory newsletterCategory, SubscriptionStatus status) {
+        List <NewsletterSubscriptor> result = new ArrayList<NewsletterSubscriptor>();        
+        List<NewsletterSubscription> newsletterSubscription = new ArrayList<NewsletterSubscription>();
+        try {            
+            Session currentSession = sessionFactory.getCurrentSession();
+            Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
+            criteria.add(Restrictions.eq(NewsletterSubscription.CATEGORY, newsletterCategory));
+            
+            if (status != null) {
+                criteria.add(Restrictions.sqlRestriction("status = '" + status.toString() + "'"));
+            }
+            
+            newsletterSubscription = criteria.list();                    
+            for (NewsletterSubscription sls : newsletterSubscription) {
+                result.add(sls.getSubscriptor());
+            }            
+        } catch (NonUniqueResultException ex) {
+            String error = "Error loading Subscriptor by Category" + ex;
+            logger.error(error);
+        }   
+        
+        return result;
+    }
 
     @Override
     public int findByCategoryCount(NewsletterCategory newsletterCategory) {
@@ -178,6 +203,31 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
                     criteria.addOrder(Order.asc(ordercrit)); 
                 }
             }
+            
+            newsletterSubscription = criteria.list();                    
+            for (NewsletterSubscription sls : newsletterSubscription) {
+                result.add(sls.getSubscriptor());
+            }            
+        } catch (NonUniqueResultException ex) {
+            String error = "Error loading Subscriptor by Category" + ex;
+            logger.error(error);
+        }   
+        
+        return result;
+        
+    }
+    
+    @Override
+    public List<NewsletterSubscriptor> findAllByStatus(SubscriptionStatus status) {        
+        List <NewsletterSubscriptor> result = new ArrayList<NewsletterSubscriptor>();        
+        List<NewsletterSubscription> newsletterSubscription = new ArrayList<NewsletterSubscription>();
+        try {            
+            Session currentSession = sessionFactory.getCurrentSession();
+            Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
+            
+            if (status != null) {
+                criteria.add(Restrictions.sqlRestriction("status = '" + status.toString() + "'"));
+            }           
             
             newsletterSubscription = criteria.list();                    
             for (NewsletterSubscription sls : newsletterSubscription) {

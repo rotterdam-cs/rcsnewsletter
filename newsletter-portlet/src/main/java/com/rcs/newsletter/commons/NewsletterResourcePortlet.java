@@ -79,8 +79,11 @@ public class NewsletterResourcePortlet extends GenericFacesPortlet {
 
             OutputStream os = null;
             try {
-                NewsletterCategory category = subscriberAdminManagedBean.getFilterCategory();
-                String fileName = category != null ? category.getName() : "subscribers";
+                String fileName = "subscribers";
+                if(subscriberAdminManagedBean.getCategoryId() != 0) {
+                    NewsletterCategory category = subscriberAdminManagedBean.getFilterCategory();
+                    fileName = category != null ? category.getName() : "subscribers";
+                }
                 
                 response.setContentType(ContentTypes.TEXT_XML_UTF8);
                 response.addProperty(HttpHeaders.CACHE_CONTROL, "must-revalidate, post-check=0, pre-check=0");

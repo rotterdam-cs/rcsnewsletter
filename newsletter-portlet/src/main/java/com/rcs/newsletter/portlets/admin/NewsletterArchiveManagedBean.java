@@ -2,8 +2,10 @@
 package com.rcs.newsletter.portlets.admin;
 
 import com.rcs.newsletter.core.model.NewsletterArchive;
+import com.rcs.newsletter.core.model.commons.ArchiveComparator;
 import com.rcs.newsletter.core.service.NewsletterArchiveService;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -41,6 +43,7 @@ public class NewsletterArchiveManagedBean implements Serializable {
     @PostConstruct
     public void init() {
         archives = archiveService.findAll().getPayload();
+        Collections.sort(archives, new ArchiveComparator());
     }
 
     public List<NewsletterArchive> getArchives() {

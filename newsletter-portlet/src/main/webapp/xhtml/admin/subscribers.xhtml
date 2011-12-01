@@ -72,13 +72,14 @@
                 </p:column>
 
             </p:dataTable>
-            <br></br>            
+            <br></br>
             
-            <portlet:resourceURL var="resUrl">
-                <portlet:param id="type" name="type" value="#{subscriptorExportManagedBean.resourceType}"/>
+            <portlet:resourceURL var="resourceExportURL">
+                <portlet:param id="type" name="type" value="#{subscriptorExportManagedBean.exportResourceType}"/>
             </portlet:resourceURL>            
-            <a href="#{resUrl}">#{nlk['newsletter.admin.subscribers.export']}</a>            
-            
-        </ui:composition>
+            <a href="#{resourceExportURL}">#{nlk['newsletter.admin.subscribers.export']}</a>
+            <br></br>
+            <p:commandButton value="#{nlk['newsletter.admin.lists.add']}" action="#{subscriptorExportManagedBean.redirectImportSubscriptors}"/>
+        </ui:composition>        
     </h:body>
 </html>

@@ -7,5 +7,6 @@ package com.rcs.newsletter.commons;
  */
 public enum ResourceTypeEnum {
     
-    SUBSCRIPTOR_TO_EXCEL;
+    SUBSCRIPTOR_TO_EXCEL
+    ,SUBSCRIPTOR_FROM_EXCEL;
 }

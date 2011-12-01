@@ -6,6 +6,7 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.rcs.newsletter.core.model.NewsletterArchive;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterMailing;
+import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.NewsletterArchiveService;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterMailingService;
@@ -192,12 +193,13 @@ public class NewsletterMailingManagedBean implements Serializable {
             return selectedMailing.getArticleTitle();
         }
     }
+    
     public int getSelectedListCountMembers(){
         if (selectedMailing == null) {            
             return 0;
         }else{            
             NewsletterCategory filterCategory = selectedMailing.getMailing().getList();
-            return subscriptorService.findByCategoryCount(filterCategory);
+            return subscriptorService.findByCategoryAndStatusCount(filterCategory, SubscriptionStatus.ACTIVE);
         }
     }
     

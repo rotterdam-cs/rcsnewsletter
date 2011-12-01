@@ -248,6 +248,7 @@ public class SubscriptionManagedBean implements Serializable {
                             String subscriptorFirstName = subscriptor.getFirstName() != null ? subscriptor.getFirstName() : "";
                             String subscriptorLastName = subscriptor.getLastName() != null ? subscriptor.getLastName() : "";
 
+                            content = content.replace(CONFIRMATION_LINK_TOKEN, stringBuilder.toString());
                             content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
                             content = content.replace(FIRST_NAME_TOKEN, subscriptorFirstName);
                             content = content.replace(LAST_NAME_TOKEN, subscriptorLastName);

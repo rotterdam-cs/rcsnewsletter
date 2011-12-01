@@ -4,7 +4,7 @@ import com.rcs.newsletter.core.model.NewsletterArchive;
 import java.util.Comparator;
 
 /**
- *
+ * Comparator that sort the Archive putting the newest on top
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
 public class ArchiveComparator implements Comparator<NewsletterArchive> {

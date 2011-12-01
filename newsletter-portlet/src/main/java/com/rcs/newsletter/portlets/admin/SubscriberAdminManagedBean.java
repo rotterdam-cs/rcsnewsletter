@@ -10,12 +10,15 @@ import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
 
+import static com.rcs.newsletter.NewsletterConstants.*;
 
 /**
  *
@@ -30,7 +33,8 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     private int categoryId = 0;
     private Boolean onlyActive = true;
     private SubscriptionStatus status = null;
-        
+    private ResourceBundle messageBundle;
+    
     @Inject
     NewsletterSubscriptorService subscriptorService;
     
@@ -43,13 +47,24 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     @Inject
     NewsletterSubscriptionService subscriptionService;
     
-    List<NewsletterSubscriptor> subscribers;
+    List<NewsletterSubscriptor> subscribers;    
     
     @PostConstruct
     public void init() {
         setPaginationStart(NewsletterConstants.PAGINATION_DEFAULT_START);
         setPaginationLimit(NewsletterConstants.PAGINATION_DEFAULT_LIMIT);
         updateSubscriptors();
+        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        messageBundle = ResourceBundle.getBundle(LANGUAGE_BUNDLE, facesContext.getViewRoot().getLocale());
+    }
+
+    public ResourceBundle getMessageBundle() {
+        return messageBundle;
+    }
+
+    public void setMessageBundle(ResourceBundle messageBundle) {
+        this.messageBundle = messageBundle;
     }
     
     public List<NewsletterSubscriptor> getSubscribers() {

@@ -25,6 +25,8 @@ import org.portletfaces.bridge.GenericFacesPortlet;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import java.util.ResourceBundle;
+
 
 public class NewsletterResourcePortlet extends GenericFacesPortlet {
 
@@ -71,8 +73,21 @@ public class NewsletterResourcePortlet extends GenericFacesPortlet {
                 (SubscriberAdminManagedBean) request.getPortletSession().getAttribute("subscriberAdminManagedBean");
 
         if (subscriberAdminManagedBean != null) {
-
+            
+            ResourceBundle messageBundle = subscriberAdminManagedBean.getMessageBundle();
+            
             List<NewsletterSubscriptor> subscriptors = subscriberAdminManagedBean.getSubscriptorsByFilterCategory();
+            int categoryId = subscriberAdminManagedBean.getCategoryId();
+            String categoryName = messageBundle.getString("newsletter.admin.general.undefined");
+            String fileName = messageBundle.getString("newsletter.admin.subscribers");
+            
+            if (subscriberAdminManagedBean.getCategoryId() != 0) {
+                NewsletterCategory category = subscriberAdminManagedBean.getFilterCategory();
+                
+                categoryName = category.getName() != null && !category.getName().isEmpty() ? category.getName() : categoryName;
+                fileName = category.getName() != null && !category.getName().isEmpty() ? categoryName : fileName;
+            }
+            
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet();
             HSSFRow row = sheet.createRow((short) 0);
@@ -93,6 +108,14 @@ public class NewsletterResourcePortlet extends GenericFacesPortlet {
             HSSFCell cell4 = row.createCell((short) 3);
             cell4.setCellValue("Email");
             cell4.setCellStyle(cellStyle);
+            
+            HSSFCell cell5 = null;
+            NewsletterCategory category = null;
+            if(categoryId != 0) {
+                cell5 = row.createCell((short) 4);
+                cell5.setCellValue("List");
+                cell5.setCellStyle(cellStyle);
+            }
 
             int index = 1;
             for (NewsletterSubscriptor subscriptor : subscriptors) {
@@ -101,17 +124,16 @@ public class NewsletterResourcePortlet extends GenericFacesPortlet {
                 row.createCell((short) 1).setCellValue(subscriptor.getFirstName());
                 row.createCell((short) 2).setCellValue(subscriptor.getLastName());
                 row.createCell((short) 3).setCellValue(subscriptor.getEmail());
+                
+                if(categoryId != 0) {                    
+                    row.createCell((short) 4).setCellValue(categoryName);
+                }
+                
                 index++;
             }
 
             OutputStream os = null;
             try {
-                String fileName = "subscribers";
-                if (subscriberAdminManagedBean.getCategoryId() != 0) {
-                    NewsletterCategory category = subscriberAdminManagedBean.getFilterCategory();
-                    fileName = category != null ? category.getName() : "subscribers";
-                }
-
                 response.setContentType(ContentTypes.TEXT_XML_UTF8);
                 response.addProperty(HttpHeaders.CACHE_CONTROL, "must-revalidate, post-check=0, pre-check=0");
                 response.addProperty(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + fileName + ".xls\"");

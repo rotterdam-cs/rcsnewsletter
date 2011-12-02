@@ -31,7 +31,7 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     private static Log log = LogFactoryUtil.getLog(SubscriberAdminManagedBean.class);    
     private NewsletterCategory filterCategory;
     private int categoryId = 0;
-    private Boolean onlyActive = true;
+    private Boolean onlyInactive = false;
     private SubscriptionStatus status = null;
     private ResourceBundle messageBundle;
     
@@ -88,13 +88,13 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
         this.categoryId = categoryId;        
     }
 
-    public Boolean getOnlyActive() {
-        return onlyActive;
+    public Boolean getOnlyInactive() {
+        return onlyInactive;
     }
 
-    public void setOnlyActive(Boolean onlyActive) {
-        this.onlyActive = onlyActive;
-    }    
+    public void setOnlyInactive(Boolean onlyInactive) {
+        this.onlyInactive = onlyInactive;
+    }
     
     public String getCategoryIdAsString() {
         return String.valueOf(categoryId);
@@ -111,10 +111,10 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     
     private void updateSubscriptors() {
         try {
-            if (onlyActive) {
-                status= SubscriptionStatus.ACTIVE;
+            if (onlyInactive) {
+                status= SubscriptionStatus.INACTIVE;
             } else {
-                status= null;
+                status= SubscriptionStatus.ACTIVE;
             }
             if (getCategoryId() == 0) {                
                 subscribers = subscriptorService.findAllByStatus(getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC, status);                

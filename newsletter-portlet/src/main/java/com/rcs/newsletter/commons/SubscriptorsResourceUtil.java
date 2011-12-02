@@ -34,11 +34,13 @@ import org.apache.commons.fileupload.FileItem;
 public class SubscriptorsResourceUtil {
 
     private static final Log logger = LogFactoryUtil.getLog(NewsletterResourcePortlet.class);
+    
     private static final String ID_COLUMN = "Id";
     private static final String NAME_COLUMN = "Name";
     private static final String LAST_NAME_COLUMN = "Last Name";
     private static final String EMAIL_COLUMN = "Email";
     private static final String LIST_COLUMN = "List";
+    
     private static final int ID_INDEX = 0;
     private static final int NAME_INDEX = 1;
     private static final int LAST_NAME_INDEX = 2;

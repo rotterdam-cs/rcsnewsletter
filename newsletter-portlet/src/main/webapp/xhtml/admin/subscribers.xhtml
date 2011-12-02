@@ -22,10 +22,10 @@
                     <f:ajax event="change" listener="#{subscriberAdminManagedBean.changeCategory}" render="@form"/>
                 </h:selectOneMenu>
                                     
-                <h:selectBooleanCheckbox value="#{subscriberAdminManagedBean.onlyActive}">
+                <h:selectBooleanCheckbox value="#{subscriberAdminManagedBean.onlyInactive}">
                     <f:ajax event="change" listener="#{subscriberAdminManagedBean.changeCategory}" render="@form"/>
                 </h:selectBooleanCheckbox>                    
-                <h:outputLabel value="#{msg['newsletter.admin.subscribers.only.show.active.subscribers']}" />
+                <h:outputLabel value="#{nlk['newsletter.admin.subscribers.only.show.inactive.subscribers']}" />
 
             </h:panelGrid>           
             <hr/>

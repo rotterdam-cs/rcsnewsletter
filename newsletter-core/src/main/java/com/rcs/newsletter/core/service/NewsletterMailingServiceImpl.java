@@ -5,6 +5,7 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
+import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.util.LiferayMailingUtil;
 import org.slf4j.Logger;
@@ -23,12 +24,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> implements NewsletterMailingService {
 
+    private static final Logger logger = LoggerFactory.getLogger(NewsletterMailingServiceImpl.class);
+    
     @Autowired
     private LiferayMailingUtil mailingUtil;
     
     @Value("${newsletter.mail.from}")
     private String fromEmailAddress;
-    private static final Logger logger = LoggerFactory.getLogger(NewsletterMailingServiceImpl.class);
+    @Value("${newsletter.admin.name}")
+    private String fromName;    
 
     @Async
     @Override
@@ -46,7 +50,9 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
             
             for (NewsletterSubscription newsletterSubscription : mailing.getList().getSubscriptions()) {
                 if(newsletterSubscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
-                    mailingUtil.sendArticleByEmail(ja, themeDisplay, newsletterSubscription.getSubscriptor().getEmail(), fromEmailAddress);
+                    NewsletterSubscriptor subscriptor = newsletterSubscription.getSubscriptor();
+                    String name = subscriptor.getFirstName() + " " + subscriptor.getLastName();
+                    mailingUtil.sendArticleByEmail(ja, themeDisplay, name, subscriptor.getEmail(), fromName, fromEmailAddress);
                 }
             }
         } catch (Exception ex) {

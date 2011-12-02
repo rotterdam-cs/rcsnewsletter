@@ -132,8 +132,7 @@ public class CategoryCRUDManagedBean {
         NewsletterCategory newsletterCategory = null;
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
-        String message = "";
-
+        String message = "";        
         switch (getAction()) {
             case CREATE:
                 newsletterCategory = new NewsletterCategory();

@@ -11,13 +11,14 @@
         <h:form enctype="multipart/form-data">
             <h:panelGrid columns="1" styleClass="newsletter-forms-form">
                 <h:outputLabel value="#{nlk['newsletter.admin.subscribers.import.category.select']}:&nbsp;" />
-                <h:selectOneMenu value="#{subscriberAdminManagedBean.categoryId}">                    
-                    <f:selectItems value="#{categoryAdminManagedBean.categorys}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}"/>                    
-                    <f:ajax event="change" listener="#{subscriberAdminManagedBean.changeCategory}" render="@form"/>
-                </h:selectOneMenu>                
-                <input type="file" name="resumeFile" />
+                <h:selectOneMenu value="#{subscriptorExportManagedBean.categoryId}">
+                    <f:selectItem itemLabel="#{msg['newsletter.admin.general.all.lists']}" itemValue="0" />
+                    <f:selectItems value="#{categoryAdminManagedBean.categorys}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}"/>
+                    <f:ajax event="change" listener="#{subscriptorExportManagedBean.changeCategory}"/>
+                </h:selectOneMenu>
+                <input type="file" name="#{subscriptorExportManagedBean.importResourceType}" />                
                 <h:panelGrid columns="2" styleClass="newsletter-forms-form">
-                    <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
+                    <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.back']}" />
                     <h:commandButton value="Import" action="#{subscriptorExportManagedBean.submitApply}" />                    
                 </h:panelGrid>
             </h:panelGrid>          

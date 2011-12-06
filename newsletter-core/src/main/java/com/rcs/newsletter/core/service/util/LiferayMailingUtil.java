@@ -36,6 +36,9 @@ public class LiferayMailingUtil {
                                                     themeDisplay.getLanguageId(), 
                                                     themeDisplay);        
             
+            //Add full path to images
+            content = EmailFormat.fixImagesPath(content, themeDisplay);
+            
             String title = ja.getTitle();
             sendEmail(fromName, fromMail, toName, toMail, title, content);
         } catch (Exception ex) {

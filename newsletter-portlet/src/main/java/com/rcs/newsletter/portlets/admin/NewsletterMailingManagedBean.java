@@ -1,5 +1,6 @@
 package com.rcs.newsletter.portlets.admin;
 
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
@@ -14,6 +15,7 @@ import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.portlets.admin.dto.MailingTableRow;
+import com.rcs.newsletter.core.service.util.EmailFormat;
 import com.rcs.newsletter.util.FacesUtil;
 import java.io.Serializable;
 import java.util.Date;
@@ -126,7 +128,8 @@ public class NewsletterMailingManagedBean implements Serializable {
         
         //we are going to save this version of the mailing
         JournalArticle article = uiState.getJournalArticleByArticleId(mailing.getArticleId());
-        String emailContent = uiState.getContent(article);        
+        String emailContent = uiState.getContent(article);
+               
         saveArchiveForMailing(mailing.getName(), mailing.getList().getName(), article.getTitle(), emailContent);
         
         //We remove the mailing that is already sent
@@ -162,7 +165,7 @@ public class NewsletterMailingManagedBean implements Serializable {
         archiveService.save(archive);
     }
     
-     public String redirectConfirmSend() {
+     public String redirectConfirmSend() {         
         if (selectedMailing == null) {
             FacesUtil.infoMessage("Please select one row to send the mailing");
             return null;

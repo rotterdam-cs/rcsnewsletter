@@ -143,3 +143,16 @@
     text-align: center!important;
     display: none;
 }
+.newsletter-forms-column-1-filterlist{
+  width: 180px;
+  padding-right: 20px;
+}
+.newsletter-forms-column-2-filterlist{
+  padding-right: 20px;
+}
+.newsletter-forms-column-3-filterlist{
+  width: 20px;
+}
+.newsletter-forms-column-4-filterlist{
+  width: 200px;  
+}

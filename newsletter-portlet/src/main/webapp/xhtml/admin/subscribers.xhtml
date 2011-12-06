@@ -14,7 +14,7 @@
     </h:head>
     <h:body>
         <ui:composition>
-            <h:panelGrid columns="4" width="410">                
+            <h:panelGrid columns="4" columnClasses="newsletter-forms-column-1-filterlist,newsletter-forms-column-2-filterlist,newsletter-forms-column-3-filterlist,newsletter-forms-column-4-filterlist">
                 <h:outputLabel value="#{msg['newsletter.admin.subscribers.only.show.subscribers.off']}:&nbsp;" />                               
                 <h:selectOneMenu value="#{subscriberAdminManagedBean.categoryId}">
                     <f:selectItem itemLabel="#{msg['newsletter.admin.general.all.lists']}" itemValue="0" />

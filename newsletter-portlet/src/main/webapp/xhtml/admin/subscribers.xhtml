@@ -71,17 +71,21 @@
                     </p:menu>                            
                 </p:column>
 
-            </p:dataTable>
-            <br></br>
+            </p:dataTable>            
             
             <portlet:resourceURL var="resourceExportURL">
                 <portlet:param id="type" name="type" value="#{subscriptorExportManagedBean.exportResourceType}"/>
-            </portlet:resourceURL>            
-            <a href="#{resourceExportURL}">#{nlk['newsletter.admin.subscribers.export']}</a>
-            <br></br>
+            </portlet:resourceURL>
+            <script type="text/javascript">
+                function exportNewsletter(){
+                    window.location = "#{resourceExportURL}";
+                }
+            </script>            
             
             <br></br>
             <p:commandButton value="#{nlk['newsletter.admin.subscribers.import']}" action="#{subscriptorExportManagedBean.redirectImportSubscriptors}"/>
+            <button id="exportbutton" type="button" onclick="exportNewsletter();" class="exportbutton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"> #{nlk['newsletter.admin.subscribers.export']} </button> 
+            
         </ui:composition>        
     </h:body>
 </html>

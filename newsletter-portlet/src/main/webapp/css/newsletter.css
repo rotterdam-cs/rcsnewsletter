@@ -156,3 +156,7 @@
 .newsletter-forms-column-4-filterlist{
   width: 200px;  
 }
+.exportbutton{
+    padding: 6px!important;
+    margin-left: 10px;
+}

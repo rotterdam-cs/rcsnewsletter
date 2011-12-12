@@ -6,15 +6,20 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
-import com.liferay.util.mail.MailEngine;
 import com.liferay.util.mail.MailEngineException;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+//import com.liferay.util.mail.MailEngine;
 
 /**
  *
@@ -24,8 +29,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class LiferayMailingUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(LiferayMailingUtil.class);
+    //private static final Logger log = LoggerFactory.getLogger(LiferayMailingUtil.class);    
+    private static Log log = LogFactoryUtil.getLog(LiferayMailingUtil.class);
 
+    
     public void sendArticleByEmail(JournalArticle ja, ThemeDisplay themeDisplay, String toName, String toMail, String fromName, String fromMail) {
         try {
             String content = ja.getContentByLocale(ja.getDefaultLocale());
@@ -34,7 +41,7 @@ public class LiferayMailingUtil {
                                                     ja.getTemplateId(), 
                                                     Constants.PRINT, 
                                                     themeDisplay.getLanguageId(), 
-                                                    themeDisplay);        
+                                                    themeDisplay);
             
             //Add full path to images
             content = EmailFormat.fixImagesPath(content, themeDisplay);
@@ -63,7 +70,10 @@ public class LiferayMailingUtil {
                                                     ja.getTemplateId(), 
                                                     Constants.PRINT, 
                                                     themeDisplay.getLanguageId(), 
-                                                    themeDisplay);        
+                                                    themeDisplay);
+            
+            //Add full path to images
+            content = EmailFormat.fixImagesPath(content, themeDisplay);
             
             String title = ja.getTitle();
             sendEmail(from, to, title, content);
@@ -94,7 +104,7 @@ public class LiferayMailingUtil {
      * @param subject the email subject
      * @param content the email content
      */
-    public static boolean sendEmail(String from, String to, String subject, String content) {    
+    public static boolean sendEmail(String from, String to, String subject, String content) throws Exception {    
         return sendEmail(null, from, null, to, subject, content);
     }
     
@@ -105,13 +115,35 @@ public class LiferayMailingUtil {
      * @param subject the email subject
      * @param content the email content
      */
-    public static boolean sendEmail(String fromName, String fromEmail, String toName, String toMail, String subject, String content) {
+    public static boolean sendEmail(String fromName, String fromEmail, String toName, String toMail, String subject, String content) throws Exception {
         boolean result = false;
         
         try {
+            // Insert content-id in images src, but first get the images src
+            ArrayList images = EmailFormat.getImagesPathFromHTML(content);
+            
             InternetAddress fromIA = fromName != null ? new InternetAddress(fromEmail, fromName) : new InternetAddress(fromEmail);
             InternetAddress toIA = toName != null ? new InternetAddress(toMail, toName) : new InternetAddress(toMail);
-            MailEngine.send(fromIA, toIA, subject, content, true);
+            MailMessage message = new MailMessage(fromIA, toIA, subject, content, true);
+            
+            // embed the images into the multipart
+            for (int i = 0; i < images.size(); i++) {
+                String image = (String) images.get(i);
+                URL imageUrl = null;
+                try {
+                    String imagePathOriginal = (String) images.get(i);                    
+                    String imagePath = StringEscapeUtils.unescapeHtml(image);
+                    imageUrl = new URL(imagePath);                    
+                    File tempF = EmailFormat.getFile(imageUrl);//To Improve probably add Cache
+                    content = StringUtils.replace(content, imagePathOriginal, "cid:" + tempF.getName());
+                    message.addAttachment(tempF);
+                } catch (MalformedURLException ex) {
+                    log.error("problem with image url " + image, ex);
+                }
+            }
+            message.setBody(content);
+            MailEngineNL.send(message);
+                        
             result = true;
         } catch(UnsupportedEncodingException ex) {
             log.error("Error building the internet address", ex);            

@@ -33,25 +33,25 @@ public class LiferayMailingUtil {
     private static Log log = LogFactoryUtil.getLog(LiferayMailingUtil.class);
 
     
-    public void sendArticleByEmail(JournalArticle ja, ThemeDisplay themeDisplay, String toName, String toMail, String fromName, String fromMail) {
-        try {
-            String content = ja.getContentByLocale(ja.getDefaultLocale());
-            content = JournalContentUtil.getContent(ja.getGroupId(), 
-                                                    ja.getArticleId(), 
-                                                    ja.getTemplateId(), 
-                                                    Constants.PRINT, 
-                                                    themeDisplay.getLanguageId(), 
-                                                    themeDisplay);
-            
-            //Add full path to images
-            content = EmailFormat.fixImagesPath(content, themeDisplay);
-            
-            String title = ja.getTitle();
-            sendEmail(fromName, fromMail, toName, toMail, title, content);
-        } catch (Exception ex) {
-            log.error("Error while trying to read article", ex);
-        }
-    }
+//    public void sendArticleByEmail(JournalArticle ja, ThemeDisplay themeDisplay, String toName, String toMail, String fromName, String fromMail) {
+//        try {
+//            String content = ja.getContentByLocale(ja.getDefaultLocale());
+//            content = JournalContentUtil.getContent(ja.getGroupId(), 
+//                                                    ja.getArticleId(), 
+//                                                    ja.getTemplateId(), 
+//                                                    Constants.PRINT, 
+//                                                    themeDisplay.getLanguageId(), 
+//                                                    themeDisplay);
+//            
+//            //Add full path to images
+//            content = EmailFormat.fixImagesPath(content, themeDisplay);
+//            
+//            String title = ja.getTitle();
+//            sendEmail(fromName, fromMail, toName, toMail, title, content);
+//        } catch (Exception ex) {
+//            log.error("Error while trying to read article", ex);
+//        }
+//    }
     
     
     /**
@@ -62,25 +62,25 @@ public class LiferayMailingUtil {
      * @param subject
      * @param content 
      */
-    public void sendArticleByEmail(JournalArticle ja, ThemeDisplay themeDisplay, String to, String from) {
-        try {
-            String content = ja.getContentByLocale(ja.getDefaultLocale());
-            content = JournalContentUtil.getContent(ja.getGroupId(), 
-                                                    ja.getArticleId(), 
-                                                    ja.getTemplateId(), 
-                                                    Constants.PRINT, 
-                                                    themeDisplay.getLanguageId(), 
-                                                    themeDisplay);
-            
-            //Add full path to images
-            content = EmailFormat.fixImagesPath(content, themeDisplay);
-            
-            String title = ja.getTitle();
-            sendEmail(from, to, title, content);
-        } catch (Exception ex) {
-            log.error("Error while trying to read article", ex);
-        }
-    }
+//    public void sendArticleByEmail(JournalArticle ja, ThemeDisplay themeDisplay, String to, String from) {
+//        try {
+//            String content = ja.getContentByLocale(ja.getDefaultLocale());
+//            content = JournalContentUtil.getContent(ja.getGroupId(), 
+//                                                    ja.getArticleId(), 
+//                                                    ja.getTemplateId(), 
+//                                                    Constants.PRINT, 
+//                                                    themeDisplay.getLanguageId(), 
+//                                                    themeDisplay);
+//            
+//            //Add full path to images
+//            content = EmailFormat.fixImagesPath(content, themeDisplay);
+//            
+//            String title = ja.getTitle();
+//            sendEmail(from, to, title, content);
+//        } catch (Exception ex) {
+//            log.error("Error while trying to read article", ex);
+//        }
+//    }
     
     /**
      * Send an article to an email address.
@@ -88,14 +88,14 @@ public class LiferayMailingUtil {
      * @param to
      * @param from 
      */
-    public void sendArticleByEmail(Long articleId, ThemeDisplay themeDisplay, String to, String from) {
-        try {
-            JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(articleId);
-            sendArticleByEmail(ja, themeDisplay, to, from);
-        } catch (Exception ex) {
-            log.error("Error while trying to read article", ex);
-        }
-    }
+//    public void sendArticleByEmail(Long articleId, ThemeDisplay themeDisplay, String to, String from) {
+//        try {
+//            JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(articleId);
+//            sendArticleByEmail(ja, themeDisplay, to, from);
+//        } catch (Exception ex) {
+//            log.error("Error while trying to read article", ex);
+//        }
+//    }
 
     /**
      * Sends an HTML email using the portal's mail engine
@@ -118,29 +118,12 @@ public class LiferayMailingUtil {
     public static boolean sendEmail(String fromName, String fromEmail, String toName, String toMail, String subject, String content) throws Exception {
         boolean result = false;
         
-        try {
-            // Insert content-id in images src, but first get the images src
-            ArrayList images = EmailFormat.getImagesPathFromHTML(content);
-            
+        try {           
             InternetAddress fromIA = fromName != null ? new InternetAddress(fromEmail, fromName) : new InternetAddress(fromEmail);
             InternetAddress toIA = toName != null ? new InternetAddress(toMail, toName) : new InternetAddress(toMail);
-            MailMessage message = new MailMessage(fromIA, toIA, subject, content, true);
             
-            // embed the images into the multipart
-            for (int i = 0; i < images.size(); i++) {
-                String image = (String) images.get(i);
-                URL imageUrl = null;
-                try {
-                    String imagePathOriginal = (String) images.get(i);                    
-                    String imagePath = StringEscapeUtils.unescapeHtml(image);
-                    imageUrl = new URL(imagePath);                    
-                    File tempF = EmailFormat.getFile(imageUrl);//To Improve probably add Cache
-                    content = StringUtils.replace(content, imagePathOriginal, "cid:" + tempF.getName());
-                    message.addAttachment(tempF);
-                } catch (MalformedURLException ex) {
-                    log.error("problem with image url " + image, ex);
-                }
-            }
+            MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);
+                        
             message.setBody(content);
             MailEngineNL.send(message);
                         
@@ -155,4 +138,23 @@ public class LiferayMailingUtil {
         
         return result;
     }
+    
+    /**
+     * 
+     * @param message
+     * @return
+     * @throws Exception 
+     */
+    public static boolean sendEmail(MailMessage message) throws Exception {
+        boolean result = false;        
+        try {           
+            MailEngineNL.send(message);                        
+            result = true;       
+        } catch (MailEngineException ex) {
+            log.error("Error sending the email", ex);            
+        }
+        
+        return result;
+    }
+    
 }

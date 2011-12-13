@@ -1,5 +1,6 @@
 package com.rcs.newsletter.portlets.subscription;
 
+import com.rcs.newsletter.core.service.util.EmailFormat;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.Map;
@@ -153,22 +154,8 @@ public class SubscriptionManagedBean implements Serializable {
                         if (sendEmail) {
                             String content = subscriptionEmail;
                             String subject = newsletterBundle.getString("newsletter.subscription.mail.subject");
-
-                            String portalUrl = uiStateManagedBean.getThemeDisplay().getPortalURL();
                             
-                            StringBuilder stringBuilder = new StringBuilder(portalUrl);
-                            stringBuilder.append("?subscriptionId=");
-                            stringBuilder.append(subscription.getId());
-                            stringBuilder.append("&activationkey=");
-                            stringBuilder.append(subscription.getActivationKey());
-                            
-                            String subscriptorFirstName = subscriptor.getFirstName() != null ? subscriptor.getFirstName() : "";
-                            String subscriptorLastName = subscriptor.getLastName() != null ? subscriptor.getLastName() : "";
-                            
-                            content = content.replace(CONFIRMATION_LINK_TOKEN, stringBuilder.toString());
-                            content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
-                            content = content.replace(FIRST_NAME_TOKEN, subscriptorFirstName);
-                            content = content.replace(LAST_NAME_TOKEN, subscriptorLastName);
+                            content = EmailFormat.replaceUserInfo(content, subscription, uiStateManagedBean.getThemeDisplay());
 
                             LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
 
@@ -235,24 +222,10 @@ public class SubscriptionManagedBean implements Serializable {
                             subscriptionService.update(subscription);
                             
                             String content = unsubscriptionEmail;
-                            String subject = newsletterBundle.getString("newsletter.unsubscription.mail.subject");
+                            String subject = newsletterBundle.getString("newsletter.unsubscription.mail.subject");                            
 
-                            String portalUrl = uiStateManagedBean.getThemeDisplay().getPortalURL();
-                            
-                            StringBuilder stringBuilder = new StringBuilder(portalUrl);
-                            stringBuilder.append("?unsubscriptionId=");
-                            stringBuilder.append(subscription.getId());
-                            stringBuilder.append("&deactivationkey=");
-                            stringBuilder.append(subscription.getDeactivationKey());
-
-                            String subscriptorFirstName = subscriptor.getFirstName() != null ? subscriptor.getFirstName() : "";
-                            String subscriptorLastName = subscriptor.getLastName() != null ? subscriptor.getLastName() : "";
-
-                            content = content.replace(CONFIRMATION_LINK_TOKEN, stringBuilder.toString());
-                            content = content.replace(LIST_NAME_TOKEN, newsletterCategory.getName());
-                            content = content.replace(FIRST_NAME_TOKEN, subscriptorFirstName);
-                            content = content.replace(LAST_NAME_TOKEN, subscriptorLastName);
-                            
+                            content = content.replace(CONFIRMATION_LINK_TOKEN, CONFIRMATION_UNREGISTER_LINK_TOKEN);                             
+                            content = EmailFormat.replaceUserInfo(content, subscription, uiStateManagedBean.getThemeDisplay());
                             LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
 
                             String infoMessage = serverMessageBundle.getString("newsletter.registration.success.info");
@@ -302,15 +275,8 @@ public class SubscriptionManagedBean implements Serializable {
                         String greetingEmail = category.getGreetingEmail();
                         String content = greetingEmail;
                         String subject = newsletterBundle.getString("newsletter.greetings.mail.subject");
-                        
-                        NewsletterSubscriptor subscriptor = subscription.getSubscriptor();
-                        String subscriptorFirstName = subscriptor.getFirstName() != null ? subscriptor.getFirstName() : "";
-                        String subscriptorLastName = subscriptor.getLastName() != null ? subscriptor.getLastName() : "";
-                        
-                        content = content.replace(LIST_NAME_TOKEN, category.getName());
-                        content = content.replace(FIRST_NAME_TOKEN, subscriptorFirstName);
-                        content = content.replace(LAST_NAME_TOKEN, subscriptorLastName);
-                        
+                                                
+                        content = EmailFormat.replaceUserInfo(content, subscription, uiStateManagedBean.getThemeDisplay());                        
                         
                         LiferayMailingUtil.sendEmail(category.getFromEmail(), subscription.getSubscriptor().getEmail(), subject, content);
 

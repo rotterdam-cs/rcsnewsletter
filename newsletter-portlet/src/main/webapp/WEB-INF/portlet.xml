@@ -71,5 +71,25 @@
             <keywords>Registration Confirmation</keywords>
         </portlet-info>
     </portlet>
+    
+    <portlet>
+        <portlet-name>Online-Newsletter-Viewer</portlet-name>
+        <display-name>Online Newsletter Viewer</display-name>
+        <portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+        <init-param>
+            <name>javax.portlet.faces.defaultViewId.view</name>
+            <value>/xhtml/onlineNewsletterViewer.xhtml</value>
+        </init-param>
+        <expiration-cache>0</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+        </supports>
+                <!--<resource-bundle>Language</resource-bundle> -->
+        <portlet-info>
+            <title>Online Newsletter Viewer Portlet</title>
+            <short-title>Online Newsletter Viewer</short-title>
+            <keywords>Online Newsletter Viewer</keywords>
+        </portlet-info>
+    </portlet>
         
 </portlet-app>

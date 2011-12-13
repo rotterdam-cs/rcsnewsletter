@@ -22,5 +22,5 @@ public interface NewsletterMailingService extends CRUDService<NewsletterMailing>
      * @param mailingId
      * @param themeDisplay 
      */
-    void sendMailing(Long mailingId, ThemeDisplay themeDisplay);    
+    void sendMailing(Long mailingId, ThemeDisplay themeDisplay, Long archiveId);    
 }

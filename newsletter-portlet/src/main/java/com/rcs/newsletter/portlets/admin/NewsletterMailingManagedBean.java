@@ -123,14 +123,15 @@ public class NewsletterMailingManagedBean implements Serializable {
             return "admin";
         }
         
-        NewsletterMailing mailing = result.getPayload();
-        service.sendMailing(mailing.getId(), uiState.getThemeDisplay());
+        NewsletterMailing mailing = result.getPayload();        
         
         //we are going to save this version of the mailing
         JournalArticle article = uiState.getJournalArticleByArticleId(mailing.getArticleId());
         String emailContent = uiState.getContent(article);
                
-        saveArchiveForMailing(mailing.getName(), mailing.getList().getName(), article.getTitle(), emailContent);
+        Long archiveId = saveArchiveForMailing(mailing.getName(), mailing.getList().getName(), article.getTitle(), emailContent);
+        
+        service.sendMailing(mailing.getId(), uiState.getThemeDisplay(), archiveId);
         
         //We remove the mailing that is already sent
         result = service.delete(mailing);
@@ -154,7 +155,7 @@ public class NewsletterMailingManagedBean implements Serializable {
      * @param categoryName
      * @param emailBody 
      */
-    private void saveArchiveForMailing(String mailingName, String categoryName, String articleTitle, String emailBody) {
+    private Long saveArchiveForMailing(String mailingName, String categoryName, String articleTitle, String emailBody) {
         NewsletterArchive archive = new NewsletterArchive();
         archive.setDate(new Date());
         archive.setCategoryName(categoryName);
@@ -163,6 +164,7 @@ public class NewsletterMailingManagedBean implements Serializable {
         archive.setName(mailingName);        
 
         archiveService.save(archive);
+        return archive.getId();
     }
     
      public String redirectConfirmSend() {         

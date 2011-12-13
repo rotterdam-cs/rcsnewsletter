@@ -112,7 +112,7 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     private void updateSubscriptors() {
         try {
             if (onlyInactive) {
-                status= SubscriptionStatus.INACTIVE;
+                status= null;
             } else {
                 status= SubscriptionStatus.ACTIVE;
             }

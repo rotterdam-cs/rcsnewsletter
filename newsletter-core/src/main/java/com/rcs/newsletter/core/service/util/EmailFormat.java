@@ -1,8 +1,15 @@
 package com.rcs.newsletter.core.service.util;
 
+import java.net.MalformedURLException;
+import org.apache.commons.lang.StringEscapeUtils;
+import javax.mail.internet.InternetAddress;
+import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.rcs.newsletter.core.model.NewsletterCategory;
+import com.rcs.newsletter.core.model.NewsletterSubscription;
+import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,10 +20,132 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class EmailFormat {
+import static com.rcs.newsletter.NewsletterConstants.*;
 
+public class EmailFormat {
     private static Log log = LogFactoryUtil.getLog(EmailFormat.class);
 
+    
+    /**
+     * To determine if the content is personalizable or not
+     * @param content
+     * @return 
+     */
+    public static boolean contentPersonalizable(String content) {
+        boolean result = false;        
+        if (content.contains(CONFIRMATION_LINK_TOKEN)
+         || content.contains(LIST_NAME_TOKEN)
+         || content.contains(FIRST_NAME_TOKEN)
+         || content.contains(LAST_NAME_TOKEN)             
+         || content.contains(ONLINE_ARTICLE_LINK) 
+        ){
+            result = true;
+        }        
+        return result;
+    }
+    
+    
+    /**
+     * Replace special tags with user information
+     * @param content
+     * @param subscription
+     * @param themeDisplay
+     * @return 
+     */
+    public static String replaceUserInfo(String content, NewsletterSubscription subscription, ThemeDisplay themeDisplay) {
+        return replaceUserInfo(content, subscription, themeDisplay, null);
+    }
+    
+    /**
+     * Replace special tags with user information Including the OnLine Article Viewer
+     * @param content
+     * @param subscription
+     * @param themeDisplay
+     * @param articleId
+     * @return 
+     */
+    public static String replaceUserInfo(String content, NewsletterSubscription subscription, ThemeDisplay themeDisplay, Long archiveId) {        
+        //Default Replacement information
+        String subscriptorFirstName = "";
+        String subscriptorLastName = "";
+        String categoryName = "";        
+        String confirmationLinkToken = "";
+        String confirmationUnregisterLinkToken = "";
+        String onlineArticleLink = "";
+        
+        String portalUrl = themeDisplay.getPortalURL();
+        if (subscription != null) {
+            //Replace Subscriptor Information
+            NewsletterSubscriptor subscriptor = subscription.getSubscriptor();
+            subscriptorFirstName = subscriptor.getFirstName() != null ? subscriptor.getFirstName() : "";
+            subscriptorLastName = subscriptor.getLastName() != null ? subscriptor.getLastName() : "";
+            
+            //Replace Category Information
+            NewsletterCategory category = subscription.getCategory();
+            categoryName = category.getName();
+            
+            //Replace Confirmation Link Information
+            StringBuilder stringBuilder = new StringBuilder(portalUrl);
+            stringBuilder.append(ONLINE_NEWSLETTER_CONFIRMATION_PAGE);
+            stringBuilder.append("?subscriptionId=");
+            stringBuilder.append(subscription.getId());
+            stringBuilder.append("&activationkey=");
+            stringBuilder.append(subscription.getActivationKey());       
+            
+            String confirmationLinkTokenTmp = stringBuilder.toString();            
+            StringBuilder stringBuilderconfirmationLinkToken = new StringBuilder("<a href=\"");
+            stringBuilderconfirmationLinkToken.append(confirmationLinkTokenTmp);
+            stringBuilderconfirmationLinkToken.append("\">");
+            stringBuilderconfirmationLinkToken.append(confirmationLinkTokenTmp);            
+            stringBuilderconfirmationLinkToken.append("</a>");
+            confirmationLinkToken = stringBuilderconfirmationLinkToken.toString();
+            
+            //Replace UNREGISTER Confirmation Link Information
+            StringBuilder stringBuilderu = new StringBuilder(portalUrl);
+            stringBuilderu.append(ONLINE_NEWSLETTER_CONFIRMATION_PAGE);
+            stringBuilderu.append("?unsubscriptionId=");
+            stringBuilderu.append(subscription.getId());
+            stringBuilderu.append("&deactivationkey=");
+            stringBuilderu.append(subscription.getDeactivationKey());       
+            
+            String confirmationLinkTokenTmpu = stringBuilderu.toString();            
+            StringBuilder stringBuilderconfirmationLinkTokenu = new StringBuilder("<a href=\"");
+            stringBuilderconfirmationLinkTokenu.append(confirmationLinkTokenTmpu);
+            stringBuilderconfirmationLinkTokenu.append("\">");
+            stringBuilderconfirmationLinkTokenu.append(confirmationLinkTokenTmpu);            
+            stringBuilderconfirmationLinkTokenu.append("</a>");
+            confirmationUnregisterLinkToken = stringBuilderconfirmationLinkTokenu.toString();
+            
+            //Replace Confirmation Link Information
+            if (archiveId != null) {            
+                StringBuilder stringBuilderol = new StringBuilder(portalUrl);
+                stringBuilderol.append(ONLINE_NEWSLETTER_VIEWER_PAGE);
+                stringBuilderol.append("?nlid=");
+                stringBuilderol.append(archiveId);
+                stringBuilderol.append("&sid=");
+                stringBuilderol.append(subscription.getId());
+                
+                String stringBuilderolTmp = stringBuilderol.toString();            
+                StringBuilder stringBuilderollink = new StringBuilder("<a href=\"");
+                stringBuilderollink.append(stringBuilderolTmp);
+                stringBuilderollink.append("\">");
+                stringBuilderollink.append(stringBuilderolTmp);            
+                stringBuilderollink.append("</a>");
+                onlineArticleLink = stringBuilderollink.toString();
+            }
+            
+        }        
+        content = content.replace(FIRST_NAME_TOKEN, subscriptorFirstName);
+        content = content.replace(LAST_NAME_TOKEN, subscriptorLastName);
+        content = content.replace(LIST_NAME_TOKEN, categoryName);
+        content = content.replace(CONFIRMATION_LINK_TOKEN, confirmationLinkToken);
+        content = content.replace(CONFIRMATION_UNREGISTER_LINK_TOKEN, confirmationUnregisterLinkToken);        
+        content = content.replace(ONLINE_ARTICLE_LINK, onlineArticleLink);
+        return content;
+    }
+    
+    
+    
     /**
      * Fix the relative Paths to Absolute Paths on images
      */
@@ -88,6 +217,41 @@ public class EmailFormat {
         return tmp;
     }
 
+    /**
+     * Get the message with attached images
+     * @param fromIA
+     * @param toIA
+     * @param subject
+     * @param content
+     * @return
+     * @throws Exception 
+     */
+    public static MailMessage getMailMessageWithAttachedImages(InternetAddress fromIA, InternetAddress toIA, String subject, String content) throws Exception {
+        
+        ArrayList images = getImagesPathFromHTML(content);
+        
+        MailMessage message = new MailMessage(fromIA, toIA, subject, content, true);
+            
+        // embed the images into the multipart
+        for (int i = 0; i < images.size(); i++) {
+            String image = (String) images.get(i);
+            URL imageUrl = null;
+            try {
+                String imagePathOriginal = (String) images.get(i);                    
+                String imagePath = StringEscapeUtils.unescapeHtml(image);
+                imageUrl = new URL(imagePath);                    
+                File tempF = getFile(imageUrl);//To Improve probably add Cache
+                content = StringUtils.replace(content, imagePathOriginal, "cid:" + tempF.getName());
+                message.addAttachment(tempF);
+            } catch (MalformedURLException ex) {
+                log.error("problem with image url " + image, ex);
+            }
+        }
+        message.setBody(content);
+        
+        return message;
+    }
+    
     /**
      * Method imported from COPS (com.rcs.community.common.MimeMail)
      * Returns an ArrayList with all the different images paths. Duplicated paths are deleted.

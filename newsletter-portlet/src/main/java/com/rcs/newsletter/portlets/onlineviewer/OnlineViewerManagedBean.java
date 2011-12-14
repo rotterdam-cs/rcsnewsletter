@@ -90,7 +90,7 @@ public class OnlineViewerManagedBean implements Serializable {
                     break;
                 }
             }
-        }
+        }        
         if(getRequestedNewsletterId() != null) {
             ServiceActionResult<NewsletterArchive> sar = archiveService.findById( getRequestedNewsletterId() );
             if (sar.isSuccess()) {

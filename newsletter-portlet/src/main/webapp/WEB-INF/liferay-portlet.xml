@@ -11,6 +11,7 @@
         <instanceable>false</instanceable>                        
         <ajaxable>false</ajaxable>                    
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
+        <header-portlet-javascript>/js/jquery-1.6.4.min.js</header-portlet-javascript>
         <footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
     </portlet> 
 
@@ -20,6 +21,7 @@
         <instanceable>true</instanceable>                        
         <ajaxable>false</ajaxable>                    
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
+        <header-portlet-javascript>/js/jquery-1.6.4.min.js</header-portlet-javascript>
         <footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
     </portlet> 
         
@@ -28,6 +30,7 @@
         <icon>/icon.png</icon>
         <instanceable>true</instanceable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
+        <header-portlet-javascript>/js/jquery-1.6.4.min.js</header-portlet-javascript>
         <footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
         <css-class-wrapper>newsletter-confirmation-msg</css-class-wrapper>
     </portlet>

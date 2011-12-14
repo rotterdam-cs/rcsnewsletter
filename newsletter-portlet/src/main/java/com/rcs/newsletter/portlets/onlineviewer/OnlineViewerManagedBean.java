@@ -8,9 +8,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.faces.context.FacesContext;
-import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
-import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.io.Serializable;
@@ -19,8 +17,9 @@ import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.rcs.newsletter.NewsletterConstants;
+import java.util.List;
 
-import static com.rcs.newsletter.NewsletterConstants.*;
 
 /**
  *
@@ -50,8 +49,10 @@ public class OnlineViewerManagedBean implements Serializable {
         return requestedNewsletterId;
     }
 
-    public void setRequestedNewsletterId(Long requestedNewsletterId) {
-        this.requestedNewsletterId = requestedNewsletterId;
+    public void setRequestedNewsletterId(String requestedNewsletterId) {
+        if (requestedNewsletterId != null && !requestedNewsletterId.isEmpty()) {        
+            this.requestedNewsletterId = Long.parseLong(requestedNewsletterId);
+        }
     }    
     
     public String getRequestedsubscriptionId() {
@@ -84,24 +85,44 @@ public class OnlineViewerManagedBean implements Serializable {
             for (String key : map.keySet()) {
                 if (map.get(key) instanceof HttpServletRequestWrapper) {
                     HttpServletRequest request = (HttpServletRequest) ((HttpServletRequestWrapper) map.get(key)).getRequest();
-                    setRequestedNewsletterId(Long.parseLong((String) request.getParameter("nlid")));
+                    setRequestedNewsletterId((String) request.getParameter("nlid"));
                     setRequestedsubscriptionId((String) request.getParameter("sid"));
                     break;
                 }
             }
         }
-        if(getRequestedNewsletterId() != null && getRequestedsubscriptionId() != null) {
+        if(getRequestedNewsletterId() != null) {
             ServiceActionResult<NewsletterArchive> sar = archiveService.findById( getRequestedNewsletterId() );
             if (sar.isSuccess()) {
-                long subscriptionId = Long.parseLong(getRequestedsubscriptionId());
-                ServiceActionResult<NewsletterSubscription> subscriptionResult = subscriptionService.findById(subscriptionId);
                 result = sar.getPayload().getEmailBody();
-                if (subscriptionResult.isSuccess()) {
-                    NewsletterSubscription subscription = subscriptionResult.getPayload();
-                    result = EmailFormat.replaceUserInfo(result, subscription, uiStateManagedBean.getThemeDisplay(), getRequestedNewsletterId());
+                if (getRequestedsubscriptionId() != null){
+                    long subscriptionId = Long.parseLong(getRequestedsubscriptionId());
+                    ServiceActionResult<NewsletterSubscription> subscriptionResult = subscriptionService.findById(subscriptionId);
+                    if (subscriptionResult.isSuccess()) {
+                        NewsletterSubscription subscription = subscriptionResult.getPayload();
+                        result = EmailFormat.replaceUserInfo(result, subscription, uiStateManagedBean.getThemeDisplay(), getRequestedNewsletterId());
+                    } else {
+                        result = EmailFormat.replaceUserInfo(result, null, uiStateManagedBean.getThemeDisplay(), getRequestedNewsletterId());
+                    }
+                } else {
+                    result = EmailFormat.replaceUserInfo(result, null, uiStateManagedBean.getThemeDisplay(), getRequestedNewsletterId());
                 }
-            }                        
-        }        
+            //Show the latest newsletter article
+            } else {
+                List<NewsletterArchive> sarl = archiveService.findAll(0, 1, "id", NewsletterConstants.ORDER_BY_DESC).getPayload();
+                if (sarl.size() > 0) {
+                    result = sarl.get(0).getEmailBody();
+                    result = EmailFormat.replaceUserInfo(result, null, uiStateManagedBean.getThemeDisplay(), getRequestedNewsletterId());
+                }
+            }
+        //Show the latest newsletter article
+        } else {
+            List<NewsletterArchive> sarl = archiveService.findAll(0, 1, "id", NewsletterConstants.ORDER_BY_DESC).getPayload();
+            if (sarl.size() > 0) {
+                result = sarl.get(0).getEmailBody();
+                result = EmailFormat.replaceUserInfo(result, null, uiStateManagedBean.getThemeDisplay(), getRequestedNewsletterId());
+            }
+        }
         return result;
     }    
     

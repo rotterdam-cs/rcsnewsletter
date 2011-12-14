@@ -160,6 +160,9 @@
     padding: 6px!important;
     margin-left: 10px;
 }
-.newsletter-confirmation-msg{
+.online-newsletter-viewer {
     padding: 20px;
+}
+.online-newsletter-viewer-container {
+    width: 700px;
 }

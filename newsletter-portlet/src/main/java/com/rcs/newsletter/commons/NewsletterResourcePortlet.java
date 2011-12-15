@@ -14,7 +14,9 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.portlets.admin.SubscriptorExportManagedBean;
 import java.util.List;
+import javax.portlet.PortletPreferences;
 import org.apache.commons.fileupload.FileItem;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 
 public class NewsletterResourcePortlet extends GenericFacesPortlet {
 
@@ -46,9 +48,11 @@ public class NewsletterResourcePortlet extends GenericFacesPortlet {
     }
 
     @Override
-    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {
+    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {        
         if (FileUploadUtil.isMultipart(actionRequest)) {
             try {
+                PortletPreferences prefs = actionRequest.getPreferences();
+                
                 List<FileItem> items = FileUploadUtil.parseRequest(actionRequest);
                 for (FileItem fileItem : items) {
                     if (fileItem.getFieldName().equals(ResourceTypeEnum.SUBSCRIPTOR_FROM_EXCEL.toString())) {
@@ -58,11 +62,16 @@ public class NewsletterResourcePortlet extends GenericFacesPortlet {
 
                         if (subscriptorExportManagedBean != null) {
                             SubscriptorsResourceUtil.importSubscriptorsFromExcel(fileItem, subscriptorExportManagedBean);
+                            prefs.setValue("importresult", "1");
+            
                         } else {
+                            prefs.setValue("importresult", "0");
                             logger.error("Could not retrieve the Export Managed Bean");
                         }
                     }
                 }
+                prefs.store();
+                SessionMessages.add(actionRequest, "success");
             } catch (FileUploadException ex) {
                 logger.error("Could not parse the request");
             }

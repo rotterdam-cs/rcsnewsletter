@@ -6,14 +6,6 @@
       xmlns:h="http://java.sun.com/jsf/html">
     <f:loadBundle basename="Newsletter" var="nlk" />
     <h:body>
-        <script type="text/javascript">
-            jQuery(document).ready(function() {                
-                var msg = jQuery(".registration-confirmation-messages").html();
-                if (msg != "") {
-                    jQuery(".newsletter-confirmation-msg").show();
-                }
-            });            
-        </script>
        <h:outputText styleClass="registration-confirmation-messages" value="#{subscriptionManagedBean.activationkey}" escape="false"/>
     </h:body>
 </html>

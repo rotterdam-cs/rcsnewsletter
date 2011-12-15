@@ -1,5 +1,9 @@
 package com.rcs.newsletter.portlets.admin;
 
+import java.io.IOException;
+import javax.portlet.ReadOnlyException;
+import javax.portlet.RenderRequest;
+import javax.portlet.PortletPreferences;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.NewsletterConstants;
@@ -16,6 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.portlet.ValidatorException;
 import org.springframework.context.annotation.Scope;
 
 import static com.rcs.newsletter.NewsletterConstants.*;
@@ -34,6 +39,7 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     private Boolean onlyInactive = false;
     private SubscriptionStatus status = null;
     private ResourceBundle messageBundle;
+    private String importResult = "";
     
     @Inject
     NewsletterSubscriptorService subscriptorService;
@@ -50,12 +56,26 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     List<NewsletterSubscriptor> subscribers;    
     
     @PostConstruct
-    public void init() {
+    public void init() throws IOException, ValidatorException {
+        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        
+        try {
+            Object a = facesContext.getExternalContext().getRequest();            
+            if(a instanceof RenderRequest) {                
+                RenderRequest renderRequest = (RenderRequest)a;
+                PortletPreferences prefs = renderRequest.getPreferences();
+                prefs.setValue("importresult", "");
+                prefs.store();
+            }
+        } catch (ReadOnlyException ex) {
+            log.error(ex);
+        }
+        
         setPaginationStart(NewsletterConstants.PAGINATION_DEFAULT_START);
         setPaginationLimit(NewsletterConstants.PAGINATION_DEFAULT_LIMIT);
         updateSubscriptors();
-        
-        FacesContext facesContext = FacesContext.getCurrentInstance();
+                
         messageBundle = ResourceBundle.getBundle(LANGUAGE_BUNDLE, facesContext.getViewRoot().getLocale());
     }
 
@@ -68,7 +88,7 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     }
     
     public List<NewsletterSubscriptor> getSubscribers() {
-        updateSubscriptors();
+        updateSubscriptors();        
         return subscribers;
     }
 
@@ -100,6 +120,38 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
         return String.valueOf(categoryId);
     }
 
+    public String getImportResult() {
+        
+        try {  
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            Object a = facesContext.getExternalContext().getRequest();
+            String importResultBridge = "";
+            if(a instanceof RenderRequest) {
+                RenderRequest renderRequest = (RenderRequest)a;
+                PortletPreferences prefs = renderRequest.getPreferences();
+                importResultBridge = (String)prefs.getValue("importresult", "");                
+                prefs.setValue("importresult", "");
+                prefs.store();
+            }           
+            ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
+            if (importResultBridge.equals("1")) {
+                importResult = newsletterMessageBundle.getString("newsletter.admin.subscribers.import.success");
+            } else if (importResultBridge.equals("0")) {
+                importResult = newsletterMessageBundle.getString("newsletter.admin.subscribers.import.unsuccess");
+            } else {
+                importResult = "";
+            }
+         }catch(Exception ex) {
+            log.error(ex);
+        }
+        
+        return importResult;
+    }
+
+    public void setImportResult(String importResult) {
+        this.importResult = importResult;
+    }    
+    
     public void changeCategory(AjaxBehaviorEvent event) {
         this.gotoFirstPage();
     }
@@ -109,8 +161,8 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
         updateSubscriptors();
     }
     
-    private void updateSubscriptors() {
-        try {
+    private void updateSubscriptors() {        
+        try {            
             if (onlyInactive) {
                 status= null;
             } else {

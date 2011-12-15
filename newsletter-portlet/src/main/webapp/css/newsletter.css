@@ -136,12 +136,14 @@
     
     border: 1px solid;
     margin: 10px 0;
+    margin-bottom: 10px;
     padding: 10px;
 }
 
 .newsletter-confirmation-msg {    
     text-align: center!important;
     display: none;
+    padding-bottom: 15px;
 }
 .newsletter-forms-column-1-filterlist{
   width: 180px;

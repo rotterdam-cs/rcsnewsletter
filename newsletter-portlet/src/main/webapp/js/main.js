@@ -16,4 +16,9 @@ jQuery(document).ready(function() {
        $j('#register-link').toggle();
        $j('.infohidden').toggle();
     });
+    
+    var msg = jQuery(".registration-confirmation-messages").html();
+    if (msg != "") {
+        jQuery(".newsletter-confirmation-msg").show();
+    }
 });

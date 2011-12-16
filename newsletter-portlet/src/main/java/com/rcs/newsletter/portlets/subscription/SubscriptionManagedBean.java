@@ -1,5 +1,7 @@
 package com.rcs.newsletter.portlets.subscription;
 
+import com.liferay.portal.kernel.mail.MailMessage;
+import javax.mail.internet.InternetAddress;
 import com.rcs.newsletter.core.service.util.EmailFormat;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -156,8 +158,13 @@ public class SubscriptionManagedBean implements Serializable {
                             String subject = newsletterBundle.getString("newsletter.subscription.mail.subject");
                             
                             content = EmailFormat.replaceUserInfo(content, subscription, uiStateManagedBean.getThemeDisplay());
-
-                            LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
+                            
+                            content = EmailFormat.fixImagesPath(content, uiStateManagedBean.getThemeDisplay());                            
+                            InternetAddress fromIA = new InternetAddress(newsletterCategory.getFromEmail());
+                            InternetAddress toIA = new InternetAddress(email);
+                            MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);
+                            LiferayMailingUtil.sendEmail(message);
+                            //LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
 
                             String infoMessage = serverMessageBundle.getString("newsletter.registration.success.msg");
                             FacesUtil.infoMessage(infoMessage);
@@ -226,7 +233,13 @@ public class SubscriptionManagedBean implements Serializable {
 
                             content = content.replace(CONFIRMATION_LINK_TOKEN, CONFIRMATION_UNREGISTER_LINK_TOKEN);                             
                             content = EmailFormat.replaceUserInfo(content, subscription, uiStateManagedBean.getThemeDisplay());
-                            LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
+                            
+                            content = EmailFormat.fixImagesPath(content, uiStateManagedBean.getThemeDisplay());                            
+                            InternetAddress fromIA = new InternetAddress(newsletterCategory.getFromEmail());
+                            InternetAddress toIA = new InternetAddress(email);
+                            MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);
+                            LiferayMailingUtil.sendEmail(message);
+                            //LiferayMailingUtil.sendEmail(newsletterCategory.getFromEmail(), email, subject, content);
 
                             String infoMessage = serverMessageBundle.getString("newsletter.registration.success.info");
                             FacesUtil.infoMessage(infoMessage);
@@ -278,7 +291,12 @@ public class SubscriptionManagedBean implements Serializable {
                                                 
                         content = EmailFormat.replaceUserInfo(content, subscription, uiStateManagedBean.getThemeDisplay());                        
                         
-                        LiferayMailingUtil.sendEmail(category.getFromEmail(), subscription.getSubscriptor().getEmail(), subject, content);
+                        content = EmailFormat.fixImagesPath(content, uiStateManagedBean.getThemeDisplay());                            
+                        InternetAddress fromIA = new InternetAddress(category.getFromEmail());
+                        InternetAddress toIA = new InternetAddress(subscription.getSubscriptor().getEmail());
+                        MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);
+                        LiferayMailingUtil.sendEmail(message);
+                        //LiferayMailingUtil.sendEmail(category.getFromEmail(), subscription.getSubscriptor().getEmail(), subject, content);
 
                         infoMesage = serverMessageBundle.getString("newsletter.registration.confirmed.msg");
                         FacesUtil.infoMessage(infoMesage);

@@ -3,12 +3,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.prime.com.tr/ui">    
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+>    
     <f:loadBundle basename="Language" var="msg" />
     <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>        
     </h:head>
-    <h:body>
+    <script type="text/javascript">
+        var hcontent = jQuery('input[id*="hcontent"]');
+        function initEditor() {
+            return hcontent.val();
+        }
+        function editorContentChanged(a){
+            hcontent.val(a);
+        }
+    </script>
+    <h:body>        
         <h2>#{subscriptionEmailManagedBean.subscriptionType}</h2>
         <br></br>
         <h:form id="edit-subscription-email-form">
@@ -18,12 +28,13 @@
             </p:dialog> 
             <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>
             <p:commandButton styleClass="newsletter-forms-button" value="#{msg['newsletter.admin.category.general.help']}" onclick="dlg3.show();" type="button"/> 
-            <h:panelGrid columns="2" styleClass="newsletter-forms-form-panel" >                                
-                <p:editor value="#{subscriptionEmailManagedBean.subscriptionEmailBody}"  /> 
-            </h:panelGrid>
+            
+            <h:inputHidden value="#{subscriptionEmailManagedBean.subscriptionEmailBody}" id="hcontent"/>
+            <iframe height="450" id="editortest" name="editortest" src="/html/js/editor/editor.jsp?p_l_id=#{subscriptionEmailManagedBean.plid}&amp;p_main_path=%2Fde%2Fc&amp;doAsUserId=#{subscriptionEmailManagedBean.doAsUserId}&amp;editorImpl=ckeditor&amp;toolbarSet=liferay-article&amp;initMethod=initEditor&amp;onChangeMethod=editorContentChanged&amp;cssPath=%2Fhtml%2Fthemes%2Fcontrol_panel%2Fcss&amp;cssClasses=portlet+portlet-journal" style="border: none;" width="95%"></iframe>
+            
             <p:growl id="editSubscriptionMailMessage"/>
             <p:commandButton styleClass="newsletter-forms-button" value="#{msg['newsletter.admin.general.edit']}" update="editSubscriptionMailMessage" action="#{subscriptionEmailManagedBean.save}" ajax="false"/>
-            <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
+            <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />            
         </h:form>
     </h:body>
 </html>

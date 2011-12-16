@@ -37,6 +37,8 @@ public class SubscriptionEmailManagedBean {
     private SubscriptionTypeEnum subscriptionType;
     private String subscriptionEmailBody;
     private String helpPageText;
+    private Long plid;
+    private String doAsUserId;
 
     public int getCategoryId() {
         return categoryId;
@@ -77,6 +79,27 @@ public class SubscriptionEmailManagedBean {
     public void setHelpPageText(String helpPageText) {
         this.helpPageText = helpPageText;
     }
+
+    public Long getPlid() {
+        setPlid(uiState.getThemeDisplay().getPlid());
+        return plid;
+    }
+
+    public void setPlid(Long plid) {
+        this.plid = plid;
+    }
+
+    public String getDoAsUserId() {
+        setDoAsUserId(uiState.getThemeDisplay().getDoAsUserId());
+        return doAsUserId;
+    }
+
+    public void setDoAsUserId(String doAsUserId) {
+        this.doAsUserId = doAsUserId;
+    }
+    
+    
+    
 
     public String redirectEditSubscribeMail() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);

@@ -19,7 +19,7 @@
             <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>
             <p:commandButton styleClass="newsletter-forms-button" value="#{msg['newsletter.admin.category.general.help']}" onclick="dlg3.show();" type="button"/> 
             <h:panelGrid columns="2" styleClass="newsletter-forms-form-panel" >                                
-                <p:editor value="#{subscriptionEmailManagedBean.subscriptionEmailBody}"/> 
+                <p:editor value="#{subscriptionEmailManagedBean.subscriptionEmailBody}"  /> 
             </h:panelGrid>
             <p:growl id="editSubscriptionMailMessage"/>
             <p:commandButton styleClass="newsletter-forms-button" value="#{msg['newsletter.admin.general.edit']}" update="editSubscriptionMailMessage" action="#{subscriptionEmailManagedBean.save}" ajax="false"/>

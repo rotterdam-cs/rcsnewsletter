@@ -18,18 +18,19 @@
                 <h:inputText styleClass="newsletter-forms-input-text" value="#{editMailingManagedBean.mailingName}" />
                 
                 <h:outputLabel value="#{msg['newsletter.admin.general.list']}:" />
-                <h:selectOneListbox size="1"  styleClass="newsletter-forms-input-text" value="#{editMailingManagedBean.categoryId}">
+                <h:selectOneListbox size="1"  styleClass="newsletter-forms-input-text" value="#{editMailingManagedBean.categoryId}">                    
                     <f:selectItems var="item" value="#{newsletterMailingManagedBean.categories}" itemLabel="#{item.name}" itemValue="#{item.id}"  />
                 </h:selectOneListbox>
                 
                 <h:outputLabel value="#{msg['newsletter.admin.template']}:" />
-                <h:inputText value="#{editMailingManagedBean.templateId}" />
+                <h:selectOneMenu value="#{editMailingManagedBean.templateId}" styleClass="newsletter-forms-input-text">
+                    <f:selectItem itemLabel="" itemValue="0" />
+                    <f:selectItems value="#{editMailingManagedBean.templates}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>                    
+                    <f:ajax event="change" listener="#{editMailingManagedBean.changeTemplate}" render="@form"/>
+                </h:selectOneMenu>                            
                 
-                <h:outputLabel value="#{msg['newsletter.admin.article']}:" />
-                <h:selectOneListbox size="1" styleClass="newsletter-forms-input-text" value="#{editMailingManagedBean.articleId}">
-                    <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />
-                </h:selectOneListbox>                
-                   
+                <h:outputText value="#{editMailingManagedBean.template}" escape="false"/>
+                
             </h:panelGrid>
             <p:commandButton styleClass="newsletter-forms-button" action="#{editMailingManagedBean.save}" update="messages" value="#{nlk[editMailingManagedBean.saveButtonKey]}" />
             <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />

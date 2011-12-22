@@ -1,5 +1,8 @@
 package com.rcs.newsletter.portlets.admin;
 
+import java.util.ResourceBundle;
+import javax.faces.context.FacesContext;
+import com.rcs.newsletter.core.service.util.EmailFormat;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.core.model.NewsletterCategory;
@@ -14,6 +17,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
+import static com.rcs.newsletter.NewsletterConstants.*;
 
 /**
  *
@@ -23,13 +27,14 @@ import org.springframework.context.annotation.Scope;
 @Scope("request")
 public class EditMailingManagedBean {
     private static Log log = LogFactoryUtil.getLog(EditMailingManagedBean.class);  
+    private static final String NO_BLOCKS_IN_TEMPLATE = "newsletter.admin.mailing.template.no.blocks";
     //////////////// DEPENDENCIES //////////////////
     @Inject
     private NewsletterMailingService service;
     
     @Inject
     private NewsletterTemplateService templateService;
-    
+        
     private NewsletterMailingManagedBean mailingManagedBean;
     
     /////////////// L10N KEYS //////////////////////
@@ -47,8 +52,10 @@ public class EditMailingManagedBean {
     private Long categoryId;
     private Long articleId;
     private Long templateId;
+    List<NewsletterTemplate> templates;
     private String mailingName;
     private Long mailingId;
+    private String template = "";
     
     //////////////// METHODS //////////////////////
     @PostConstruct
@@ -67,13 +74,11 @@ public class EditMailingManagedBean {
                 mailing = service.findById(mailingId).getPayload();                
                 break;
         }
-        //mailing.setArticleId(articleId);
-        
         NewsletterTemplate nlt = templateService.findById(templateId).getPayload();
         mailing.setTemplate(nlt);
         mailing.setName(mailingName);
         mailing.setList(findListById(categoryId));
-        
+                
         ServiceActionResult result = null;
         
         switch(currentAction) {
@@ -84,7 +89,6 @@ public class EditMailingManagedBean {
                 result = service.update(mailing);
                 break;
         }
-        
         if (result.isSuccess()) {
             mailingManagedBean.init(); 
             return "admin";
@@ -95,7 +99,6 @@ public class EditMailingManagedBean {
                 FacesUtil.errorMessage(key);
             }
         }
-        log.error("saving 5 ");
         return null;
     }    
     
@@ -145,12 +148,50 @@ public class EditMailingManagedBean {
         this.mailingName = mailingName;
     }
 
-    public Long getTemplateId() {
+    public Long getTemplateId() {        
         return templateId;
     }
 
-    public void setTemplateId(Long templateId) {
+    public void setTemplateId(Long templateId) {        
         this.templateId = templateId;
+    }
+
+    public List<NewsletterTemplate> getTemplates() {
+        setTemplates(templateService.findAll().getPayload());
+        return templates;
+    }
+
+    public void setTemplates(List<NewsletterTemplate> templates) {
+        this.templates = templates;
+    }
+
+    public String getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
+    }    
+    
+    public void changeTemplate() {
+        if (templateId != null && templateId != 0) {
+            String templateContent = templateService.findById(templateId).getPayload().getTemplate();
+            templateContent = parseTemplateEdit(templateContent);
+            setTemplate(templateContent);
+        } else {
+            setTemplate("");
+        }
+    }
+    
+    private String parseTemplateEdit(String template) {
+        String result = "";
+        result = EmailFormat.parseTemplateEdit(template);
+        if (result.isEmpty()){
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
+            result = newsletterMessageBundle.getString(NO_BLOCKS_IN_TEMPLATE);
+        }        
+        return result;
     }
     
     

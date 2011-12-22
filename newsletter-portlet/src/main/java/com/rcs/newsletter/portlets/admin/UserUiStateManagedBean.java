@@ -45,8 +45,8 @@ public class UserUiStateManagedBean implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(UserUiStateManagedBean.class);
     
     //global lists
-    List<JournalArticle> journalArticles;
-
+    List<JournalArticle> journalArticles;   
+    
     @PostConstruct
     public void init() {
         adminActiveTabIndex = LISTS_TAB_INDEX;

@@ -407,11 +407,51 @@ public class EmailFormat {
     }
     
     /**
+     * Get the edit code that allow the selection of articles on each block
+     * @param templateContent
+     * @return 
+     */
+    public static String parseTemplateEdit(String templateContent) {
+        String result = "";
+        
+        String fTagBlockOpen = fixTagsToRegex(TEMPLATE_TAG_BLOCK_OPEN);
+        String fTagBlockClose = fixTagsToRegex(TEMPLATE_TAG_BLOCK_CLOSE);
+        String fTagBlockTitle = fixTagsToRegex(TEMPLATE_TAG_TITLE);
+        String fTagBlockContent = fixTagsToRegex(TEMPLATE_TAG_CONTENT);
+        
+        templateContent = templateContent.replace(TEMPLATE_TAG_BLOCK_OPEN, fTagBlockOpen)
+                .replace(TEMPLATE_TAG_BLOCK_CLOSE, fTagBlockClose)
+                .replace(TEMPLATE_TAG_TITLE, fTagBlockTitle)
+                .replace(TEMPLATE_TAG_CONTENT, fTagBlockContent);
+        
+        //If the template contains at least one block with one title or content
+        if (templateContent.contains(fTagBlockOpen) 
+                && templateContent.contains(fTagBlockClose) 
+                && ( templateContent.contains(fTagBlockTitle) || templateContent.contains(fTagBlockContent) ) 
+        ){
+                String templateContentTmp = templateContent;
+                Pattern patternBlock = Pattern.compile(fTagBlockOpen + ".*?" + fTagBlockClose, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+                Matcher m = patternBlock.matcher(templateContent);
+                 int count = 0;
+        
+                //Iterate each Block
+                while(m.find()) {                         
+                       String toReplace = templateContent.substring(m.start(), m.end() ); 
+                       templateContentTmp = templateContentTmp.replaceFirst(toReplace, "<div id=\"blockSelector" + count + "\">blockSelector"+count+"</div>");                       
+                       count++;
+                }
+                result = templateContentTmp;            
+        }
+
+        return result;
+    }
+    
+    /**
      * Fix tags to allow replacements using common regular Expressions
      * @param tag
      * @return 
      */
-    private static String fixTagsToRegex(String tag){
+    public static String fixTagsToRegex(String tag){
         tag = tag.replace("[", "<");
         tag = tag.replace("]", ">");
         return tag;

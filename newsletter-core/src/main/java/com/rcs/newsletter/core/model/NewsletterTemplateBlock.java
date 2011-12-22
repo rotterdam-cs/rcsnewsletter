@@ -1,6 +1,7 @@
 package com.rcs.newsletter.core.model;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
@@ -13,7 +14,8 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name="newsletter_template_block")
 public class NewsletterTemplateBlock extends NewsletterEntity {    
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;    
+    public static final String TEMPLATE = "template_id";
     
     @NotNull
     @Min(1)
@@ -21,8 +23,8 @@ public class NewsletterTemplateBlock extends NewsletterEntity {
     
     private int blockOrder;
     
-    @NotNull
     @ManyToOne
+    @JoinColumn(name="template_id")
     private NewsletterTemplate template;
 
     public Long getArticleId() {

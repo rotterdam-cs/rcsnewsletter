@@ -1,5 +1,18 @@
 package com.rcs.newsletter.core.service.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portlet.journalcontent.util.JournalContentUtil;
+import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.portlet.journal.model.JournalArticle;
+import com.rcs.newsletter.core.service.NewsletterTemplateBlockService;
+import java.util.logging.Level;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
+import java.util.List;
 import java.net.MalformedURLException;
 import org.apache.commons.lang.StringEscapeUtils;
 import javax.mail.internet.InternetAddress;
@@ -10,6 +23,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import com.rcs.newsletter.core.model.NewsletterTemplate;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,7 +38,10 @@ import static com.rcs.newsletter.NewsletterConstants.*;
 
 public class EmailFormat {
     private static Log log = LogFactoryUtil.getLog(EmailFormat.class);
-
+    
+    @Autowired
+    private static NewsletterTemplateBlockService templateBlockService;
+    
     
     /**
      * To determine if the content is personalizable or not
@@ -171,6 +188,12 @@ public class EmailFormat {
         return result.toString();
     }
 
+    /**
+     * 
+     * @param u
+     * @return
+     * @throws Exception 
+     */
     public static File getFile(URL u) throws Exception {
         URLConnection uc = u.openConnection();
         String contentType = uc.getContentType();
@@ -317,4 +340,79 @@ public class EmailFormat {
         }
         return imagesList;
     }
+    
+    
+    /**
+     * Get the email content based on the template
+     * @param template
+     * @param themeDisplay
+     * @return 
+     */
+    public static String getEmailFromTemplate(NewsletterTemplate template, ThemeDisplay themeDisplay) {        
+        String result = template.getTemplate();
+        String fTagBlockOpen = fixTagsToRegex(TEMPLATE_TAG_BLOCK_OPEN);
+        String fTagBlockClose = fixTagsToRegex(TEMPLATE_TAG_BLOCK_CLOSE);
+        String fTagBlockTitle = fixTagsToRegex(TEMPLATE_TAG_TITLE);
+        String fTagBlockContent = fixTagsToRegex(TEMPLATE_TAG_CONTENT);
+        
+        result = result.replace(TEMPLATE_TAG_BLOCK_OPEN, fTagBlockOpen)
+                .replace(TEMPLATE_TAG_BLOCK_CLOSE, fTagBlockClose)
+                .replace(TEMPLATE_TAG_TITLE, fTagBlockTitle)
+                .replace(TEMPLATE_TAG_CONTENT, fTagBlockContent);
+        String resulttmp = result;
+        List<NewsletterTemplateBlock> ntb = template.getBlocks();
+                
+        Pattern patternBlock = Pattern.compile(fTagBlockOpen + ".*?" + fTagBlockClose, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+        Matcher m = patternBlock.matcher(result);
+        String toReplaceTmp = "";
+        int count = 0;
+        
+        //Iterate each Blocks
+        while(m.find()) {
+            try {
+               String toReplace = result.substring(m.start(), m.end() );
+               toReplaceTmp  = result.substring(m.start()+fTagBlockOpen.length(), m.end()-fTagBlockClose.length() );               
+                           
+               //If there is a content related to this block
+               if (ntb.size() > count) {                   
+                    JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(ntb.get(count).getArticleId());
+                    String content = ja.getContentByLocale(ja.getDefaultLocale());
+                    content = JournalContentUtil.getContent(ja.getGroupId(), 
+                                                    ja.getArticleId(), 
+                                                    ja.getTemplateId(), 
+                                                    Constants.PRINT, 
+                                                    themeDisplay.getLanguageId(), 
+                                                    themeDisplay);
+                    toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, ja.getTitle());
+                    toReplaceTmp = toReplaceTmp.replace(fTagBlockContent, content); 
+                    resulttmp = resulttmp.replaceFirst(toReplace, toReplaceTmp);
+                    
+                //If there is a NOT content related to this block the block is deleted
+                } else {                                                                             
+                    resulttmp = resulttmp.replaceFirst(toReplace, "");
+                }
+               
+            } catch (PortalException ex) {
+                log.error("Error while trying to read article", ex);
+            } catch (SystemException ex) {
+                log.error("Error while trying to read article", ex);
+            }           
+           count++;
+        }
+        result = resulttmp;
+        return result;
+    }
+    
+    /**
+     * Fix tags to allow replacements using common regular Expressions
+     * @param tag
+     * @return 
+     */
+    private static String fixTagsToRegex(String tag){
+        tag = tag.replace("[", "<");
+        tag = tag.replace("]", ">");
+        return tag;
+    }
+    
+    
 }

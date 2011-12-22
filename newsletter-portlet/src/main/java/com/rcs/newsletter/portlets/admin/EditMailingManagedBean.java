@@ -1,8 +1,12 @@
 package com.rcs.newsletter.portlets.admin;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterMailing;
+import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.service.NewsletterMailingService;
+import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.util.FacesUtil;
 import java.util.List;
@@ -18,10 +22,13 @@ import org.springframework.context.annotation.Scope;
 @Named
 @Scope("request")
 public class EditMailingManagedBean {
-    
+    private static Log log = LogFactoryUtil.getLog(EditMailingManagedBean.class);  
     //////////////// DEPENDENCIES //////////////////
     @Inject
     private NewsletterMailingService service;
+    
+    @Inject
+    private NewsletterTemplateService templateService;
     
     private NewsletterMailingManagedBean mailingManagedBean;
     
@@ -39,6 +46,7 @@ public class EditMailingManagedBean {
     
     private Long categoryId;
     private Long articleId;
+    private Long templateId;
     private String mailingName;
     private Long mailingId;
     
@@ -49,7 +57,6 @@ public class EditMailingManagedBean {
     }
     
     public String save() {
-        
         NewsletterMailing mailing = null;
         
         switch(currentAction) {
@@ -60,8 +67,10 @@ public class EditMailingManagedBean {
                 mailing = service.findById(mailingId).getPayload();                
                 break;
         }
-        
         mailing.setArticleId(articleId);
+        
+        NewsletterTemplate nlt = templateService.findById(templateId).getPayload();
+        mailing.setTemplate(nlt);
         mailing.setName(mailingName);
         mailing.setList(findListById(categoryId));
         
@@ -77,7 +86,7 @@ public class EditMailingManagedBean {
         }
         
         if (result.isSuccess()) {
-            mailingManagedBean.init();            
+            mailingManagedBean.init(); 
             return "admin";
         } else {
             FacesUtil.errorMessage("Failed to create mailing");
@@ -86,7 +95,7 @@ public class EditMailingManagedBean {
                 FacesUtil.errorMessage(key);
             }
         }
-        
+        log.error("saving 5 ");
         return null;
     }    
     
@@ -135,6 +144,15 @@ public class EditMailingManagedBean {
     public void setMailingName(String mailingName) {
         this.mailingName = mailingName;
     }
+
+    public Long getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(Long templateId) {
+        this.templateId = templateId;
+    }
+    
     
     /**
      * Get the l10n key for the title of the page.

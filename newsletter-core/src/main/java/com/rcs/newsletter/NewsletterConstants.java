@@ -31,4 +31,9 @@ public interface NewsletterConstants {
     public static final String ONLINE_NEWSLETTER_VIEWER_PAGE = "/online-newsletter/";
     public static final String ONLINE_NEWSLETTER_CONFIRMATION_PAGE = "";
     
+    public static final String TEMPLATE_TAG_BLOCK_OPEN = "[block]";
+    public static final String TEMPLATE_TAG_BLOCK_CLOSE = "[/block]";
+    public static final String TEMPLATE_TAG_TITLE = "[title]";
+    public static final String TEMPLATE_TAG_CONTENT= "[content]";
+    
 }

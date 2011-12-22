@@ -4,24 +4,22 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portlet.journal.model.JournalArticle;
-import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
-import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.util.LiferayMailingUtil;
-import com.liferay.portal.kernel.util.Constants;
 import com.rcs.newsletter.core.service.util.EmailFormat;
 import javax.mail.internet.InternetAddress;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.rcs.newsletter.core.model.NewsletterTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 /**
  *
@@ -34,7 +32,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     
     @Autowired
     private LiferayMailingUtil mailingUtil;
-    
+        
     @Value("${newsletter.mail.from}")
     private String fromEmailAddress;
     @Value("${newsletter.admin.name}")
@@ -45,24 +43,17 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     public void sendTestMailing(Long mailingId, String testEmail, ThemeDisplay themeDisplay) {        
         try {
             
-            NewsletterMailing mailing = findById(mailingId).getPayload();
-            JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(mailing.getArticleId());
-            
-            String content = ja.getContentByLocale(ja.getDefaultLocale());
-            content = JournalContentUtil.getContent(ja.getGroupId(), 
-                                                    ja.getArticleId(), 
-                                                    ja.getTemplateId(), 
-                                                    Constants.PRINT, 
-                                                    themeDisplay.getLanguageId(), 
-                                                    themeDisplay);
-            
+            NewsletterMailing mailing = findById(mailingId).getPayload();                                                
+            NewsletterTemplate template = mailing.getTemplate();
+            String content = EmailFormat.getEmailFromTemplate(template, themeDisplay);
+                        
             //Add full path to images
             content = EmailFormat.fixImagesPath(content, themeDisplay);
             
             //Replace User Info
             content = EmailFormat.replaceUserInfo(content, null, themeDisplay);
             
-            String title = ja.getTitle();
+            String title = mailing.getName();
             
             InternetAddress fromIA = new InternetAddress(fromEmailAddress);
             InternetAddress toIA = new InternetAddress(testEmail);
@@ -85,20 +76,15 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     public void sendMailing(Long mailingId, ThemeDisplay themeDisplay, Long archiveId) {
         try {
             NewsletterMailing mailing = findById(mailingId).getPayload();
-            JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(mailing.getArticleId()); 
+            //JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(mailing.getArticleId()); 
             
-            String content = ja.getContentByLocale(ja.getDefaultLocale());
-            content = JournalContentUtil.getContent(ja.getGroupId(), 
-                                                    ja.getArticleId(), 
-                                                    ja.getTemplateId(), 
-                                                    Constants.PRINT, 
-                                                    themeDisplay.getLanguageId(), 
-                                                    themeDisplay);
+            NewsletterTemplate template = mailing.getTemplate();            
+            String content = EmailFormat.getEmailFromTemplate(template, themeDisplay);
             
             //Add full path to images
             content = EmailFormat.fixImagesPath(content, themeDisplay);            
             
-            String title = ja.getTitle();
+            String title = mailing.getName();
             
             InternetAddress fromIA = new InternetAddress(fromEmailAddress, fromName);
             InternetAddress toIA = new InternetAddress();

@@ -22,6 +22,9 @@
                     <f:selectItems var="item" value="#{newsletterMailingManagedBean.categories}" itemLabel="#{item.name}" itemValue="#{item.id}"  />
                 </h:selectOneListbox>
                 
+                <h:outputLabel value="#{msg['newsletter.admin.template']}:" />
+                <h:inputText value="#{editMailingManagedBean.templateId}" />
+                
                 <h:outputLabel value="#{msg['newsletter.admin.article']}:" />
                 <h:selectOneListbox size="1" styleClass="newsletter-forms-input-text" value="#{editMailingManagedBean.articleId}">
                     <f:selectItems var="item" value="#{userUiStateManagedBean.journalArticles}" itemLabel="#{item.title}" itemValue="#{item.id}" />

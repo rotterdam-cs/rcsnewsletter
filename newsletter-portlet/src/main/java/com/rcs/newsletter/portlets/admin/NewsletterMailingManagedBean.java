@@ -1,5 +1,7 @@
 package com.rcs.newsletter.portlets.admin;
 
+import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
+import com.rcs.newsletter.core.service.NewsletterTemplateBlockService;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -53,7 +55,7 @@ public class NewsletterMailingManagedBean implements Serializable {
     NewsletterSubscriptorService subscriptorService;
     @Inject
     private NewsletterArchiveService archiveService;
-    
+            
     private List<MailingTableRow> mailingList;
     private Long mailingId;
     private String testEmail;
@@ -104,6 +106,7 @@ public class NewsletterMailingManagedBean implements Serializable {
     }
     
     public void sendTestMailing() {
+        
         if (selectedMailing == null) {
             FacesUtil.errorMessage("Please select one row to send the test email");
             return;

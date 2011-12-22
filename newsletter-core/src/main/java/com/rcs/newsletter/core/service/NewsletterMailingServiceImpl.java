@@ -144,5 +144,13 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         }
     }
     
+    @Override
+    public String getEmailFromTemplate(Long mailingId, ThemeDisplay themeDisplay){
+        NewsletterMailing mailing = findById(mailingId).getPayload();                                                
+        NewsletterTemplate template = mailing.getTemplate();
+        String content = EmailFormat.getEmailFromTemplate(template, themeDisplay);
+        return content;
+    }
+    
     
 }

@@ -2,6 +2,7 @@ package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.model.NewsletterMailing;
+import com.rcs.newsletter.core.model.NewsletterTemplate;
 
 /**
  *
@@ -22,5 +23,7 @@ public interface NewsletterMailingService extends CRUDService<NewsletterMailing>
      * @param mailingId
      * @param themeDisplay 
      */
-    void sendMailing(Long mailingId, ThemeDisplay themeDisplay, Long archiveId);    
+    void sendMailing(Long mailingId, ThemeDisplay themeDisplay, Long archiveId);
+    
+    String getEmailFromTemplate(Long mailingId, ThemeDisplay themeDisplay); 
 }

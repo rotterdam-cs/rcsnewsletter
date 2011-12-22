@@ -348,7 +348,7 @@ public class EmailFormat {
      * @param themeDisplay
      * @return 
      */
-    public static String getEmailFromTemplate(NewsletterTemplate template, ThemeDisplay themeDisplay) {        
+    public static String getEmailFromTemplate(NewsletterTemplate template, ThemeDisplay themeDisplay) { 
         String result = template.getTemplate();
         String fTagBlockOpen = fixTagsToRegex(TEMPLATE_TAG_BLOCK_OPEN);
         String fTagBlockClose = fixTagsToRegex(TEMPLATE_TAG_BLOCK_CLOSE);
@@ -360,35 +360,39 @@ public class EmailFormat {
                 .replace(TEMPLATE_TAG_TITLE, fTagBlockTitle)
                 .replace(TEMPLATE_TAG_CONTENT, fTagBlockContent);
         String resulttmp = result;
-        List<NewsletterTemplateBlock> ntb = template.getBlocks();
-                
+        
+        List<NewsletterTemplateBlock> ntb = template.getBlocks();              
         Pattern patternBlock = Pattern.compile(fTagBlockOpen + ".*?" + fTagBlockClose, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
         Matcher m = patternBlock.matcher(result);
         String toReplaceTmp = "";
         int count = 0;
         
-        //Iterate each Blocks
-        while(m.find()) {
-            try {
-               String toReplace = result.substring(m.start(), m.end() );
-               toReplaceTmp  = result.substring(m.start()+fTagBlockOpen.length(), m.end()-fTagBlockClose.length() );               
-                           
+        //Iterate each Block
+        while(m.find()) {             
+            try {               
+               String toReplace = result.substring(m.start(), m.end() );               
+               toReplaceTmp  = result.substring(m.start()+fTagBlockOpen.length(), m.end()-fTagBlockClose.length() );  
+              
                //If there is a content related to this block
                if (ntb.size() > count) {                   
-                    JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(ntb.get(count).getArticleId());
-                    String content = ja.getContentByLocale(ja.getDefaultLocale());
-                    content = JournalContentUtil.getContent(ja.getGroupId(), 
-                                                    ja.getArticleId(), 
-                                                    ja.getTemplateId(), 
-                                                    Constants.PRINT, 
-                                                    themeDisplay.getLanguageId(), 
-                                                    themeDisplay);
-                    toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, ja.getTitle());
-                    toReplaceTmp = toReplaceTmp.replace(fTagBlockContent, content); 
-                    resulttmp = resulttmp.replaceFirst(toReplace, toReplaceTmp);
-                    
+                   if (ntb.get(count).getArticleId() != null && ntb.get(count).getArticleId() != 0) {                   
+                        JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(ntb.get(count).getArticleId());
+                        String content = ja.getContentByLocale(ja.getDefaultLocale());
+                        content = JournalContentUtil.getContent(ja.getGroupId(), 
+                                                        ja.getArticleId(), 
+                                                        ja.getTemplateId(), 
+                                                        Constants.PRINT, 
+                                                        themeDisplay.getLanguageId(), 
+                                                        themeDisplay);
+                        toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, ja.getTitle());
+                        toReplaceTmp = toReplaceTmp.replace(fTagBlockContent, content); 
+                        resulttmp = resulttmp.replaceFirst(toReplace, toReplaceTmp);                   
+                   //If there is a NOT content related to this block the block is deleted
+                   } else {
+                    resulttmp = resulttmp.replaceFirst(toReplace, "");
+                   }
                 //If there is a NOT content related to this block the block is deleted
-                } else {                                                                             
+                } else {
                     resulttmp = resulttmp.replaceFirst(toReplace, "");
                 }
                
@@ -399,8 +403,7 @@ public class EmailFormat {
             }           
            count++;
         }
-        result = resulttmp;
-        return result;
+        return resulttmp;
     }
     
     /**

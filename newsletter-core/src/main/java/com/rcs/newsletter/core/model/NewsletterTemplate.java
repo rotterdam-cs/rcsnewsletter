@@ -25,13 +25,12 @@ public class NewsletterTemplate extends NewsletterEntity {
     private String name;
     
     @Type(type="text")
-    private String template;
-    
+    private String template;    
     
     @OneToMany
     @JoinColumn(name = "template_id")
     @OrderColumn(name = "blockOrder")
-    @Cascade(CascadeType.DELETE)    
+    @Cascade(CascadeType.DELETE)        
     private List<NewsletterTemplateBlock> blocks;   
     
 

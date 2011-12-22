@@ -29,15 +29,15 @@ public class NewsletterMailing extends NewsletterEntity{
     private NewsletterTemplate template;
     
     //********************************* TO REMOVE
-    @NotNull
-    @Min(1)
-    private Long articleId;    
-    public Long getArticleId() {
-        return articleId;
-    }
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
-    }
+//    @NotNull
+//    @Min(1)
+//    private Long articleId;    
+//    public Long getArticleId() {
+//        return articleId;
+//    }
+//    public void setArticleId(Long articleId) {
+//        this.articleId = articleId;
+//    }
     //****************************** EN TO REMOVE
 
     public NewsletterCategory getList() {

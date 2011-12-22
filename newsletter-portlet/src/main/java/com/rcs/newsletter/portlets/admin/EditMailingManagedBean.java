@@ -67,7 +67,7 @@ public class EditMailingManagedBean {
                 mailing = service.findById(mailingId).getPayload();                
                 break;
         }
-        mailing.setArticleId(articleId);
+        //mailing.setArticleId(articleId);
         
         NewsletterTemplate nlt = templateService.findById(templateId).getPayload();
         mailing.setTemplate(nlt);
@@ -207,7 +207,7 @@ public class EditMailingManagedBean {
         
         this.mailingName = mailing.getName();
         this.categoryId = mailing.getList().getId();
-        this.articleId = mailing.getArticleId();
+        //this.articleId = mailing.getArticleId();
         
     }
 

@@ -1,5 +1,6 @@
 package com.rcs.newsletter.portlets.admin;
 
+import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
 import com.rcs.newsletter.core.service.NewsletterTemplateBlockService;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -105,12 +106,11 @@ public class NewsletterMailingManagedBean implements Serializable {
         return "admin";
     }
     
-    public void sendTestMailing() {
-        
+    public void sendTestMailing() {        
         if (selectedMailing == null) {
             FacesUtil.errorMessage("Please select one row to send the test email");
             return;
-        }
+        }        
         service.sendTestMailing(selectedMailing.getMailing().getId(), testEmail, uiState.getThemeDisplay());
         FacesUtil.infoMessage("Test email is scheduled to be sent");
     }
@@ -124,18 +124,17 @@ public class NewsletterMailingManagedBean implements Serializable {
         if (!result.isSuccess()) {
             FacesUtil.errorMessage("Could not find mailing to send");
             return "admin";
-        }
+        }        
         
         NewsletterMailing mailing = result.getPayload();        
         
-        //we are going to save this version of the mailing
-        JournalArticle article = uiState.getJournalArticleByArticleId(mailing.getArticleId());
-        String emailContent = uiState.getContent(article);
+        //we are going to save this version of the mailing        
+        String emailContent = service.getEmailFromTemplate(mailingId, uiState.getThemeDisplay());  
                
-        Long archiveId = saveArchiveForMailing(mailing.getName(), mailing.getList().getName(), article.getTitle(), emailContent);
+        Long archiveId = saveArchiveForMailing(mailing.getName(), mailing.getList().getName(), mailing.getName(), emailContent);       
         
-        service.sendMailing(mailing.getId(), uiState.getThemeDisplay(), archiveId);
-        
+        service.sendMailing(mailingId, uiState.getThemeDisplay(), archiveId);
+       
         //We remove the mailing that is already sent
         result = service.delete(mailing);
         
@@ -249,7 +248,8 @@ public class NewsletterMailingManagedBean implements Serializable {
         List<MailingTableRow> ret = new LinkedList<MailingTableRow>();
         
         for (NewsletterMailing newsletterMailing : payload) {
-            ret.add(new MailingTableRow(newsletterMailing, uiState.getTitleByArticleId(newsletterMailing.getArticleId())));
+            //ret.add(new MailingTableRow(newsletterMailing, uiState.getTitleByArticleId(newsletterMailing.getArticleId())));
+            ret.add(new MailingTableRow(newsletterMailing, newsletterMailing.getName()));
         }
         
         return ret;

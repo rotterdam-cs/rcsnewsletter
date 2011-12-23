@@ -1,5 +1,7 @@
 package com.rcs.newsletter.core.service.util;
 
+import com.rcs.newsletter.core.model.NewsletterMailing;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -9,7 +11,6 @@ import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.rcs.newsletter.core.service.NewsletterTemplateBlockService;
-import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
 import java.util.List;
@@ -42,7 +43,7 @@ public class EmailFormat {
     @Autowired
     private static NewsletterTemplateBlockService templateBlockService;
     
-    
+        
     /**
      * To determine if the content is personalizable or not
      * @param content
@@ -341,14 +342,15 @@ public class EmailFormat {
         return imagesList;
     }
     
-    
+
     /**
      * Get the email content based on the template
-     * @param template
+     * @param mailing
      * @param themeDisplay
      * @return 
      */
-    public static String getEmailFromTemplate(NewsletterTemplate template, ThemeDisplay themeDisplay) { 
+    public static String getEmailFromTemplate(NewsletterMailing mailing, ThemeDisplay themeDisplay) { 
+        NewsletterTemplate template = mailing.getTemplate();
         String result = template.getTemplate();
         String fTagBlockOpen = fixTagsToRegex(TEMPLATE_TAG_BLOCK_OPEN);
         String fTagBlockClose = fixTagsToRegex(TEMPLATE_TAG_BLOCK_CLOSE);
@@ -361,7 +363,7 @@ public class EmailFormat {
                 .replace(TEMPLATE_TAG_CONTENT, fTagBlockContent);
         String resulttmp = result;
         
-        List<NewsletterTemplateBlock> ntb = template.getBlocks();              
+        List<NewsletterTemplateBlock> ntb = mailing.getBlocks();              
         Pattern patternBlock = Pattern.compile(fTagBlockOpen + ".*?" + fTagBlockClose, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
         Matcher m = patternBlock.matcher(result);
         String toReplaceTmp = "";
@@ -375,7 +377,7 @@ public class EmailFormat {
               
                //If there is a content related to this block
                if (ntb.size() > count) {                   
-                   if (ntb.get(count).getArticleId() != null && ntb.get(count).getArticleId() != 0) {                   
+                   if (ntb.get(count).getArticleId() != null && ntb.get(count).getArticleId() != UNDEFINED) {                   
                         JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(ntb.get(count).getArticleId());
                         String content = ja.getContentByLocale(ja.getDefaultLocale());
                         content = JournalContentUtil.getContent(ja.getGroupId(), 
@@ -411,7 +413,7 @@ public class EmailFormat {
      * @param templateContent
      * @return 
      */
-    public static String parseTemplateEdit(String templateContent) {
+    public static String parseTemplateEdit(String templateContent, String newsletterArticleType, String emptySelectorMessage) {
         String result = "";
         
         String fTagBlockOpen = fixTagsToRegex(TEMPLATE_TAG_BLOCK_OPEN);
@@ -432,15 +434,63 @@ public class EmailFormat {
                 String templateContentTmp = templateContent;
                 Pattern patternBlock = Pattern.compile(fTagBlockOpen + ".*?" + fTagBlockClose, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
                 Matcher m = patternBlock.matcher(templateContent);
-                 int count = 0;
-        
-                //Iterate each Block
-                while(m.find()) {                         
-                       String toReplace = templateContent.substring(m.start(), m.end() ); 
-                       templateContentTmp = templateContentTmp.replaceFirst(toReplace, "<div id=\"blockSelector" + count + "\">blockSelector"+count+"</div>");                       
-                       count++;
+                int count = 0;                
+                
+                //Get all newsletter articles to create the selectors
+                HashMap<String, JournalArticle> resultArticleNewsletter = new HashMap<String, JournalArticle>();
+                try {
+                    List<JournalArticle> allJournalArticles = JournalArticleLocalServiceUtil.getArticles();
+
+                    for (JournalArticle article : allJournalArticles) {
+                        //We only put the last version of the article
+                        if (!resultArticleNewsletter.containsKey(article.getArticleId())
+                                && article.getType().equals(newsletterArticleType)) {
+                            JournalArticle lastArticle = JournalArticleLocalServiceUtil.getLatestArticle(
+                                    article.getGroupId(),
+                                    article.getArticleId());
+                            resultArticleNewsletter.put(lastArticle.getArticleId(), lastArticle);
+                        }
+                    }
+                } catch (SystemException ex) {
+                    log.warn("Could not filter the articles by this category", ex);
+                } catch (PortalException ex) {
+                    log.warn("Could not filter the articles by this category", ex);
                 }
-                result = templateContentTmp;            
+                List<JournalArticle> newsletterArticles = new ArrayList<JournalArticle>(resultArticleNewsletter.values());
+                
+                //Create HTML select option with all newsletter articles
+                StringBuilder selectHTMLOptionsSB = new StringBuilder("<option value=\"");
+                selectHTMLOptionsSB.append(UNDEFINED);
+                selectHTMLOptionsSB.append("\">");
+                selectHTMLOptionsSB.append(emptySelectorMessage);
+                selectHTMLOptionsSB.append("</option>");                
+                for (JournalArticle journalArticle : newsletterArticles) {
+                    selectHTMLOptionsSB.append("<option value=\"");
+                    selectHTMLOptionsSB.append(journalArticle.getId());
+                    selectHTMLOptionsSB.append("\">");
+                    selectHTMLOptionsSB.append(journalArticle.getTitle());
+                    selectHTMLOptionsSB.append("</option>");
+                }
+                
+                //Iterate each Block and replace by the HTML select
+                while (m.find()) {
+                    StringBuilder selectHTMLItemSB = new StringBuilder("<div id=\"blockSelector");
+                    selectHTMLItemSB.append(count);
+                    selectHTMLItemSB.append("\">");
+                    selectHTMLItemSB.append("<select class=\"blockSelectorSelect\" ");
+                    selectHTMLItemSB.append(count);
+                    selectHTMLItemSB.append(" class=\"newsletter-forms-input-text\" onchange=\"selectArticlesToTemplate() \">");
+                    selectHTMLItemSB.append(selectHTMLOptionsSB.toString());
+                    selectHTMLItemSB.append("</select></div>");
+                    String toReplace = templateContent.substring(m.start(), m.end());
+                    templateContentTmp = templateContentTmp.replaceFirst(toReplace, selectHTMLItemSB.toString());
+                    count++;
+                }
+                
+                StringBuilder resultSB = new StringBuilder("<div class=\"templateArticleSelectorEditor\">");
+                resultSB.append(templateContentTmp);
+                resultSB.append("</div>");
+                result = resultSB.toString();            
         }
 
         return result;

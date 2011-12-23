@@ -36,4 +36,6 @@ public interface NewsletterConstants {
     public static final String TEMPLATE_TAG_TITLE = "[title]";
     public static final String TEMPLATE_TAG_CONTENT= "[content]";
     
+    public static final int UNDEFINED = -1;
+    
 }

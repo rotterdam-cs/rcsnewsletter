@@ -43,9 +43,8 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     public void sendTestMailing(Long mailingId, String testEmail, ThemeDisplay themeDisplay) {        
         try {
             
-            NewsletterMailing mailing = findById(mailingId).getPayload();                                                
-            NewsletterTemplate template = mailing.getTemplate();
-            String content = EmailFormat.getEmailFromTemplate(template, themeDisplay);
+            NewsletterMailing mailing = findById(mailingId).getPayload();
+            String content = EmailFormat.getEmailFromTemplate(mailing, themeDisplay);
                         
             //Add full path to images
             content = EmailFormat.fixImagesPath(content, themeDisplay);
@@ -76,10 +75,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     public void sendMailing(Long mailingId, ThemeDisplay themeDisplay, Long archiveId) {
         try {
             NewsletterMailing mailing = findById(mailingId).getPayload();
-            //JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(mailing.getArticleId()); 
-            
-            NewsletterTemplate template = mailing.getTemplate();            
-            String content = EmailFormat.getEmailFromTemplate(template, themeDisplay);
+            String content = EmailFormat.getEmailFromTemplate(mailing, themeDisplay);
             
             //Add full path to images
             content = EmailFormat.fixImagesPath(content, themeDisplay);            
@@ -146,9 +142,8 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     
     @Override
     public String getEmailFromTemplate(Long mailingId, ThemeDisplay themeDisplay){
-        NewsletterMailing mailing = findById(mailingId).getPayload();                                                
-        NewsletterTemplate template = mailing.getTemplate();
-        String content = EmailFormat.getEmailFromTemplate(template, themeDisplay);
+        NewsletterMailing mailing = findById(mailingId).getPayload();
+        String content = EmailFormat.getEmailFromTemplate(mailing, themeDisplay);
         return content;
     }
     

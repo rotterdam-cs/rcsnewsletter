@@ -11,14 +11,28 @@
     </h:head>
     <h:body>
         <h1>#{nlk[editMailingManagedBean.titleKey]}</h1>
+        <script type="text/javascript">
+            function selectArticlesToTemplate() {                
+                var templateArticles = jQuery('input[id*="template-Articles"]');                
+                var tempTemplateArticles = "";
+                jQuery.each($(".blockSelectorSelect"),function(i,e) {
+                    var check = e.value;
+                    tempTemplateArticles += (tempTemplateArticles == "")? check : "," + check;                    
+                });
+                templateArticles.val(tempTemplateArticles);  
+                alert(templateArticles.val());
+            }
+        </script>
         <h:form>
+            <h:inputHidden value="#{editMailingManagedBean.currentAction}" />
+            <h:inputHidden value="#{editMailingManagedBean.mailingId}" />            
             <h:panelGrid columns="2" styleClass="newsletter-forms-form" columnClasses="newsletter-forms-column-left,newsletter-forms-column-right">
                 
                 <h:outputLabel value="#{msg['newsletter.admin.general.name']}:" />
                 <h:inputText styleClass="newsletter-forms-input-text" value="#{editMailingManagedBean.mailingName}" />
                 
                 <h:outputLabel value="#{msg['newsletter.admin.general.list']}:" />
-                <h:selectOneListbox size="1"  styleClass="newsletter-forms-input-text" value="#{editMailingManagedBean.categoryId}">                    
+                <h:selectOneListbox size="1" styleClass="newsletter-forms-input-text" value="#{editMailingManagedBean.categoryId}">                    
                     <f:selectItems var="item" value="#{newsletterMailingManagedBean.categories}" itemLabel="#{item.name}" itemValue="#{item.id}"  />
                 </h:selectOneListbox>
                 
@@ -26,15 +40,18 @@
                 <h:selectOneMenu value="#{editMailingManagedBean.templateId}" styleClass="newsletter-forms-input-text">
                     <f:selectItem itemLabel="" itemValue="0" />
                     <f:selectItems value="#{editMailingManagedBean.templates}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>                    
-                    <f:ajax event="change" listener="#{editMailingManagedBean.changeTemplate}" render="@form"/>
-                </h:selectOneMenu>                            
-                
-                <h:outputText value="#{editMailingManagedBean.template}" escape="false"/>
+                    <f:ajax event="change" listener="#{editMailingManagedBean.changeTemplate}" render="templateEditContainer" onevent="selectArticlesToTemplate" />
+                </h:selectOneMenu>  
                 
             </h:panelGrid>
+            
+            <br/>
+            <h:outputText id="templateEditContainer" value="#{editMailingManagedBean.template}" escape="false"/>                
+            <br/>            
+            <h:inputText id="template-Articles" value="#{editMailingManagedBean.templateArticles}" />
+            
             <p:commandButton styleClass="newsletter-forms-button" action="#{editMailingManagedBean.save}" update="messages" value="#{nlk[editMailingManagedBean.saveButtonKey]}" />
             <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
         </h:form>
     </h:body>
 </html>
-

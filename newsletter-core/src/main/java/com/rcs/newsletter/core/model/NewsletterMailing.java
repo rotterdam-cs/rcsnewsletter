@@ -1,10 +1,16 @@
 package com.rcs.newsletter.core.model;
 
-import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.Min;
+//import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
+import javax.persistence.Table;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -13,7 +19,7 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity
 @Table(name="newsletter_mailing")
-public class NewsletterMailing extends NewsletterEntity{
+public class NewsletterMailing extends NewsletterEntity {
     private static final long serialVersionUID = 1L;
     
     @NotBlank
@@ -40,6 +46,20 @@ public class NewsletterMailing extends NewsletterEntity{
 //    }
     //****************************** EN TO REMOVE
 
+    @OneToMany
+    @JoinColumn(name = "mailing_id")
+    @OrderColumn(name = "blockOrder")
+    @Cascade(CascadeType.DELETE)        
+    private List<NewsletterTemplateBlock> blocks;
+
+    public List<NewsletterTemplateBlock> getBlocks() {
+        return blocks;
+    }
+
+    public void setBlocks(List<NewsletterTemplateBlock> blocks) {
+        this.blocks = blocks;
+    }
+    
     public NewsletterCategory getList() {
         return list;
     }

@@ -1,5 +1,7 @@
 package com.rcs.newsletter.portlets.admin;
 
+import com.rcs.newsletter.core.service.NewsletterTemplateBlockService;
+import org.springframework.beans.factory.annotation.Value;
 import java.util.ResourceBundle;
 import javax.faces.context.FacesContext;
 import com.rcs.newsletter.core.service.util.EmailFormat;
@@ -8,10 +10,12 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
+import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
 import com.rcs.newsletter.core.service.NewsletterMailingService;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.util.FacesUtil;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -27,13 +31,19 @@ import static com.rcs.newsletter.NewsletterConstants.*;
 @Scope("request")
 public class EditMailingManagedBean {
     private static Log log = LogFactoryUtil.getLog(EditMailingManagedBean.class);  
-    private static final String NO_BLOCKS_IN_TEMPLATE = "newsletter.admin.mailing.template.no.blocks";
+    
+    @Value("${newsletter.articles.type}")
+    private String newsletterArticleType;
+    
     //////////////// DEPENDENCIES //////////////////
     @Inject
     private NewsletterMailingService service;
     
     @Inject
     private NewsletterTemplateService templateService;
+    
+    @Inject
+    private NewsletterTemplateBlockService templateBlockService;
         
     private NewsletterMailingManagedBean mailingManagedBean;
     
@@ -43,8 +53,8 @@ public class EditMailingManagedBean {
     
     public static final String CREATE_TITLE_KEY = "newsletter.admin.mailing.createtitle";
     public static final String UPDATE_TITLE_KEY = "newsletter.admin.mailing.updatetitle";
-    
-    
+    private static final String NO_BLOCKS_IN_TEMPLATE = "newsletter.admin.mailing.template.no.blocks"; 
+    private static final String TEMPLATE_BLOCK_EMPTY_SELECTOR = "newsletter.admin.mailing.template.select.article"; 
     /////////////// PROPERTIES ////////////////////
     
     private CRUDActionEnum currentAction;
@@ -56,40 +66,65 @@ public class EditMailingManagedBean {
     private String mailingName;
     private Long mailingId;
     private String template = "";
+    private String templateArticles = "";
     
     //////////////// METHODS //////////////////////
     @PostConstruct
-    public void init() {
+    public void init() {        
         currentAction = CRUDActionEnum.CREATE;
     }
     
     public String save() {
         NewsletterMailing mailing = null;
-        
         switch(currentAction) {
             case CREATE:
-                mailing = new NewsletterMailing();                
+                mailing = new NewsletterMailing();
                 break;
             case UPDATE:
-                mailing = service.findById(mailingId).getPayload();                
+                mailing = service.findById(mailingId).getPayload();
                 break;
         }
         NewsletterTemplate nlt = templateService.findById(templateId).getPayload();
         mailing.setTemplate(nlt);
         mailing.setName(mailingName);
         mailing.setList(findListById(categoryId));
-                
-        ServiceActionResult result = null;
         
+        ServiceActionResult result = null;
+        log.error("****currentAction"+currentAction);
         switch(currentAction) {
             case CREATE:
+                 log.error("CREATE");
                 result = service.save(mailing);
                 break;
             case UPDATE:
+                 log.error("UPDATE");
                 result = service.update(mailing);
+                
+                List <NewsletterTemplateBlock> ntbsOld =  templateBlockService.findAllByMailing(mailing);                
+                for (NewsletterTemplateBlock ntbOld : ntbsOld) {
+                    templateBlockService.delete(ntbOld);
+                }                
                 break;
         }
-        if (result.isSuccess()) {
+        if (result.isSuccess()) {            
+                            
+            //Update the TemplateBlocks       
+            String[] articleIds;
+            articleIds = templateArticles.split(",");
+            log.error("*** Update the TemplateBlocks");
+            for(int i =0; i < articleIds.length ; i++) {                
+                NewsletterTemplateBlock ntb = new NewsletterTemplateBlock();
+                log.error("*** 20 setArticleId: " + Long.valueOf(articleIds[i]));
+                ntb.setArticleId(Long.valueOf(articleIds[i]));
+                log.error("*** 21 setBlockOrder: " + i);
+                ntb.setBlockOrder(i);
+                log.error("*** 22 setMailing " + mailing);
+                ntb.setMailing(mailing);
+                log.error("*** 23 save");
+                ServiceActionResult res = templateBlockService.save(ntb);
+                log.error("*** 24 res.isSuccess:" + res.isSuccess());
+            }  
+            
             mailingManagedBean.init(); 
             return "admin";
         } else {
@@ -97,6 +132,7 @@ public class EditMailingManagedBean {
             List<String> validationKeys = result.getValidationKeys();
             for (String key : validationKeys) {
                 FacesUtil.errorMessage(key);
+                log.error("ERROR Failed to create mailing:" + key);
             }
         }
         return null;
@@ -156,6 +192,14 @@ public class EditMailingManagedBean {
         this.templateId = templateId;
     }
 
+    public String getTemplateArticles() {
+        return templateArticles;
+    }
+
+    public void setTemplateArticles(String templateArticles) {
+        this.templateArticles = templateArticles;
+    }
+        
     public List<NewsletterTemplate> getTemplates() {
         setTemplates(templateService.findAll().getPayload());
         return templates;
@@ -184,11 +228,12 @@ public class EditMailingManagedBean {
     }
     
     private String parseTemplateEdit(String template) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
+        String emptySelectorMessage = newsletterMessageBundle.getString(TEMPLATE_BLOCK_EMPTY_SELECTOR);
         String result = "";
-        result = EmailFormat.parseTemplateEdit(template);
-        if (result.isEmpty()){
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
+        result = EmailFormat.parseTemplateEdit(template, newsletterArticleType, emptySelectorMessage);
+        if (result.isEmpty()){            
             result = newsletterMessageBundle.getString(NO_BLOCKS_IN_TEMPLATE);
         }        
         return result;
@@ -248,8 +293,21 @@ public class EditMailingManagedBean {
         
         this.mailingName = mailing.getName();
         this.categoryId = mailing.getList().getId();
-        //this.articleId = mailing.getArticleId();
+        this.templateId = mailing.getTemplate().getId();
+        changeTemplate();
         
+        
+        //AQUI QUEDO, HAY QUE COMPLETAR EL TEMPLATEARTICLES y que lo muestre en la vista
+        //REVISAR EL BORRADO
+//        this.templateArticles = "";
+//        List <NewsletterTemplateBlock> ntbsOld =  templateBlockService.findAllByMailing(mailing);                
+//        for (NewsletterTemplateBlock ntbOld : ntbsOld) {
+//            if (this.templateArticles.isEmpty()) {
+//                this.templateArticles += ntbOld.getArticleId();
+//            } else {
+//                this.templateArticles += "," + ntbOld.getArticleId();
+//            }            
+//        }        
     }
 
     public void setMailingManagedBean(NewsletterMailingManagedBean mailingManagedBean) {

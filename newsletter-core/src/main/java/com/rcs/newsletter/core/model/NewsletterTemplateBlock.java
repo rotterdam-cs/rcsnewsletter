@@ -13,19 +13,19 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name="newsletter_template_block")
-public class NewsletterTemplateBlock extends NewsletterEntity {    
-    private static final long serialVersionUID = 1L;    
-    public static final String TEMPLATE = "template_id";
+public class NewsletterTemplateBlock extends NewsletterEntity {     
+    public static final String MAILING = "mailing";
+    public static final String BLOCK_ORDER_COLUMN = "blockorder";    
+    private static final long serialVersionUID = 1L;        
     
-    @NotNull
-    @Min(1)
+
     private Long articleId;
     
     private int blockOrder;
     
     @ManyToOne
-    @JoinColumn(name="template_id")
-    private NewsletterTemplate template;
+    @JoinColumn(name="mailing_id")
+    private NewsletterMailing mailing;
 
     public Long getArticleId() {
         return articleId;
@@ -43,14 +43,12 @@ public class NewsletterTemplateBlock extends NewsletterEntity {
         this.blockOrder = blockOrder;
     }
 
-    public NewsletterTemplate getTemplate() {
-        return template;
+    public NewsletterMailing getMailing() {
+        return mailing;
     }
 
-    public void setTemplate(NewsletterTemplate template) {
-        this.template = template;
+    public void setMailing(NewsletterMailing mailing) {
+        this.mailing = mailing;
     }
-    
-    
     
 }

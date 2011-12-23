@@ -168,3 +168,10 @@
 .online-newsletter-viewer-container {
     width: 700px;
 }
+.templateArticleSelectorEditor{
+    border-width: 1px;
+    border-style: dotted;
+    border-color: #bbbbbb;
+    padding: 10px;
+    margin: 5px;
+}

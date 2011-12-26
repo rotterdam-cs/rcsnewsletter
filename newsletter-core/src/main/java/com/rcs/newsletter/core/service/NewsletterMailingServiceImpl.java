@@ -134,7 +134,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
                 mailingUtil.sendEmail(message);
             }
             */
-            
+            logger.error("End Sending personalizable conent");
         } catch (Exception ex) {
             logger.error("Error while trying to read article", ex);
         }

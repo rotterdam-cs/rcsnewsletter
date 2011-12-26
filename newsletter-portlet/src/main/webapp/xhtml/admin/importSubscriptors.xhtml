@@ -12,7 +12,7 @@
             <h:panelGrid columns="1" styleClass="newsletter-forms-form">
                 <h:outputLabel value="#{nlk['newsletter.admin.subscribers.import.category.select']}:&nbsp;" />
                 <h:selectOneMenu value="#{subscriptorExportManagedBean.categoryId}">
-                    <f:selectItem itemLabel="#{msg['newsletter.admin.general.all.lists']}" itemValue="0" />
+                    <f:selectItem itemLabel="#{nlk['newsletter.admin.category.select']}" itemValue="0" />
                     <f:selectItems value="#{categoryAdminManagedBean.categorys}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}"/>
                     <f:ajax event="change" listener="#{subscriptorExportManagedBean.changeCategory}"/>
                 </h:selectOneMenu>

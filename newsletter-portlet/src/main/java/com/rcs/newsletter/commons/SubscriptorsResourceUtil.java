@@ -24,7 +24,11 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.rcs.newsletter.NewsletterConstants;
+import com.rcs.newsletter.util.FacesUtil;
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import javax.faces.context.FacesContext;
 import org.apache.commons.fileupload.FileItem;
 
 /**
@@ -34,13 +38,11 @@ import org.apache.commons.fileupload.FileItem;
 public class SubscriptorsResourceUtil {
 
     private static final Log logger = LogFactoryUtil.getLog(NewsletterResourcePortlet.class);
-    
     private static final String ID_COLUMN = "Id";
     private static final String NAME_COLUMN = "Name";
     private static final String LAST_NAME_COLUMN = "Last Name";
     private static final String EMAIL_COLUMN = "Email";
     private static final String LIST_COLUMN = "List";
-    
     private static final int ID_INDEX = 0;
     private static final int NAME_INDEX = 1;
     private static final int LAST_NAME_INDEX = 2;
@@ -156,18 +158,32 @@ public class SubscriptorsResourceUtil {
                     String email = "";
 
                     HSSFCell nameCell = row.getCell(NAME_INDEX);
-                    if (nameCell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
+                    if (nameCell != null && nameCell.getCellType() == HSSFCell.CELL_TYPE_STRING && nameCell.getStringCellValue() != null) {
                         firstName = nameCell.getStringCellValue();
                     }
 
                     HSSFCell lastNameCell = row.getCell(LAST_NAME_INDEX);
-                    if (lastNameCell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
+                    if (lastNameCell != null && lastNameCell.getCellType() == HSSFCell.CELL_TYPE_STRING && lastNameCell.getStringCellValue() != null) {
                         lastName = lastNameCell.getStringCellValue();
                     }
 
                     HSSFCell emailCell = row.getCell(EMAIL_INDEX);
-                    if (emailCell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
-                        email = emailCell.getStringCellValue();
+                    if (emailCell != null && emailCell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
+                        if (emailCell.getStringCellValue() != null) {
+                            email = emailCell.getStringCellValue();
+                        } else {
+                            FacesContext facesContext = FacesContext.getCurrentInstance();
+                            ResourceBundle serverMessageBundle = ResourceBundle.getBundle(NewsletterConstants.NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
+                            Object[] messageArguments = {row.getRowNum()};
+                            MessageFormat formatter = new MessageFormat("");
+
+                            formatter.setLocale(facesContext.getViewRoot().getLocale());
+                            formatter.applyPattern(serverMessageBundle.getString("newsletter.admin.subscribers.import.failure.email"));
+
+                            String output = formatter.format(messageArguments);
+
+                            FacesUtil.errorMessage(output);
+                        }
                     }
 
                     NewsletterSubscriptorService subscriptorService = exportManagedBean.getSubscriptorService();
@@ -215,8 +231,8 @@ public class SubscriptorsResourceUtil {
                             subscriptionService.save(subscription);
 
                             logger.debug("Associated the new mail: " + email
-                                    + " to the category with id: " + category.getId());                            
-                        } else {                            
+                                    + " to the category with id: " + category.getId());
+                        } else {
                             logger.debug("we could not save the subscriptor");
                         }
                     }

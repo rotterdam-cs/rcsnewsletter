@@ -34,18 +34,6 @@ public class NewsletterMailing extends NewsletterEntity {
     @ManyToOne
     private NewsletterTemplate template;
     
-    //********************************* TO REMOVE
-//    @NotNull
-//    @Min(1)
-//    private Long articleId;    
-//    public Long getArticleId() {
-//        return articleId;
-//    }
-//    public void setArticleId(Long articleId) {
-//        this.articleId = articleId;
-//    }
-    //****************************** EN TO REMOVE
-
     @OneToMany
     @JoinColumn(name = "mailing_id")
     @OrderColumn(name = "blockOrder")

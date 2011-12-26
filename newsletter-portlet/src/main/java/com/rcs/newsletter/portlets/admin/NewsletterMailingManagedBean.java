@@ -123,7 +123,6 @@ public class NewsletterMailingManagedBean implements Serializable {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         String message = "";
-        
         ServiceActionResult<NewsletterMailing> result = service.findById(mailingId);
         if (!result.isSuccess()) {
             FacesUtil.errorMessage("Could not find mailing to send");
@@ -135,11 +134,15 @@ public class NewsletterMailingManagedBean implements Serializable {
         //we are going to save this version of the mailing        
         String emailContent = service.getEmailFromTemplate(mailingId, uiState.getThemeDisplay());  
                
-        Long archiveId = saveArchiveForMailing(mailing.getName(), mailing.getList().getName(), mailing.getName(), emailContent);       
-        
+        Long archiveId = saveArchiveForMailing(mailing.getName(), mailing.getList().getName(), mailing.getName(), emailContent);
         service.sendMailing(mailingId, uiState.getThemeDisplay(), archiveId);
-       
+        
         //We remove the mailing that is already sent
+        //Delete all TemplateBlocks that belongs to this mailing
+        List <NewsletterTemplateBlock> ntbsOld =  templateBlockService.findAllByMailing(result.getPayload());
+        for (NewsletterTemplateBlock ntbOld : ntbsOld) {
+            templateBlockService.delete(ntbOld);
+        }
         result = service.delete(mailing);
         
         if (result.isSuccess()) {

@@ -117,7 +117,7 @@ public class EditMailingManagedBean {
                 ntb.setArticleId(Long.valueOf(articleIds[i]));
                 ntb.setBlockOrder(i);
                 ntb.setMailing(mailing);
-                ServiceActionResult res = templateBlockService.save(ntb);
+                templateBlockService.save(ntb);
             }  
             
             mailingManagedBean.init(); 
@@ -228,6 +228,7 @@ public class EditMailingManagedBean {
         String emptySelectorMessage = newsletterMessageBundle.getString(TEMPLATE_BLOCK_EMPTY_SELECTOR);
         String result = "";
         result = EmailFormat.parseTemplateEdit(template, newsletterArticleType, emptySelectorMessage);
+        log.error(result);
         if (result.isEmpty()){            
             result = newsletterMessageBundle.getString(NO_BLOCKS_IN_TEMPLATE);
         }        

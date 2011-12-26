@@ -139,7 +139,6 @@ public class templateCRUDManagedBean {
             case CREATE:
                 newsletterTemplate = new NewsletterTemplate();
                 fillNewsletterTemplate(newsletterTemplate);
-                log.error("**************Saving: " + newsletterTemplate.getName() + " template: " + newsletterTemplate.getTemplate());
                 ServiceActionResult<NewsletterTemplate> saveResult = templateCRUDService.save(newsletterTemplate);
 
                 if (saveResult.isSuccess()) {
@@ -151,6 +150,7 @@ public class templateCRUDManagedBean {
                 }
                 break;
             case UPDATE:
+                
                 ServiceActionResult serviceActionResult = templateCRUDService.findById(getId());
                 if (serviceActionResult.isSuccess()) {
                     newsletterTemplate = (NewsletterTemplate) serviceActionResult.getPayload();

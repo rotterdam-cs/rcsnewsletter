@@ -1,5 +1,7 @@
 package com.rcs.newsletter.portlets.admin;
 
+import com.rcs.newsletter.core.model.commons.TemplateBlockComparator;
+import java.util.Collections;
 import com.rcs.newsletter.core.service.NewsletterTemplateBlockService;
 import org.springframework.beans.factory.annotation.Value;
 import java.util.ResourceBundle;
@@ -15,7 +17,6 @@ import com.rcs.newsletter.core.service.NewsletterMailingService;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.util.FacesUtil;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -90,7 +91,6 @@ public class EditMailingManagedBean {
         mailing.setList(findListById(categoryId));
         
         ServiceActionResult result = null;
-        log.error("****currentAction"+currentAction);
         switch(currentAction) {
             case CREATE:
                  log.error("CREATE");
@@ -100,7 +100,8 @@ public class EditMailingManagedBean {
                  log.error("UPDATE");
                 result = service.update(mailing);
                 
-                List <NewsletterTemplateBlock> ntbsOld =  templateBlockService.findAllByMailing(mailing);                
+                List <NewsletterTemplateBlock> ntbsOld =  templateBlockService.findAllByMailing(mailing);               
+                
                 for (NewsletterTemplateBlock ntbOld : ntbsOld) {
                     templateBlockService.delete(ntbOld);
                 }                
@@ -111,18 +112,12 @@ public class EditMailingManagedBean {
             //Update the TemplateBlocks       
             String[] articleIds;
             articleIds = templateArticles.split(",");
-            log.error("*** Update the TemplateBlocks");
             for(int i =0; i < articleIds.length ; i++) {                
                 NewsletterTemplateBlock ntb = new NewsletterTemplateBlock();
-                log.error("*** 20 setArticleId: " + Long.valueOf(articleIds[i]));
                 ntb.setArticleId(Long.valueOf(articleIds[i]));
-                log.error("*** 21 setBlockOrder: " + i);
                 ntb.setBlockOrder(i);
-                log.error("*** 22 setMailing " + mailing);
                 ntb.setMailing(mailing);
-                log.error("*** 23 save");
                 ServiceActionResult res = templateBlockService.save(ntb);
-                log.error("*** 24 res.isSuccess:" + res.isSuccess());
             }  
             
             mailingManagedBean.init(); 
@@ -296,18 +291,16 @@ public class EditMailingManagedBean {
         this.templateId = mailing.getTemplate().getId();
         changeTemplate();
         
-        
-        //AQUI QUEDO, HAY QUE COMPLETAR EL TEMPLATEARTICLES y que lo muestre en la vista
-        //REVISAR EL BORRADO
-//        this.templateArticles = "";
-//        List <NewsletterTemplateBlock> ntbsOld =  templateBlockService.findAllByMailing(mailing);                
-//        for (NewsletterTemplateBlock ntbOld : ntbsOld) {
-//            if (this.templateArticles.isEmpty()) {
-//                this.templateArticles += ntbOld.getArticleId();
-//            } else {
-//                this.templateArticles += "," + ntbOld.getArticleId();
-//            }            
-//        }        
+        this.templateArticles = "";
+        List <NewsletterTemplateBlock> ntbsOld =  templateBlockService.findAllByMailing(mailing); 
+        Collections.sort(ntbsOld, new TemplateBlockComparator());
+        for (NewsletterTemplateBlock ntbOld : ntbsOld) {
+            if (this.templateArticles.isEmpty()) {
+                this.templateArticles += ntbOld.getArticleId();
+            } else {
+                this.templateArticles += "," + ntbOld.getArticleId();
+            }            
+        }        
     }
 
     public void setMailingManagedBean(NewsletterMailingManagedBean mailingManagedBean) {

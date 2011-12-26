@@ -1,5 +1,7 @@
 package com.rcs.newsletter.portlets.admin;
 
+import com.rcs.newsletter.core.service.NewsletterTemplateBlockService;
+import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.core.model.NewsletterArchive;
@@ -49,7 +51,9 @@ public class NewsletterMailingManagedBean implements Serializable {
     @Inject
     NewsletterSubscriptorService subscriptorService;
     @Inject
-    private NewsletterArchiveService archiveService;
+    private NewsletterArchiveService archiveService;    
+    @Inject
+    private NewsletterTemplateBlockService templateBlockService;
             
     private List<MailingTableRow> mailingList;
     private Long mailingId;
@@ -80,7 +84,8 @@ public class NewsletterMailingManagedBean implements Serializable {
     }
 
     public String beginDeletion() {
-        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.MAILING_TAB_INDEX);
+        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.MAILING_TAB_INDEX);        
+        mailingBean.setMailingId(mailingId);
         return "deleteMailing";
     }
 
@@ -91,8 +96,13 @@ public class NewsletterMailingManagedBean implements Serializable {
             return null;
         }
         
-        result = service.delete(result.getPayload());
+        //Delete all TemplateBlocks that belongs to this mailing
+        List <NewsletterTemplateBlock> ntbsOld =  templateBlockService.findAllByMailing(result.getPayload());
+        for (NewsletterTemplateBlock ntbOld : ntbsOld) {
+            templateBlockService.delete(ntbOld);
+        }
         
+        result = service.delete(result.getPayload());        
         if (result.isSuccess()) {
             init();
         }

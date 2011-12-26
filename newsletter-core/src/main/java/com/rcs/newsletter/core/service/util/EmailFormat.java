@@ -1,5 +1,7 @@
 package com.rcs.newsletter.core.service.util;
 
+import com.rcs.newsletter.core.model.commons.TemplateBlockComparator;
+import java.util.Collections;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -363,7 +365,8 @@ public class EmailFormat {
                 .replace(TEMPLATE_TAG_CONTENT, fTagBlockContent);
         String resulttmp = result;
         
-        List<NewsletterTemplateBlock> ntb = mailing.getBlocks();              
+        List<NewsletterTemplateBlock> ntb = mailing.getBlocks();
+        Collections.sort(ntb, new TemplateBlockComparator());
         Pattern patternBlock = Pattern.compile(fTagBlockOpen + ".*?" + fTagBlockClose, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
         Matcher m = patternBlock.matcher(result);
         String toReplaceTmp = "";
@@ -477,9 +480,10 @@ public class EmailFormat {
                     StringBuilder selectHTMLItemSB = new StringBuilder("<div id=\"blockSelector");
                     selectHTMLItemSB.append(count);
                     selectHTMLItemSB.append("\">");
-                    selectHTMLItemSB.append("<select class=\"blockSelectorSelect\" ");
+                    selectHTMLItemSB.append("<select class=\"blockSelectorSelect\"");
+                    selectHTMLItemSB.append(" id=\"blockSelectorSelect");
                     selectHTMLItemSB.append(count);
-                    selectHTMLItemSB.append(" class=\"newsletter-forms-input-text\" onchange=\"selectArticlesToTemplate() \">");
+                    selectHTMLItemSB.append("\" class=\"newsletter-forms-input-text\" onchange=\"selectArticlesToTemplate() \">");
                     selectHTMLItemSB.append(selectHTMLOptionsSB.toString());
                     selectHTMLItemSB.append("</select></div>");
                     String toReplace = templateContent.substring(m.start(), m.end());

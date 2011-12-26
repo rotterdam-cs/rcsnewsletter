@@ -1,10 +1,12 @@
 package com.rcs.newsletter.core.service;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
 import java.util.List;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +20,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class NewsletterTemplateBlockServiceImpl extends CRUDServiceImpl<NewsletterTemplateBlock> implements NewsletterTemplateBlockService {
-   
+    private static Log log = LogFactoryUtil.getLog(NewsletterTemplateBlockServiceImpl.class);  
+    
     @Autowired
     private SessionFactory sessionFactory;
         
     @Override
     public List<NewsletterTemplateBlock> findAllByMailing(NewsletterMailing mailing) {
-        Criteria blocksCriteria = sessionFactory.getCurrentSession().createCriteria(NewsletterTemplateBlock.class);
+        Session currentSession = sessionFactory.getCurrentSession();        
+        Criteria blocksCriteria = currentSession.createCriteria(NewsletterTemplateBlock.class);
         blocksCriteria.add(Restrictions.eq(NewsletterTemplateBlock.MAILING, mailing));
-        blocksCriteria.addOrder(Order.asc(NewsletterTemplateBlock.BLOCK_ORDER_COLUMN));
-        List<NewsletterTemplateBlock> blocks = blocksCriteria.list();
-        return blocks;
+        return blocksCriteria.list();
     }
+    
+    
+    
     
 }

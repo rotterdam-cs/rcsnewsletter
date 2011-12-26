@@ -12,6 +12,7 @@
     <h:body>
         <h1>#{nlk[editMailingManagedBean.titleKey]}</h1>
         <script type="text/javascript">
+        //<![CDATA[     
             function selectArticlesToTemplate() {                
                 var templateArticles = jQuery('input[id*="template-Articles"]');                
                 var tempTemplateArticles = "";
@@ -19,9 +20,18 @@
                     var check = e.value;
                     tempTemplateArticles += (tempTemplateArticles == "")? check : "," + check;                    
                 });
-                templateArticles.val(tempTemplateArticles);  
-                alert(templateArticles.val());
+                templateArticles.val(tempTemplateArticles);
             }
+            jQuery(document).ready(function() { 
+                var templateArticles = jQuery('input[id*="template-Articles"]');
+                if (templateArticles.val().length > 0) {
+                    var templateArticlesArray = templateArticles.val().split(",");
+                    for (i = 0; i < templateArticlesArray.length; i++) {
+                        jQuery('#blockSelectorSelect'+i).val(templateArticlesArray[i]);
+                    }
+                }                
+            });
+        //]]> 
         </script>
         <h:form>
             <h:inputHidden value="#{editMailingManagedBean.currentAction}" />
@@ -48,7 +58,7 @@
             <br/>
             <h:outputText id="templateEditContainer" value="#{editMailingManagedBean.template}" escape="false"/>                
             <br/>            
-            <h:inputText id="template-Articles" value="#{editMailingManagedBean.templateArticles}" />
+            <h:inputHidden id="template-Articles" value="#{editMailingManagedBean.templateArticles}" />
             
             <p:commandButton styleClass="newsletter-forms-button" action="#{editMailingManagedBean.save}" update="messages" value="#{nlk[editMailingManagedBean.saveButtonKey]}" />
             <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />

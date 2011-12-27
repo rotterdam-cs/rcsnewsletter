@@ -32,38 +32,33 @@ import static com.rcs.newsletter.NewsletterConstants.*;
 @Named
 @Scope("session")
 public class SubscriberAdminManagedBean extends PaginationManagedBean {
-    
-    private static Log log = LogFactoryUtil.getLog(SubscriberAdminManagedBean.class);    
+
+    private static Log log = LogFactoryUtil.getLog(SubscriberAdminManagedBean.class);
     private NewsletterCategory filterCategory;
     private int categoryId = 0;
     private Boolean onlyInactive = false;
     private SubscriptionStatus status = null;
     private ResourceBundle messageBundle;
     private String importResult = "";
-    
     @Inject
     NewsletterSubscriptorService subscriptorService;
-    
     @Inject
     NewsletterCategoryService categoryService;
-    
     @Inject
     private UserUiStateManagedBean uiState;
-    
     @Inject
     NewsletterSubscriptionService subscriptionService;
-    
-    List<NewsletterSubscriptor> subscribers;    
-    
+    List<NewsletterSubscriptor> subscribers;
+
     @PostConstruct
     public void init() throws IOException, ValidatorException {
-        
+
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        
+
         try {
-            Object a = facesContext.getExternalContext().getRequest();            
-            if(a instanceof RenderRequest) {                
-                RenderRequest renderRequest = (RenderRequest)a;
+            Object a = facesContext.getExternalContext().getRequest();
+            if (a instanceof RenderRequest) {
+                RenderRequest renderRequest = (RenderRequest) a;
                 PortletPreferences prefs = renderRequest.getPreferences();
                 prefs.setValue("importresult", "");
                 prefs.store();
@@ -71,11 +66,11 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
         } catch (ReadOnlyException ex) {
             log.error(ex);
         }
-        
+
         setPaginationStart(NewsletterConstants.PAGINATION_DEFAULT_START);
         setPaginationLimit(NewsletterConstants.PAGINATION_DEFAULT_LIMIT);
         updateSubscriptors();
-                
+
         messageBundle = ResourceBundle.getBundle(LANGUAGE_BUNDLE, facesContext.getViewRoot().getLocale());
     }
 
@@ -86,9 +81,9 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     public void setMessageBundle(ResourceBundle messageBundle) {
         this.messageBundle = messageBundle;
     }
-    
+
     public List<NewsletterSubscriptor> getSubscribers() {
-        updateSubscriptors();        
+        updateSubscriptors();
         return subscribers;
     }
 
@@ -105,7 +100,7 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     }
 
     public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;        
+        this.categoryId = categoryId;
     }
 
     public Boolean getOnlyInactive() {
@@ -115,63 +110,67 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
     public void setOnlyInactive(Boolean onlyInactive) {
         this.onlyInactive = onlyInactive;
     }
-    
+
     public String getCategoryIdAsString() {
         return String.valueOf(categoryId);
     }
 
     public String getImportResult() {
-        
-        try {  
+
+        try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             Object a = facesContext.getExternalContext().getRequest();
             String importResultBridge = "";
-            if(a instanceof RenderRequest) {
-                RenderRequest renderRequest = (RenderRequest)a;
+            if (a instanceof RenderRequest) {
+                RenderRequest renderRequest = (RenderRequest) a;
                 PortletPreferences prefs = renderRequest.getPreferences();
-                importResultBridge = (String)prefs.getValue("importresult", "");                
+                importResultBridge = (String) prefs.getValue("importresult", "");
                 prefs.setValue("importresult", "");
                 prefs.store();
-            }           
+            }
             ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
-            if (importResultBridge.equals("1")) {
-                importResult = newsletterMessageBundle.getString("newsletter.admin.subscribers.import.success");
-            } else if (importResultBridge.equals("0")) {
+
+            if (importResultBridge.equals("0")) {
                 importResult = newsletterMessageBundle.getString("newsletter.admin.subscribers.import.unsuccess");
-            } else {
+
+            } else if (importResultBridge.equals("1")) {
+                importResult = newsletterMessageBundle.getString("newsletter.admin.subscribers.import.success");
+            } else if (importResultBridge.equals("2")) {
+                importResult = newsletterMessageBundle.getString("newsletter.admin.subscribers.import.partial");
+            }else{
                 importResult = "";
             }
-         }catch(Exception ex) {
+        } catch (Exception ex) {
             log.error(ex);
         }
-        
+
         return importResult;
     }
 
     public void setImportResult(String importResult) {
         this.importResult = importResult;
-    }    
-    
+    }
+
     public void changeCategory(AjaxBehaviorEvent event) {
         this.gotoFirstPage();
     }
-    
+
     private void updateResults() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
         updateSubscriptors();
     }
-    
-    private void updateSubscriptors() {        
-        try {            
+
+    private void updateSubscriptors() {
+        try {
             if (onlyInactive) {
-                status= null;
+                status = null;
             } else {
-                status= SubscriptionStatus.ACTIVE;
+                status = SubscriptionStatus.ACTIVE;
             }
-            if (getCategoryId() == 0) {                
-                subscribers = subscriptorService.findAllByStatus(getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC, status);                
+            if (getCategoryId() == 0) {
+                subscribers = subscriptorService.findAllByStatus(getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC, status);
                 setPaginationTotal(subscriptorService.findAllByStatusCount(status));
-                
+
             } else {
                 filterCategory = categoryService.findById(categoryId).getPayload();
                 subscribers = subscriptorService.findByCategoryAndStatus(filterCategory, getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC, status);
@@ -181,47 +180,46 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
             log.error(ex);
         }
     }
-    
+
     public List<NewsletterSubscriptor> getSubscriptorsByFilterCategory() {
-        
+
         List<NewsletterSubscriptor> result = null;
         if (getCategoryId() == 0) {
             result = subscriptorService.findAllByStatus(SubscriptionStatus.ACTIVE);
         } else {
-            result = subscriptorService.findByCategoryAndStatus(getFilterCategory(), SubscriptionStatus.ACTIVE);            
+            result = subscriptorService.findByCategoryAndStatus(getFilterCategory(), SubscriptionStatus.ACTIVE);
         }
-        
+
         return result;
     }
-    
+
     @Override
     public void gotoPage() {
         super.gotoPage();
         updateResults();
     }
-    
+
     @Override
-    public void nextPage() {        
-        super.nextPage();        
+    public void nextPage() {
+        super.nextPage();
         updateResults();
-    }
-    
-    @Override
-    public void prevPage() {        
-        super.prevPage();        
-        updateResults();
-    }
-    
-    @Override
-    public void gotoFirstPage() {        
-        super.gotoFirstPage();        
-        updateResults();        
-    }
-    
-    @Override
-    public void gotoLastPage() {        
-        super.gotoLastPage();        
-        updateResults();         
     }
 
+    @Override
+    public void prevPage() {
+        super.prevPage();
+        updateResults();
+    }
+
+    @Override
+    public void gotoFirstPage() {
+        super.gotoFirstPage();
+        updateResults();
+    }
+
+    @Override
+    public void gotoLastPage() {
+        super.gotoLastPage();
+        updateResults();
+    }
 }

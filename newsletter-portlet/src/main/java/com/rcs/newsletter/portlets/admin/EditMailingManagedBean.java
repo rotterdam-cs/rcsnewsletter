@@ -9,6 +9,7 @@ import javax.faces.context.FacesContext;
 import com.rcs.newsletter.core.service.util.EmailFormat;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
@@ -46,6 +47,9 @@ public class EditMailingManagedBean {
     @Inject
     private NewsletterTemplateBlockService templateBlockService;
         
+    @Inject
+    private UserUiStateManagedBean uiState;
+    
     private NewsletterMailingManagedBean mailingManagedBean;
     
     /////////////// L10N KEYS //////////////////////
@@ -54,8 +58,7 @@ public class EditMailingManagedBean {
     
     public static final String CREATE_TITLE_KEY = "newsletter.admin.mailing.createtitle";
     public static final String UPDATE_TITLE_KEY = "newsletter.admin.mailing.updatetitle";
-    private static final String NO_BLOCKS_IN_TEMPLATE = "newsletter.admin.mailing.template.no.blocks"; 
-    private static final String TEMPLATE_BLOCK_EMPTY_SELECTOR = "newsletter.admin.mailing.template.select.article"; 
+    private static final String NO_BLOCKS_IN_TEMPLATE = "newsletter.admin.mailing.template.no.blocks";     
     /////////////// PROPERTIES ////////////////////
     
     private CRUDActionEnum currentAction;
@@ -225,9 +228,9 @@ public class EditMailingManagedBean {
     private String parseTemplateEdit(String template) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
-        String emptySelectorMessage = newsletterMessageBundle.getString(TEMPLATE_BLOCK_EMPTY_SELECTOR);
         String result = "";
-        result = EmailFormat.parseTemplateEdit(template, newsletterArticleType, emptySelectorMessage);
+        ThemeDisplay themedisplay = uiState.getThemeDisplay();
+        result = EmailFormat.parseTemplateEdit(template, newsletterArticleType, themedisplay);
         log.error(result);
         if (result.isEmpty()){            
             result = newsletterMessageBundle.getString(NO_BLOCKS_IN_TEMPLATE);

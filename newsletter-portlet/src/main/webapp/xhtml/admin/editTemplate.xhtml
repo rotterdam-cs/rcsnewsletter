@@ -29,20 +29,15 @@
                for (i = 1; i < contentTemplate.length; i++) {
                    var contentTemplateInside = contentTemplate[i].split("[block]");
                    var contentTemplateInside2 = contentTemplate[i].split("[/block]");
-                   if (contentTemplateInside.length > 1 || contentTemplateInside2.length != 2) {//Blocks nested
+                   if (contentTemplateInside.length > 1 || contentTemplateInside2.length != 2) {//nested blocks 
                        result = false;
                    }                   
                }
             }
             if (result){
-                jQuery('#errmsg1').hide();
-                jQuery('#errmsg').hide();
-                jQuery('#errmsg2').show();
+                jQuery('#errmsg1').hide(); jQuery('#errmsg').hide(); jQuery('#errmsg2').show();
             } else {
-                jQuery('#errmsg1').show();
-                jQuery('#errmsg').show();
-                jQuery('#errmsg2').hide();
-                
+                jQuery('#errmsg1').show(); jQuery('#errmsg').show(); jQuery('#errmsg2').hide();                
             }
             return result;            
         }            
@@ -55,7 +50,7 @@
         <h:form id="edit-template-email-form">
             <h:inputHidden value="#{templateCRUDManagedBean.id}"/>
             <h:inputHidden value="#{templateCRUDManagedBean.action}"/>
-            <p:dialog header="#{nlk['newsletter.admin.template.help']}" widgetVar="dlg3" showEffect="bounce" hideEffect="explode" height="400" width="400" resizable="false">  
+            <p:dialog header="#{nlk['newsletter.admin.template.help']}" widgetVar="dlg3" showEffect="bounce" hideEffect="explode" height="450" width="400" resizable="false">  
                 <h:outputText value="#{templateCRUDManagedBean.helpPageText}" escape="false"/>  
             </p:dialog>            
             

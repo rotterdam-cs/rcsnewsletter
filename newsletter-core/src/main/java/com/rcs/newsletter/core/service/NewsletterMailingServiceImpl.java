@@ -13,7 +13,6 @@ import com.rcs.newsletter.core.service.util.EmailFormat;
 import javax.mail.internet.InternetAddress;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.rcs.newsletter.core.model.NewsletterTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -140,6 +139,12 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         }
     }
     
+    /**
+     * 
+     * @param mailingId
+     * @param themeDisplay
+     * @return 
+     */
     @Override
     public String getEmailFromTemplate(Long mailingId, ThemeDisplay themeDisplay){
         NewsletterMailing mailing = findById(mailingId).getPayload();
@@ -147,5 +152,21 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         return content;
     }
     
+    /**
+     * Validates the template format
+     * @param mailingId
+     * @return 
+     */
+    @Override
+    public boolean validateTemplateFormat(Long mailingId) {
+        boolean result = true;
+        NewsletterMailing mailing = findById(mailingId).getPayload();
+        String templateContent = mailing.getTemplate().getTemplate();
+        String content = EmailFormat.validateTemplateFormat(templateContent);
+        if (content == null || content.isEmpty()) {
+            result = false;
+        }
+        return result;
+    }
     
 }

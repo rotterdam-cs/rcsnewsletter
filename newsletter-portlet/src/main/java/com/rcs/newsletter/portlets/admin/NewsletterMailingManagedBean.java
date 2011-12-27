@@ -89,10 +89,13 @@ public class NewsletterMailingManagedBean implements Serializable {
         return "deleteMailing";
     }
 
-    public String confirmDeletion() {
+    public String confirmDeletion() {        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
+        
         ServiceActionResult<NewsletterMailing> result = service.findById(mailingId);
         if (!result.isSuccess()) {
-            FacesUtil.errorMessage("Could not find mailing to delete");
+            FacesUtil.errorMessage(newsletterMessageBundle.getString("newsletter.admin.mailing.not.found"));
             return null;
         }
         
@@ -110,22 +113,31 @@ public class NewsletterMailingManagedBean implements Serializable {
         return "admin";
     }
     
-    public void sendTestMailing() {        
+    public void sendTestMailing() {   
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
+
         if (selectedMailing == null) {
-            FacesUtil.errorMessage("Please select one row to send the test email");
+            FacesUtil.errorMessage(newsletterMessageBundle.getString("newsletter.admin.mailing.please.select.mailing"));
             return;
-        }        
-        service.sendTestMailing(selectedMailing.getMailing().getId(), testEmail, uiState.getThemeDisplay());
-        FacesUtil.infoMessage("Test email is scheduled to be sent");
+        } else if (service.validateTemplateFormat(selectedMailing.getMailing().getId())) {
+            service.sendTestMailing(selectedMailing.getMailing().getId(), testEmail, uiState.getThemeDisplay());
+            FacesUtil.infoMessage(newsletterMessageBundle.getString("newsletter.admin.mailing.test.sent"));
+        } else {            
+            String message = newsletterMessageBundle.getString(EditMailingManagedBean.NO_BLOCKS_IN_TEMPLATE);
+            FacesUtil.errorMessage(message);
+            return;
+        }
     }
     
     public String sendMailing() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
+        ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
         String message = "";
         ServiceActionResult<NewsletterMailing> result = service.findById(mailingId);
         if (!result.isSuccess()) {
-            FacesUtil.errorMessage("Could not find mailing to send");
+            FacesUtil.errorMessage(newsletterMessageBundle.getString("newsletter.admin.mailing.not.found"));
             return "admin";
         }        
         
@@ -135,25 +147,30 @@ public class NewsletterMailingManagedBean implements Serializable {
         String emailContent = service.getEmailFromTemplate(mailingId, uiState.getThemeDisplay());  
                
         Long archiveId = saveArchiveForMailing(mailing.getName(), mailing.getList().getName(), mailing.getName(), emailContent);
-        service.sendMailing(mailingId, uiState.getThemeDisplay(), archiveId);
-        
-        //We remove the mailing that is already sent
-        //Delete all TemplateBlocks that belongs to this mailing
-        List <NewsletterTemplateBlock> ntbsOld =  templateBlockService.findAllByMailing(result.getPayload());
-        for (NewsletterTemplateBlock ntbOld : ntbsOld) {
-            templateBlockService.delete(ntbOld);
-        }
-        result = service.delete(mailing);
-        
-        if (result.isSuccess()) {
-            init();
+        if (service.validateTemplateFormat(mailingId)) {
+            service.sendMailing(mailingId, uiState.getThemeDisplay(), archiveId);
+            
+            //We remove the mailing that is already sent
+            //Delete all TemplateBlocks that belongs to this mailing
+            List <NewsletterTemplateBlock> ntbsOld =  templateBlockService.findAllByMailing(result.getPayload());
+            for (NewsletterTemplateBlock ntbOld : ntbsOld) {
+                templateBlockService.delete(ntbOld);
+            }
+            result = service.delete(mailing);
+
+            if (result.isSuccess()) {
+                init();
+                message = serverMessageBundle.getString("newsletter.admin.mailing.sent.succesfully");        
+                FacesUtil.infoMessage(message);
+            } else {
+                message = serverMessageBundle.getString("newsletter.admin.mailing.delete.failure");        
+                FacesUtil.infoMessage(message);
+            }
+            
         } else {
-            message = serverMessageBundle.getString("newsletter.admin.mailing.delete.failure");        
-            FacesUtil.infoMessage(message);
+            message = newsletterMessageBundle.getString(EditMailingManagedBean.NO_BLOCKS_IN_TEMPLATE);
+            FacesUtil.errorMessage(message);
         }
-        
-        message = serverMessageBundle.getString("newsletter.admin.mailing.sent.succesfully");        
-        FacesUtil.infoMessage(message);
         
         return "admin";
     }
@@ -178,7 +195,9 @@ public class NewsletterMailingManagedBean implements Serializable {
     
      public String redirectConfirmSend() {         
         if (selectedMailing == null) {
-            FacesUtil.infoMessage("Please select one row to send the mailing");
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
+            FacesUtil.infoMessage(newsletterMessageBundle.getString("newsletter.admin.mailing.please.select.mailing"));
             return null;
         } else {
             uiState.setAdminActiveTabIndex(UserUiStateManagedBean.MAILING_TAB_INDEX);

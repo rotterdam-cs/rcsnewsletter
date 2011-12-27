@@ -25,5 +25,18 @@ public interface NewsletterMailingService extends CRUDService<NewsletterMailing>
      */
     void sendMailing(Long mailingId, ThemeDisplay themeDisplay, Long archiveId);
     
+    /**
+     * 
+     * @param mailingId
+     * @param themeDisplay
+     * @return 
+     */
     String getEmailFromTemplate(Long mailingId, ThemeDisplay themeDisplay); 
+    
+    /**
+     * Validates the template format
+     * @param mailingId
+     * @return 
+     */
+    boolean validateTemplateFormat(Long mailingId);
 }

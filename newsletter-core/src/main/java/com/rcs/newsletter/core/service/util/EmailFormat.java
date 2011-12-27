@@ -424,27 +424,16 @@ public class EmailFormat {
      * @param templateContent
      * @return 
      */
-    public static String parseTemplateEdit(String templateContent, String newsletterArticleType, ThemeDisplay themeDisplay) {
+    public static String parseTemplateEdit(String incomingTemplateContent, String newsletterArticleType, ThemeDisplay themeDisplay) {
+        String result = ""; 
+        
         ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, themeDisplay.getLocale());
-        String emptySelectorMessage = newsletterMessageBundle.getString(TEMPLATE_BLOCK_EMPTY_SELECTOR);
-        
-        String result = "";
-        
+        String emptySelectorMessage = newsletterMessageBundle.getString(TEMPLATE_BLOCK_EMPTY_SELECTOR);               
         String fTagBlockOpen = fixTagsToRegex(TEMPLATE_TAG_BLOCK_OPEN);
         String fTagBlockClose = fixTagsToRegex(TEMPLATE_TAG_BLOCK_CLOSE);
-        String fTagBlockTitle = fixTagsToRegex(TEMPLATE_TAG_TITLE);
-        String fTagBlockContent = fixTagsToRegex(TEMPLATE_TAG_CONTENT);
-        
-        templateContent = templateContent.replace(TEMPLATE_TAG_BLOCK_OPEN, fTagBlockOpen)
-                .replace(TEMPLATE_TAG_BLOCK_CLOSE, fTagBlockClose)
-                .replace(TEMPLATE_TAG_TITLE, fTagBlockTitle)
-                .replace(TEMPLATE_TAG_CONTENT, fTagBlockContent);
-        
+        String templateContent = validateTemplateFormat(incomingTemplateContent);
         //If the template contains at least one block with one title or content
-        if (templateContent.contains(fTagBlockOpen) 
-                && templateContent.contains(fTagBlockClose) 
-                && ( templateContent.contains(fTagBlockTitle) || templateContent.contains(fTagBlockContent) ) 
-        ){
+        if (templateContent != null && !templateContent.isEmpty()) {
                 String templateContentTmp = templateContent;
                 Pattern patternBlock = Pattern.compile(fTagBlockOpen + ".*?" + fTagBlockClose, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
                 Matcher m = patternBlock.matcher(templateContent);
@@ -466,15 +455,15 @@ public class EmailFormat {
                         }
                     }
                 } catch (SystemException ex) {
-                    log.warn("Could not filter the articles by this category", ex);
+                    log.error("Could not filter the articles by this category", ex);
                 } catch (PortalException ex) {
-                    log.warn("Could not filter the articles by this category", ex);
+                    log.error("Could not filter the articles by this category", ex);
                 }
                 List<JournalArticle> newsletterArticles = new ArrayList<JournalArticle>(resultArticleNewsletter.values());
                 
                 //Create HTML select option with all newsletter articles
                 StringBuilder selectHTMLOptionsSB = new StringBuilder("<option value=\"");
-                selectHTMLOptionsSB.append(UNDEFINED);
+                selectHTMLOptionsSB.append(String.valueOf(UNDEFINED));
                 selectHTMLOptionsSB.append("\">");
                 selectHTMLOptionsSB.append(emptySelectorMessage);
                 selectHTMLOptionsSB.append("</option>");                
@@ -506,8 +495,37 @@ public class EmailFormat {
                 resultSB.append(templateContentTmp);
                 resultSB.append("</div>");
                 result = resultSB.toString();            
+        } else {
+            log.error("Invalid Template Format");
         }
 
+        return result;
+    }
+    
+    /**
+     * Validate the template format
+     * @param templateContent
+     * @return 
+     */
+    public static String validateTemplateFormat(String templateContent) {
+        String result = null;
+        String fTagBlockOpen = fixTagsToRegex(TEMPLATE_TAG_BLOCK_OPEN);
+        String fTagBlockClose = fixTagsToRegex(TEMPLATE_TAG_BLOCK_CLOSE);
+        String fTagBlockTitle = fixTagsToRegex(TEMPLATE_TAG_TITLE);
+        String fTagBlockContent = fixTagsToRegex(TEMPLATE_TAG_CONTENT);
+        
+        templateContent = templateContent.replace(TEMPLATE_TAG_BLOCK_OPEN, fTagBlockOpen)
+                .replace(TEMPLATE_TAG_BLOCK_CLOSE, fTagBlockClose)
+                .replace(TEMPLATE_TAG_TITLE, fTagBlockTitle)
+                .replace(TEMPLATE_TAG_CONTENT, fTagBlockContent);
+        
+        //If the template contains at least one block with one title or content
+        if (templateContent.contains(fTagBlockOpen) 
+                && templateContent.contains(fTagBlockClose) 
+                && ( templateContent.contains(fTagBlockTitle) || templateContent.contains(fTagBlockContent) ) 
+        ){
+            result = templateContent;
+        }
         return result;
     }
     

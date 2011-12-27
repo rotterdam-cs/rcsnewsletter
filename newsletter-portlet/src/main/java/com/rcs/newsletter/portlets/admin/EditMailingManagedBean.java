@@ -58,7 +58,7 @@ public class EditMailingManagedBean {
     
     public static final String CREATE_TITLE_KEY = "newsletter.admin.mailing.createtitle";
     public static final String UPDATE_TITLE_KEY = "newsletter.admin.mailing.updatetitle";
-    private static final String NO_BLOCKS_IN_TEMPLATE = "newsletter.admin.mailing.template.no.blocks";     
+    public static final String NO_BLOCKS_IN_TEMPLATE = "newsletter.admin.mailing.template.no.blocks";     
     /////////////// PROPERTIES ////////////////////
     
     private CRUDActionEnum currentAction;
@@ -231,7 +231,6 @@ public class EditMailingManagedBean {
         String result = "";
         ThemeDisplay themedisplay = uiState.getThemeDisplay();
         result = EmailFormat.parseTemplateEdit(template, newsletterArticleType, themedisplay);
-        log.error(result);
         if (result.isEmpty()){            
             result = newsletterMessageBundle.getString(NO_BLOCKS_IN_TEMPLATE);
         }        

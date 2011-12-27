@@ -1,5 +1,6 @@
 package com.rcs.newsletter.core.service.util;
 
+import java.util.ResourceBundle;
 import com.rcs.newsletter.core.model.commons.TemplateBlockComparator;
 import java.util.Collections;
 import com.rcs.newsletter.core.model.NewsletterMailing;
@@ -41,6 +42,11 @@ import static com.rcs.newsletter.NewsletterConstants.*;
 
 public class EmailFormat {
     private static Log log = LogFactoryUtil.getLog(EmailFormat.class);
+    
+    //Boundle Keys
+    private static final String TEMPLATE_BLOCK_EMPTY_SELECTOR = "newsletter.admin.mailing.template.select.article";
+    private static final String DEFAULT_REPLACEMENT_FIRST_NAME_TOKEN = "newsletter.admin.mailing.default.replacement.firstname";    
+    private static final String DEFAULT_REPLACEMENT_LAST_NAME_TOKEN = "newsletter.admin.mailing.default.replacement.lastname";
     
     @Autowired
     private static NewsletterTemplateBlockService templateBlockService;
@@ -85,9 +91,11 @@ public class EmailFormat {
      * @return 
      */
     public static String replaceUserInfo(String content, NewsletterSubscription subscription, ThemeDisplay themeDisplay, Long archiveId) {        
+        ResourceBundle serverMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, themeDisplay.getLocale());
+        
         //Default Replacement information
-        String subscriptorFirstName = "";
-        String subscriptorLastName = "";
+        String subscriptorFirstName = serverMessageBundle.getString(DEFAULT_REPLACEMENT_FIRST_NAME_TOKEN);
+        String subscriptorLastName = serverMessageBundle.getString(DEFAULT_REPLACEMENT_LAST_NAME_TOKEN);
         String categoryName = "";        
         String confirmationLinkToken = "";
         String confirmationUnregisterLinkToken = "";
@@ -416,7 +424,10 @@ public class EmailFormat {
      * @param templateContent
      * @return 
      */
-    public static String parseTemplateEdit(String templateContent, String newsletterArticleType, String emptySelectorMessage) {
+    public static String parseTemplateEdit(String templateContent, String newsletterArticleType, ThemeDisplay themeDisplay) {
+        ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, themeDisplay.getLocale());
+        String emptySelectorMessage = newsletterMessageBundle.getString(TEMPLATE_BLOCK_EMPTY_SELECTOR);
+        
         String result = "";
         
         String fTagBlockOpen = fixTagsToRegex(TEMPLATE_TAG_BLOCK_OPEN);

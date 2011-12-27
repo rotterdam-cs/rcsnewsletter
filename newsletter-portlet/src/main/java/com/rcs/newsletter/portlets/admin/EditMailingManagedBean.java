@@ -83,6 +83,8 @@ public class EditMailingManagedBean {
         switch(currentAction) {
             case CREATE:
                 mailing = new NewsletterMailing();
+                mailing.setGroupid(uiState.getGroupid());
+                mailing.setCompanyid(uiState.getCompanyid());
                 break;
             case UPDATE:
                 mailing = service.findById(mailingId).getPayload();
@@ -116,7 +118,10 @@ public class EditMailingManagedBean {
             String[] articleIds;
             articleIds = templateArticles.split(",");
             for(int i =0; i < articleIds.length ; i++) {                
-                NewsletterTemplateBlock ntb = new NewsletterTemplateBlock();
+                NewsletterTemplateBlock ntb = new NewsletterTemplateBlock();                
+                ntb.setGroupid(uiState.getGroupid());
+                ntb.setCompanyid(uiState.getCompanyid());
+                
                 ntb.setArticleId(Long.valueOf(articleIds[i]));
                 ntb.setBlockOrder(i);
                 ntb.setMailing(mailing);
@@ -199,7 +204,7 @@ public class EditMailingManagedBean {
     }
         
     public List<NewsletterTemplate> getTemplates() {
-        setTemplates(templateService.findAll().getPayload());
+        setTemplates(templateService.findAll(uiState.getThemeDisplay()).getPayload());
         return templates;
     }
 
@@ -230,6 +235,8 @@ public class EditMailingManagedBean {
         ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
         String result = "";
         ThemeDisplay themedisplay = uiState.getThemeDisplay();
+        //themedisplay.getScopeGroupId();
+        //themedisplay.getCompanyId()
         result = EmailFormat.parseTemplateEdit(template, newsletterArticleType, themedisplay);
         if (result.isEmpty()){            
             result = newsletterMessageBundle.getString(NO_BLOCKS_IN_TEMPLATE);

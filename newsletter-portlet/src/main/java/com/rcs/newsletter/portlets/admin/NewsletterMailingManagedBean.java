@@ -65,7 +65,7 @@ public class NewsletterMailingManagedBean implements Serializable {
      */
     @PostConstruct
     public void init() {
-        mailingList = createMailingsList(service.findAll().getPayload());
+        mailingList = createMailingsList(service.findAll(uiState.getThemeDisplay()).getPayload());
         //workaround for circular dependency injection.
         mailingBean.setMailingManagedBean(this);
     }
@@ -183,6 +183,8 @@ public class NewsletterMailingManagedBean implements Serializable {
      */
     private Long saveArchiveForMailing(String mailingName, String categoryName, String articleTitle, String emailBody) {
         NewsletterArchive archive = new NewsletterArchive();
+        archive.setGroupid(uiState.getGroupid());
+        archive.setCompanyid(uiState.getCompanyid());
         archive.setDate(new Date());
         archive.setCategoryName(categoryName);
         archive.setArticleTitle(articleTitle);
@@ -251,7 +253,7 @@ public class NewsletterMailingManagedBean implements Serializable {
     }
 
     public List<NewsletterCategory> getCategories() {
-        return categoryService.findAll().getPayload();
+        return categoryService.findAll(uiState.getThemeDisplay()).getPayload();
     }
 
     public MailingTableRow getSelectedMailing() {

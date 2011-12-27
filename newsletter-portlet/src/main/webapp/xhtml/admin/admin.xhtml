@@ -20,6 +20,10 @@
                 <p:tab title="#{msg['newsletter.admin.subscribers']}">
                     <ui:include src="subscribers.xhtml" />
                 </p:tab>
+                
+                <p:tab title="#{msg['newsletter.admin.templates']}">
+                    <ui:include src="templates.xhtml" />
+                </p:tab>
 
                 <p:tab title="#{msg['newsletter.admin.mailing']}">
                     <ui:include src="mailing.xhtml" />
@@ -29,10 +33,7 @@
                     <ui:include src="archive.xhtml" />
                 </p:tab>
                 
-                <p:tab title="#{msg['newsletter.admin.templates']}">
-                    <ui:include src="templates.xhtml" />
-                </p:tab>
-
+                
             </p:tabView>
         </h:form>
     </h:body>

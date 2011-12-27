@@ -136,6 +136,9 @@ public class CategoryCRUDManagedBean {
         switch (getAction()) {
             case CREATE:
                 newsletterCategory = new NewsletterCategory();
+                newsletterCategory.setGroupid(uiState.getGroupid());
+                newsletterCategory.setCompanyid(uiState.getCompanyid());
+                
                 fillNewsletterCategory(newsletterCategory);
                 ServiceActionResult<NewsletterCategory> saveResult = categoryCRUDService.save(newsletterCategory);
 

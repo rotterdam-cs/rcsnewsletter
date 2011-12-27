@@ -168,8 +168,8 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
                 status = SubscriptionStatus.ACTIVE;
             }
             if (getCategoryId() == 0) {
-                subscribers = subscriptorService.findAllByStatus(getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC, status);
-                setPaginationTotal(subscriptorService.findAllByStatusCount(status));
+                subscribers = subscriptorService.findAllByStatus(uiState.getThemeDisplay(), getPaginationStart(), getPaginationLimit(), "id", NewsletterConstants.ORDER_BY_ASC, status);
+                setPaginationTotal(subscriptorService.findAllByStatusCount(uiState.getThemeDisplay(), status));
 
             } else {
                 filterCategory = categoryService.findById(categoryId).getPayload();
@@ -185,7 +185,7 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
 
         List<NewsletterSubscriptor> result = null;
         if (getCategoryId() == 0) {
-            result = subscriptorService.findAllByStatus(SubscriptionStatus.ACTIVE);
+            result = subscriptorService.findAllByStatus(uiState.getThemeDisplay(), SubscriptionStatus.ACTIVE);
         } else {
             result = subscriptorService.findByCategoryAndStatus(getFilterCategory(), SubscriptionStatus.ACTIVE);
         }

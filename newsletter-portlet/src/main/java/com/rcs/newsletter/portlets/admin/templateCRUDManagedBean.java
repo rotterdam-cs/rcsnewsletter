@@ -137,7 +137,10 @@ public class templateCRUDManagedBean {
         String message = "";
         switch (getAction()) {
             case CREATE:
-                newsletterTemplate = new NewsletterTemplate();
+                newsletterTemplate = new NewsletterTemplate();                            
+                newsletterTemplate.setGroupid(uiState.getGroupid());
+                newsletterTemplate.setCompanyid(uiState.getCompanyid());
+                            
                 fillNewsletterTemplate(newsletterTemplate);
                 ServiceActionResult<NewsletterTemplate> saveResult = templateCRUDService.save(newsletterTemplate);
 

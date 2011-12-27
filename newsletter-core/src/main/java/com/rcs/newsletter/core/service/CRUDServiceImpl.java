@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.NewsletterConstants;
 import javax.validation.ConstraintViolation;
 import org.hibernate.Session;
@@ -33,7 +34,8 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
     @Autowired
     private SessionFactory sessionFactory;
     @Autowired
-    private Validator validator;    
+    private Validator validator;
+    
     private static Log logger = LogFactoryUtil.getLog(CRUDServiceImpl.class);
 
     private Class getEntityClass() {
@@ -132,13 +134,13 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
     }
 
     @Override
-    public ServiceActionResult<List<E>> findAll() {
-        return findAll(-1, -1);        
+    public ServiceActionResult<List<E>> findAll(ThemeDisplay themeDisplay) {
+        return findAll(themeDisplay, -1, -1);        
     }
     
     @Override
-    public ServiceActionResult<List<E>> findAll(int start, int limit) {
-        return findAll(-1, -1, "", "");        
+    public ServiceActionResult<List<E>> findAll(ThemeDisplay themeDisplay, int start, int limit) {
+        return findAll(themeDisplay, -1, -1, "", "");        
     }
     
     /**
@@ -153,9 +155,12 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
     }
     
     @Override
-    public ServiceActionResult<List<E>> findAll(int start, int limit, String ordercrit, String order) {       
+    public ServiceActionResult<List<E>> findAll(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order) {       
         Session currentSession = sessionFactory.getCurrentSession();
         Criteria criteria = currentSession.createCriteria(getEntityClass());
+        
+        criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
+        criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
         
         if (start != -1) {
             criteria.setFirstResult(start);
@@ -182,11 +187,15 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
     }
 
     @Override
-    public int findAllCount() {
+    public int findAllCount(ThemeDisplay themeDisplay) {
         int result = 0;
         try {            
             Session currentSession = sessionFactory.getCurrentSession();
-            Criteria criteria = currentSession.createCriteria(getEntityClass());           
+            Criteria criteria = currentSession.createCriteria(getEntityClass());
+            
+            criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
+            criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
+            
             result = criteria.list().size();                    
                         
         } catch (NonUniqueResultException ex) {

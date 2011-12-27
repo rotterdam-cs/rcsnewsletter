@@ -62,11 +62,16 @@ public class SubscriptionManagedBean implements Serializable {
     private NewsletterSubscriptionService subscriptionService;
     @Inject
     private UserUiStateManagedBean uiStateManagedBean;
+    @Inject
+    private UserUiStateManagedBean uiState;
 
     @PostConstruct
     public void init() {
-        currentConfig = new RegistrationConfig();
-        RegistrationConfig registrationConfig = settingsService.findConfig(FacesUtil.getPortletUniqueId());
+        currentConfig = new RegistrationConfig();        
+        currentConfig.setGroupid(uiState.getGroupid());
+        currentConfig.setCompanyid(uiState.getCompanyid());
+        
+        RegistrationConfig registrationConfig = settingsService.findConfig(uiState.getThemeDisplay(), FacesUtil.getPortletUniqueId());
         if (registrationConfig != null) {
             currentConfig.setListId(registrationConfig.getListId());
             currentConfig.setDisableName(registrationConfig.isDisableName());
@@ -77,7 +82,7 @@ public class SubscriptionManagedBean implements Serializable {
     public void doSaveSettings() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
-        ServiceActionResult result = settingsService.updateConfig(FacesUtil.getPortletUniqueId(), currentConfig);
+        ServiceActionResult result = settingsService.updateConfig(uiState.getThemeDisplay(), FacesUtil.getPortletUniqueId(), currentConfig);
         if (result.isSuccess()) {
             String infoMessage = serverMessageBundle.getString("newsletter.registration.settings.save.successfully");
             FacesUtil.infoMessage(infoMessage);
@@ -112,10 +117,13 @@ public class SubscriptionManagedBean implements Serializable {
                     if (subscriptionEmail != null) {
                         NewsletterSubscriptor subscriptor = null;
                         ServiceActionResult<NewsletterSubscriptor> subscriptorResult;
-                        subscriptorResult = subscriptorService.findByEmail(email);
+                        subscriptorResult = subscriptorService.findByEmail(uiState.getThemeDisplay(), email);
                         //If the subscriptor doesnt exists we should create it
                         if (!subscriptorResult.isSuccess()) {
-                            subscriptor = new NewsletterSubscriptor();
+                            subscriptor = new NewsletterSubscriptor();                            
+                            subscriptor.setGroupid(uiState.getGroupid());
+                            subscriptor.setCompanyid(uiState.getCompanyid());
+                            
                             subscriptor.setEmail(email);
                             subscriptor.setFirstName(name);
                             subscriptor.setLastName(lastName);
@@ -137,6 +145,9 @@ public class SubscriptionManagedBean implements Serializable {
                         //does not exists we should create it
                         if (subscription == null) {
                             subscription = new NewsletterSubscription();
+                            subscription.setGroupid(uiState.getGroupid());
+                            subscription.setCompanyid(uiState.getCompanyid());
+                            
                             subscription.setSubscriptor(subscriptor);
                             subscription.setCategory(newsletterCategory);
                             subscription.setStatus(SubscriptionStatus.INACTIVE);
@@ -213,7 +224,7 @@ public class SubscriptionManagedBean implements Serializable {
 
                 if (unsubscriptionEmail != null) {
                     ServiceActionResult<NewsletterSubscriptor> subscriptorResult;
-                    subscriptorResult = subscriptorService.findByEmail(email);
+                    subscriptorResult = subscriptorService.findByEmail(uiState.getThemeDisplay(), email);
 
                     if (!subscriptorResult.isSuccess()) {
                         String errorMessage = serverMessageBundle.getString("newsletter.unregistration.generalerror");

@@ -1,6 +1,7 @@
 
 package com.rcs.newsletter.core.service;
 
+import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.NewsletterConstants;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterEntity;
@@ -35,7 +36,7 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
     private final static Logger logger = LoggerFactory.getLogger(NewsletterSubscriptionImpl.class);
 
     @Override
-    public ServiceActionResult<NewsletterSubscriptor> findByEmail(String email) {
+    public ServiceActionResult<NewsletterSubscriptor> findByEmail(ThemeDisplay themeDisplay, String email) {
         boolean success = true;
         List<String> validationKeys = new ArrayList<String>();
         NewsletterSubscriptor newsletterSubscriptor = null;
@@ -44,6 +45,9 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
             Session currentSession = sessionFactory.getCurrentSession();
             Criteria criteria = currentSession.createCriteria(NewsletterSubscriptor.class);
             criteria.add(Restrictions.eq(NewsletterSubscriptor.EMAIL, email));            
+            
+            criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
+            criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
             
             Object uniqueObject = criteria.uniqueResult();
             
@@ -179,12 +183,15 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
     }
     
     @Override
-    public List<NewsletterSubscriptor> findAllByStatus(int start, int limit, String ordercrit, String order, SubscriptionStatus status) {        
+    public List<NewsletterSubscriptor> findAllByStatus(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order, SubscriptionStatus status) {        
         List <NewsletterSubscriptor> result = new ArrayList<NewsletterSubscriptor>();        
         List<NewsletterSubscription> newsletterSubscription = new ArrayList<NewsletterSubscription>();
         try {            
             Session currentSession = sessionFactory.getCurrentSession();
             Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
+            
+            criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
+            criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
             
             if (status != null) {
                 criteria.add(Restrictions.sqlRestriction("status = '" + status.toString() + "'"));
@@ -218,12 +225,15 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
     }
     
     @Override
-    public List<NewsletterSubscriptor> findAllByStatus(SubscriptionStatus status) {        
+    public List<NewsletterSubscriptor> findAllByStatus(ThemeDisplay themeDisplay, SubscriptionStatus status) {        
         List <NewsletterSubscriptor> result = new ArrayList<NewsletterSubscriptor>();        
         List<NewsletterSubscription> newsletterSubscription = new ArrayList<NewsletterSubscription>();
         try {            
             Session currentSession = sessionFactory.getCurrentSession();
             Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
+            
+            criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
+            criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
             
             if (status != null) {
                 criteria.add(Restrictions.sqlRestriction("status = '" + status.toString() + "'"));
@@ -243,11 +253,15 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
     }
 
     @Override
-    public int findAllByStatusCount(SubscriptionStatus status) {
+    public int findAllByStatusCount(ThemeDisplay themeDisplay, SubscriptionStatus status) {
         int result = 0;
         try {            
             Session currentSession = sessionFactory.getCurrentSession();
-            Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
+            Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);            
+        
+            criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
+            criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
+            
             if (status != null) {
                 criteria.add(Restrictions.sqlRestriction("status = '" + status.toString() + "'"));
             }

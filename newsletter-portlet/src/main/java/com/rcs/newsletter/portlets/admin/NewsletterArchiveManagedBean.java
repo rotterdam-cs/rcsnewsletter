@@ -42,7 +42,7 @@ public class NewsletterArchiveManagedBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        archives = archiveService.findAll().getPayload();
+        archives = archiveService.findAll(uiState.getThemeDisplay()).getPayload();
         Collections.sort(archives, new ArchiveComparator());
     }
 

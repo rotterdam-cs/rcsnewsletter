@@ -1,5 +1,6 @@
 package com.rcs.newsletter.core.service;
 
+import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.model.RegistrationConfig;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 
@@ -13,7 +14,7 @@ public interface NewsletterPortletSettingsService {
      * @param portletId
      * @return 
      */
-    RegistrationConfig findConfig(String portletId);
+    RegistrationConfig findConfig(ThemeDisplay themeDisplay, String portletId);
     
     /**
      * Update the registration portlet config.
@@ -21,5 +22,5 @@ public interface NewsletterPortletSettingsService {
      * @param config
      * @return 
      */
-    ServiceActionResult updateConfig(String portletId, RegistrationConfig config);
+    ServiceActionResult updateConfig(ThemeDisplay themeDisplay, String portletId, RegistrationConfig config);
 }

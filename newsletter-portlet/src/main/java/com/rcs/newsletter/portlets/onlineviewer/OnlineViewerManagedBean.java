@@ -17,6 +17,7 @@ import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.NewsletterConstants;
 import java.util.List;
 
@@ -41,8 +42,7 @@ public class OnlineViewerManagedBean implements Serializable {
     @Inject
     private NewsletterSubscriptionService subscriptionService;
     @Inject
-    private UserUiStateManagedBean uiStateManagedBean;
-
+    private UserUiStateManagedBean uiState;
     
     
     public Long getRequestedNewsletterId() {
@@ -79,6 +79,7 @@ public class OnlineViewerManagedBean implements Serializable {
      */
     public String getNewsletterArticle() {
         String result = "";
+        ThemeDisplay themeDisplay = uiState.getThemeDisplay();
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Map<String, Object> map = facesContext.getExternalContext().getRequestMap();
         if (map != null) {
@@ -100,27 +101,27 @@ public class OnlineViewerManagedBean implements Serializable {
                     ServiceActionResult<NewsletterSubscription> subscriptionResult = subscriptionService.findById(subscriptionId);
                     if (subscriptionResult.isSuccess()) {
                         NewsletterSubscription subscription = subscriptionResult.getPayload();
-                        result = EmailFormat.replaceUserInfo(result, subscription, uiStateManagedBean.getThemeDisplay(), getRequestedNewsletterId());
+                        result = EmailFormat.replaceUserInfo(result, subscription, themeDisplay, getRequestedNewsletterId());
                     } else {
-                        result = EmailFormat.replaceUserInfo(result, null, uiStateManagedBean.getThemeDisplay(), getRequestedNewsletterId());
+                        result = EmailFormat.replaceUserInfo(result, null, themeDisplay, getRequestedNewsletterId());
                     }
                 } else {
-                    result = EmailFormat.replaceUserInfo(result, null, uiStateManagedBean.getThemeDisplay(), getRequestedNewsletterId());
+                    result = EmailFormat.replaceUserInfo(result, null, themeDisplay, getRequestedNewsletterId());
                 }
             //Show the latest newsletter article
             } else {
-                List<NewsletterArchive> sarl = archiveService.findAll(0, 1, "id", NewsletterConstants.ORDER_BY_DESC).getPayload();
+                List<NewsletterArchive> sarl = archiveService.findAll(themeDisplay,0, 1, "id", NewsletterConstants.ORDER_BY_DESC).getPayload();
                 if (sarl.size() > 0) {
                     result = sarl.get(0).getEmailBody();
-                    result = EmailFormat.replaceUserInfo(result, null, uiStateManagedBean.getThemeDisplay(), getRequestedNewsletterId());
+                    result = EmailFormat.replaceUserInfo(result, null, themeDisplay, getRequestedNewsletterId());
                 }
             }
         //Show the latest newsletter article
         } else {
-            List<NewsletterArchive> sarl = archiveService.findAll(0, 1, "id", NewsletterConstants.ORDER_BY_DESC).getPayload();
+            List<NewsletterArchive> sarl = archiveService.findAll(themeDisplay,0, 1, "id", NewsletterConstants.ORDER_BY_DESC).getPayload();
             if (sarl.size() > 0) {
                 result = sarl.get(0).getEmailBody();
-                result = EmailFormat.replaceUserInfo(result, null, uiStateManagedBean.getThemeDisplay(), getRequestedNewsletterId());
+                result = EmailFormat.replaceUserInfo(result, null, themeDisplay, getRequestedNewsletterId());
             }
         }
         return result;

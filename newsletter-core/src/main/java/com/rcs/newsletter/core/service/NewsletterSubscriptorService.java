@@ -1,6 +1,7 @@
 
 package com.rcs.newsletter.core.service;
 
+import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface NewsletterSubscriptorService extends CRUDService<NewsletterSubscriptor> {
     
-    ServiceActionResult<NewsletterSubscriptor> findByEmail(String email);   
+    ServiceActionResult<NewsletterSubscriptor> findByEmail(ThemeDisplay themeDisplay, String email);   
     
     List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory);
     
@@ -25,11 +26,11 @@ public interface NewsletterSubscriptorService extends CRUDService<NewsletterSubs
     
     List<NewsletterSubscriptor> findByCategoryAndStatus(NewsletterCategory newsletterCategory, SubscriptionStatus status);
     
-    List<NewsletterSubscriptor> findAllByStatus(int start, int limit, String ordercrit, String order, SubscriptionStatus status);
+    List<NewsletterSubscriptor> findAllByStatus(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order, SubscriptionStatus status);
     
-    List<NewsletterSubscriptor> findAllByStatus(SubscriptionStatus status);    
+    List<NewsletterSubscriptor> findAllByStatus(ThemeDisplay themeDisplay, SubscriptionStatus status);    
     
-    int findAllByStatusCount(SubscriptionStatus status);
+    int findAllByStatusCount(ThemeDisplay themeDisplay, SubscriptionStatus status);
     
     int findByCategoryCount(NewsletterCategory newsletterCategory);
     

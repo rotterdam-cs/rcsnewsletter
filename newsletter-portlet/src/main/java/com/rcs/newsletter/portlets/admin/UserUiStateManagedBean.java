@@ -34,9 +34,12 @@ public class UserUiStateManagedBean implements Serializable {
     
     public static final int LISTS_TAB_INDEX = 0;
     public static final int SUBSCRIBERS_TAB_INDEX = 1;
-    public static final int MAILING_TAB_INDEX = 2;
-    public static final int ARCHIVE_TAB_INDEX = 3;
-    public static final int TEMPLATE_TAB_INDEX = 4;
+    public static final int TEMPLATE_TAB_INDEX = 2;    
+    public static final int MAILING_TAB_INDEX = 3;
+    public static final int ARCHIVE_TAB_INDEX = 4;
+    
+    private Long groupid;    
+    private Long companyid;
     
     @Value("${newsletter.articles.type}")
     private String newsletterArticleType;
@@ -169,8 +172,31 @@ public class UserUiStateManagedBean implements Serializable {
     public void refresh() {
         try {
             journalArticles = findArticlesByType(newsletterArticleType);
+            groupid = getGroupid();
+            companyid = getCompanyid();
         } catch (Exception ex) {
             logger.error("Error while trying to get the list of journal articles", ex);
         }
     }
+
+    public Long getCompanyid() {
+        companyid = getThemeDisplay().getCompanyId();
+        return companyid;
+    }
+
+    public void setCompanyid(Long companyid) {
+        this.companyid = companyid;
+    }
+
+    public Long getGroupid() {
+        groupid = getThemeDisplay().getScopeGroupId();
+        return groupid;
+    }
+
+    public void setGroupid(Long groupid) {
+        this.groupid = groupid;
+    }
+    
+    
+    
 }

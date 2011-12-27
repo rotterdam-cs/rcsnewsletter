@@ -17,11 +17,16 @@ import java.util.List;
 import javax.portlet.PortletPreferences;
 import org.apache.commons.fileupload.FileItem;
 import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
+import javax.inject.Inject;
 
 public class NewsletterResourcePortlet extends GenericFacesPortlet {
 
     private static final Log logger = LogFactoryUtil.getLog(NewsletterResourcePortlet.class);
 
+    @Inject
+    private UserUiStateManagedBean uiState;
+    
     public NewsletterResourcePortlet() {
         super();
     }
@@ -62,7 +67,7 @@ public class NewsletterResourcePortlet extends GenericFacesPortlet {
 
                         if (subscriptorExportManagedBean != null) {
                             logger.debug("LLAMANDO!!*****************");
-                            String result = SubscriptorsResourceUtil.importSubscriptorsFromExcel(fileItem, subscriptorExportManagedBean);
+                            String result = SubscriptorsResourceUtil.importSubscriptorsFromExcel(fileItem, subscriptorExportManagedBean, uiState);
 
                             if (result.equals("0")) {
                                 prefs.setValue("importresult", "0");

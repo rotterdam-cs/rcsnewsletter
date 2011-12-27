@@ -22,6 +22,8 @@ public class RegistrationConfig implements Serializable {
     private Long confirmationEmailArticleId;
     private Long greetingEmailArticleId;
     private boolean disableName;
+    private Long groupid;    
+    private Long companyid;
 
     public Long getConfirmationEmailArticleId() {
         return confirmationEmailArticleId;
@@ -62,6 +64,22 @@ public class RegistrationConfig implements Serializable {
     public void setDisableName(boolean disableName) {
         this.disableName = disableName;
     }
+
+    public Long getCompanyid() {
+        return companyid;
+    }
+
+    public void setCompanyid(Long companyid) {
+        this.companyid = companyid;
+    }
+
+    public Long getGroupid() {
+        return groupid;
+    }
+
+    public void setGroupid(Long groupid) {
+        this.groupid = groupid;
+    }    
 
     @Override
     public boolean equals(Object obj) {

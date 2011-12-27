@@ -1,7 +1,9 @@
 
 package com.rcs.newsletter.core.service;
 
+import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.model.NewsletterCategory;
+import com.rcs.newsletter.core.model.NewsletterEntity;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import java.util.ArrayList;
@@ -50,8 +52,14 @@ public class NewsletterCategoryImpl extends CRUDServiceImpl<NewsletterCategory> 
     }
 
     @Override
-    public List<NewsletterCategory> findAllNewsletterCategorys(boolean fetchSubscriptors) {
-        List<NewsletterCategory> result = sessionFactory.getCurrentSession().createCriteria(NewsletterCategory.class).list();
+    public List<NewsletterCategory> findAllNewsletterCategorys(ThemeDisplay themeDisplay, boolean fetchSubscriptors) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        Criteria criteria = currentSession.createCriteria(NewsletterCategory.class);
+        
+        criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
+        criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
+        
+        List<NewsletterCategory> result = criteria.list();
         
         if(fetchSubscriptors) {
             for(NewsletterCategory newsletterCategory : result) {

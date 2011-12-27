@@ -25,6 +25,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.NewsletterConstants;
+import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import javax.faces.context.FacesContext;
@@ -47,7 +48,7 @@ public class SubscriptorsResourceUtil {
     private static final int LAST_NAME_INDEX = 2;
     private static final int EMAIL_INDEX = 3;
     private static final int LIST_INDEX = 4;
-
+    
     /**
      * Method that create the excel from the subscribers list and
      * writes to the response
@@ -145,7 +146,7 @@ public class SubscriptorsResourceUtil {
      * @param exportManagedBean
      * @return 
      */
-    public static String importSubscriptorsFromExcel(FileItem fileItem, SubscriptorExportManagedBean exportManagedBean) {
+    public static String importSubscriptorsFromExcel(FileItem fileItem, SubscriptorExportManagedBean exportManagedBean, UserUiStateManagedBean uiState) {
         logger.error("DENTRO!!*****************");
         try {
             HSSFWorkbook workbook = new HSSFWorkbook(fileItem.getInputStream());
@@ -194,7 +195,7 @@ public class SubscriptorsResourceUtil {
                     NewsletterSubscriptorService subscriptorService = exportManagedBean.getSubscriptorService();
                     NewsletterSubscriptionService subscriptionService = exportManagedBean.getSubscriptionService();
 
-                    ServiceActionResult<NewsletterSubscriptor> subscriptorResult = subscriptorService.findByEmail(email);
+                    ServiceActionResult<NewsletterSubscriptor> subscriptorResult = subscriptorService.findByEmail(uiState.getThemeDisplay(),email);
                     NewsletterSubscriptor subscriptor = null;
                     NewsletterSubscription subscription = null;
 
@@ -207,6 +208,9 @@ public class SubscriptorsResourceUtil {
                          */
                         if (subscription == null) {
                             subscription = new NewsletterSubscription();
+                            subscription.setGroupid(uiState.getGroupid());
+                            subscription.setCompanyid(uiState.getCompanyid());
+                            
                             subscription.setCategory(category);
                             subscription.setSubscriptor(subscriptor);
                             subscription.setStatus(SubscriptionStatus.ACTIVE);
@@ -221,6 +225,9 @@ public class SubscriptorsResourceUtil {
                         }
                     } else {
                         subscriptor = new NewsletterSubscriptor();
+                        subscriptor.setGroupid(uiState.getGroupid());
+                        subscriptor.setCompanyid(uiState.getCompanyid());                        
+                        
                         subscriptor.setEmail(email);
                         subscriptor.setFirstName(firstName);
                         subscriptor.setLastName(lastName);
@@ -229,6 +236,10 @@ public class SubscriptorsResourceUtil {
 
                         if (subscriptorResult.isSuccess()) {
                             subscription = new NewsletterSubscription();
+                            
+                            subscription.setGroupid(uiState.getGroupid());
+                            subscription.setCompanyid(uiState.getCompanyid());
+                            
                             subscription.setCategory(category);
                             subscription.setSubscriptor(subscriptor);
                             subscription.setStatus(SubscriptionStatus.ACTIVE);

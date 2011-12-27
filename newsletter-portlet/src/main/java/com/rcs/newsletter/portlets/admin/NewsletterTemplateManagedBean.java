@@ -24,10 +24,12 @@ public class NewsletterTemplateManagedBean {
     
     @Inject
     NewsletterTemplateService templateService;
+    @Inject
+    private UserUiStateManagedBean uiState;
     
     @PostConstruct
     public void init() {
-        templates = templateService.findAll().getPayload();
+        templates = templateService.findAll(uiState.getThemeDisplay()).getPayload();
     }
 
     public List<NewsletterTemplate> getTemplates() {

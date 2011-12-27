@@ -30,13 +30,16 @@ public class CategoryAdminManagedBean {
     @Inject
     NewsletterSubscriptorService subscriptorService;
     
+    @Inject
+    private UserUiStateManagedBean uiState;
+    
     @PostConstruct
     public void init() {
-        categorys = categoryService.findAllNewsletterCategorys(true);
+        categorys = categoryService.findAllNewsletterCategorys(uiState.getThemeDisplay(), true);
     }
     
     public List<NewsletterCategory> getCategorys() {        
-        return categoryService.findAllNewsletterCategorys(true);
+        return categoryService.findAllNewsletterCategorys(uiState.getThemeDisplay(), true);
     }
 
     public List<NewsletterCategory> getSubscriberCategorys() {

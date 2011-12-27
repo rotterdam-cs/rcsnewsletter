@@ -48,11 +48,11 @@ public class NewsletterResourcePortlet extends GenericFacesPortlet {
     }
 
     @Override
-    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {        
+    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {
         if (FileUploadUtil.isMultipart(actionRequest)) {
             try {
                 PortletPreferences prefs = actionRequest.getPreferences();
-                
+
                 List<FileItem> items = FileUploadUtil.parseRequest(actionRequest);
                 for (FileItem fileItem : items) {
                     if (fileItem.getFieldName().equals(ResourceTypeEnum.SUBSCRIPTOR_FROM_EXCEL.toString())) {
@@ -61,9 +61,17 @@ public class NewsletterResourcePortlet extends GenericFacesPortlet {
                                 (SubscriptorExportManagedBean) actionRequest.getPortletSession().getAttribute("subscriptorExportManagedBean");
 
                         if (subscriptorExportManagedBean != null) {
-                            SubscriptorsResourceUtil.importSubscriptorsFromExcel(fileItem, subscriptorExportManagedBean);
-                            prefs.setValue("importresult", "1");
-            
+                            logger.debug("LLAMANDO!!*****************");
+                            String result = SubscriptorsResourceUtil.importSubscriptorsFromExcel(fileItem, subscriptorExportManagedBean);
+
+                            if (result.equals("0")) {
+                                prefs.setValue("importresult", "0");
+                            } else if (result.equals("1")) {
+                                prefs.setValue("importresult", "1");
+                            } else {
+                                prefs.setValue("importresult", "2");
+                            }
+
                         } else {
                             prefs.setValue("importresult", "0");
                             logger.error("Could not retrieve the Export Managed Bean");

@@ -25,7 +25,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.NewsletterConstants;
-import com.rcs.newsletter.util.FacesUtil;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import javax.faces.context.FacesContext;
@@ -142,9 +141,12 @@ public class SubscriptorsResourceUtil {
 
     /**
      * Import subscribers from excel file
-     * @param fileItem 
+     * @param fileItem
+     * @param exportManagedBean
+     * @return 
      */
-    public static void importSubscriptorsFromExcel(FileItem fileItem, SubscriptorExportManagedBean exportManagedBean) {
+    public static String importSubscriptorsFromExcel(FileItem fileItem, SubscriptorExportManagedBean exportManagedBean) {
+        logger.error("DENTRO!!*****************");
         try {
             HSSFWorkbook workbook = new HSSFWorkbook(fileItem.getInputStream());
             NewsletterCategory category = exportManagedBean.getFilterCategory();
@@ -172,6 +174,7 @@ public class SubscriptorsResourceUtil {
                         if (emailCell.getStringCellValue() != null) {
                             email = emailCell.getStringCellValue();
                         } else {
+
                             FacesContext facesContext = FacesContext.getCurrentInstance();
                             ResourceBundle serverMessageBundle = ResourceBundle.getBundle(NewsletterConstants.NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
                             Object[] messageArguments = {row.getRowNum()};
@@ -181,8 +184,10 @@ public class SubscriptorsResourceUtil {
                             formatter.applyPattern(serverMessageBundle.getString("newsletter.admin.subscribers.import.failure.email"));
 
                             String output = formatter.format(messageArguments);
-
-                            FacesUtil.errorMessage(output);
+                            logger.error(output);
+                            return "2";
+//
+//                            FacesUtil.errorMessage(output);
                         }
                     }
 
@@ -208,10 +213,10 @@ public class SubscriptorsResourceUtil {
 
                             subscriptionService.save(subscription);
 
-                            logger.debug("Associated the existing mail: " + email
+                            logger.warn("Associated the existing mail: " + email
                                     + " to the category with id: " + category.getId());
                         } else {
-                            logger.debug("The mail: " + email
+                            logger.warn("The mail: " + email
                                     + " already belong to the category with id: " + category.getId());
                         }
                     } else {
@@ -233,13 +238,18 @@ public class SubscriptorsResourceUtil {
                             logger.debug("Associated the new mail: " + email
                                     + " to the category with id: " + category.getId());
                         } else {
-                            logger.debug("we could not save the subscriptor");
+                            logger.error("we could not save the subscriptor of row "+ row.getRowNum());
+                            return "2";
                         }
                     }
                 }
+                return "1";
+            } else {
+                return "0";
             }
 
         } catch (IOException ex) {
+            return "0";
         }
     }
 }

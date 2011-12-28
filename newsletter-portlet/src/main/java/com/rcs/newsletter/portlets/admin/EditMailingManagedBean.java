@@ -247,7 +247,7 @@ public class EditMailingManagedBean {
             result = EmailFormat.parseTemplateEdit(template, newsletterArticleType, newsletterArticleCategory, newsletterArticleTag, themedisplay);
             if (result.isEmpty()){            
                 result = newsletterMessageBundle.getString(NO_BLOCKS_IN_TEMPLATE);
-            }            
+            }
         } catch (ClassNotFoundException ex) {
             log.error(ex);
         } catch (InstantiationException ex) {

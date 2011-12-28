@@ -86,10 +86,11 @@ public class UserUiStateManagedBean implements Serializable {
         return result;
     }
 
-    public List<JournalArticle> getJournalArticles() {
-        refresh();
-        return journalArticles;
-    }
+    //@DEPRECATED
+    //public List<JournalArticle> getJournalArticles() {
+    //    refresh();
+    //    return journalArticles;
+    //}
 
     /**
      * Obtain the title of the article by his id
@@ -141,11 +142,12 @@ public class UserUiStateManagedBean implements Serializable {
     }
 
     /**
+     * @DEPRECATED
      * Method that filter the articles by a specified type
      * @param type
      * @return 
      */
-    public List<JournalArticle> findArticlesByType(String type) {
+    /*public List<JournalArticle> findArticlesByType(String type) {
         HashMap<String, JournalArticle> result = new HashMap<String, JournalArticle>();
         try {
             List<JournalArticle> allJournalArticles = JournalArticleLocalServiceUtil.getArticles();
@@ -167,11 +169,11 @@ public class UserUiStateManagedBean implements Serializable {
         }
 
         return new ArrayList<JournalArticle>(result.values());
-    }
+    }*/
 
     public void refresh() {
         try {
-            journalArticles = findArticlesByType(newsletterArticleType);
+            //journalArticles = findArticlesByType(newsletterArticleType);
             groupid = getGroupid();
             companyid = getCompanyid();
         } catch (Exception ex) {

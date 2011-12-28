@@ -9,8 +9,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.Constants;
-import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.rcs.newsletter.core.service.NewsletterTemplateBlockService;
@@ -359,7 +357,7 @@ public class EmailFormat {
      * @param themeDisplay
      * @return 
      */
-    public static String getEmailFromTemplate(NewsletterMailing mailing, ThemeDisplay themeDisplay) { 
+    public static String getEmailFromTemplate(NewsletterMailing mailing, ThemeDisplay themeDisplay) throws Exception { 
         NewsletterTemplate template = mailing.getTemplate();
         String result = template.getTemplate();
         String fTagBlockOpen = fixTagsToRegex(TEMPLATE_TAG_BLOCK_OPEN);
@@ -391,19 +389,16 @@ public class EmailFormat {
                    if (ntb.get(count).getArticleId() != null && ntb.get(count).getArticleId() != UNDEFINED) {                   
                         JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(ntb.get(count).getArticleId());
                         String content = ja.getContentByLocale(ja.getDefaultLocale());
-                        content = JournalContentUtil.getContent(ja.getGroupId(), 
-                                                        ja.getArticleId(), 
-                                                        ja.getTemplateId(), 
-                                                        Constants.PRINT, 
-                                                        themeDisplay.getLanguageId(), 
-                                                        themeDisplay);
+                        content = ArticleUtils.getArticleContent(ja, themeDisplay.getLocale().toString());
                         toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, ja.getTitle());
                         toReplaceTmp = toReplaceTmp.replace(fTagBlockContent, content); 
-                        resulttmp = resulttmp.replaceFirst(toReplace, toReplaceTmp);                   
+                        resulttmp = resulttmp.replaceFirst(toReplace, toReplaceTmp);      
+                        
                    //If there is a NOT content related to this block the block is deleted
                    } else {
                     resulttmp = resulttmp.replaceFirst(toReplace, "");
                    }
+                   
                 //If there is a NOT content related to this block the block is deleted
                 } else {
                     resulttmp = resulttmp.replaceFirst(toReplace, "");
@@ -424,7 +419,7 @@ public class EmailFormat {
      * @param templateContent
      * @return 
      */
-    public static String parseTemplateEdit(String incomingTemplateContent, String newsletterArticleType, ThemeDisplay themeDisplay) {
+    public static String parseTemplateEdit(String incomingTemplateContent, String newsletterArticleType, String newsletterArticleCategory, String newsletterArticleTag, ThemeDisplay themeDisplay) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         String result = ""; 
         
         ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, themeDisplay.getLocale());
@@ -442,22 +437,31 @@ public class EmailFormat {
                 //Get all newsletter articles to create the selectors
                 HashMap<String, JournalArticle> resultArticleNewsletter = new HashMap<String, JournalArticle>();
                 try {
-                    List<JournalArticle> allJournalArticles = JournalArticleLocalServiceUtil.getArticles();
-
-                    for (JournalArticle article : allJournalArticles) {
-                        //We only put the last version of the article
-                        if (!resultArticleNewsletter.containsKey(article.getArticleId())
-                                && article.getType().equals(newsletterArticleType)) {
-                            JournalArticle lastArticle = JournalArticleLocalServiceUtil.getLatestArticle(
-                                    article.getGroupId(),
-                                    article.getArticleId());
-                            resultArticleNewsletter.put(lastArticle.getArticleId(), lastArticle);
+                    //Search Articles by Type
+                    List<JournalArticle> articlesByType = ArticleUtils.findArticlesByType(newsletterArticleType);
+                    for (JournalArticle article : articlesByType) {
+                        if (!resultArticleNewsletter.containsKey(article.getArticleId())) {                            
+                            resultArticleNewsletter.put(article.getArticleId(), article);
                         }
                     }
+                    //Search Articles by Category
+                    List<JournalArticle> articlesByCategory = ArticleUtils.findArticlesByCategory(newsletterArticleCategory);
+                    for (JournalArticle article : articlesByCategory) {
+                        if (!resultArticleNewsletter.containsKey(article.getArticleId())) {                            
+                            resultArticleNewsletter.put(article.getArticleId(), article);
+                        }
+                    }
+                    //Search Articles by Tag
+                    List<JournalArticle> articlesByTag = ArticleUtils.findArticlesByTag(themeDisplay, newsletterArticleTag);
+                    for (JournalArticle article : articlesByTag) {
+                        if (!resultArticleNewsletter.containsKey(article.getArticleId())) {                            
+                            resultArticleNewsletter.put(article.getArticleId(), article);
+                        }
+                    }                    
                 } catch (SystemException ex) {
-                    log.error("Could not filter the articles by this category", ex);
+                    log.error("Could not filter the articles by this category, type, or tag", ex);
                 } catch (PortalException ex) {
-                    log.error("Could not filter the articles by this category", ex);
+                    log.error("Could not filter the articles by this category, type, or tag", ex);
                 }
                 List<JournalArticle> newsletterArticles = new ArrayList<JournalArticle>(resultArticleNewsletter.values());
                 

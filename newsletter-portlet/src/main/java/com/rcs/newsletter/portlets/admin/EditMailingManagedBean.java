@@ -3,6 +3,8 @@ package com.rcs.newsletter.portlets.admin;
 import com.rcs.newsletter.core.model.commons.TemplateBlockComparator;
 import java.util.Collections;
 import com.rcs.newsletter.core.service.NewsletterTemplateBlockService;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import java.util.ResourceBundle;
 import javax.faces.context.FacesContext;
@@ -36,6 +38,12 @@ public class EditMailingManagedBean {
     
     @Value("${newsletter.articles.type}")
     private String newsletterArticleType;
+    
+    @Value("${newsletter.articles.category}")
+    private String newsletterArticleCategory;
+    
+    @Value("${newsletter.articles.tag}")
+    private String newsletterArticleTag;
     
     //////////////// DEPENDENCIES //////////////////
     @Inject
@@ -231,16 +239,22 @@ public class EditMailingManagedBean {
     }
     
     private String parseTemplateEdit(String template) {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
         String result = "";
-        ThemeDisplay themedisplay = uiState.getThemeDisplay();
-        //themedisplay.getScopeGroupId();
-        //themedisplay.getCompanyId()
-        result = EmailFormat.parseTemplateEdit(template, newsletterArticleType, themedisplay);
-        if (result.isEmpty()){            
-            result = newsletterMessageBundle.getString(NO_BLOCKS_IN_TEMPLATE);
-        }        
+        try {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());            
+            ThemeDisplay themedisplay = uiState.getThemeDisplay(); 
+            result = EmailFormat.parseTemplateEdit(template, newsletterArticleType, newsletterArticleCategory, newsletterArticleTag, themedisplay);
+            if (result.isEmpty()){            
+                result = newsletterMessageBundle.getString(NO_BLOCKS_IN_TEMPLATE);
+            }            
+        } catch (ClassNotFoundException ex) {
+            log.error(ex);
+        } catch (InstantiationException ex) {
+            log.error(ex);
+        } catch (IllegalAccessException ex) {
+            log.error(ex);
+        }
         return result;
     }
     

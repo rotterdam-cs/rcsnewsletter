@@ -10,6 +10,8 @@ import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.util.LiferayMailingUtil;
 import com.rcs.newsletter.core.service.util.EmailFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.internet.InternetAddress;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -147,8 +149,13 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
      */
     @Override
     public String getEmailFromTemplate(Long mailingId, ThemeDisplay themeDisplay){
-        NewsletterMailing mailing = findById(mailingId).getPayload();
-        String content = EmailFormat.getEmailFromTemplate(mailing, themeDisplay);
+        String content = "";
+        try {
+            NewsletterMailing mailing = findById(mailingId).getPayload();
+            content = EmailFormat.getEmailFromTemplate(mailing, themeDisplay);            
+        } catch (Exception ex) {
+            Logger.getLogger(NewsletterMailingServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return content;
     }
     

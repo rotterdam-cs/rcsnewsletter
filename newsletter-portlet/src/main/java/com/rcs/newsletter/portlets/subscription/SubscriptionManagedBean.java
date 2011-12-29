@@ -145,13 +145,16 @@ public class SubscriptionManagedBean implements Serializable {
                         //does not exists we should create it
                         if (subscription == null) {
                             subscription = new NewsletterSubscription();
+                            subscription.setDeactivationKey(getUniqueKey());
                             subscription.setGroupid(uiState.getGroupid());
                             subscription.setCompanyid(uiState.getCompanyid());
+                            
                             
                             subscription.setSubscriptor(subscriptor);
                             subscription.setCategory(newsletterCategory);
                             subscription.setStatus(SubscriptionStatus.INACTIVE);
                             subscription.setActivationKey(getUniqueKey());
+                            
 
                             subscription = subscriptionService.save(subscription).getPayload();
                         }

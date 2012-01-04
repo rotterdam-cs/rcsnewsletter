@@ -17,15 +17,18 @@ import java.util.List;
 import javax.portlet.PortletPreferences;
 import org.apache.commons.fileupload.FileItem;
 import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
 
 public class NewsletterResourcePortlet extends GenericFacesPortlet {
 
     private static final Log logger = LogFactoryUtil.getLog(NewsletterResourcePortlet.class);
-
-    @Inject
-    private UserUiStateManagedBean uiState;
     
     public NewsletterResourcePortlet() {
         super();
@@ -40,7 +43,7 @@ public class NewsletterResourcePortlet extends GenericFacesPortlet {
             ResourceTypeEnum resourceType = ResourceTypeEnum.valueOf(type);
 
             switch (resourceType) {
-                case SUBSCRIPTOR_TO_EXCEL:
+                case SUBSCRIPTOR_TO_EXCEL:                     
                     SubscriptorsResourceUtil.writeSubscriptorsExcel(request, response);
                     break;
                 default:
@@ -65,20 +68,32 @@ public class NewsletterResourcePortlet extends GenericFacesPortlet {
                         SubscriptorExportManagedBean subscriptorExportManagedBean =
                                 (SubscriptorExportManagedBean) actionRequest.getPortletSession().getAttribute("subscriptorExportManagedBean");
 
+                        int result = 0;
+                        String resultRowProblems = "";
                         if (subscriptorExportManagedBean != null) {
-                            logger.debug("LLAMANDO!!*****************");
-                            String result = SubscriptorsResourceUtil.importSubscriptorsFromExcel(fileItem, subscriptorExportManagedBean, uiState);
-
-                            if (result.equals("0")) {
+                            
+                            ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);                            
+                            HashMap<Integer, String> resultHM = SubscriptorsResourceUtil.importSubscriptorsFromExcel(fileItem, subscriptorExportManagedBean, themeDisplay);
+                            Set set = resultHM.entrySet();
+                            Iterator i = set.iterator();
+                            while(i.hasNext()){
+                              Map.Entry me = (Map.Entry)i.next();
+                              result = Integer.parseInt(me.getKey().toString());
+                              resultRowProblems = me.getValue().toString();
+                            }                            
+                            if (result == 0) {
                                 prefs.setValue("importresult", "0");
-                            } else if (result.equals("1")) {
+                                prefs.setValue("importresultDetails", resultRowProblems);
+                            } else if (result == 1) {
                                 prefs.setValue("importresult", "1");
+                                prefs.setValue("importresultDetails", resultRowProblems);
                             } else {
                                 prefs.setValue("importresult", "2");
+                                prefs.setValue("importresultDetails", resultRowProblems);
                             }
-
                         } else {
                             prefs.setValue("importresult", "0");
+                            prefs.setValue("importresultDetails", resultRowProblems);
                             logger.error("Could not retrieve the Export Managed Bean");
                         }
                     }

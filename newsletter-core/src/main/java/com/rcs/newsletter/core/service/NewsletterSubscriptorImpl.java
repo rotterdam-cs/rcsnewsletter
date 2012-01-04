@@ -1,4 +1,3 @@
-
 package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
@@ -20,8 +19,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 /**
  *
  * @author Ariel Parra <ariel@rotterdam-cs.com>
@@ -29,19 +28,17 @@ import org.slf4j.Logger;
 @Service
 @Transactional
 public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscriptor> implements NewsletterSubscriptorService {
-
+    private static final Log log = LogFactoryUtil.getLog(NewsletterSubscriptorImpl.class);
+    
     @Autowired
     private SessionFactory sessionFactory;
     
-    private final static Logger logger = LoggerFactory.getLogger(NewsletterSubscriptionImpl.class);
-
     @Override
     public ServiceActionResult<NewsletterSubscriptor> findByEmail(ThemeDisplay themeDisplay, String email) {
         boolean success = true;
         List<String> validationKeys = new ArrayList<String>();
         NewsletterSubscriptor newsletterSubscriptor = null;
-        
-        try {            
+        try {
             Session currentSession = sessionFactory.getCurrentSession();
             Criteria criteria = currentSession.createCriteria(NewsletterSubscriptor.class);
             criteria.add(Restrictions.eq(NewsletterSubscriptor.EMAIL, email));            
@@ -50,21 +47,19 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
             criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
             
             Object uniqueObject = criteria.uniqueResult();
-            
             if(uniqueObject != null) {
                 newsletterSubscriptor = (NewsletterSubscriptor) uniqueObject;
             } else {
                 success = false;
             }
         } catch (NonUniqueResultException ex) {
-            String error = "Exists more than unique email";
-            logger.error(error);
+            String error = "Exists more than unique email";            
+            log.error(error + ex);
             success = false;
         }        
         
         ServiceActionResult<NewsletterSubscriptor> result = 
                 new ServiceActionResult<NewsletterSubscriptor>(success, newsletterSubscriptor, validationKeys);
-        
         return result;
     }
 
@@ -116,7 +111,7 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
             }            
         } catch (NonUniqueResultException ex) {
             String error = "Error loading Subscriptor by Category" + ex;
-            logger.error(error);
+            log.error(error);
         }   
         
         return result;
@@ -141,7 +136,7 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
             }            
         } catch (NonUniqueResultException ex) {
             String error = "Error loading Subscriptor by Category" + ex;
-            logger.error(error);
+            log.error(error);
         }   
         
         return result;
@@ -158,7 +153,7 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
                         
         } catch (NonUniqueResultException ex) {
             String error = "Error loading Subscriptor by Category Count" + ex;
-            logger.error(error);
+            log.error(error);
         }   
         return result;
     }
@@ -177,7 +172,7 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
                         
         } catch (NonUniqueResultException ex) {
             String error = "Error loading Subscriptor by Category Count" + ex;
-            logger.error(error);
+            log.error(error);
         }   
         return result;
     }
@@ -217,7 +212,7 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
             }            
         } catch (NonUniqueResultException ex) {
             String error = "Error loading Subscriptor by Category" + ex;
-            logger.error(error);
+            log.error(error);
         }   
         
         return result;
@@ -245,7 +240,7 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
             }            
         } catch (NonUniqueResultException ex) {
             String error = "Error loading Subscriptor by Category" + ex;
-            logger.error(error);
+            log.error(error);
         }   
         
         return result;
@@ -269,7 +264,7 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
                         
         } catch (NonUniqueResultException ex) {
             String error = "Error in findAllCount" + ex;
-            logger.error(error);
+            log.error(error);
         }   
         return result;
     }

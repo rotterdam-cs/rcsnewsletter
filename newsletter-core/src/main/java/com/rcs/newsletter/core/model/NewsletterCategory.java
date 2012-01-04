@@ -27,6 +27,7 @@ public class NewsletterCategory extends NewsletterEntity {
     private String name;
     private String description;
     private String fromName;
+    private String adminEmail;
     
     @NotNull
     @NotEmpty
@@ -124,4 +125,13 @@ public class NewsletterCategory extends NewsletterEntity {
     public void setUnsubscriptionEmail(String unsubscriptionEmail) {
         this.unsubscriptionEmail = unsubscriptionEmail;
     }
+
+    public String getAdminEmail() {
+        return adminEmail;
+    }
+
+    public void setAdminEmail(String adminEmail) {
+        this.adminEmail = adminEmail;
+    }
+    
 }

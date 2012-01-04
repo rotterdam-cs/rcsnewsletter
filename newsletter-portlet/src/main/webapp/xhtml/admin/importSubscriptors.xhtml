@@ -16,6 +16,11 @@
                     <f:selectItems value="#{categoryAdminManagedBean.categorys}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}"/>
                     <f:ajax event="change" listener="#{subscriptorExportManagedBean.changeCategory}"/>
                 </h:selectOneMenu>
+                
+                <br/>
+                <h:outputText value="#{nlk['newsletter.admin.subscriber.import.excel.format.instructions1']}" escape="false"/>
+                <h:outputText value="#{nlk['newsletter.admin.subscriber.import.excel.format.instructions2']}" escape="false"/>
+                
                 <input type="file" name="#{subscriptorExportManagedBean.importResourceType}" />                
                 <h:panelGrid columns="2" styleClass="newsletter-forms-form">
                     <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.back']}" />

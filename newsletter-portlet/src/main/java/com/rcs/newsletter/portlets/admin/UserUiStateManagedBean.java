@@ -1,7 +1,7 @@
 package com.rcs.newsletter.portlets.admin;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -9,16 +9,12 @@ import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import org.primefaces.event.TabChangeEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 
@@ -30,6 +26,7 @@ import org.springframework.context.annotation.Scope;
 @Scope("session")
 public class UserUiStateManagedBean implements Serializable {
 
+    private static Log logger = LogFactoryUtil.getLog(UserUiStateManagedBean.class);
     private static final long serialVersionUID = 1L;
     
     public static final int LISTS_TAB_INDEX = 0;
@@ -45,7 +42,6 @@ public class UserUiStateManagedBean implements Serializable {
     private String newsletterArticleType;
     
     private int adminActiveTabIndex;
-    private static final Logger logger = LoggerFactory.getLogger(UserUiStateManagedBean.class);
     
     //global lists
     List<JournalArticle> journalArticles;   

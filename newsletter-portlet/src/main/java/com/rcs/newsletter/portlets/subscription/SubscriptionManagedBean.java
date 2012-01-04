@@ -309,9 +309,21 @@ public class SubscriptionManagedBean implements Serializable {
                         InternetAddress fromIA = new InternetAddress(category.getFromEmail());
                         InternetAddress toIA = new InternetAddress(subscription.getSubscriptor().getEmail());
                         MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);
-                        LiferayMailingUtil.sendEmail(message);
-                        //LiferayMailingUtil.sendEmail(category.getFromEmail(), subscription.getSubscriptor().getEmail(), subject, content);
-
+                        LiferayMailingUtil.sendEmail(message);                        
+                        
+                        //Send email to list manager
+                        if (subscription.getCategory().getAdminEmail() != null && !subscription.getCategory().getAdminEmail().isEmpty()) {
+                            log.error("Sendig Subscription email to admin");
+                            String adminSubject = newsletterBundle.getString("newsletter.admin.list.manager.subscription.info.subject");
+                            adminSubject = adminSubject.replace("{0}", subscription.getCategory().getName());
+                            String adminContent = newsletterBundle.getString("newsletter.admin.list.manager.subscription.info");
+                            adminContent = adminContent.replace("{0}", subscription.getSubscriptor().getEmail());
+                            adminContent = adminContent.replace("{1}", subscription.getCategory().getName());
+                            InternetAddress toIAAdmin = new InternetAddress(subscription.getCategory().getAdminEmail());
+                            MailMessage messageAdmin = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIAAdmin, adminSubject, adminContent);
+                            LiferayMailingUtil.sendEmail(messageAdmin);
+                        }
+                        
                         infoMesage = serverMessageBundle.getString("newsletter.registration.confirmed.msg");
                         FacesUtil.infoMessage(infoMesage);
                     } else {
@@ -341,6 +353,7 @@ public class SubscriptionManagedBean implements Serializable {
     public String doConfirmUnregistration() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
+        ResourceBundle newsletterBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
         String infoMesage = "";
         try {
             long subscriptionId = Long.parseLong(getRequestedUnsubscriptionId());
@@ -351,8 +364,21 @@ public class SubscriptionManagedBean implements Serializable {
 
                 if (subscription.getDeactivationKey().equals(getRequestedDeactivationKey())) {               
                     
-                    subscriptionResult = subscriptionService.delete(subscription);
+                    //Send email to list manager
+                    if (subscription.getCategory().getAdminEmail() != null && !subscription.getCategory().getAdminEmail().isEmpty()) {
+                        log.error("Sendig UnSubscription email to admin");
+                        String adminSubject = newsletterBundle.getString("newsletter.admin.list.manager.unsubscription.info.subject");
+                        adminSubject = adminSubject.replace("{0}", subscription.getCategory().getName());
+                        String adminContent = newsletterBundle.getString("newsletter.admin.list.manager.unsubscription.info");
+                        adminContent = adminContent.replace("{0}", subscription.getSubscriptor().getEmail());
+                        adminContent = adminContent.replace("{1}", subscription.getCategory().getName());
+                        InternetAddress toIAAdmin = new InternetAddress(subscription.getCategory().getAdminEmail());
+                        InternetAddress fromIAAdmin = new InternetAddress(subscription.getCategory().getFromEmail());
+                        MailMessage messageAdmin = EmailFormat.getMailMessageWithAttachedImages(fromIAAdmin, toIAAdmin, adminSubject, adminContent);
+                        LiferayMailingUtil.sendEmail(messageAdmin);
+                    }
                     
+                    subscriptionResult = subscriptionService.delete(subscription);                    
 
                     if (subscriptionResult.isSuccess()) {
                         infoMesage = serverMessageBundle.getString("newsletter.unregistration.confirmed.msg");

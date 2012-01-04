@@ -38,6 +38,7 @@ public class CategoryCRUDManagedBean {
     private String fromEmail;
     private String description;
     private boolean active;
+    private String adminEmail;
 
     /////////////// GETTERS && SETTERS ////////////////
     public long getId() {
@@ -96,6 +97,16 @@ public class CategoryCRUDManagedBean {
         this.name = name;
     }
 
+    public String getAdminEmail() {
+        return adminEmail;
+    }
+
+    public void setAdminEmail(String adminEmail) {
+        this.adminEmail = adminEmail;
+    }
+    
+    
+
     //////////////// METHODS //////////////////////
     
     public String redirectCreateCategory() {
@@ -114,6 +125,7 @@ public class CategoryCRUDManagedBean {
             this.description = newsletterCategory.getDescription();
             this.fromEmail = newsletterCategory.getFromEmail();
             this.fromName = newsletterCategory.getFromName();
+            this.adminEmail = newsletterCategory.getAdminEmail();
             this.setAction(CRUDActionEnum.UPDATE);
         } else {
             return "admin";
@@ -177,6 +189,7 @@ public class CategoryCRUDManagedBean {
         newsletterCategory.setDescription(description);
         newsletterCategory.setFromName(fromName);
         newsletterCategory.setFromEmail(fromEmail);
+        newsletterCategory.setAdminEmail(adminEmail);
     }
 
     public String delete() {

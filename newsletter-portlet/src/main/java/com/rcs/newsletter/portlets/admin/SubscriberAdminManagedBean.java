@@ -1,5 +1,6 @@
 package com.rcs.newsletter.portlets.admin;
 
+import com.liferay.portal.theme.ThemeDisplay;
 import java.io.IOException;
 import javax.portlet.ReadOnlyException;
 import javax.portlet.RenderRequest;
@@ -60,7 +61,8 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
             if (a instanceof RenderRequest) {
                 RenderRequest renderRequest = (RenderRequest) a;
                 PortletPreferences prefs = renderRequest.getPreferences();
-                prefs.setValue("importresult", "");
+                prefs.setValue("importresult", "");                
+                prefs.setValue("importresultDetails", "");
                 prefs.store();
             }
         } catch (ReadOnlyException ex) {
@@ -121,11 +123,14 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             Object a = facesContext.getExternalContext().getRequest();
             String importResultBridge = "";
+            String importResultBridgeDetails = "";
             if (a instanceof RenderRequest) {
                 RenderRequest renderRequest = (RenderRequest) a;
                 PortletPreferences prefs = renderRequest.getPreferences();
                 importResultBridge = (String) prefs.getValue("importresult", "");
+                importResultBridgeDetails = (String) prefs.getValue("importresultDetails", "");
                 prefs.setValue("importresult", "");
+                prefs.setValue("importresultDetails", "");
                 prefs.store();
             }
             ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
@@ -137,6 +142,7 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
                 importResult = newsletterMessageBundle.getString("newsletter.admin.subscribers.import.success");
             } else if (importResultBridge.equals("2")) {
                 importResult = newsletterMessageBundle.getString("newsletter.admin.subscribers.import.partial");
+                importResult += " " + importResultBridgeDetails;
             }else{
                 importResult = "";
             }
@@ -181,11 +187,11 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean {
         }
     }
 
-    public List<NewsletterSubscriptor> getSubscriptorsByFilterCategory() {
+    public List<NewsletterSubscriptor> getSubscriptorsByFilterCategory(ThemeDisplay themeDisplay) {
 
         List<NewsletterSubscriptor> result = null;
         if (getCategoryId() == 0) {
-            result = subscriptorService.findAllByStatus(uiState.getThemeDisplay(), SubscriptionStatus.ACTIVE);
+            result = subscriptorService.findAllByStatus(themeDisplay, SubscriptionStatus.ACTIVE);
         } else {
             result = subscriptorService.findByCategoryAndStatus(getFilterCategory(), SubscriptionStatus.ACTIVE);
         }

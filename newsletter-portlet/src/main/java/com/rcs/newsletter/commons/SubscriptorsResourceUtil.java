@@ -24,9 +24,11 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.NewsletterConstants;
-import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import javax.faces.context.FacesContext;
 import org.apache.commons.fileupload.FileItem;
@@ -63,8 +65,8 @@ public class SubscriptorsResourceUtil {
         if (subscriberAdminManagedBean != null) {
 
             ResourceBundle messageBundle = subscriberAdminManagedBean.getMessageBundle();
-
-            List<NewsletterSubscriptor> subscriptors = subscriberAdminManagedBean.getSubscriptorsByFilterCategory();
+            ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+            List<NewsletterSubscriptor> subscriptors = subscriberAdminManagedBean.getSubscriptorsByFilterCategory(themeDisplay);
             int categoryId = subscriberAdminManagedBean.getCategoryId();
             String categoryName = messageBundle.getString("newsletter.admin.general.undefined");
             String fileName = messageBundle.getString("newsletter.admin.subscribers");
@@ -146,9 +148,11 @@ public class SubscriptorsResourceUtil {
      * @param exportManagedBean
      * @return 
      */
-    public static String importSubscriptorsFromExcel(FileItem fileItem, SubscriptorExportManagedBean exportManagedBean, UserUiStateManagedBean uiState) {
-        logger.error("DENTRO!!*****************");
-        try {
+    public static HashMap importSubscriptorsFromExcel(FileItem fileItem, SubscriptorExportManagedBean exportManagedBean, ThemeDisplay themeDisplay) {        
+        int result = 1;
+        String resultRowProblems = "";
+        HashMap<Integer, String> resultHM = new HashMap();        
+        try {            
             HSSFWorkbook workbook = new HSSFWorkbook(fileItem.getInputStream());
             NewsletterCategory category = exportManagedBean.getFilterCategory();
             if (workbook != null && category != null) {
@@ -156,6 +160,8 @@ public class SubscriptorsResourceUtil {
 
                 for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
                     HSSFRow row = sheet.getRow(i);
+                    int realrow = row.getRowNum();
+                    realrow = realrow + 1;
                     String firstName = "";
                     String lastName = "";
                     String email = "";
@@ -186,16 +192,17 @@ public class SubscriptorsResourceUtil {
 
                             String output = formatter.format(messageArguments);
                             logger.error(output);
-                            return "2";
-//
-//                            FacesUtil.errorMessage(output);
+                            
+                            resultRowProblems += " " + realrow;
+                            result = 2;
                         }
                     }
 
                     NewsletterSubscriptorService subscriptorService = exportManagedBean.getSubscriptorService();
                     NewsletterSubscriptionService subscriptionService = exportManagedBean.getSubscriptionService();
-
-                    ServiceActionResult<NewsletterSubscriptor> subscriptorResult = subscriptorService.findByEmail(uiState.getThemeDisplay(),email);
+                                        
+                    ServiceActionResult<NewsletterSubscriptor> subscriptorResult = subscriptorService.findByEmail(themeDisplay,email);
+                    
                     NewsletterSubscriptor subscriptor = null;
                     NewsletterSubscription subscription = null;
 
@@ -208,8 +215,8 @@ public class SubscriptorsResourceUtil {
                          */
                         if (subscription == null) {
                             subscription = new NewsletterSubscription();
-                            subscription.setGroupid(uiState.getGroupid());
-                            subscription.setCompanyid(uiState.getCompanyid());
+                            subscription.setGroupid(themeDisplay.getScopeGroupId());
+                            subscription.setCompanyid(themeDisplay.getCompanyId());
                             
                             subscription.setCategory(category);
                             subscription.setSubscriptor(subscriptor);
@@ -225,8 +232,8 @@ public class SubscriptorsResourceUtil {
                         }
                     } else {
                         subscriptor = new NewsletterSubscriptor();
-                        subscriptor.setGroupid(uiState.getGroupid());
-                        subscriptor.setCompanyid(uiState.getCompanyid());                        
+                        subscriptor.setGroupid(themeDisplay.getScopeGroupId());
+                        subscriptor.setCompanyid(themeDisplay.getCompanyId());                        
                         
                         subscriptor.setEmail(email);
                         subscriptor.setFirstName(firstName);
@@ -237,8 +244,8 @@ public class SubscriptorsResourceUtil {
                         if (subscriptorResult.isSuccess()) {
                             subscription = new NewsletterSubscription();
                             
-                            subscription.setGroupid(uiState.getGroupid());
-                            subscription.setCompanyid(uiState.getCompanyid());
+                            subscription.setGroupid(themeDisplay.getScopeGroupId());
+                            subscription.setCompanyid(themeDisplay.getCompanyId());
                             
                             subscription.setCategory(category);
                             subscription.setSubscriptor(subscriptor);
@@ -250,17 +257,20 @@ public class SubscriptorsResourceUtil {
                                     + " to the category with id: " + category.getId());
                         } else {
                             logger.error("we could not save the subscriptor of row "+ row.getRowNum());
-                            return "2";
+                            resultRowProblems += " " + realrow;
+                            result = 2;
                         }
                     }
                 }
-                return "1";
+                
             } else {
-                return "0";
+                result = 0;
             }
-
         } catch (IOException ex) {
-            return "0";
+            logger.error("Error in importSubscriptorsFromExcel " +ex);
+            result = 0;
         }
+        resultHM.put(result, resultRowProblems);
+        return resultHM;
     }
 }

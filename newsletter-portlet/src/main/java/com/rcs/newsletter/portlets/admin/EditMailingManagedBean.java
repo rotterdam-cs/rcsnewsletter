@@ -102,11 +102,10 @@ public class EditMailingManagedBean {
         mailing.setTemplate(nlt);
         mailing.setName(mailingName);
         mailing.setList(findListById(categoryId));
-        
         ServiceActionResult result = null;
         switch(currentAction) {
             case CREATE:
-                 log.error("CREATE");
+                log.error("CREATE");
                 result = service.save(mailing);
                 break;
             case UPDATE:

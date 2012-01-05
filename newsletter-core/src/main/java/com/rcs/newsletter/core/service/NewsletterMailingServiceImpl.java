@@ -21,6 +21,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.rcs.newsletter.NewsletterConstants.*;
 
 /**
  *
@@ -46,7 +47,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
             
             NewsletterMailing mailing = findById(mailingId).getPayload();
             String content = EmailFormat.getEmailFromTemplate(mailing, themeDisplay);
-                        
+            content = content.replace(LIST_NAME_TOKEN, mailing.getName());            
             //Add full path to images
             content = EmailFormat.fixImagesPath(content, themeDisplay);
             

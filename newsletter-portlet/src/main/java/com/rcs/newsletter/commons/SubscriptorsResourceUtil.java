@@ -31,6 +31,8 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import javax.faces.context.FacesContext;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import org.apache.commons.fileupload.FileItem;
 
 /**
@@ -142,6 +144,17 @@ public class SubscriptorsResourceUtil {
         }
     }
 
+    public static boolean isValidEmailAddress(String email) {
+       boolean result = true;
+       try {
+          InternetAddress emailAddr = new InternetAddress(email);
+          emailAddr.validate();
+       } catch (AddressException ex) {
+          result = false;
+       }
+       return result;
+    }
+    
     /**
      * Import subscribers from excel file
      * @param fileItem
@@ -158,8 +171,11 @@ public class SubscriptorsResourceUtil {
             if (workbook != null && category != null) {
                 HSSFSheet sheet = workbook.getSheetAt(0);
 
-                for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+                for (int i = 0; i < sheet.getPhysicalNumberOfRows(); i++) {
+                    int rwp = 0;
                     HSSFRow row = sheet.getRow(i);
+                    HSSFCell emailCell = row.getCell(EMAIL_INDEX);
+                   
                     int realrow = row.getRowNum();
                     realrow = realrow + 1;
                     String firstName = "";
@@ -176,33 +192,33 @@ public class SubscriptorsResourceUtil {
                         lastName = lastNameCell.getStringCellValue();
                     }
 
-                    HSSFCell emailCell = row.getCell(EMAIL_INDEX);
                     if (emailCell != null && emailCell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
-                        if (emailCell.getStringCellValue() != null) {
+                        if (emailCell.getStringCellValue() != null && isValidEmailAddress(emailCell.getStringCellValue())) {
                             email = emailCell.getStringCellValue();
                         } else {
-
-                            FacesContext facesContext = FacesContext.getCurrentInstance();
-                            ResourceBundle serverMessageBundle = ResourceBundle.getBundle(NewsletterConstants.NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
-                            Object[] messageArguments = {row.getRowNum()};
-                            MessageFormat formatter = new MessageFormat("");
-
-                            formatter.setLocale(facesContext.getViewRoot().getLocale());
-                            formatter.applyPattern(serverMessageBundle.getString("newsletter.admin.subscribers.import.failure.email"));
-
-                            String output = formatter.format(messageArguments);
-                            logger.error(output);
-                            
-                            resultRowProblems += " " + realrow;
-                            result = 2;
+                            if (i > 0) {
+//                                FacesContext facesContext = FacesContext.getCurrentInstance();
+//                                ResourceBundle serverMessageBundle = ResourceBundle.getBundle(NewsletterConstants.NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
+//                                Object[] messageArguments = {row.getRowNum()};
+//                                MessageFormat formatter = new MessageFormat("");
+//
+//                                formatter.setLocale(facesContext.getViewRoot().getLocale());
+//                                formatter.applyPattern(serverMessageBundle.getString("newsletter.admin.subscribers.import.failure.email"));
+//
+//                                String output = formatter.format(messageArguments);
+//                                logger.error(output);
+                                rwp = 1;
+                                resultRowProblems += " " + realrow;
+                                result = 2;
+                            }
                         }
                     }
 
                     NewsletterSubscriptorService subscriptorService = exportManagedBean.getSubscriptorService();
                     NewsletterSubscriptionService subscriptionService = exportManagedBean.getSubscriptionService();
-                                        
+
                     ServiceActionResult<NewsletterSubscriptor> subscriptorResult = subscriptorService.findByEmail(themeDisplay,email);
-                    
+
                     NewsletterSubscriptor subscriptor = null;
                     NewsletterSubscription subscription = null;
 
@@ -217,7 +233,7 @@ public class SubscriptorsResourceUtil {
                             subscription = new NewsletterSubscription();
                             subscription.setGroupid(themeDisplay.getScopeGroupId());
                             subscription.setCompanyid(themeDisplay.getCompanyId());
-                            
+
                             subscription.setCategory(category);
                             subscription.setSubscriptor(subscriptor);
                             subscription.setStatus(SubscriptionStatus.ACTIVE);
@@ -234,7 +250,7 @@ public class SubscriptorsResourceUtil {
                         subscriptor = new NewsletterSubscriptor();
                         subscriptor.setGroupid(themeDisplay.getScopeGroupId());
                         subscriptor.setCompanyid(themeDisplay.getCompanyId());                        
-                        
+
                         subscriptor.setEmail(email);
                         subscriptor.setFirstName(firstName);
                         subscriptor.setLastName(lastName);
@@ -243,10 +259,10 @@ public class SubscriptorsResourceUtil {
 
                         if (subscriptorResult.isSuccess()) {
                             subscription = new NewsletterSubscription();
-                            
+
                             subscription.setGroupid(themeDisplay.getScopeGroupId());
                             subscription.setCompanyid(themeDisplay.getCompanyId());
-                            
+
                             subscription.setCategory(category);
                             subscription.setSubscriptor(subscriptor);
                             subscription.setStatus(SubscriptionStatus.ACTIVE);
@@ -256,12 +272,14 @@ public class SubscriptorsResourceUtil {
                             logger.debug("Associated the new mail: " + email
                                     + " to the category with id: " + category.getId());
                         } else {
-                            logger.error("we could not save the subscriptor of row "+ row.getRowNum());
-                            resultRowProblems += " " + realrow;
-                            result = 2;
+                            if (i > 0 && rwp == 0) {
+                                logger.error("we could not save the subscriptor of row "+ row.getRowNum());
+                                resultRowProblems += " " + realrow;
+                                result = 2;
+                            }
                         }
                     }
-                }
+                }                
                 
             } else {
                 result = 0;

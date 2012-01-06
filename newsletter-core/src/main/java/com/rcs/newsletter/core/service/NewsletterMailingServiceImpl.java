@@ -56,7 +56,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
             
             String title = mailing.getName();
             
-            InternetAddress fromIA = new InternetAddress(fromEmailAddress);
+            InternetAddress fromIA = new InternetAddress(mailing.getList().getFromEmail());
             InternetAddress toIA = new InternetAddress(testEmail);
             MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, title, content);            
             mailingUtil.sendEmail(message);

@@ -2,27 +2,31 @@
 <Scene Scope="Project" version="2">
     <Scope Scope="Faces Configuration Only"/>
     <Scope Scope="Project">
-        <Node id="xhtml/admin/admin.xhtml" x="150" y="300" zoom="true"/>
         <Node id="xhtml/admin/editSubscriber.xhtml" x="650" y="150" zoom="true"/>
+        <Node id="xhtml/admin/admin.xhtml" x="150" y="300" zoom="true"/>
+        <Node id="xhtml/admin/editTemplate.xhtml" x="1650" y="150" zoom="true"/>
+        <Node id="xhtml/admin/editSubscriptionMail.xhtml" x="900" y="300" zoom="true"/>
+        <Node id="view.jsp" x="150" y="150" zoom="true"/>
+        <Node id="xhtml/admin/importSubscriptors.xhtml" x="150" y="900" zoom="true"/>
+        <Node id="xhtml/admin/templates.xhtml" x="1400" y="300" zoom="true"/>
+        <Node id="xhtml/admin/editmailing.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="xhtml/admin/listsSendConfirmation.xhtml" x="1400" y="150" zoom="true"/>
+        <Node id="xhtml/admin/deleteTemplate.xhtml" x="900" y="600" zoom="true"/>
+        <Node id="xhtml/admin/previewArchiveMail.xhtml" x="400" y="750" zoom="true"/>
         <Node id="xhtml/admin/mailing.xhtml" x="150" y="450" zoom="true"/>
         <Node id="xhtml/registration.xhtml" x="900" y="450" zoom="true"/>
+        <Node id="xhtml/onlineNewsletterViewer.xhtml" x="1150" y="450" zoom="true"/>
         <Node id="xhtml/admin/subscribers.xhtml" x="400" y="450" zoom="true"/>
-        <Node id="xhtml/admin/editSubscriptionMail.xhtml" x="900" y="300" zoom="true"/>
-        <Node id="xhtml/admin/lists.xhtml" x="900" y="150" zoom="true"/>
         <Node id="xhtml/admin/archive.xhtml" x="650" y="300" zoom="true"/>
+        <Node id="xhtml/admin/lists.xhtml" x="900" y="150" zoom="true"/>
         <Node id="xhtml/admin/deleteCategory.xhtml" x="400" y="300" zoom="true"/>
         <Node id="xhtml/admin/deleteMailing.xhtml" x="650" y="600" zoom="true"/>
         <Node id="xhtml/admin/paginator.xhtml" x="400" y="600" zoom="true"/>
         <Node id="xhtml/registrationSucess.xhtml" x="650" y="450" zoom="true"/>
-        <Node id="view.jsp" x="150" y="150" zoom="true"/>
         <Node id="xhtml/test.xhtml" x="400" y="150" zoom="true"/>
-        <Node id="xhtml/admin/importSubscriptors.xhtml" x="150" y="900" zoom="true"/>
         <Node id="xhtml/registration-edit.xhtml" x="150" y="750" zoom="true"/>
-        <Node id="xhtml/admin/editmailing.xhtml" x="150" y="600" zoom="true"/>
-        <Node id="xhtml/admin/listsSendConfirmation.xhtml" x="1400" y="150" zoom="true"/>
         <Node id="xhtml/admin/editCategory.xhtml" x="1150" y="150" zoom="true"/>
         <Node id="xhtml/admin/deleteSubscriber.xhtml" x="1150" y="300" zoom="true"/>
-        <Node id="xhtml/admin/previewArchiveMail.xhtml" x="400" y="750" zoom="true"/>
     </Scope>
     <Scope Scope="All Faces Configurations"/>
 </Scene>

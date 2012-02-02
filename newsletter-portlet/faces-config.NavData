@@ -2,8 +2,8 @@
 <Scene Scope="Project" version="2">
     <Scope Scope="Faces Configuration Only"/>
     <Scope Scope="Project">
-        <Node id="xhtml/admin/admin.xhtml" x="150" y="300" zoom="true"/>
         <Node id="xhtml/admin/editSubscriber.xhtml" x="650" y="150" zoom="true"/>
+        <Node id="xhtml/admin/admin.xhtml" x="150" y="300" zoom="true"/>
         <Node id="xhtml/admin/editTemplate.xhtml" x="1650" y="150" zoom="true"/>
         <Node id="xhtml/admin/editSubscriptionMail.xhtml" x="900" y="300" zoom="true"/>
         <Node id="view.jsp" x="150" y="150" zoom="true"/>
@@ -25,8 +25,9 @@
         <Node id="xhtml/registrationSucess.xhtml" x="650" y="450" zoom="true"/>
         <Node id="xhtml/test.xhtml" x="400" y="150" zoom="true"/>
         <Node id="xhtml/registration-edit.xhtml" x="150" y="750" zoom="true"/>
-        <Node id="xhtml/admin/deleteSubscriber.xhtml" x="1150" y="300" zoom="true"/>
         <Node id="xhtml/admin/editCategory.xhtml" x="1150" y="150" zoom="true"/>
+        <Node id="xhtml/admin/deleteSubscriber.xhtml" x="1150" y="300" zoom="true"/>
+
     </Scope>
     <Scope Scope="All Faces Configurations"/>
 </Scene>

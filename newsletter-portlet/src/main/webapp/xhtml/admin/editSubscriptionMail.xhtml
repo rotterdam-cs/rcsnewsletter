@@ -1,23 +1,18 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
->    
+      xmlns:p="http://primefaces.prime.com.tr/ui"      
+      >
+    
     <f:loadBundle basename="Language" var="msg" />
     <f:loadBundle basename="Newsletter" var="nlk" />
-    <h:head>        
+    <h:head>       
     </h:head>
-    <script type="text/javascript">
-        var hcontent = jQuery('input[id*="hcontent"]');
-        function initEditor() {
-            return hcontent.val();
-        }
-        function editorContentChanged(a){
-            hcontent.val(a);
-        }
-    </script>
+    
+    
     <h:body>        
         <h2>#{subscriptionEmailManagedBean.subscriptionType}</h2>
         <br></br>
@@ -27,10 +22,9 @@
                 <h:outputText value="#{subscriptionEmailManagedBean.helpPageText}" escape="false"/>  
             </p:dialog> 
             <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>
-            <p:commandButton styleClass="newsletter-forms-button" value="#{msg['newsletter.admin.category.general.help']}" onclick="dlg3.show();" type="button"/> 
+            <p:commandButton  styleClass="newsletter-forms-button" value="#{msg['newsletter.admin.category.general.help']}" onclick="dlg3.show();" type="button"/> 
             
-            <h:inputHidden value="#{subscriptionEmailManagedBean.subscriptionEmailBody}" id="hcontent"/>
-            <iframe height="450" id="editortest" name="editortest" src="/html/js/editor/editor.jsp?p_l_id=#{subscriptionEmailManagedBean.plid}&amp;p_main_path=%2Fde%2Fc&amp;doAsUserId=#{subscriptionEmailManagedBean.doAsUserId}&amp;editorImpl=ckeditor&amp;toolbarSet=liferay-article&amp;initMethod=initEditor&amp;onChangeMethod=editorContentChanged&amp;cssPath=%2Fhtml%2Fthemes%2Fcontrol_panel%2Fcss&amp;cssClasses=portlet+portlet-journal" style="border: none;" width="95%"></iframe>
+            <p:editor value="#{subscriptionEmailManagedBean.subscriptionEmailBody}"/>
             
             <p:growl id="editSubscriptionMailMessage"/>
             <p:commandButton styleClass="newsletter-forms-button" value="#{msg['newsletter.admin.general.edit']}" update="editSubscriptionMailMessage" action="#{subscriptionEmailManagedBean.save}" ajax="false"/>

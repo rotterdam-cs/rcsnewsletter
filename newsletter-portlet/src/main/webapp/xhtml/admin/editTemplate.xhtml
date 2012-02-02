@@ -9,40 +9,33 @@
     <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>        
     </h:head>
-    <script type="text/javascript">
+     <script type="text/javascript">
     //<![CDATA[ 
-        var hcontent = jQuery('input[id*="hcontent"]');
-        function initEditor() {
-            return hcontent.val();
-        }
-        function editorContentChanged(a){
-            hcontent.val(a);
-            isTemplateValid();
-        }
         function isTemplateValid() {
-            var content = hcontent.val();
-            var result = true;
-            var contentTemplate = content.split("[block]");
-            if (contentTemplate.length < 2) {//No Blocks
-                result = false;
-            } else {
-               for (i = 1; i < contentTemplate.length; i++) {
-                   var contentTemplateInside = contentTemplate[i].split("[block]");
-                   var contentTemplateInside2 = contentTemplate[i].split("[/block]");
-                   if (contentTemplateInside.length > 1 || contentTemplateInside2.length != 2) {//nested blocks 
-                       result = false;
-                   }                   
-               }
-            }
-            if (result){
-                jQuery('#errmsg1').hide(); jQuery('#errmsg').hide(); jQuery('#errmsg2').show();
-            } else {
-                jQuery('#errmsg1').show(); jQuery('#errmsg').show(); jQuery('#errmsg2').hide();                
-            }
-            return result;            
-        }            
-    //]]>
-    </script>
+                                
+                var content = $('#editTemplateHtmlEditor iframe')[0].contentWindow.document.body.innerHTML;                
+                var result = true;
+                var contentTemplate = content.split("[block]");
+                if (contentTemplate.length < 2) {//No Blocks
+                    result = false;
+                } else {
+                   for (i = 1; i < contentTemplate.length; i++) {
+                       var contentTemplateInside = contentTemplate[i].split("[block]");
+                       var contentTemplateInside2 = contentTemplate[i].split("[/block]");
+                       if (contentTemplateInside.length > 1 || contentTemplateInside2.length != 2) {//nested blocks 
+                           result = false;
+                       }                   
+                   }
+                }
+                if (result){
+                    jQuery('#errmsg1').hide(); jQuery('#errmsg').hide(); jQuery('#errmsg2').show();
+                } else {
+                    jQuery('#errmsg1').show(); jQuery('#errmsg').show(); jQuery('#errmsg2').hide();                
+                }
+                return result;            
+        }      
+    ////]]>
+     </script>
     <h:body>        
         <h2>#{nlk['newsletter.admin.templates.add']}</h2>
         <br />
@@ -59,12 +52,11 @@
             
             <h:outputLabel value="#{msg['newsletter.admin.general.name']}: " />
             <h:inputText styleClass="newsletter-forms-input-text" value="#{templateCRUDManagedBean.name}" />
-            
-            <h:inputHidden value="#{templateCRUDManagedBean.template}" id="hcontent"/>
-            <iframe height="450" id="editortest" name="editortest" src="/html/js/editor/editor.jsp?p_l_id=#{templateCRUDManagedBean.plid}&amp;p_main_path=%2Fde%2Fc&amp;doAsUserId=#{templateCRUDManagedBean.doAsUserId}&amp;editorImpl=ckeditor&amp;toolbarSet=liferay-article&amp;initMethod=initEditor&amp;onChangeMethod=editorContentChanged&amp;cssPath=%2Fhtml%2Fthemes%2Fcontrol_panel%2Fcss&amp;cssClasses=portlet+portlet-journal" style="border: none;" width="95%"></iframe>
-            
+            <div id="editTemplateHtmlEditor">            
+                <p:editor id="hcontent" value="#{templateCRUDManagedBean.template}" />
+            </div>
             <p:growl id="editSubscriptionMailMessage"/>
-            <span id="errmsg1"><p:commandButton styleClass="newsletter-forms-button" id="okbuttonbad" value="#{msg['newsletter.admin.general.edit']}" onclick="isTemplateValid()" ajax="true" /></span>
+            <span id="errmsg1"><p:commandButton styleClass="newsletter-forms-button" id="okbuttonbad" value="#{msg['newsletter.admin.general.validate']}" onclick="isTemplateValid()" ajax="true" /></span>
             <span id="errmsg2" class="hiddenMsg"><p:commandButton styleClass="newsletter-forms-button hiddenMsg" id="okbuttongood" value="#{msg['newsletter.admin.general.edit']}" update="editSubscriptionMailMessage" action="#{templateCRUDManagedBean.save}" ajax="false" /></span>
             <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />            
         </h:form>

@@ -1,6 +1,5 @@
 package com.rcs.newsletter.core.service.util;
 
-import com.liferay.portlet.journalcontent.util.JournalContent;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -11,6 +10,7 @@ import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -23,7 +23,6 @@ import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.portlet.asset.service.persistence.AssetEntryQuery;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.model.JournalArticleResource;
-import com.liferay.portlet.journal.service.JournalArticleLocalService;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleResourceLocalServiceUtil;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
@@ -89,10 +88,10 @@ public class ArticleUtils {
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    public static List<JournalArticle> findArticlesByKeyword(ThemeDisplay themeDisplay, String tagName) throws PortalException, SystemException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public static List<JournalArticle> findArticlesByKeyword(ThemeDisplay themeDisplay, String tagName, SearchContext searchContext) throws PortalException, SystemException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         List journalArticleList = new ArrayList();
-        Long companyId = themeDisplay.getCompanyId();
-        BooleanQuery searchQuery = BooleanQueryFactoryUtil.create();
+        Long companyId = themeDisplay.getCompanyId();        
+        BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(searchContext);
         String keywords = tagName;
         if (Validator.isNotNull(keywords)) {
             keywords = keywords.trim();
@@ -116,7 +115,7 @@ public class ArticleUtils {
             searchQuery.addTerm("firstName", keywords,true);
             searchQuery.addTerm("lastName", keywords,true);
         }
-        BooleanQuery fullQuery = BooleanQueryFactoryUtil.create();
+        BooleanQuery fullQuery = BooleanQueryFactoryUtil.create(searchContext);
         if (searchQuery.clauses().size() > 0) {
             fullQuery.add(searchQuery, BooleanClauseOccur.MUST);
         }        

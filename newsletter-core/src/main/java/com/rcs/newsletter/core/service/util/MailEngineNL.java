@@ -101,13 +101,12 @@ public class MailEngineNL {
 	public static void send(MailMessage mailMessage)
 		throws MailEngineException {
 
-		send(
-			mailMessage.getFrom(), mailMessage.getTo(), mailMessage.getCC(),
-			mailMessage.getBCC(), mailMessage.getBulkAddresses(),
+		send(mailMessage.getFrom(), mailMessage.getTo(), mailMessage.getCC(),
+                        mailMessage.getBCC(), mailMessage.getBulkAddresses(),
 			mailMessage.getSubject(), mailMessage.getBody(),
 			mailMessage.isHTMLFormat(), mailMessage.getReplyTo(),
 			mailMessage.getMessageId(), mailMessage.getInReplyTo(),
-			mailMessage.getAttachments(), mailMessage.getSMTPAccount());
+			mailMessage.getFileAttachments().toArray(new File[mailMessage.getFileAttachments().size()]), mailMessage.getSMTPAccount());
 	}
 
 	public static void send(String from, String to, String subject, String body)

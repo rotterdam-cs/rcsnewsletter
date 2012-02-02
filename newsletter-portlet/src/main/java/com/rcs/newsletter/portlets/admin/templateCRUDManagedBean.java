@@ -131,10 +131,15 @@ public class templateCRUDManagedBean {
     }
 
     public String save() {
+        log.error("It is here");
         NewsletterTemplate newsletterTemplate = null;
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         String message = "";
+        if(getAction() == null){
+            log.error("Action null");
+        }
+        
         switch (getAction()) {
             case CREATE:
                 newsletterTemplate = new NewsletterTemplate();                            

@@ -39,6 +39,7 @@ public class SubscriptionEmailManagedBean {
     private String helpPageText;
     private Long plid;
     private String doAsUserId;
+    //private String htmlCode;
 
     public int getCategoryId() {
         return categoryId;
@@ -198,4 +199,13 @@ public class SubscriptionEmailManagedBean {
 
         return "admin";
     }
+    /*public String getDefaultEditor(){
+        return PropsUtil.get(PropsKeys.EDITOR_WYSIWYG_DEFAULT);
+    }
+
+    public String getNamespace(){
+        
+        return ((PortletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse()).getNamespace();
+    }*/
+    
 }

@@ -136,7 +136,7 @@
         <dependency>
             <groupId>org.portletfaces.liferay.faces</groupId>
             <artifactId>liferayfaces</artifactId>
-            <version>6.0.0.1</version>
+            <version>6.0.0.2</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -164,6 +164,7 @@
           <version>1.2.1</version>
           <scope>compile</scope>
         </dependency>
+        
     </dependencies>
     
     <repositories>                

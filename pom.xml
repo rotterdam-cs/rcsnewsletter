@@ -9,7 +9,7 @@
     <modules>
         <module>newsletter-core</module>
         <module>newsletter-portlet</module>
-  </modules>
+    </modules>
   
     <build>
         <plugins>
@@ -116,7 +116,7 @@
     </dependencies>
 
     <properties>
-        <liferay.version>6.0.6</liferay.version>
+        <liferay.version>6.1.0</liferay.version>
         <hibernate.version>3.6.0.Final</hibernate.version>
         <hibernatevalidator.version>4.2.0.Final</hibernatevalidator.version>
         <javassist.version>3.12.1.GA</javassist.version>

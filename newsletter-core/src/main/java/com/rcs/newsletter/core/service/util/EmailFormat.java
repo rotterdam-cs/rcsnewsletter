@@ -274,7 +274,7 @@ public class EmailFormat {
                 imageUrl = new URL(imagePath);                    
                 File tempF = getFile(imageUrl);//To Improve probably add Cache
                 content = StringUtils.replace(content, imagePathOriginal, "cid:" + tempF.getName());
-                message.addAttachment(tempF);
+                message.addFileAttachment(tempF);
             } catch (MalformedURLException ex) {
                 log.error("problem with image url " + image, ex);
             }

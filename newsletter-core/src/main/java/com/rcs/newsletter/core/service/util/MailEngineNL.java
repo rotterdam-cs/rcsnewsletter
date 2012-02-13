@@ -1,5 +1,6 @@
 package com.rcs.newsletter.core.service.util;
 
+import com.liferay.mail.model.FileAttachment;
 import com.liferay.mail.service.MailServiceUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
@@ -100,13 +101,22 @@ public class MailEngineNL {
 
 	public static void send(MailMessage mailMessage)
 		throws MailEngineException {
-
-		send(mailMessage.getFrom(), mailMessage.getTo(), mailMessage.getCC(),
+                                
+                File[] attachments = new File[mailMessage.getFileAttachments().size()];
+                
+                
+                for(int i = 0; i < mailMessage.getFileAttachments().size(); i++){
+                    
+                    attachments[i] = mailMessage.getFileAttachments().get(i).getFile();
+                    
+                }
+                		
+                send(mailMessage.getFrom(), mailMessage.getTo(), mailMessage.getCC(),
                         mailMessage.getBCC(), mailMessage.getBulkAddresses(),
 			mailMessage.getSubject(), mailMessage.getBody(),
 			mailMessage.isHTMLFormat(), mailMessage.getReplyTo(),
 			mailMessage.getMessageId(), mailMessage.getInReplyTo(),
-			mailMessage.getFileAttachments().toArray(new File[mailMessage.getFileAttachments().size()]), mailMessage.getSMTPAccount());
+			attachments, mailMessage.getSMTPAccount());
 	}
 
 	public static void send(String from, String to, String subject, String body)

@@ -25,6 +25,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import static com.rcs.newsletter.NewsletterConstants.*;
 
 /**
@@ -87,6 +89,7 @@ public class EditMailingManagedBean {
     }
     
     public String save() {
+        log.error(templateArticles);
         NewsletterMailing mailing = null;
         switch(currentAction) {
             case CREATE:
@@ -102,10 +105,12 @@ public class EditMailingManagedBean {
         mailing.setTemplate(nlt);
         mailing.setName(mailingName);
         mailing.setList(findListById(categoryId));
+        
         ServiceActionResult result = null;
         switch(currentAction) {
             case CREATE:
                 log.error("CREATE");
+                                
                 result = service.save(mailing);
                 break;
             case UPDATE:
@@ -123,6 +128,7 @@ public class EditMailingManagedBean {
                             
             //Update the TemplateBlocks       
             String[] articleIds;
+            
             articleIds = templateArticles.split(",");
             for(int i =0; i < articleIds.length ; i++) {                
                 NewsletterTemplateBlock ntb = new NewsletterTemplateBlock();                

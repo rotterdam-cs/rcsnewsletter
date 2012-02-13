@@ -36,8 +36,8 @@ public class NewsletterMailing extends NewsletterEntity {
     
     @OneToMany
     @JoinColumn(name = "mailing_id")
-    @OrderColumn(name = "blockOrder")
-    @Cascade(CascadeType.DELETE)        
+    @OrderColumn(name = "blockOrder")    
+    @Cascade(CascadeType.DELETE)    
     private List<NewsletterTemplateBlock> blocks;
 
     public List<NewsletterTemplateBlock> getBlocks() {

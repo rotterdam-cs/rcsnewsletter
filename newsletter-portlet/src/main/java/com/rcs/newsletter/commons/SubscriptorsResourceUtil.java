@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.NewsletterConstants;
+import com.rcs.newsletter.util.SubscriptionUtil;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.ResourceBundle;
@@ -233,11 +234,13 @@ public class SubscriptorsResourceUtil {
                             subscription = new NewsletterSubscription();
                             subscription.setGroupid(themeDisplay.getScopeGroupId());
                             subscription.setCompanyid(themeDisplay.getCompanyId());
-
+                            subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
+                            
                             subscription.setCategory(category);
                             subscription.setSubscriptor(subscriptor);
                             subscription.setStatus(SubscriptionStatus.ACTIVE);
-
+                            subscription.setActivationKey(SubscriptionUtil.getUniqueKey());
+                            
                             subscriptionService.save(subscription);
 
                             logger.warn("Associated the existing mail: " + email
@@ -250,11 +253,13 @@ public class SubscriptorsResourceUtil {
                         subscriptor = new NewsletterSubscriptor();
                         subscriptor.setGroupid(themeDisplay.getScopeGroupId());
                         subscriptor.setCompanyid(themeDisplay.getCompanyId());                        
-
+                        subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
+                        
                         subscriptor.setEmail(email);
                         subscriptor.setFirstName(firstName);
                         subscriptor.setLastName(lastName);
-
+                        subscription.setActivationKey(SubscriptionUtil.getUniqueKey());
+                        
                         subscriptorResult = subscriptorService.save(subscriptor);
 
                         if (subscriptorResult.isSuccess()) {

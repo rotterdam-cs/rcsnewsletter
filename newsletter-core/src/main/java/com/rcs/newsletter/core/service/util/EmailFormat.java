@@ -139,13 +139,7 @@ public class EmailFormat {
                 onlineViewerStringBuilder.append("&sid=");
                 onlineViewerStringBuilder.append(subscription.getId());
                 
-                String stringBuilderolTmp = onlineViewerStringBuilder.toString();            
-                StringBuilder onlineViewerLinkBuilder = new StringBuilder("<a href=\"");
-                onlineViewerLinkBuilder.append(stringBuilderolTmp);
-                onlineViewerLinkBuilder.append("\">");
-                onlineViewerLinkBuilder.append(stringBuilderolTmp);            
-                onlineViewerLinkBuilder.append("</a>");
-                onlineArticleLink = onlineViewerLinkBuilder.toString();
+                onlineArticleLink = onlineViewerStringBuilder.toString();
             }
             
         }        

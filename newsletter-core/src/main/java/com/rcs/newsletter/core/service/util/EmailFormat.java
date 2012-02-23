@@ -111,53 +111,35 @@ public class EmailFormat {
             categoryName = category.getName();
             
             //Replace Confirmation Link Information
-            StringBuilder stringBuilder = new StringBuilder(portalUrl);
-            stringBuilder.append(ONLINE_NEWSLETTER_CONFIRMATION_PAGE);
-            stringBuilder.append("?subscriptionId=");
-            stringBuilder.append(subscription.getId());
-            stringBuilder.append("&activationkey=");
-            stringBuilder.append(subscription.getActivationKey());       
+            StringBuilder confirmationLinkBuilder = new StringBuilder(portalUrl);
+            confirmationLinkBuilder.append(ONLINE_NEWSLETTER_CONFIRMATION_PAGE);
+            confirmationLinkBuilder.append("?subscriptionId=");
+            confirmationLinkBuilder.append(subscription.getId());
+            confirmationLinkBuilder.append("&activationkey=");
+            confirmationLinkBuilder.append(subscription.getActivationKey());       
             
-            String confirmationLinkTokenTmp = stringBuilder.toString();            
-            StringBuilder stringBuilderconfirmationLinkToken = new StringBuilder("<a href=\"");
-            stringBuilderconfirmationLinkToken.append(confirmationLinkTokenTmp);
-            stringBuilderconfirmationLinkToken.append("\">");
-            stringBuilderconfirmationLinkToken.append(confirmationLinkTokenTmp);            
-            stringBuilderconfirmationLinkToken.append("</a>");
-            confirmationLinkToken = stringBuilderconfirmationLinkToken.toString();
+            confirmationLinkToken = confirmationLinkBuilder.toString();
             
             //Replace UNREGISTER Confirmation Link Information
-            StringBuilder stringBuilderu = new StringBuilder(portalUrl);
-            stringBuilderu.append(ONLINE_NEWSLETTER_CONFIRMATION_PAGE);
-            stringBuilderu.append("?unsubscriptionId=");
-            stringBuilderu.append(subscription.getId());
-            stringBuilderu.append("&deactivationkey=");
-            stringBuilderu.append(subscription.getDeactivationKey());       
+            StringBuilder unregistrationLinkBuilder = new StringBuilder(portalUrl);
+            unregistrationLinkBuilder.append(ONLINE_NEWSLETTER_CONFIRMATION_PAGE);
+            unregistrationLinkBuilder.append("?unsubscriptionId=");
+            unregistrationLinkBuilder.append(subscription.getId());
+            unregistrationLinkBuilder.append("&deactivationkey=");
+            unregistrationLinkBuilder.append(subscription.getDeactivationKey());       
             
-            String confirmationLinkTokenTmpu = stringBuilderu.toString();            
-            StringBuilder stringBuilderconfirmationLinkTokenu = new StringBuilder("<a href=\"");
-            stringBuilderconfirmationLinkTokenu.append(confirmationLinkTokenTmpu);
-            stringBuilderconfirmationLinkTokenu.append("\">");
-            stringBuilderconfirmationLinkTokenu.append(confirmationLinkTokenTmpu);            
-            stringBuilderconfirmationLinkTokenu.append("</a>");
-            confirmationUnregisterLinkToken = stringBuilderconfirmationLinkTokenu.toString();
+            confirmationUnregisterLinkToken = unregistrationLinkBuilder.toString();
             
             //Replace Confirmation Link Information
             if (archiveId != null) {            
-                StringBuilder stringBuilderol = new StringBuilder(portalUrl);
-                stringBuilderol.append(ONLINE_NEWSLETTER_VIEWER_PAGE);
-                stringBuilderol.append("?nlid=");
-                stringBuilderol.append(archiveId);
-                stringBuilderol.append("&sid=");
-                stringBuilderol.append(subscription.getId());
+                StringBuilder onlineViewerLinkBuilder = new StringBuilder(portalUrl);
+                onlineViewerLinkBuilder.append(ONLINE_NEWSLETTER_VIEWER_PAGE);
+                onlineViewerLinkBuilder.append("?nlid=");
+                onlineViewerLinkBuilder.append(archiveId);
+                onlineViewerLinkBuilder.append("&sid=");
+                onlineViewerLinkBuilder.append(subscription.getId());
                 
-                String stringBuilderolTmp = stringBuilderol.toString();            
-                StringBuilder stringBuilderollink = new StringBuilder("<a href=\"");
-                stringBuilderollink.append(stringBuilderolTmp);
-                stringBuilderollink.append("\">");
-                stringBuilderollink.append(stringBuilderolTmp);            
-                stringBuilderollink.append("</a>");
-                onlineArticleLink = stringBuilderollink.toString();
+                onlineArticleLink = onlineViewerLinkBuilder.toString();
             }
             
         }        

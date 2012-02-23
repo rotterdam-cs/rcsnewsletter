@@ -89,53 +89,26 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
             MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, title, content);
             String bodyContent = message.getBody();
             
-            //sendEmail(fromName, fromMail, toName, toMail, title, content);
-            
-            //if the content is personalizable a different message will be send for each user
-            //if (EmailFormat.contentPersonalizable(content)){
-                logger.error("Sending personalizable conent");
-                for (NewsletterSubscription newsletterSubscription : mailing.getList().getSubscriptions()) {
-                    if(newsletterSubscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
-                        NewsletterSubscriptor subscriptor = newsletterSubscription.getSubscriptor();
-                        String name = subscriptor.getFirstName() + " " + subscriptor.getLastName();                    
-                        
-                        MailMessage personalMessage = message;
-                        
-                        toIA = new InternetAddress(subscriptor.getEmail(), name);
-                        logger.error("Sending to " + name + "<" + subscriptor.getEmail() + ">");
-                        personalMessage.setTo(toIA);
+            logger.error("Sending personalizable conent");
+            for (NewsletterSubscription newsletterSubscription : mailing.getList().getSubscriptions()) {
+                if(newsletterSubscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
+                    NewsletterSubscriptor subscriptor = newsletterSubscription.getSubscriptor();
+                    String name = subscriptor.getFirstName() + " " + subscriptor.getLastName();                    
 
-                        //Replace User Info
-                        String tmpContent = EmailFormat.replaceUserInfo(bodyContent, newsletterSubscription, themeDisplay, archiveId);
-                        personalMessage.setBody(tmpContent);
+                    MailMessage personalMessage = message;
 
-                        mailingUtil.sendEmail(personalMessage);
-                        //mailingUtil.sendArticleByEmail(ja, themeDisplay, name, subscriptor.getEmail(), fromName, fromEmailAddress);
-                    }
+                    toIA = new InternetAddress(subscriptor.getEmail(), name);
+                    logger.error("Sending to " + name + "<" + subscriptor.getEmail() + ">");
+                    personalMessage.setTo(toIA);
+
+                    //Replace User Info
+                    String tmpContent = EmailFormat.replaceUserInfo(bodyContent, newsletterSubscription, themeDisplay, archiveId);
+                    personalMessage.setBody(tmpContent);
+
+                    mailingUtil.sendEmail(personalMessage);
+                    //mailingUtil.sendArticleByEmail(ja, themeDisplay, name, subscriptor.getEmail(), fromName, fromEmailAddress);
                 }
-                
-            //if the content is NOT personalizable the same message will be send for all users
-            //@@To Improve
-            /*
-            } else {
-                List<InternetAddress> ial = new ArrayList<InternetAddress>();                
-                for (NewsletterSubscription newsletterSubscription : mailing.getList().getSubscriptions()) {
-                    if(newsletterSubscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
-                        NewsletterSubscriptor subscriptor = newsletterSubscription.getSubscriptor();
-                        String name = subscriptor.getFirstName() + " " + subscriptor.getLastName();                                                
-                        ial.add( new InternetAddress(subscriptor.getEmail(), name) );                        
-                    }
-                }                
-                int numSubscribtors = ial.size();                
-                InternetAddress[] ia;
-                ia = new InternetAddress[numSubscribtors];
-                ia = ial.toArray(ia);                
-                message.setBCC(ia);
-                InternetAddress toIAt = new InternetAddress("to@to.com");
-                message.setTo(toIAt);
-                mailingUtil.sendEmail(message);
             }
-            */
             logger.error("End Sending personalizable conent");
         } catch (Exception ex) {
             logger.error("Error while trying to read article", ex);

@@ -86,11 +86,11 @@ public class SubscriptionManagedBean implements Serializable {
         if (result.isSuccess()) {
             String infoMessage = serverMessageBundle.getString("newsletter.registration.settings.save.successfully");
             FacesUtil.infoMessage(infoMessage);
-            log.error("Settings updated successfully");
+            log.info("Newsletter Settings updated successfully");
         } else {
             String errorMessage = serverMessageBundle.getString("newsletter.registration.settings.save.error");
             FacesUtil.errorMessage(errorMessage);            
-            log.error("Error");
+            log.error("Newsletter Settings could not be updated");
         }
     }
 
@@ -438,8 +438,7 @@ public class SubscriptionManagedBean implements Serializable {
         } else if(getRequestedDeactivationKey() != null && getRequestedUnsubscriptionId() != null) {
             result = doConfirmUnregistration();
         }
-        log.error("******** getRequestedActivationKey:" + getRequestedActivationKey() + " getRequestedsubscriptionId:" + getRequestedsubscriptionId());
-        log.error("******** getRequestedDeactivationKey:" + getRequestedDeactivationKey() + " getRequestedUnsubscriptionId:" + getRequestedUnsubscriptionId());
+        
         return result;
     }
     

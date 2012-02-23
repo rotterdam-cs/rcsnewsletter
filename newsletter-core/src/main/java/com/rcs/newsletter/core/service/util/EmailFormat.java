@@ -111,62 +111,52 @@ public class EmailFormat {
             categoryName = category.getName();
             
             //Replace Confirmation Link Information
-            StringBuilder stringBuilder = new StringBuilder(portalUrl);
-            stringBuilder.append(ONLINE_NEWSLETTER_CONFIRMATION_PAGE);
-            stringBuilder.append("?subscriptionId=");
-            stringBuilder.append(subscription.getId());
-            stringBuilder.append("&activationkey=");
-            stringBuilder.append(subscription.getActivationKey());       
+            StringBuilder confirmationLinkBuilder = new StringBuilder(portalUrl);
+            confirmationLinkBuilder.append(ONLINE_NEWSLETTER_CONFIRMATION_PAGE);
+            confirmationLinkBuilder.append("?subscriptionId=");
+            confirmationLinkBuilder.append(subscription.getId());
+            confirmationLinkBuilder.append("&activationkey=");
+            confirmationLinkBuilder.append(subscription.getActivationKey());       
             
-            String confirmationLinkTokenTmp = stringBuilder.toString();            
-            StringBuilder stringBuilderconfirmationLinkToken = new StringBuilder("<a href=\"");
-            stringBuilderconfirmationLinkToken.append(confirmationLinkTokenTmp);
-            stringBuilderconfirmationLinkToken.append("\">");
-            stringBuilderconfirmationLinkToken.append(confirmationLinkTokenTmp);            
-            stringBuilderconfirmationLinkToken.append("</a>");
-            confirmationLinkToken = stringBuilderconfirmationLinkToken.toString();
+            confirmationLinkToken = confirmationLinkBuilder.toString();
             
-            //Replace UNREGISTER Confirmation Link Information
-            StringBuilder stringBuilderu = new StringBuilder(portalUrl);
-            stringBuilderu.append(ONLINE_NEWSLETTER_CONFIRMATION_PAGE);
-            stringBuilderu.append("?unsubscriptionId=");
-            stringBuilderu.append(subscription.getId());
-            stringBuilderu.append("&deactivationkey=");
-            stringBuilderu.append(subscription.getDeactivationKey());       
+            //Replace UNREGISTER Confirmation Link Information            
+            StringBuilder unregisterStringBuilder = new StringBuilder(portalUrl);
+            unregisterStringBuilder.append(ONLINE_NEWSLETTER_CONFIRMATION_PAGE);
+            unregisterStringBuilder.append("?unsubscriptionId=");
+            unregisterStringBuilder.append(subscription.getId());
+            unregisterStringBuilder.append("&deactivationkey=");
+            unregisterStringBuilder.append(subscription.getDeactivationKey());       
             
-            String confirmationLinkTokenTmpu = stringBuilderu.toString();            
-            StringBuilder stringBuilderconfirmationLinkTokenu = new StringBuilder("<a href=\"");
-            stringBuilderconfirmationLinkTokenu.append(confirmationLinkTokenTmpu);
-            stringBuilderconfirmationLinkTokenu.append("\">");
-            stringBuilderconfirmationLinkTokenu.append(confirmationLinkTokenTmpu);            
-            stringBuilderconfirmationLinkTokenu.append("</a>");
-            confirmationUnregisterLinkToken = stringBuilderconfirmationLinkTokenu.toString();
+            confirmationUnregisterLinkToken = unregisterStringBuilder.toString();
             
-            //Replace Confirmation Link Information
+            //Replace Online Viewer Link Information
             if (archiveId != null) {            
-                StringBuilder stringBuilderol = new StringBuilder(portalUrl);
-                stringBuilderol.append(ONLINE_NEWSLETTER_VIEWER_PAGE);
-                stringBuilderol.append("?nlid=");
-                stringBuilderol.append(archiveId);
-                stringBuilderol.append("&sid=");
-                stringBuilderol.append(subscription.getId());
+                StringBuilder onlineViewerStringBuilder = new StringBuilder(portalUrl);
+                onlineViewerStringBuilder.append(ONLINE_NEWSLETTER_VIEWER_PAGE);
+                onlineViewerStringBuilder.append("?nlid=");
+                onlineViewerStringBuilder.append(archiveId);
+                onlineViewerStringBuilder.append("&sid=");
+                onlineViewerStringBuilder.append(subscription.getId());
                 
-                String stringBuilderolTmp = stringBuilderol.toString();            
-                StringBuilder stringBuilderollink = new StringBuilder("<a href=\"");
-                stringBuilderollink.append(stringBuilderolTmp);
-                stringBuilderollink.append("\">");
-                stringBuilderollink.append(stringBuilderolTmp);            
-                stringBuilderollink.append("</a>");
-                onlineArticleLink = stringBuilderollink.toString();
+                String stringBuilderolTmp = onlineViewerStringBuilder.toString();            
+                StringBuilder onlineViewerLinkBuilder = new StringBuilder("<a href=\"");
+                onlineViewerLinkBuilder.append(stringBuilderolTmp);
+                onlineViewerLinkBuilder.append("\">");
+                onlineViewerLinkBuilder.append(stringBuilderolTmp);            
+                onlineViewerLinkBuilder.append("</a>");
+                onlineArticleLink = onlineViewerLinkBuilder.toString();
             }
             
         }        
+        
         content = content.replace(FIRST_NAME_TOKEN, subscriptorFirstName);
         content = content.replace(LAST_NAME_TOKEN, subscriptorLastName);
         content = content.replace(LIST_NAME_TOKEN, categoryName);
         content = content.replace(CONFIRMATION_LINK_TOKEN, confirmationLinkToken);
         content = content.replace(CONFIRMATION_UNREGISTER_LINK_TOKEN, confirmationUnregisterLinkToken);        
         content = content.replace(ONLINE_ARTICLE_LINK, onlineArticleLink);
+        
         return content;
     }
     

@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
 import static com.rcs.newsletter.NewsletterConstants.*;
+import com.rcs.newsletter.util.SubscriptionUtil;
 
 /**
  *
@@ -145,7 +146,7 @@ public class SubscriptionManagedBean implements Serializable {
                         //does not exists we should create it
                         if (subscription == null) {
                             subscription = new NewsletterSubscription();
-                            subscription.setDeactivationKey(getUniqueKey());
+                            subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
                             subscription.setGroupid(uiState.getGroupid());
                             subscription.setCompanyid(uiState.getCompanyid());
                             
@@ -153,7 +154,7 @@ public class SubscriptionManagedBean implements Serializable {
                             subscription.setSubscriptor(subscriptor);
                             subscription.setCategory(newsletterCategory);
                             subscription.setStatus(SubscriptionStatus.INACTIVE);
-                            subscription.setActivationKey(getUniqueKey());
+                            subscription.setActivationKey(SubscriptionUtil.getUniqueKey());
                             
 
                             subscription = subscriptionService.save(subscription).getPayload();
@@ -239,7 +240,7 @@ public class SubscriptionManagedBean implements Serializable {
 
                         if (subscription != null) {
                             
-                            subscription.setDeactivationKey(getUniqueKey());
+                            subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
                             subscriptionService.update(subscription);
                             
                             String content = unsubscriptionEmail;
@@ -438,19 +439,9 @@ public class SubscriptionManagedBean implements Serializable {
         } else if(getRequestedDeactivationKey() != null && getRequestedUnsubscriptionId() != null) {
             result = doConfirmUnregistration();
         }
-        log.error("******** getRequestedActivationKey:" + getRequestedActivationKey() + " getRequestedsubscriptionId:" + getRequestedsubscriptionId());
-        log.error("******** getRequestedDeactivationKey:" + getRequestedDeactivationKey() + " getRequestedUnsubscriptionId:" + getRequestedUnsubscriptionId());
-        return result;
-    }
-    
-    private static String getUniqueKey() {
-        String result = "";
-        UUID uuid = UUID.randomUUID();
-        
-        result = uuid.toString();
         
         return result;
-    }
+    }    
 
     ////////////////// GETTERS AND SETTERS /////////////////////
     public String getEmail() {

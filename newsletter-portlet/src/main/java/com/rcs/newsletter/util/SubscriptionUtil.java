@@ -13,9 +13,18 @@ public class SubscriptionUtil {
      * @param email
      * @return 
      */
-    private static String getUniqueKey(String email) {
-        String result = "";
+    public static String getUniqueKey(String email) {
+        String result;
         UUID uuid = UUID.fromString(email);
+        
+        result = uuid.toString();
+        
+        return result;
+    }
+    
+    public static String getUniqueKey() {
+        String result;
+        UUID uuid = UUID.randomUUID();
         
         result = uuid.toString();
         

@@ -26,11 +26,9 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.rcs.newsletter.NewsletterConstants;
-import java.text.MessageFormat;
+import com.rcs.newsletter.util.SubscriptionUtil;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import javax.faces.context.FacesContext;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import org.apache.commons.fileupload.FileItem;
@@ -233,11 +231,13 @@ public class SubscriptorsResourceUtil {
                             subscription = new NewsletterSubscription();
                             subscription.setGroupid(themeDisplay.getScopeGroupId());
                             subscription.setCompanyid(themeDisplay.getCompanyId());
-
+                            subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
+                            
                             subscription.setCategory(category);
                             subscription.setSubscriptor(subscriptor);
                             subscription.setStatus(SubscriptionStatus.ACTIVE);
-
+                            subscription.setActivationKey(SubscriptionUtil.getUniqueKey());
+                            
                             subscriptionService.save(subscription);
 
                             logger.warn("Associated the existing mail: " + email
@@ -262,11 +262,13 @@ public class SubscriptorsResourceUtil {
 
                             subscription.setGroupid(themeDisplay.getScopeGroupId());
                             subscription.setCompanyid(themeDisplay.getCompanyId());
-
+                            subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
+                            
                             subscription.setCategory(category);
                             subscription.setSubscriptor(subscriptor);
                             subscription.setStatus(SubscriptionStatus.ACTIVE);
-
+                            subscription.setActivationKey(SubscriptionUtil.getUniqueKey());
+                            
                             subscriptionService.save(subscription);
 
                             logger.debug("Associated the new mail: " + email

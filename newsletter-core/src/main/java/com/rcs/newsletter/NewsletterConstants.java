@@ -29,7 +29,7 @@ public interface NewsletterConstants {
     public static final int PAGINATION_DEFAULT_LIMIT = 5;
     
     public static final String ONLINE_NEWSLETTER_VIEWER_PAGE = "/online-newsletter/";
-    public static final String ONLINE_NEWSLETTER_CONFIRMATION_PAGE = "";
+    public static final String ONLINE_NEWSLETTER_CONFIRMATION_PAGE = "/home";
     
     public static final String TEMPLATE_TAG_BLOCK_OPEN = "[block]";
     public static final String TEMPLATE_TAG_BLOCK_CLOSE = "[/block]";

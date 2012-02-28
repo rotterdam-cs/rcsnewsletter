@@ -383,9 +383,11 @@ public class SubscriptionManagedBean implements Serializable {
 
                     if (subscriptionResult.isSuccess()) {
                         infoMesage = serverMessageBundle.getString("newsletter.unregistration.confirmed.msg");
+                        infoMesage = infoMesage.replace("{0}", subscription.getCategory().getName());
                         FacesUtil.infoMessage(infoMesage);
                     } else {
                         infoMesage = serverMessageBundle.getString("newsletter.unregistration.unconfirmed.msg");
+                        infoMesage = infoMesage.replace("{0}", subscription.getCategory().getName());
                         FacesUtil.errorMessage(infoMesage);
                     }                
                 } else {

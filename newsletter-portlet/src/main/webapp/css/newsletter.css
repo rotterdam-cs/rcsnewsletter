@@ -130,10 +130,9 @@
 }
 
 .registration-confirmation-messages {
-    font-size: large;
+    font-size: 15px;
     background-color: #BDE5F8;
-    color: #00529B;
-    
+    color: #00529B;    
     border: 1px solid;
     margin: 10px 0;
     margin-bottom: 10px;

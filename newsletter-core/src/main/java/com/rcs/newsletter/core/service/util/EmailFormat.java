@@ -43,9 +43,8 @@ public class EmailFormat {
     
     //Boundle Keys
     private static final String TEMPLATE_BLOCK_EMPTY_SELECTOR = "newsletter.admin.mailing.template.select.article";
-    private static final String DEFAULT_REPLACEMENT_FIRST_NAME_TOKEN = "newsletter.admin.mailing.default.replacement.firstname";    
-    private static final String DEFAULT_REPLACEMENT_LAST_NAME_TOKEN = "newsletter.admin.mailing.default.replacement.lastname";
-    
+    private static final String DEFAULT_REPLACEMENT_USER_TOKEN = "newsletter.admin.mailing.default.replacement.user";    
+        
     @Autowired
     private static NewsletterTemplateBlockService templateBlockService;
     
@@ -92,8 +91,8 @@ public class EmailFormat {
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, themeDisplay.getLocale());
         
         //Default Replacement information
-        String subscriptorFirstName = serverMessageBundle.getString(DEFAULT_REPLACEMENT_FIRST_NAME_TOKEN);
-        String subscriptorLastName = serverMessageBundle.getString(DEFAULT_REPLACEMENT_LAST_NAME_TOKEN);
+        String subscriptorFirstName = serverMessageBundle.getString(DEFAULT_REPLACEMENT_USER_TOKEN);
+        String subscriptorLastName = "";
         String categoryName = "";        
         String confirmationLinkToken = "";
         String confirmationUnregisterLinkToken = "";

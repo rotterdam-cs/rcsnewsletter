@@ -15,8 +15,9 @@ import java.util.StringTokenizer;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.log.Log;
 
-import org.apache.log4j.Logger;
 
 import java.io.UnsupportedEncodingException;
 
@@ -26,7 +27,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class StringUtils extends org.apache.commons.lang.StringUtils {
 
-    private static transient Logger logger = Logger.getLogger(StringUtils.class);
+    private static transient Log logger = LogFactoryUtil.getLog(StringUtils.class);
     private static final int DATE_SIZE = 15;
     /** Zeg ken jij het alfabet, dat gaat van ABC, zeg ken jij het alfabet, daar maak je woorden mee!  */
     public static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";

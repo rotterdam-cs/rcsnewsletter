@@ -252,6 +252,7 @@ public class EmailFormat {
             try {
                 String imagePathOriginal = (String) images.get(i);                    
                 String imagePath = StringEscapeUtils.unescapeHtml(image);
+                imagePath = imagePath.trim().replaceAll(" ", "%20");
                 imageUrl = new URL(imagePath);                    
                 File tempF = getFile(imageUrl);//To Improve probably add Cache
                 content = StringUtils.replace(content, imagePathOriginal, "cid:" + tempF.getName());

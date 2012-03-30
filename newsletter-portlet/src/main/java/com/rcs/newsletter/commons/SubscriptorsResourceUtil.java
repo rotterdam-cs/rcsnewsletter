@@ -253,12 +253,10 @@ public class SubscriptorsResourceUtil {
                         subscriptor = new NewsletterSubscriptor();
                         subscriptor.setGroupid(themeDisplay.getScopeGroupId());
                         subscriptor.setCompanyid(themeDisplay.getCompanyId());                        
-                        subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
                         
                         subscriptor.setEmail(email);
                         subscriptor.setFirstName(firstName);
                         subscriptor.setLastName(lastName);
-                        subscription.setActivationKey(SubscriptionUtil.getUniqueKey());
                         
                         subscriptorResult = subscriptorService.save(subscriptor);
 
@@ -267,10 +265,12 @@ public class SubscriptorsResourceUtil {
 
                             subscription.setGroupid(themeDisplay.getScopeGroupId());
                             subscription.setCompanyid(themeDisplay.getCompanyId());
+                            subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
 
                             subscription.setCategory(category);
                             subscription.setSubscriptor(subscriptor);
                             subscription.setStatus(SubscriptionStatus.ACTIVE);
+                            subscription.setActivationKey(SubscriptionUtil.getUniqueKey());
 
                             subscriptionService.save(subscription);
 

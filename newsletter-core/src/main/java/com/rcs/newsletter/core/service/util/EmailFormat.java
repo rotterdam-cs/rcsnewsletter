@@ -1,5 +1,6 @@
 package com.rcs.newsletter.core.service.util;
 
+import com.liferay.portlet.journal.model.JournalArticleDisplay;
 import java.util.ResourceBundle;
 import com.rcs.newsletter.core.model.commons.TemplateBlockComparator;
 import java.util.Collections;
@@ -22,6 +23,7 @@ import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.journal.model.JournalArticleConstants;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
@@ -36,6 +38,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
+import net.sf.ehcache.distribution.jgroups.JGroupEventMessage;
 import static com.rcs.newsletter.NewsletterConstants.*;
 
 public class EmailFormat {
@@ -252,6 +255,7 @@ public class EmailFormat {
             try {
                 String imagePathOriginal = (String) images.get(i);                    
                 String imagePath = StringEscapeUtils.unescapeHtml(image);
+                imagePath = imagePath.trim().replaceAll(" ", "%20");
                 imageUrl = new URL(imagePath);                    
                 File tempF = getFile(imageUrl);//To Improve probably add Cache
                 content = StringUtils.replace(content, imagePathOriginal, "cid:" + tempF.getName());
@@ -369,9 +373,9 @@ public class EmailFormat {
                if (ntb.size() > count) {                   
                    if (ntb.get(count).getArticleId() != null && ntb.get(count).getArticleId() != UNDEFINED) {                   
                         JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(ntb.get(count).getArticleId());
-                        String content = ja.getContentByLocale(ja.getDefaultLocale());
-                        content = ArticleUtils.getArticleContent(ja, themeDisplay.getLocale().toString());
-                        toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, ja.getTitle());
+                        JournalArticleDisplay jad = JournalArticleLocalServiceUtil.getArticleDisplay(ja.getGroupId(),ja.getArticleId(),"PRINT",themeDisplay.getLocale().getLanguage(),themeDisplay);
+                        String content = jad.getContent();
+                        toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, jad.getTitle());
                         toReplaceTmp = toReplaceTmp.replace(fTagBlockContent, content); 
                         resulttmp = resulttmp.replaceFirst(toReplace, toReplaceTmp);      
                         

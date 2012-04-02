@@ -191,8 +191,8 @@ public class SubscriptorsResourceUtil {
 
                     HSSFCell emailCell = row.getCell(EMAIL_INDEX);
                     if (emailCell != null && emailCell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
-                        if (emailCell.getStringCellValue() != null && isValidEmailAddress(emailCell.getStringCellValue())) {
-                            email = emailCell.getStringCellValue();
+                        if (emailCell.getStringCellValue() != null && isValidEmailAddress(emailCell.getStringCellValue().trim())) {
+                            email = emailCell.getStringCellValue().trim();
                         } else {
                             if (i > 0) {
 //                                FacesContext facesContext = FacesContext.getCurrentInstance();

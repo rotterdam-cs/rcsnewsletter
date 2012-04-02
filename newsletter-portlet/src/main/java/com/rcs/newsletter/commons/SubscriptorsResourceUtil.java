@@ -172,7 +172,6 @@ public class SubscriptorsResourceUtil {
                 for (int i = 0; i < sheet.getPhysicalNumberOfRows(); i++) {
                     int rwp = 0;
                     HSSFRow row = sheet.getRow(i);
-                    HSSFCell emailCell = row.getCell(EMAIL_INDEX);
                    
                     int realrow = row.getRowNum();
                     realrow = realrow + 1;
@@ -190,6 +189,7 @@ public class SubscriptorsResourceUtil {
                         lastName = lastNameCell.getStringCellValue();
                     }
 
+                    HSSFCell emailCell = row.getCell(EMAIL_INDEX);
                     if (emailCell != null && emailCell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
                         if (emailCell.getStringCellValue() != null && isValidEmailAddress(emailCell.getStringCellValue())) {
                             email = emailCell.getStringCellValue();

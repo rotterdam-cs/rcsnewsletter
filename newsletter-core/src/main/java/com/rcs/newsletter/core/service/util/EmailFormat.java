@@ -1,5 +1,6 @@
 package com.rcs.newsletter.core.service.util;
 
+import com.liferay.portlet.journal.model.JournalArticleDisplay;
 import java.util.ResourceBundle;
 import com.rcs.newsletter.core.model.commons.TemplateBlockComparator;
 import java.util.Collections;
@@ -372,9 +373,9 @@ public class EmailFormat {
                if (ntb.size() > count) {                   
                    if (ntb.get(count).getArticleId() != null && ntb.get(count).getArticleId() != UNDEFINED) {                   
                         JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(ntb.get(count).getArticleId());
-                        String content = ja.getContentByLocale(ja.getDefaultLocale());
-                        content = ArticleUtils.getArticleContent(ja, themeDisplay.getLocale().toString());
-                        toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, ja.getTitle());
+                        JournalArticleDisplay jad = JournalArticleLocalServiceUtil.getArticleDisplay(ja.getGroupId(),ja.getArticleId(),ja.getTemplateId(), "PRINT",themeDisplay.getLocale().getLanguage(),themeDisplay);
+                        String content = jad.getContent();
+                        toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, jad.getTitle());
                         toReplaceTmp = toReplaceTmp.replace(fTagBlockContent, content); 
                         resulttmp = resulttmp.replaceFirst(toReplace, toReplaceTmp);      
                         
@@ -397,7 +398,7 @@ public class EmailFormat {
         }
         return resulttmp;
     }
-    
+     
     /**
      * Get the edit code that allow the selection of articles on each block
      * @param templateContent

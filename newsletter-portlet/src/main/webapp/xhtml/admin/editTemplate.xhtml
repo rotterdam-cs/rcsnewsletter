@@ -43,7 +43,7 @@
         <h:form id="edit-template-email-form">
             <h:inputHidden value="#{templateCRUDManagedBean.id}"/>
             <h:inputHidden value="#{templateCRUDManagedBean.action}"/>
-            <p:dialog header="#{nlk['newsletter.admin.template.help']}" widgetVar="dlg3" showEffect="bounce" hideEffect="explode" height="450" width="400" resizable="false">  
+            <p:dialog modal="true" header="#{nlk['newsletter.admin.template.help']}" widgetVar="dlg3" showEffect="bounce" hideEffect="explode" height="450" width="400" resizable="false">  
                 <h:outputText value="#{templateCRUDManagedBean.helpPageText}" escape="false"/>  
             </p:dialog>            
             

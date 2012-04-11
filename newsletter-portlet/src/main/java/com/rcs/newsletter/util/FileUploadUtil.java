@@ -1,9 +1,7 @@
 package com.rcs.newsletter.util;
 
 import java.util.List;
-
 import javax.portlet.ActionRequest;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;

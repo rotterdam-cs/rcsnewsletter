@@ -1,30 +1,18 @@
 package com.rcs.newsletter.commons;
 
-import com.rcs.newsletter.util.FileUploadUtil;
-import java.io.IOException;
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletException;
-import javax.portlet.ResourceRequest;
-import javax.portlet.ResourceResponse;
-import org.apache.commons.fileupload.FileUploadException;
-import org.portletfaces.bridge.GenericFacesPortlet;
-
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.rcs.newsletter.portlets.admin.SubscriptorExportManagedBean;
-import java.util.List;
-import javax.portlet.PortletPreferences;
-import org.apache.commons.fileupload.FileItem;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import javax.inject.Inject;
+import com.rcs.newsletter.portlets.admin.SubscriptorExportManagedBean;
+import com.rcs.newsletter.util.FileUploadUtil;
+import java.io.IOException;
+import java.util.*;
+import javax.portlet.*;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.portletfaces.bridge.GenericFacesPortlet;
 
 public class NewsletterResourcePortlet extends GenericFacesPortlet {
 

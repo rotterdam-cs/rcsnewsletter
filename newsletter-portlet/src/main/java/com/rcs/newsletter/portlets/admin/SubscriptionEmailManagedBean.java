@@ -1,18 +1,18 @@
 package com.rcs.newsletter.portlets.admin;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import static com.rcs.newsletter.NewsletterConstants.NEWSLETTER_BUNDLE;
+import static com.rcs.newsletter.NewsletterConstants.SERVER_MESSAGE_BUNDLE;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import javax.inject.Inject;
-import javax.inject.Named;
-import org.springframework.context.annotation.Scope;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.log.Log;
 import com.rcs.newsletter.util.FacesUtil;
 import java.util.ResourceBundle;
 import javax.faces.context.FacesContext;
-
-import static com.rcs.newsletter.NewsletterConstants.*;
+import javax.inject.Inject;
+import javax.inject.Named;
+import org.springframework.context.annotation.Scope;
 
 /**
  *

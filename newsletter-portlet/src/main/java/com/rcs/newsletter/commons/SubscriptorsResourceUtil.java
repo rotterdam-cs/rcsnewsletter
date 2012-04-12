@@ -1,7 +1,12 @@
 package com.rcs.newsletter.commons;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.service.ServiceContextThreadLocal;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
@@ -12,29 +17,18 @@ import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.portlets.admin.SubscriberAdminManagedBean;
 import com.rcs.newsletter.portlets.admin.SubscriptorExportManagedBean;
 import com.rcs.newsletter.util.ExcelExporterUtil;
+import com.rcs.newsletter.util.SubscriptionUtil;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
-import javax.portlet.ResourceRequest;
-import javax.portlet.ResourceResponse;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.rcs.newsletter.NewsletterConstants;
-import com.rcs.newsletter.util.SubscriptionUtil;
-import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
-import javax.faces.context.FacesContext;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.poi.hssf.usermodel.*;
 
 /**
  *
@@ -231,7 +225,11 @@ public class SubscriptorsResourceUtil {
                          */
                         if (subscription == null) {
                             subscription = new NewsletterSubscription();
-                            subscription.setGroupid(themeDisplay.getScopeGroupId());
+                            
+                            // #6573
+                            // subscription.setGroupid(themeDisplay.getScopeGroupId());
+                            subscription.setGroupid(ServiceContextThreadLocal.getServiceContext().getScopeGroupId());
+                            
                             subscription.setCompanyid(themeDisplay.getCompanyId());
                             subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
                             
@@ -250,7 +248,11 @@ public class SubscriptorsResourceUtil {
                         }
                     } else {
                         subscriptor = new NewsletterSubscriptor();
-                        subscriptor.setGroupid(themeDisplay.getScopeGroupId());
+                        
+                        // #6573
+                        // subscriptor.setGroupid(themeDisplay.getScopeGroupId());
+                        subscriptor.setGroupid(ServiceContextThreadLocal.getServiceContext().getScopeGroupId());
+                        
                         subscriptor.setCompanyid(themeDisplay.getCompanyId());                        
                         
                         subscriptor.setEmail(email);
@@ -262,7 +264,10 @@ public class SubscriptorsResourceUtil {
                         if (subscriptorResult.isSuccess()) {
                             subscription = new NewsletterSubscription();
 
-                            subscription.setGroupid(themeDisplay.getScopeGroupId());
+                            // #6573
+                            // subscription.setGroupid(themeDisplay.getScopeGroupId());
+                            subscription.setGroupid(ServiceContextThreadLocal.getServiceContext().getScopeGroupId());
+                            
                             subscription.setCompanyid(themeDisplay.getCompanyId());
                             subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
 

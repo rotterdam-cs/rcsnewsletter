@@ -1,25 +1,25 @@
 package com.rcs.newsletter.portlets.onlineviewer;
 
-import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
-import com.rcs.newsletter.core.service.util.EmailFormat;
-import com.rcs.newsletter.core.model.NewsletterArchive;
-import com.rcs.newsletter.core.service.NewsletterArchiveService;
-import javax.servlet.http.HttpServletRequestWrapper;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.faces.context.FacesContext;
-import com.rcs.newsletter.core.model.NewsletterSubscription;
-import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
-import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import java.io.Serializable;
-import javax.inject.Inject;
-import javax.inject.Named;
-import org.springframework.context.annotation.Scope;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.NewsletterConstants;
+import com.rcs.newsletter.core.model.NewsletterArchive;
+import com.rcs.newsletter.core.model.NewsletterSubscription;
+import com.rcs.newsletter.core.service.NewsletterArchiveService;
+import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import com.rcs.newsletter.core.service.util.EmailFormat;
+import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
+import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import org.springframework.context.annotation.Scope;
 
 
 /**

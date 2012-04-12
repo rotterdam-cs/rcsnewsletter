@@ -1,19 +1,19 @@
 package com.rcs.newsletter.portlets.admin;
 
-import com.liferay.portal.theme.ThemeDisplay;
-import java.io.IOException;
-import javax.portlet.ReadOnlyException;
-import javax.portlet.RenderRequest;
-import javax.portlet.PortletPreferences;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.NewsletterConstants;
+import static com.rcs.newsletter.NewsletterConstants.LANGUAGE_BUNDLE;
+import static com.rcs.newsletter.NewsletterConstants.NEWSLETTER_BUNDLE;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
@@ -21,10 +21,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.portlet.PortletPreferences;
+import javax.portlet.ReadOnlyException;
+import javax.portlet.RenderRequest;
 import javax.portlet.ValidatorException;
 import org.springframework.context.annotation.Scope;
-
-import static com.rcs.newsletter.NewsletterConstants.*;
 
 /**
  *
@@ -32,7 +33,7 @@ import static com.rcs.newsletter.NewsletterConstants.*;
  */
 @Named
 @Scope("session")
-public class SubscriberAdminManagedBean extends PaginationManagedBean {
+public class SubscriberAdminManagedBean extends PaginationManagedBean implements Serializable{
 
     private static Log log = LogFactoryUtil.getLog(SubscriberAdminManagedBean.class);
     private NewsletterCategory filterCategory;

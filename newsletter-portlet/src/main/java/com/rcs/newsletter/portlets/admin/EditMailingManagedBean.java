@@ -1,33 +1,29 @@
 package com.rcs.newsletter.portlets.admin;
 
-import com.rcs.newsletter.core.model.commons.TemplateBlockComparator;
-import java.util.Collections;
-import com.rcs.newsletter.core.service.NewsletterTemplateBlockService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.springframework.beans.factory.annotation.Value;
-import java.util.ResourceBundle;
-import javax.faces.context.FacesContext;
-import com.rcs.newsletter.core.service.util.EmailFormat;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import static com.rcs.newsletter.NewsletterConstants.NEWSLETTER_BUNDLE;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
+import com.rcs.newsletter.core.model.commons.TemplateBlockComparator;
 import com.rcs.newsletter.core.service.NewsletterMailingService;
+import com.rcs.newsletter.core.service.NewsletterTemplateBlockService;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import com.rcs.newsletter.core.service.util.EmailFormat;
 import com.rcs.newsletter.util.FacesUtil;
+import java.util.Collections;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import static com.rcs.newsletter.NewsletterConstants.*;
 
 /**
  *

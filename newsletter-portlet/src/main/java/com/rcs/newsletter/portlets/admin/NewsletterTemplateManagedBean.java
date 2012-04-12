@@ -1,10 +1,6 @@
 package com.rcs.newsletter.portlets.admin;
 
-import com.rcs.newsletter.core.model.NewsletterCategory;
-import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
-import com.rcs.newsletter.core.service.NewsletterCategoryService;
-import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import java.util.List;
 import javax.annotation.PostConstruct;

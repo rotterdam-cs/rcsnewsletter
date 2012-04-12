@@ -4,6 +4,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
@@ -187,7 +188,11 @@ public class UserUiStateManagedBean implements Serializable {
     }
 
     public Long getGroupid() {
-        groupid = getThemeDisplay().getScopeGroupId();
+        
+        // # 6573
+        // groupid = getThemeDisplay().getScopeGroupId();
+        groupid = ServiceContextThreadLocal.getServiceContext().getScopeGroupId();
+        
         return groupid;
     }
 

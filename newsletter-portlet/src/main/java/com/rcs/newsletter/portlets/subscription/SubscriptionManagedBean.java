@@ -1,14 +1,10 @@
 package com.rcs.newsletter.portlets.subscription;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.mail.MailMessage;
-import javax.mail.internet.InternetAddress;
-import com.rcs.newsletter.core.service.util.EmailFormat;
-import java.util.UUID;
-import javax.servlet.http.HttpServletRequestWrapper;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.faces.context.FacesContext;
-import java.util.ResourceBundle;
+import com.liferay.portal.kernel.util.Validator;
+import static com.rcs.newsletter.NewsletterConstants.*;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
@@ -19,20 +15,22 @@ import com.rcs.newsletter.core.service.NewsletterPortletSettingsService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import com.rcs.newsletter.core.service.util.EmailFormat;
 import com.rcs.newsletter.core.service.util.LiferayMailingUtil;
+import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
 import com.rcs.newsletter.util.FacesUtil;
+import com.rcs.newsletter.util.SubscriptionUtil;
 import java.io.Serializable;
+import java.util.Map;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.mail.internet.InternetAddress;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import org.springframework.context.annotation.Scope;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-
-import com.liferay.portal.kernel.util.Validator;
-import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
-import static com.rcs.newsletter.NewsletterConstants.*;
-import com.rcs.newsletter.util.SubscriptionUtil;
 
 /**
  *

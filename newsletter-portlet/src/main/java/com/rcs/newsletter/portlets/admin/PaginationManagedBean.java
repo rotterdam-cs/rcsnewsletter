@@ -1,11 +1,12 @@
 package com.rcs.newsletter.portlets.admin;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class PaginationManagedBean {
+public class PaginationManagedBean implements Serializable{
     
     private static Log log = LogFactoryUtil.getLog(SubscriberAdminManagedBean.class);    
     

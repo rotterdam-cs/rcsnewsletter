@@ -1,19 +1,15 @@
 
 package com.rcs.newsletter.commons;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.portlet.ActionRequest;
 import javax.portlet.filter.ActionRequestWrapper;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
-
-
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 public class FileUploadActionRequestWrapper extends ActionRequestWrapper {
 	

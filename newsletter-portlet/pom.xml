@@ -123,11 +123,23 @@
             <artifactId>primefaces</artifactId>
             <version>2.2.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.rcs.portletfaces</groupId>
+            <artifactId>portletfaces-bridge-impl</artifactId>
+            <version>2.0.1</version>
+        </dependency>        
         <dependency>
             <groupId>org.portletfaces</groupId>
-            <artifactId>portletfaces-bridge</artifactId>
+            <artifactId>portletfaces-bridge-api</artifactId>
             <version>2.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.portletfaces</groupId>
+            <artifactId>portletfaces-logging</artifactId>
+            <version>1.1.0</version>
+        </dependency>   
+        
         <dependency>
             <groupId>org.portletfaces.alloy.faces</groupId>
             <artifactId>alloyfaces</artifactId>

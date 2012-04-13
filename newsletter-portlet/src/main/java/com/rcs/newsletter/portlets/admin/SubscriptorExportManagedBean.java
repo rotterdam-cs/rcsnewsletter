@@ -1,18 +1,19 @@
 package com.rcs.newsletter.portlets.admin;
 
-import com.rcs.newsletter.core.service.NewsletterCategoryService;
-import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
-import javax.inject.Inject;
-import javax.inject.Named;
-import org.springframework.context.annotation.Scope;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.NewsletterConstants;
 import com.rcs.newsletter.commons.ResourceTypeEnum;
 import com.rcs.newsletter.core.model.NewsletterCategory;
+import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
+import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
+import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.inject.Inject;
+import javax.inject.Named;
+import org.springframework.context.annotation.Scope;
 
 /**
  *
@@ -20,7 +21,7 @@ import javax.faces.event.AjaxBehaviorEvent;
  */
 @Named
 @Scope("session")
-public class SubscriptorExportManagedBean {
+public class SubscriptorExportManagedBean implements Serializable{
 
     private static Log log = LogFactoryUtil.getLog(SubscriptorExportManagedBean.class);
     private NewsletterCategory filterCategory;

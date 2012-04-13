@@ -70,7 +70,7 @@
             <iframe height="450" id="editortest" name="editortest" src="/html/js/editor/editor.jsp?p_l_id=#{templateCRUDManagedBean.plid}&amp;p_main_path=%2Fde%2Fc&amp;doAsUserId=#{templateCRUDManagedBean.doAsUserId}&amp;editorImpl=ckeditor&amp;toolbarSet=liferay-article&amp;initMethod=initEditor&amp;onChangeMethod=editorContentChanged&amp;cssPath=%2Fhtml%2Fthemes%2Fcontrol_panel%2Fcss&amp;cssClasses=portlet+portlet-journal" style="border: none;" width="95%"></iframe>
 
             <p:growl id="editSubscriptionMailMessage"/>
-            <span id="errmsg1"><p:commandButton styleClass="newsletter-forms-button" id="okbuttonbad" value="#{msg['newsletter.admin.general.edit']}" onclick="isTemplateValid()" ajax="true" /></span>
+            <span id="errmsg1"><p:commandButton styleClass="newsletter-forms-button" id="okbuttonbad" value="#{msg['newsletter.admin.general.validate']}" onclick="isTemplateValid()" ajax="true" /></span>
             <span id="errmsg2" class="hiddenMsg"><p:commandButton styleClass="newsletter-forms-button hiddenMsg" id="okbuttongood" value="#{msg['newsletter.admin.general.edit']}" update="editSubscriptionMailMessage" action="#{templateCRUDManagedBean.save}" ajax="false" /></span>
             <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />            
         </h:form>

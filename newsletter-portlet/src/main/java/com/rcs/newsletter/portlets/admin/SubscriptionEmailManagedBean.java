@@ -187,17 +187,17 @@ public class SubscriptionEmailManagedBean {
 
             if (result.isSuccess()) {
                 String infoMsg = serverMessageBundle.getString("newsletter.admin.subscriptionmail.saved");
-                FacesUtil.infoMessage(infoMsg);
+                uiState.setSuccesMessage(infoMsg);
             } else {
                 String errorMsg = serverMessageBundle.getString("newsletter.admin.subscriptionmail.notsaved");
-                FacesUtil.errorMessage(errorMsg);
+                uiState.setErrorMessage(errorMsg);
             }
         } else {
             String errorMsg = serverMessageBundle.getString("newsletter.admin.subscriptionmail.notsaved");
-            FacesUtil.errorMessage(errorMsg);
+            uiState.setErrorMessage(errorMsg);
         }
 
-        return "admin";
+        return "admin?faces-redirect=true";
     }
     /*public String getDefaultEditor(){
         return PropsUtil.get(PropsKeys.EDITOR_WYSIWYG_DEFAULT);

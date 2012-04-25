@@ -7,8 +7,8 @@ import static com.rcs.newsletter.NewsletterConstants.SERVER_MESSAGE_BUNDLE;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import com.rcs.newsletter.util.FacesUtil;
 import java.util.ResourceBundle;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,24 +20,21 @@ import org.springframework.context.annotation.Scope;
  */
 @Named
 @Scope("request")
+@ViewScoped
 public class templateCRUDManagedBean {
 
     private static Log log = LogFactoryUtil.getLog(templateCRUDManagedBean.class);
-    
     private static final String TEMPLATE_HELP_INFO = "newsletter.admin.template.info";
-    
     @Inject
     NewsletterTemplateService templateCRUDService;
-    
     @Inject
     private UserUiStateManagedBean uiState;
-    
     /////////////// PROPERTIES ////////////////////
     private long id;
     private CRUDActionEnum action;
-    private String name;    
+    private String name;
     private String template;
-    private String helpPageText;    
+    private String helpPageText;
     private Long plid;
     private String doAsUserId;
 
@@ -64,7 +61,7 @@ public class templateCRUDManagedBean {
 
     public void setTemplate(String template) {
         this.template = template;
-    }    
+    }
 
     public String getName() {
         return name;
@@ -84,7 +81,8 @@ public class templateCRUDManagedBean {
     public void setHelpPageText(String helpPageText) {
         this.helpPageText = helpPageText;
     }
-     public Long getPlid() {
+
+    public Long getPlid() {
         setPlid(uiState.getThemeDisplay().getPlid());
         return plid;
     }
@@ -103,10 +101,9 @@ public class templateCRUDManagedBean {
     }
 
     //////////////// METHODS //////////////////////
-    
     public String redirectCreateTemplate() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.TEMPLATE_TAB_INDEX);
-        this.setAction(CRUDActionEnum.CREATE);        
+        this.setAction(CRUDActionEnum.CREATE);
         return "editTemplate";
     }
 
@@ -116,49 +113,50 @@ public class templateCRUDManagedBean {
         if (serviceActionResult.isSuccess()) {
             NewsletterTemplate newsletterTemplate = (NewsletterTemplate) serviceActionResult.getPayload();
             this.name = newsletterTemplate.getName();
-            this.template = newsletterTemplate.getTemplate();            
+            this.template = newsletterTemplate.getTemplate();
             this.setAction(CRUDActionEnum.UPDATE);
         } else {
-            return "admin";
+            return "admin?faces-redirect=true";
         }
 
         return "editTemplate";
     }
 
     public String redirectDeleteTemplate() {
-        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.TEMPLATE_TAB_INDEX);        
+        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.TEMPLATE_TAB_INDEX);
         return "deleteTemplate";
     }
 
     public String save() {
-        log.info("It is here");
         NewsletterTemplate newsletterTemplate = null;
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         String message = "";
-        if(getAction() == null){
+
+        if (getAction() == null) {
             log.error("Action null");
+            this.setAction(CRUDActionEnum.CREATE);
         }
-        
+
         switch (getAction()) {
             case CREATE:
-                newsletterTemplate = new NewsletterTemplate();                            
+                newsletterTemplate = new NewsletterTemplate();
                 newsletterTemplate.setGroupid(uiState.getGroupid());
                 newsletterTemplate.setCompanyid(uiState.getCompanyid());
-                            
+
                 fillNewsletterTemplate(newsletterTemplate);
                 ServiceActionResult<NewsletterTemplate> saveResult = templateCRUDService.save(newsletterTemplate);
 
                 if (saveResult.isSuccess()) {
                     message = serverMessageBundle.getString("newsletter.admin.template.save.success");
-                    FacesUtil.infoMessage(message);
+                    uiState.setSuccesMessage(message);
                 } else {
                     message = serverMessageBundle.getString("newsletter.admin.template.save.failure");
-                    FacesUtil.errorMessage(message);
+                    uiState.setErrorMessage(message);
                 }
                 break;
             case UPDATE:
-                
+
                 ServiceActionResult serviceActionResult = templateCRUDService.findById(getId());
                 if (serviceActionResult.isSuccess()) {
                     newsletterTemplate = (NewsletterTemplate) serviceActionResult.getPayload();
@@ -168,16 +166,20 @@ public class templateCRUDManagedBean {
 
                     if (updateResult.isSuccess()) {
                         message = serverMessageBundle.getString("newsletter.admin.template.update.success");
-                        FacesUtil.infoMessage(message);
+                        uiState.setSuccesMessage(message);
                     } else {
                         message = serverMessageBundle.getString("newsletter.admin.template.update.failure");
-                        FacesUtil.errorMessage(message);
+                        uiState.setErrorMessage(message);
                     }
                 }
                 break;
         }
         
-        return "admin";
+        return "admin?faces-redirect=true";
+    }
+
+    public String cancel() {
+        return "admin?faces-redirect=true";
     }
 
     private void fillNewsletterTemplate(NewsletterTemplate newsletterTemplate) {
@@ -190,23 +192,23 @@ public class templateCRUDManagedBean {
         String message = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
-        
+
         if (serviceActionResult.isSuccess()) {
             NewsletterTemplate newsletterTemplate = (NewsletterTemplate) serviceActionResult.getPayload();
             ServiceActionResult<NewsletterTemplate> deleteActionResult = templateCRUDService.delete(newsletterTemplate);
 
             if (deleteActionResult.isSuccess()) {
                 message = serverMessageBundle.getString("newsletter.admin.template.delete.success");
-                FacesUtil.infoMessage(message);
+                uiState.setSuccesMessage(message);
             } else {
                 message = serverMessageBundle.getString("newsletter.admin.template.delete.failure");
-                FacesUtil.errorMessage(message);
+                uiState.setErrorMessage(message);
             }
         } else {
             message = serverMessageBundle.getString("newsletter.admin.template.delete.failure");
-            FacesUtil.errorMessage(message);
+            uiState.setErrorMessage(message);
         }
 
-        return "admin";
+        return "admin?faces-redirect=true";
     }
 }

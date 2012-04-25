@@ -8,7 +8,7 @@
 >    
     <f:loadBundle basename="Language" var="msg" />
     <f:loadBundle basename="Newsletter" var="nlk" />
-    <h:head>        
+    <h:head>
     </h:head>
      <script type="text/javascript">
     //<![CDATA[ 
@@ -37,7 +37,7 @@
         }      
     ////]]>
      </script>
-    <h:body>        
+    <h:body>  
         <c:if test="#{templateCRUDManagedBean.action == 'CREATE'}" >
         <h2>#{nlk['newsletter.admin.templates.add']}</h2>
         </c:if>
@@ -63,8 +63,8 @@
             </div>
             <p:growl id="editSubscriptionMailMessage"/>
             <span id="errmsg1"><p:commandButton styleClass="newsletter-forms-button" id="okbuttonbad" value="#{msg['newsletter.admin.general.validate']}" onclick="isTemplateValid()" ajax="true" /></span>
-            <span id="errmsg2" class="hiddenMsg"><p:commandButton styleClass="newsletter-forms-button hiddenMsg" id="okbuttongood" value="#{msg['newsletter.admin.general.save']}" update="editSubscriptionMailMessage" action="#{templateCRUDManagedBean.save}" ajax="false" /></span>
-            <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />            
+            <span id="errmsg2" class="hiddenMsg"><p:commandButton styleClass="newsletter-forms-button hiddenMsg" id="okbuttongood" value="#{msg['newsletter.admin.general.save']}" update="editSubscriptionMailMessage" action="#{templateCRUDManagedBean.save}" ajax="false" /></span>            
+            <span id="errmsg3"><p:commandButton styleClass="newsletter-forms-button hiddenMsg" id="okbuttongood3" value="#{msg['newsletter.admin.general.cancel']}" update="editSubscriptionMailMessage" action="#{templateCRUDManagedBean.cancel}" ajax="false" /></span>
         </h:form>
     </h:body>
 </html>

@@ -31,7 +31,8 @@ import org.springframework.context.annotation.Scope;
 @Named
 @Scope("request")
 public class NewsletterMailingManagedBean implements Serializable {
-    private static Log log = LogFactoryUtil.getLog(NewsletterMailingManagedBean.class);  
+
+    private static Log log = LogFactoryUtil.getLog(NewsletterMailingManagedBean.class);
     private static final long serialVersionUID = 1L;
     @Inject
     private UserUiStateManagedBean uiState;
@@ -46,10 +47,9 @@ public class NewsletterMailingManagedBean implements Serializable {
     @Inject
     NewsletterSubscriptorService subscriptorService;
     @Inject
-    private NewsletterArchiveService archiveService;    
+    private NewsletterArchiveService archiveService;
     @Inject
     private NewsletterTemplateBlockService templateBlockService;
-            
     private List<MailingTableRow> mailingList;
     private Long mailingId;
     private String testEmail;
@@ -79,36 +79,36 @@ public class NewsletterMailingManagedBean implements Serializable {
     }
 
     public String beginDeletion() {
-        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.MAILING_TAB_INDEX);        
+        uiState.setAdminActiveTabIndex(UserUiStateManagedBean.MAILING_TAB_INDEX);
         mailingBean.setMailingId(mailingId);
         return "deleteMailing";
     }
 
-    public String confirmDeletion() {        
+    public String confirmDeletion() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
-        
+
         ServiceActionResult<NewsletterMailing> result = service.findById(mailingId);
         if (!result.isSuccess()) {
-            FacesUtil.errorMessage(newsletterMessageBundle.getString("newsletter.admin.mailing.not.found"));
+            uiState.setErrorMessage(newsletterMessageBundle.getString("newsletter.admin.mailing.not.found"));
             return null;
         }
-        
+
         //Delete all TemplateBlocks that belongs to this mailing
-        List <NewsletterTemplateBlock> ntbsOld =  templateBlockService.findAllByMailing(result.getPayload());
+        List<NewsletterTemplateBlock> ntbsOld = templateBlockService.findAllByMailing(result.getPayload());
         for (NewsletterTemplateBlock ntbOld : ntbsOld) {
             templateBlockService.delete(ntbOld);
         }
-        
-        result = service.delete(result.getPayload());        
+
+        result = service.delete(result.getPayload());
         if (result.isSuccess()) {
             init();
         }
-        
-        return "admin";
+
+        return "admin?faces-redirect=true";
     }
-    
-    public void sendTestMailing() {   
+
+    public void sendTestMailing() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
 
@@ -118,13 +118,13 @@ public class NewsletterMailingManagedBean implements Serializable {
         } else if (service.validateTemplateFormat(selectedMailing.getMailing().getId())) {
             service.sendTestMailing(selectedMailing.getMailing().getId(), testEmail, uiState.getThemeDisplay());
             FacesUtil.infoMessage(newsletterMessageBundle.getString("newsletter.admin.mailing.test.sent"));
-        } else {            
+        } else {
             String message = newsletterMessageBundle.getString(EditMailingManagedBean.NO_BLOCKS_IN_TEMPLATE);
             FacesUtil.errorMessage(message);
             return;
         }
     }
-    
+
     public String sendMailing() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
@@ -132,22 +132,22 @@ public class NewsletterMailingManagedBean implements Serializable {
         String message = "";
         ServiceActionResult<NewsletterMailing> result = service.findById(mailingId);
         if (!result.isSuccess()) {
-            FacesUtil.errorMessage(newsletterMessageBundle.getString("newsletter.admin.mailing.not.found"));
-            return "admin";
-        }        
-        
-        NewsletterMailing mailing = result.getPayload();        
-        
+            uiState.setErrorMessage(newsletterMessageBundle.getString("newsletter.admin.mailing.not.found"));
+            return "admin?faces-redirect=true";
+        }
+
+        NewsletterMailing mailing = result.getPayload();
+
         //we are going to save this version of the mailing        
-        String emailContent = service.getEmailFromTemplate(mailingId, uiState.getThemeDisplay());  
-               
+        String emailContent = service.getEmailFromTemplate(mailingId, uiState.getThemeDisplay());
+
         Long archiveId = saveArchiveForMailing(mailing.getName(), mailing.getList().getName(), mailing.getName(), emailContent);
         if (service.validateTemplateFormat(mailingId)) {
             service.sendMailing(mailingId, uiState.getThemeDisplay(), archiveId);
-            
+
             //We remove the mailing that is already sent
             //Delete all TemplateBlocks that belongs to this mailing
-            List <NewsletterTemplateBlock> ntbsOld =  templateBlockService.findAllByMailing(result.getPayload());
+            List<NewsletterTemplateBlock> ntbsOld = templateBlockService.findAllByMailing(result.getPayload());
             for (NewsletterTemplateBlock ntbOld : ntbsOld) {
                 templateBlockService.delete(ntbOld);
             }
@@ -155,26 +155,27 @@ public class NewsletterMailingManagedBean implements Serializable {
 
             if (result.isSuccess()) {
                 init();
-                message = serverMessageBundle.getString("newsletter.admin.mailing.sent.succesfully");        
-                FacesUtil.infoMessage(message);
+                message = serverMessageBundle.getString("newsletter.admin.mailing.sent.succesfully");
+                uiState.setSuccesMessage(message);
             } else {
-                message = serverMessageBundle.getString("newsletter.admin.mailing.delete.failure");        
-                FacesUtil.infoMessage(message);
+                message = serverMessageBundle.getString("newsletter.admin.mailing.delete.failure");
+                uiState.setErrorMessage(message);
             }
-            
+
         } else {
             message = newsletterMessageBundle.getString(EditMailingManagedBean.NO_BLOCKS_IN_TEMPLATE);
-            FacesUtil.errorMessage(message);
+            uiState.setErrorMessage(message);
         }
-        
-        return "admin";
+
+        return "admin?faces-redirect=true";
     }
-    
+
     /**
      * Save this version of the Mailing
+     *
      * @param mailingName
      * @param categoryName
-     * @param emailBody 
+     * @param emailBody
      */
     private Long saveArchiveForMailing(String mailingName, String categoryName, String articleTitle, String emailBody) {
         NewsletterArchive archive = new NewsletterArchive();
@@ -184,13 +185,13 @@ public class NewsletterMailingManagedBean implements Serializable {
         archive.setCategoryName(categoryName);
         archive.setArticleTitle(articleTitle);
         archive.setEmailBody(emailBody);
-        archive.setName(mailingName);        
+        archive.setName(mailingName);
 
         archiveService.save(archive);
         return archive.getId();
     }
-    
-     public String redirectConfirmSend() {         
+
+    public String redirectConfirmSend() {
         if (selectedMailing == null) {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
@@ -201,39 +202,40 @@ public class NewsletterMailingManagedBean implements Serializable {
             return "listsSendConfirmation";
         }
     }
-     
-    public String getSelectedListName(){
-        if (selectedMailing == null) {            
+
+    public String getSelectedListName() {
+        if (selectedMailing == null) {
             return null;
-        }else{
+        } else {
             return selectedMailing.getMailing().getList().getName();
         }
     }
-    public String getSelectedMailingName(){
-        if (selectedMailing == null) {            
+
+    public String getSelectedMailingName() {
+        if (selectedMailing == null) {
             return null;
-        }else{
+        } else {
             return selectedMailing.getMailing().getName();
         }
     }
-    public String getSelectedArticleName(){
-        if (selectedMailing == null) {            
+
+    public String getSelectedArticleName() {
+        if (selectedMailing == null) {
             return null;
-        }else{
+        } else {
             return selectedMailing.getArticleTitle();
         }
     }
-    
-    public int getSelectedListCountMembers(){
-        if (selectedMailing == null) {            
+
+    public int getSelectedListCountMembers() {
+        if (selectedMailing == null) {
             return 0;
-        }else{            
+        } else {
             NewsletterCategory filterCategory = selectedMailing.getMailing().getList();
             return subscriptorService.findByCategoryAndStatusCount(filterCategory, SubscriptionStatus.ACTIVE);
         }
     }
-    
-    
+
     public Long getMailingId() {
         return mailingId;
     }
@@ -269,13 +271,12 @@ public class NewsletterMailingManagedBean implements Serializable {
 
     private List<MailingTableRow> createMailingsList(List<NewsletterMailing> payload) {
         List<MailingTableRow> ret = new LinkedList<MailingTableRow>();
-        
+
         for (NewsletterMailing newsletterMailing : payload) {
             //ret.add(new MailingTableRow(newsletterMailing, uiState.getTitleByArticleId(newsletterMailing.getArticleId())));
             ret.add(new MailingTableRow(newsletterMailing, newsletterMailing.getName()));
         }
-        
+
         return ret;
     }
-    
 }

@@ -141,12 +141,12 @@ public class SubscriberCRUDManagedBean {
         String message = "";
         if (subscriptorService.update(subscriptor).isSuccess()) {
             message = serverMessageBundle.getString("newsletter.admin.subscriptor.update.succesfull");
-            FacesUtil.infoMessage(message);
+             uiState.setSuccesMessage(message);
         } else {
             message = serverMessageBundle.getString("newsletter.admin.subscriptor.update.failure");
-            FacesUtil.errorMessage(message);
+            uiState.setErrorMessage(message);
         }
-        return "admin";
+        return "admin?faces-redirect=true";
     }
     
     
@@ -180,10 +180,10 @@ public class SubscriberCRUDManagedBean {
             }            
             if (subscriptorService.delete(subscriptor).isSuccess()) {
                 message = serverMessageBundle.getString("newsletter.admin.subscriptor.delete.succesfull");
-                FacesUtil.infoMessage(message);
+                uiState.setSuccesMessage(message);
             } else {
                 message = serverMessageBundle.getString("newsletter.admin.subscriptor.delete.failure");
-                FacesUtil.errorMessage(message);
+                uiState.setErrorMessage(message);
             }
             
         } else {
@@ -192,13 +192,13 @@ public class SubscriberCRUDManagedBean {
             log.error("Deleting subscription for category: " + nls.getCategory().getName() + "and Subscriptor: " + nls.getSubscriptor().getFirstName());
             if (subscriptionService.delete(nls).isSuccess()) {
                 message = serverMessageBundle.getString("newsletter.admin.subscriptor.delete.succesfull");                
-                FacesUtil.infoMessage(message);
+                uiState.setSuccesMessage(message);
             } else {
                 message = serverMessageBundle.getString("newsletter.admin.subscriptor.delete.failure");
-                FacesUtil.errorMessage(message);
+                uiState.setErrorMessage(message);
             }
             
         }
-        return "admin";
+        return "admin?faces-redirect=true";
     }
 }

@@ -134,7 +134,7 @@ public class EditMailingManagedBean {
             }  
             
             mailingManagedBean.init(); 
-            return "admin";
+            return "admin?faces-redirect=true";
         } else {
             FacesUtil.errorMessage("Failed to create mailing");
             List<String> validationKeys = result.getValidationKeys();

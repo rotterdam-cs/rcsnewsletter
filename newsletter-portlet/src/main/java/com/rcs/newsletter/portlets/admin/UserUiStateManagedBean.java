@@ -9,6 +9,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
+import com.rcs.newsletter.util.FacesUtil;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -29,24 +30,24 @@ public class UserUiStateManagedBean implements Serializable {
 
     private static Log logger = LogFactoryUtil.getLog(UserUiStateManagedBean.class);
     private static final long serialVersionUID = 1L;
-    
     public static final int LISTS_TAB_INDEX = 0;
     public static final int SUBSCRIBERS_TAB_INDEX = 1;
-    public static final int TEMPLATE_TAB_INDEX = 2;    
+    public static final int TEMPLATE_TAB_INDEX = 2;
     public static final int MAILING_TAB_INDEX = 3;
     public static final int ARCHIVE_TAB_INDEX = 4;
-    
-    private Long groupid;    
+    private Long groupid;
     private Long companyid;
-    
+    //Message for do a redirect
+    private String succesMessage = "";
+    private String errorMessage = "";
+    //True, if the group has changed
+    private boolean changeGroup = false;
     @Value("${newsletter.articles.type}")
     private String newsletterArticleType;
-    
     private int adminActiveTabIndex;
-    
     //global lists
-    List<JournalArticle> journalArticles;   
-    
+    List<JournalArticle> journalArticles;
+
     @PostConstruct
     public void init() {
         adminActiveTabIndex = LISTS_TAB_INDEX;
@@ -68,8 +69,9 @@ public class UserUiStateManagedBean implements Serializable {
 
     /**
      * Obtain an article by his id
+     *
      * @param articleId
-     * @return 
+     * @return
      */
     public JournalArticle getJournalArticleByArticleId(long articleId) {
         JournalArticle result = null;
@@ -88,11 +90,11 @@ public class UserUiStateManagedBean implements Serializable {
     //    refresh();
     //    return journalArticles;
     //}
-
     /**
      * Obtain the title of the article by his id
+     *
      * @param articleId
-     * @return 
+     * @return
      */
     public String getTitleByArticleId(long articleId) {
         String result = "";
@@ -104,17 +106,18 @@ public class UserUiStateManagedBean implements Serializable {
 
         return result;
     }
-    
+
     public String getContent(long journalArticleId) {
         JournalArticle journalArticle = getJournalArticleByArticleId(journalArticleId);
-        
+
         return getContent(journalArticle);
     }
 
     /**
      * Obtain the content of the article
+     *
      * @param journalArticle
-     * @return 
+     * @return
      */
     public String getContent(JournalArticle journalArticle) {
         String result = null;
@@ -139,35 +142,28 @@ public class UserUiStateManagedBean implements Serializable {
     }
 
     /**
-     * @DEPRECATED
-     * Method that filter the articles by a specified type
+     * @DEPRECATED Method that filter the articles by a specified type
      * @param type
-     * @return 
+     * @return
      */
-    /*public List<JournalArticle> findArticlesByType(String type) {
-        HashMap<String, JournalArticle> result = new HashMap<String, JournalArticle>();
-        try {
-            List<JournalArticle> allJournalArticles = JournalArticleLocalServiceUtil.getArticles();
-
-            for (JournalArticle article : allJournalArticles) {
-                //We only put the last version of the article
-                if (!result.containsKey(article.getArticleId())
-                        && article.getType().equals(type)) {
-                    JournalArticle lastArticle = JournalArticleLocalServiceUtil.getLatestArticle(
-                            article.getGroupId(),
-                            article.getArticleId());
-                    result.put(lastArticle.getArticleId(), lastArticle);
-                }
-            }
-        } catch (SystemException ex) {
-            logger.warn("Could not filter the articles by this category", ex);
-        } catch (PortalException ex) {
-            logger.warn("Could not filter the articles by this category", ex);
-        }
-
-        return new ArrayList<JournalArticle>(result.values());
-    }*/
-
+    /*
+     * public List<JournalArticle> findArticlesByType(String type) {
+     * HashMap<String, JournalArticle> result = new HashMap<String,
+     * JournalArticle>(); try { List<JournalArticle> allJournalArticles =
+     * JournalArticleLocalServiceUtil.getArticles();
+     *
+     * for (JournalArticle article : allJournalArticles) { //We only put the
+     * last version of the article if
+     * (!result.containsKey(article.getArticleId()) &&
+     * article.getType().equals(type)) { JournalArticle lastArticle =
+     * JournalArticleLocalServiceUtil.getLatestArticle( article.getGroupId(),
+     * article.getArticleId()); result.put(lastArticle.getArticleId(),
+     * lastArticle); } } } catch (SystemException ex) { logger.warn("Could not
+     * filter the articles by this category", ex); } catch (PortalException ex)
+     * { logger.warn("Could not filter the articles by this category", ex); }
+     *
+     * return new ArrayList<JournalArticle>(result.values()); }
+     */
     public void refresh() {
         try {
             //journalArticles = findArticlesByType(newsletterArticleType);
@@ -188,18 +184,67 @@ public class UserUiStateManagedBean implements Serializable {
     }
 
     public Long getGroupid() {
-        
+
         // #6573
         // groupid = getThemeDisplay().getScopeGroupId();
+        if (groupid != null) {
+            setChangeGroup(!groupid.equals(ServiceContextThreadLocal.getServiceContext().getScopeGroupId()));
+        }
         groupid = ServiceContextThreadLocal.getServiceContext().getScopeGroupId();
-        
+
         return groupid;
     }
 
     public void setGroupid(Long groupid) {
+        setChangeGroup(!groupid.equals(this.groupid));
         this.groupid = groupid;
     }
-    
-    
-    
+
+    /**
+     * Return true is the group was changed
+     *
+     * @return
+     */
+    public boolean isChangeGroup() {
+        return changeGroup;
+    }
+
+    public void setChangeGroup(boolean changeGroup) {
+        this.changeGroup = changeGroup;
+    }
+
+    public String getSuccesMessage() {
+        String msg = this.succesMessage;
+        setSuccesMessage("");
+        return msg;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public void setSuccesMessage(String succesMessage) {
+        this.succesMessage = succesMessage;
+    }
+
+    public String getErrorMessage() {
+        String msg = this.errorMessage;
+        setErrorMessage("");
+        return msg;
+    }
+
+    /**
+     * Set Message when is redirected #7439
+     */
+    public void getMessage() {
+        String succesMsg = getSuccesMessage();
+        if (!succesMsg.isEmpty()) {
+            FacesUtil.infoMessage(succesMsg);
+        }
+        String errorMsg = getErrorMessage();
+        if (!errorMsg.isEmpty()) {
+            FacesUtil.errorMessage(errorMsg);
+        }
+
+    }
 }

@@ -72,7 +72,7 @@
             <p:growl id="editSubscriptionMailMessage"/>
             <span id="errmsg1"><p:commandButton styleClass="newsletter-forms-button" id="okbuttonbad" value="#{msg['newsletter.admin.general.validate']}" onclick="isTemplateValid()" ajax="true" /></span>
             <span id="errmsg2" class="hiddenMsg"><p:commandButton styleClass="newsletter-forms-button hiddenMsg" id="okbuttongood" value="#{msg['newsletter.admin.general.save']}" update="editSubscriptionMailMessage" action="#{templateCRUDManagedBean.save}" ajax="false" /></span>
-            <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />            
+                        <span id="errmsg3"><p:commandButton styleClass="newsletter-forms-button hiddenMsg" id="okbuttongood3" value="#{msg['newsletter.admin.general.cancel']}" update="editSubscriptionMailMessage" action="#{templateCRUDManagedBean.cancel}" ajax="false" /></span>     
         </h:form>
     </h:body>
 </html>

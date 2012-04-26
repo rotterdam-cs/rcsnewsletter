@@ -11,6 +11,11 @@
     </h:head>
     <h:body>
         <h:form>
+             <f:view>
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{userUiStateManagedBean.getMessage}" />
+                </f:metadata>
+            </f:view>
             <p:messages id="messages" />
             <p:tabView activeIndex="#{userUiStateManagedBean.adminActiveTabIndex}">
                 <p:tab title="#{msg['newsletter.admin.lists']}">

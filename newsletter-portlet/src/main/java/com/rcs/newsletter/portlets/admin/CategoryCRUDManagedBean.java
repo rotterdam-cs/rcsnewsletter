@@ -22,13 +22,10 @@ import org.springframework.context.annotation.Scope;
 public class CategoryCRUDManagedBean {
 
     private static Log log = LogFactoryUtil.getLog(CategoryCRUDManagedBean.class);
-    
     @Inject
     NewsletterCategoryService categoryCRUDService;
-    
     @Inject
     private UserUiStateManagedBean uiState;
-    
     /////////////// PROPERTIES ////////////////////
     private long id;
     private CRUDActionEnum action;
@@ -103,15 +100,12 @@ public class CategoryCRUDManagedBean {
     public void setAdminEmail(String adminEmail) {
         this.adminEmail = adminEmail;
     }
-    
-    
 
     //////////////// METHODS //////////////////////
-    
     public String redirectCreateCategory() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
         this.setAction(CRUDActionEnum.CREATE);
-        
+
         return "editCategory";
     }
 
@@ -127,7 +121,7 @@ public class CategoryCRUDManagedBean {
             this.adminEmail = newsletterCategory.getAdminEmail();
             this.setAction(CRUDActionEnum.UPDATE);
         } else {
-            return "admin";
+            return "admin?faces-redirect=true";
         }
 
         return "editCategory";
@@ -135,7 +129,7 @@ public class CategoryCRUDManagedBean {
 
     public String redirectDeleteCategory() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
-        
+
         return "deleteCategory";
     }
 
@@ -143,22 +137,22 @@ public class CategoryCRUDManagedBean {
         NewsletterCategory newsletterCategory = null;
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
-        String message = "";        
+        String message = "";
         switch (getAction()) {
             case CREATE:
                 newsletterCategory = new NewsletterCategory();
                 newsletterCategory.setGroupid(uiState.getGroupid());
                 newsletterCategory.setCompanyid(uiState.getCompanyid());
-                
+
                 fillNewsletterCategory(newsletterCategory);
                 ServiceActionResult<NewsletterCategory> saveResult = categoryCRUDService.save(newsletterCategory);
 
                 if (saveResult.isSuccess()) {
                     message = serverMessageBundle.getString("newsletter.admin.category.save.success");
-                    FacesUtil.infoMessage(message);
+                    uiState.setSuccesMessage(message);
                 } else {
                     message = serverMessageBundle.getString("newsletter.admin.category.save.failure");
-                    FacesUtil.errorMessage(message);
+                    uiState.setErrorMessage(message);
                 }
                 break;
             case UPDATE:
@@ -171,16 +165,16 @@ public class CategoryCRUDManagedBean {
 
                     if (updateResult.isSuccess()) {
                         message = serverMessageBundle.getString("newsletter.admin.category.update.success");
-                        FacesUtil.infoMessage(message);
+                        uiState.setSuccesMessage(message);
                     } else {
                         message = serverMessageBundle.getString("newsletter.admin.category.update.failure");
-                        FacesUtil.errorMessage(message);
+                        uiState.setErrorMessage(message);
                     }
                 }
                 break;
         }
-        
-        return "admin";
+
+        return "admin?faces-redirect=true";
     }
 
     private void fillNewsletterCategory(NewsletterCategory newsletterCategory) {
@@ -196,23 +190,23 @@ public class CategoryCRUDManagedBean {
         String message = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
-        
+
         if (serviceActionResult.isSuccess()) {
             NewsletterCategory newsletterCategory = (NewsletterCategory) serviceActionResult.getPayload();
             ServiceActionResult<NewsletterCategory> deleteActionResult = categoryCRUDService.delete(newsletterCategory);
 
             if (deleteActionResult.isSuccess()) {
                 message = serverMessageBundle.getString("newsletter.admin.category.delete.success");
-                FacesUtil.infoMessage(message);
+                uiState.setSuccesMessage(message);
             } else {
                 message = serverMessageBundle.getString("newsletter.admin.category.delete.failure");
-                FacesUtil.errorMessage(message);
+                uiState.setErrorMessage(message);
             }
         } else {
             message = serverMessageBundle.getString("newsletter.admin.category.delete.failure");
-            FacesUtil.errorMessage(message);
+            uiState.setErrorMessage(message);
         }
 
-        return "admin";
+        return "admin?faces-redirect=true";
     }
 }

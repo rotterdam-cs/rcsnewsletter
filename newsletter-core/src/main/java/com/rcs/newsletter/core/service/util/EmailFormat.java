@@ -200,7 +200,7 @@ public class EmailFormat {
         File tmp = null;
         OutputStream output = null;
         try {
-            log.error("ContenType: " + contentType);
+            log.info("ContenType: " + contentType);
             String fileExt = "";
             if (contentType.endsWith("png")){
                 fileExt = ".png";
@@ -309,7 +309,7 @@ public class EmailFormat {
                 for (int i = 0; i < imagesTag.length; i++) {
                     // get what is in the src attribute
                     String imagePath = imagesTag[i].trim();
-                    log.error("processing: " + imagePath);
+                    log.info("processing: " + imagePath);
                     if (!imagesList.contains(imagePath)) { // don't save the duplicated images
                         imagesList.add(imagePath);
                     }
@@ -320,7 +320,7 @@ public class EmailFormat {
                 for (int i = 0; i < imagesTag.length; i++) {
                     // get what is in the src attribute
                     String imagePath = imagesTag[i].trim();
-                    log.error("processing: " + imagePath);
+                    log.info("processing: " + imagePath);
                     if (!imagesList.contains(imagePath)) { // don't save the duplicated images
                         imagesList.add(imagePath);
                     }

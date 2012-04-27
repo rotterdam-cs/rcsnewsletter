@@ -497,7 +497,7 @@ public class MailEngineNL {
 				}
 			}
 			else {
-				_log.error(me.getMessage());
+				_log.info(me.getMessage());
 
 				//LogUtil.log(_log, me);
 			}

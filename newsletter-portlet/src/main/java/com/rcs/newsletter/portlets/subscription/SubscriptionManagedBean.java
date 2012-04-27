@@ -89,7 +89,7 @@ public class SubscriptionManagedBean implements Serializable {
         } else {
             String errorMessage = serverMessageBundle.getString("newsletter.registration.settings.save.error");
             FacesUtil.errorMessage(errorMessage);            
-            log.error("Newsletter Settings could not be updated");
+            log.info("Newsletter Settings could not be updated");
         }
     }
 
@@ -312,7 +312,7 @@ public class SubscriptionManagedBean implements Serializable {
                         
                         //Send email to list manager
                         if (subscription.getCategory().getAdminEmail() != null && !subscription.getCategory().getAdminEmail().isEmpty()) {
-                            log.error("Sendig Subscription email to admin");
+                            log.info("Sendig Subscription email to admin");
                             String adminSubject = newsletterBundle.getString("newsletter.admin.list.manager.subscription.info.subject");
                             adminSubject = adminSubject.replace("{0}", subscription.getCategory().getName());
                             String adminContent = newsletterBundle.getString("newsletter.admin.list.manager.subscription.info");
@@ -365,7 +365,7 @@ public class SubscriptionManagedBean implements Serializable {
                     
                     //Send email to list manager
                     if (subscription.getCategory().getAdminEmail() != null && !subscription.getCategory().getAdminEmail().isEmpty()) {
-                        log.error("Sendig UnSubscription email to admin");
+                        log.info("Sendig UnSubscription email to admin");
                         String adminSubject = newsletterBundle.getString("newsletter.admin.list.manager.unsubscription.info.subject");
                         adminSubject = adminSubject.replace("{0}", subscription.getCategory().getName());
                         String adminContent = newsletterBundle.getString("newsletter.admin.list.manager.unsubscription.info");

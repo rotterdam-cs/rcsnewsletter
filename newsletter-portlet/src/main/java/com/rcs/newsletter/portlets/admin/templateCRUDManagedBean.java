@@ -134,7 +134,7 @@ public class templateCRUDManagedBean {
         String message = "";
 
         if (getAction() == null) {
-            log.error("Action null");
+            log.info("Action null");
             this.setAction(CRUDActionEnum.CREATE);
         }
 

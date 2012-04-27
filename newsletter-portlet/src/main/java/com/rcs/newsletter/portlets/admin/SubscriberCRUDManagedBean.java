@@ -175,7 +175,7 @@ public class SubscriberCRUDManagedBean {
             
             List<NewsletterSubscription> nls = subscriptionService.findBySubscriptor(subscriptor);
             for (NewsletterSubscription newsletterSubscription : nls) {
-                log.error("Deleting Subscription :" + newsletterSubscription.getSubscriptor().getFirstName());
+                log.info("Deleting Subscription :" + newsletterSubscription.getSubscriptor().getFirstName());
                 subscriptionService.delete(newsletterSubscription);
             }            
             if (subscriptorService.delete(subscriptor).isSuccess()) {
@@ -189,7 +189,7 @@ public class SubscriberCRUDManagedBean {
         } else {
             
             NewsletterSubscription nls = subscriptionService.findBySubscriptorAndCategory(subscriptor, category);
-            log.error("Deleting subscription for category: " + nls.getCategory().getName() + "and Subscriptor: " + nls.getSubscriptor().getFirstName());
+            log.info("Deleting subscription for category: " + nls.getCategory().getName() + "and Subscriptor: " + nls.getSubscriptor().getFirstName());
             if (subscriptionService.delete(nls).isSuccess()) {
                 message = serverMessageBundle.getString("newsletter.admin.subscriptor.delete.succesfull");                
                 uiState.setSuccesMessage(message);

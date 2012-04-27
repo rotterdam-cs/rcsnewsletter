@@ -18,7 +18,7 @@
         <br></br>
         <h:form id="edit-subscription-email-form">
             <h:inputHidden value="#{subscriptionEmailManagedBean.subscriptionType}"/>
-            <p:dialog header="#{nlk['newsletter.admin.category.subscriptionmail.help']}" widgetVar="dlg3" showEffect="bounce" hideEffect="explode" height="150" width="400" resizable="false">  
+            <p:dialog modal="true" header="#{nlk['newsletter.admin.category.subscriptionmail.help']}" widgetVar="dlg3" hideEffect="explode" height="150" width="400" resizable="false">  
                 <h:outputText value="#{subscriptionEmailManagedBean.helpPageText}" escape="false"/>  
             </p:dialog> 
             <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>

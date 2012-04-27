@@ -103,11 +103,11 @@ public class EditMailingManagedBean {
         ServiceActionResult result = null;
         switch(currentAction) {
             case CREATE:
-                log.error("CREATE");
+                log.info("CREATE");
                 result = service.save(mailing);
                 break;
             case UPDATE:
-                 log.error("UPDATE");
+                 log.info("UPDATE");
                 result = service.update(mailing);
                 
                 List <NewsletterTemplateBlock> ntbsOld =  templateBlockService.findAllByMailing(mailing);               

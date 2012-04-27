@@ -85,7 +85,7 @@ public class SubscriptionManagedBean implements Serializable {
         if (result.isSuccess()) {
             String infoMessage = serverMessageBundle.getString("newsletter.registration.settings.save.successfully");
             FacesUtil.infoMessage(infoMessage);
-            log.error("Settings updated successfully");
+            log.info("Settings updated successfully");
         } else {
             String errorMessage = serverMessageBundle.getString("newsletter.registration.settings.save.error");
             FacesUtil.errorMessage(errorMessage);            
@@ -365,7 +365,7 @@ public class SubscriptionManagedBean implements Serializable {
                     
                     //Send email to list manager
                     if (subscription.getCategory().getAdminEmail() != null && !subscription.getCategory().getAdminEmail().isEmpty()) {
-                        log.error("Sendig UnSubscription email to admin");
+                        log.info("Sendig UnSubscription email to admin");
                         String adminSubject = newsletterBundle.getString("newsletter.admin.list.manager.unsubscription.info.subject");
                         adminSubject = adminSubject.replace("{0}", subscription.getCategory().getName());
                         String adminContent = newsletterBundle.getString("newsletter.admin.list.manager.unsubscription.info");

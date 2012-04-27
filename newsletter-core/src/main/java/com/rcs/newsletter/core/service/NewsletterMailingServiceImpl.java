@@ -89,7 +89,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
             MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, title, content);
             String bodyContent = message.getBody();
             
-            logger.error("Sending personalizable conent");
+            logger.info("Sending personalizable conent");
             for (NewsletterSubscription newsletterSubscription : mailing.getList().getSubscriptions()) {
                 if(newsletterSubscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
                     NewsletterSubscriptor subscriptor = newsletterSubscription.getSubscriptor();
@@ -98,7 +98,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
                     MailMessage personalMessage = message;
 
                     toIA = new InternetAddress(subscriptor.getEmail(), name);
-                    logger.error("Sending to " + name + "<" + subscriptor.getEmail() + ">");
+                    logger.info("Sending to " + name + "<" + subscriptor.getEmail() + ">");
                     personalMessage.setTo(toIA);
 
                     //Replace User Info
@@ -109,7 +109,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
                     //mailingUtil.sendArticleByEmail(ja, themeDisplay, name, subscriptor.getEmail(), fromName, fromEmailAddress);
                 }
             }
-            logger.error("End Sending personalizable conent");
+            logger.info("End Sending personalizable conent");
         } catch (Exception ex) {
             logger.error("Error while trying to read article", ex);
         }

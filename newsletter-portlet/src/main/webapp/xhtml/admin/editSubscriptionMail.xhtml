@@ -4,18 +4,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.prime.com.tr/ui"      
+      xmlns:p="http://primefaces.prime.com.tr/ui"       
       >
-    
+
     <f:loadBundle basename="Language" var="msg" />
     <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>       
+
     </h:head>
-    
-    
+
+
     <h:body>        
         <h2>#{subscriptionEmailManagedBean.subscriptionType}</h2>
         <br></br>
+
         <h:form id="edit-subscription-email-form">
             <h:inputHidden value="#{subscriptionEmailManagedBean.subscriptionType}"/>
             <p:dialog header="#{nlk['newsletter.admin.category.subscriptionmail.help']}" widgetVar="dlg3" showEffect="bounce" hideEffect="explode" height="150" width="400" resizable="false">  
@@ -23,13 +25,28 @@
             </p:dialog> 
             <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>
             <p:commandButton  styleClass="newsletter-forms-button" value="#{msg['newsletter.admin.category.general.help']}" onclick="dlg3.show();" type="button"/> 
-            
-            <p:editor value="#{subscriptionEmailManagedBean.subscriptionEmailBody}"/>
-            
+          
+            <div id="ckEditorArea">
+                <h:inputTextarea cols="90" rows="20" value="#{subscriptionEmailManagedBean.subscriptionEmailBody}" />
+                
+
+                <script type="text/javascript">                    
+
+                    
+                    CKEDITOR.replaceAll();
+                    CKEDITOR.config.language = '#{templateCRUDManagedBean.editorLanguage}';
+                    CKEDITOR.config.filebrowserBrowseUrl = '#{templateCRUDManagedBean.fileBrowserUrl}';                                        
+                    CKEDITOR.config.filebrowserUploadUrl = null;
+
+                </script>
+            </div>
+
             <p:growl id="editSubscriptionMailMessage"/>
             <p:commandButton styleClass="newsletter-forms-button" value="#{msg['newsletter.admin.general.edit']}" update="editSubscriptionMailMessage" action="#{subscriptionEmailManagedBean.save}" ajax="false"/>
             <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />            
         </h:form>
+
     </h:body>
+
 </html>
 

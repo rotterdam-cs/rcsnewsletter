@@ -58,8 +58,17 @@
             
             <h:outputLabel value="#{msg['newsletter.admin.general.name']}: " />
             <h:inputText styleClass="newsletter-forms-input-text" value="#{templateCRUDManagedBean.name}" />
-            <div id="editTemplateHtmlEditor">            
-                <p:editor id="hcontent" value="#{templateCRUDManagedBean.template}" />
+            <div id="editTemplateHtmlEditor">
+                <h:inputTextarea cols="90" rows="20" value="#{templateCRUDManagedBean.template}" />
+                <script type="text/javascript">                    
+
+                    CKEDITOR.replaceAll();
+                    CKEDITOR.config.language = '#{templateCRUDManagedBean.editorLanguage}';
+                    CKEDITOR.config.filebrowserBrowseUrl = '#{templateCRUDManagedBean.fileBrowserUrl}';                                        
+                    CKEDITOR.config.filebrowserUploadUrl = null;
+                    
+
+                </script>
             </div>
             <p:growl id="editSubscriptionMailMessage"/>
             <span id="errmsg1"><p:commandButton styleClass="newsletter-forms-button" id="okbuttonbad" value="#{msg['newsletter.admin.general.validate']}" onclick="isTemplateValid()" ajax="true" /></span>

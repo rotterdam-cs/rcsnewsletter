@@ -2,16 +2,26 @@ package com.rcs.newsletter.portlets.admin;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.util.PortalUtil;
 import static com.rcs.newsletter.NewsletterConstants.NEWSLETTER_BUNDLE;
 import static com.rcs.newsletter.NewsletterConstants.SERVER_MESSAGE_BUNDLE;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.util.FacesUtil;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.portlet.PortletRequest;
+import javax.portlet.ResourceRequest;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Scope;
 
 /**
@@ -131,7 +141,7 @@ public class templateCRUDManagedBean {
     }
 
     public String save() {
-        log.info("It is here");
+        log.info("Executing save() in templateCRUDManagedBean");
         NewsletterTemplate newsletterTemplate = null;
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
@@ -209,4 +219,68 @@ public class templateCRUDManagedBean {
 
         return "admin";
     }
+    
+    public String getEditorLanguage(){
+        PortletRequest request = (PortletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        
+        String languageId = LocaleUtil.toLanguageId(uiState.getThemeDisplay().getLocale());//ParamUtil.getString(request, "languageId");
+        
+        log.debug("************* Language Id : " + languageId);
+        return languageId;
+                
+    }
+    
+    public String getFileBrowserUrl(){
+        
+        
+        
+        String result = null;
+
+        String mainPath = uiState.getThemeDisplay().getPathMain();
+
+        HttpServletRequest request = PortalUtil.getHttpServletRequest((ResourceRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest());
+
+        Map<String, String> fileBrowserParamsMap = (Map<String, String>) request.getAttribute("liferay-ui:input-editor:fileBrowserParams");
+
+        String fileBrowserParams = marshallParams(fileBrowserParamsMap);
+
+        String portletId = PortalUtil.getPortletId(request);
+
+        long groupId = uiState.getThemeDisplay().getDoAsGroupId();
+
+        StringBundler sb = new StringBundler(10);
+
+        sb.append(mainPath);
+        sb.append("/portal/fckeditor?p_l_id=");
+        sb.append(uiState.getThemeDisplay().getPlid());
+        sb.append("&p_p_id=");
+        sb.append(HttpUtil.encodeURL(portletId));
+        sb.append("&doAsUserId=");
+        sb.append(HttpUtil.encodeURL(uiState.getThemeDisplay().getDoAsUserId()));
+        sb.append("&doAsGroupId=");
+        sb.append(HttpUtil.encodeURL(String.valueOf(groupId)));
+        sb.append(fileBrowserParams);
+
+        String connectorURL = HttpUtil.encodeURL(sb.toString());
+
+
+        result = PortalUtil.getPathContext() + "/html/js/editor/ckeditor/editor/filemanager/browser/liferay/browser.html?Connector=" + connectorURL;
+
+        return result;
+    }
+    private String marshallParams(Map<String, String> params) {
+        StringBundler sb = new StringBundler();
+
+        if (params != null) {
+            for (Map.Entry<String, String> configParam : params.entrySet()) {
+                sb.append(StringPool.AMPERSAND);
+                sb.append(configParam.getKey());
+                sb.append(StringPool.EQUAL);
+                sb.append(HttpUtil.encodeURL(configParam.getValue()));
+            }
+        }
+
+        return sb.toString();
+    }
+    
 }

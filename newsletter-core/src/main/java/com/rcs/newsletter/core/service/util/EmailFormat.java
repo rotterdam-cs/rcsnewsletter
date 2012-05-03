@@ -366,10 +366,10 @@ public class EmailFormat {
                 //If there is a content related to this block
                 if (ntb.size() > count) {
                     if (ntb.get(count).getArticleId() != null && ntb.get(count).getArticleId() != UNDEFINED) {
-                        JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(ntb.get(count).getArticleId());
+                        JournalArticle ja = JournalArticleLocalServiceUtil.getLatestArticle(themeDisplay.getDoAsGroupId(),ntb.get(count).getArticleId().toString());
                         JournalArticleDisplay jad = JournalArticleLocalServiceUtil.getArticleDisplay(ja.getGroupId(), ja.getArticleId(), ja.getTemplateId(), "PRINT", themeDisplay.getLocale().getLanguage(), themeDisplay);
-                        String content = jad.getContent();
-                        toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, jad.getTitle());
+                        String content = jad.getContent();                        
+                        toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, jad.getTitle());                        
                         toReplaceTmp = toReplaceTmp.replace(fTagBlockContent, content);
 
                         //resulttmp = resulttmp.replaceFirst(toReplace, toReplaceTmp);      
@@ -463,7 +463,8 @@ public class EmailFormat {
             selectHTMLOptionsSB.append("</option>");
             for (JournalArticle journalArticle : newsletterArticles) {
                 selectHTMLOptionsSB.append("<option value=\"");
-                selectHTMLOptionsSB.append(journalArticle.getId());
+                //selectHTMLOptionsSB.append(journalArticle.getId());
+                selectHTMLOptionsSB.append(journalArticle.getArticleId());
                 selectHTMLOptionsSB.append("\">");
                 selectHTMLOptionsSB.append(journalArticle.getTitle());
                 selectHTMLOptionsSB.append("</option>");

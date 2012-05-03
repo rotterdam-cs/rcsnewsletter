@@ -90,7 +90,7 @@ public class NewsletterMailingManagedBean implements Serializable {
         
         ServiceActionResult<NewsletterMailing> result = service.findById(mailingId);
         if (!result.isSuccess()) {
-            FacesUtil.errorMessage(newsletterMessageBundle.getString("newsletter.admin.mailing.not.found"));
+            uiState.setErrorMessage(newsletterMessageBundle.getString("newsletter.admin.mailing.not.found"));
             return null;
         }
         
@@ -105,7 +105,7 @@ public class NewsletterMailingManagedBean implements Serializable {
             init();
         }
         
-        return "admin";
+        return "admin?faces-redirect=true";
     }
     
     public void sendTestMailing() {   
@@ -132,8 +132,8 @@ public class NewsletterMailingManagedBean implements Serializable {
         String message = "";
         ServiceActionResult<NewsletterMailing> result = service.findById(mailingId);
         if (!result.isSuccess()) {
-            FacesUtil.errorMessage(newsletterMessageBundle.getString("newsletter.admin.mailing.not.found"));
-            return "admin";
+            uiState.setErrorMessage(newsletterMessageBundle.getString("newsletter.admin.mailing.not.found"));
+            return "admin?faces-redirect=true";
         }        
         
         NewsletterMailing mailing = result.getPayload();        
@@ -156,18 +156,18 @@ public class NewsletterMailingManagedBean implements Serializable {
             if (result.isSuccess()) {
                 init();
                 message = serverMessageBundle.getString("newsletter.admin.mailing.sent.succesfully");        
-                FacesUtil.infoMessage(message);
+                uiState.setSuccesMessage(message);
             } else {
                 message = serverMessageBundle.getString("newsletter.admin.mailing.delete.failure");        
-                FacesUtil.infoMessage(message);
+                uiState.setErrorMessage(message);
             }
             
         } else {
             message = newsletterMessageBundle.getString(EditMailingManagedBean.NO_BLOCKS_IN_TEMPLATE);
-            FacesUtil.errorMessage(message);
+            uiState.setErrorMessage(message);
         }
         
-        return "admin";
+        return "admin?faces-redirect=true";
     }
     
     /**

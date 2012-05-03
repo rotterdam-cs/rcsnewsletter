@@ -20,7 +20,7 @@
 
         <h:form id="edit-subscription-email-form">
             <h:inputHidden value="#{subscriptionEmailManagedBean.subscriptionType}"/>
-            <p:dialog header="#{nlk['newsletter.admin.category.subscriptionmail.help']}" widgetVar="dlg3" showEffect="bounce" hideEffect="explode" height="150" width="400" resizable="false">  
+            <p:dialog modal="true" header="#{nlk['newsletter.admin.category.subscriptionmail.help']}" widgetVar="dlg3" hideEffect="explode" height="150" width="400" resizable="false">  
                 <h:outputText value="#{subscriptionEmailManagedBean.helpPageText}" escape="false"/>  
             </p:dialog> 
             <h:inputHidden value="#{subscriptionEmailManagedBean.categoryId}"/>
@@ -32,11 +32,36 @@
 
                 <script type="text/javascript">                    
 
-                    
-                    CKEDITOR.replaceAll();
                     CKEDITOR.config.language = '#{templateCRUDManagedBean.editorLanguage}';
                     CKEDITOR.config.filebrowserBrowseUrl = '#{templateCRUDManagedBean.fileBrowserUrl}';                                        
                     CKEDITOR.config.filebrowserUploadUrl = null;
+                    
+                    
+                    
+                    CKEDITOR.config.toolbar = 'RCS';
+                        
+                    CKEDITOR.config.toolbar_RCS =
+                        [
+                            [ 'Styles','FontSize','-','TextColor','BGColor'],
+                            [ 'Bold','Italic','Underline','Strike'],                        
+                            [ 'Subscript','Superscript'],
+                            '/',
+                            [ 'Undo','Redo'], 
+                            [ 'Cut','Copy','Paste','PasteText','PasteFromWord'],
+                            [ 'SelectAll','RemoveFormat' ],
+                            [ 'Find','Replace','SpellChecker','Scayt' ],
+                            [ 'NumberedList','BulletedList'],
+                            [ 'Outdent','Indent','Blockquote' ],                        
+                            [ 'JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ],
+                            '/',
+                            [ 'Source' ],
+                            [ 'Link', 'Unlink','Anchor' ],
+                            [ 'Image', 'Flash', 'Table'], 
+                            ['Smiley', 'SpecialChar' ]
+                        ];
+                    
+                    CKEDITOR.replaceAll();
+                    
 
                 </script>
             </div>

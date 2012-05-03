@@ -127,7 +127,7 @@ public class CategoryCRUDManagedBean {
             this.adminEmail = newsletterCategory.getAdminEmail();
             this.setAction(CRUDActionEnum.UPDATE);
         } else {
-            return "admin";
+            return "admin?faces-redirect=true";
         }
 
         return "editCategory";
@@ -155,10 +155,10 @@ public class CategoryCRUDManagedBean {
 
                 if (saveResult.isSuccess()) {
                     message = serverMessageBundle.getString("newsletter.admin.category.save.success");
-                    FacesUtil.infoMessage(message);
+                   uiState.setSuccesMessage(message);
                 } else {
                     message = serverMessageBundle.getString("newsletter.admin.category.save.failure");
-                    FacesUtil.errorMessage(message);
+                    uiState.setErrorMessage(message);
                 }
                 break;
             case UPDATE:
@@ -171,16 +171,16 @@ public class CategoryCRUDManagedBean {
 
                     if (updateResult.isSuccess()) {
                         message = serverMessageBundle.getString("newsletter.admin.category.update.success");
-                        FacesUtil.infoMessage(message);
+                        uiState.setSuccesMessage(message);
                     } else {
                         message = serverMessageBundle.getString("newsletter.admin.category.update.failure");
-                        FacesUtil.errorMessage(message);
+                        uiState.setErrorMessage(message);
                     }
                 }
                 break;
         }
         
-        return "admin";
+        return "admin?faces-redirect=true";
     }
 
     private void fillNewsletterCategory(NewsletterCategory newsletterCategory) {
@@ -203,16 +203,16 @@ public class CategoryCRUDManagedBean {
 
             if (deleteActionResult.isSuccess()) {
                 message = serverMessageBundle.getString("newsletter.admin.category.delete.success");
-                FacesUtil.infoMessage(message);
+                uiState.setSuccesMessage(message);
             } else {
                 message = serverMessageBundle.getString("newsletter.admin.category.delete.failure");
-                FacesUtil.errorMessage(message);
+                uiState.setErrorMessage(message);
             }
         } else {
             message = serverMessageBundle.getString("newsletter.admin.category.delete.failure");
-            FacesUtil.errorMessage(message);
+            uiState.setErrorMessage(message);
         }
 
-        return "admin";
+        return "admin?faces-redirect=true";
     }
 }

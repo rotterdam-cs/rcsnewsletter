@@ -40,35 +40,31 @@ import java.util.ArrayList;
 import static com.rcs.newsletter.NewsletterConstants.*;
 
 public class EmailFormat {
+
     private static Log log = LogFactoryUtil.getLog(EmailFormat.class);
-    
     //Boundle Keys
     private static final String TEMPLATE_BLOCK_EMPTY_SELECTOR = "newsletter.admin.mailing.template.select.article";
-    private static final String DEFAULT_REPLACEMENT_USER_TOKEN = "newsletter.admin.mailing.default.replacement.user";    
-    
+    private static final String DEFAULT_REPLACEMENT_USER_TOKEN = "newsletter.admin.mailing.default.replacement.user";
     @Autowired
     private static NewsletterTemplateBlockService templateBlockService;
-    
-        
+
     /**
      * To determine if the content is personalizable or not
      * @param content
      * @return 
      */
     public static boolean contentPersonalizable(String content) {
-        boolean result = false;        
+        boolean result = false;
         if (content.contains(CONFIRMATION_LINK_TOKEN)
-         || content.contains(LIST_NAME_TOKEN)
-         || content.contains(FIRST_NAME_TOKEN)
-         || content.contains(LAST_NAME_TOKEN)             
-         || content.contains(ONLINE_ARTICLE_LINK) 
-        ){
+                || content.contains(LIST_NAME_TOKEN)
+                || content.contains(FIRST_NAME_TOKEN)
+                || content.contains(LAST_NAME_TOKEN)
+                || content.contains(ONLINE_ARTICLE_LINK)) {
             result = true;
-        }        
+        }
         return result;
     }
-    
-    
+
     /**
      * Replace special tags with user information
      * @param content
@@ -79,7 +75,7 @@ public class EmailFormat {
     public static String replaceUserInfo(String content, NewsletterSubscription subscription, ThemeDisplay themeDisplay) {
         return replaceUserInfo(content, subscription, themeDisplay, null);
     }
-    
+
     /**
      * Replace special tags with user information Including the OnLine Article Viewer
      * @param content
@@ -88,74 +84,72 @@ public class EmailFormat {
      * @param articleId
      * @return 
      */
-    public static String replaceUserInfo(String content, NewsletterSubscription subscription, ThemeDisplay themeDisplay, Long archiveId) {        
+    public static String replaceUserInfo(String content, NewsletterSubscription subscription, ThemeDisplay themeDisplay, Long archiveId) {
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, themeDisplay.getLocale());
-        
+
         //Default Replacement information
         String subscriptorFirstName = serverMessageBundle.getString(DEFAULT_REPLACEMENT_USER_TOKEN);
         String subscriptorLastName = "";
-        String categoryName = "";        
+        String categoryName = "";
         String confirmationLinkToken = "";
         String confirmationUnregisterLinkToken = "";
         String onlineArticleLink = "";
-        
+
         String portalUrl = themeDisplay.getPortalURL();
         if (subscription != null) {
             //Replace Subscriptor Information
             NewsletterSubscriptor subscriptor = subscription.getSubscriptor();
             subscriptorFirstName = subscriptor.getFirstName() != null ? subscriptor.getFirstName() : "";
             subscriptorLastName = subscriptor.getLastName() != null ? subscriptor.getLastName() : "";
-            
+
             //Replace Category Information
             NewsletterCategory category = subscription.getCategory();
             categoryName = category.getName();
-            
+
             //Replace Confirmation Link Information
             StringBuilder confirmationLinkBuilder = new StringBuilder(portalUrl);
             confirmationLinkBuilder.append(ONLINE_NEWSLETTER_CONFIRMATION_PAGE);
             confirmationLinkBuilder.append("?subscriptionId=");
             confirmationLinkBuilder.append(subscription.getId());
             confirmationLinkBuilder.append("&activationkey=");
-            confirmationLinkBuilder.append(subscription.getActivationKey());       
-            
+            confirmationLinkBuilder.append(subscription.getActivationKey());
+
             confirmationLinkToken = confirmationLinkBuilder.toString();
-            
+
             //Replace UNREGISTER Confirmation Link Information            
             StringBuilder unregisterStringBuilder = new StringBuilder(portalUrl);
             unregisterStringBuilder.append(ONLINE_NEWSLETTER_CONFIRMATION_PAGE);
             unregisterStringBuilder.append("?unsubscriptionId=");
             unregisterStringBuilder.append(subscription.getId());
             unregisterStringBuilder.append("&deactivationkey=");
-            unregisterStringBuilder.append(subscription.getDeactivationKey());       
-            
+            unregisterStringBuilder.append(subscription.getDeactivationKey());
+
             confirmationUnregisterLinkToken = unregisterStringBuilder.toString();
-            
+
             //Replace Online Viewer Link Information
-            if (archiveId != null) {            
+            if (archiveId != null) {
                 StringBuilder onlineViewerStringBuilder = new StringBuilder(portalUrl);
                 onlineViewerStringBuilder.append(ONLINE_NEWSLETTER_VIEWER_PAGE);
                 onlineViewerStringBuilder.append("?nlid=");
                 onlineViewerStringBuilder.append(archiveId);
                 onlineViewerStringBuilder.append("&sid=");
                 onlineViewerStringBuilder.append(subscription.getId());
-                
+
                 onlineArticleLink = onlineViewerStringBuilder.toString();
             }
-            
-        }        
-        
+
+        }
+
         content = content.replace(FIRST_NAME_TOKEN, subscriptorFirstName);
         content = content.replace(LAST_NAME_TOKEN, subscriptorLastName);
         content = content.replace(LIST_NAME_TOKEN, categoryName);
         content = content.replace(CONFIRMATION_LINK_TOKEN, confirmationLinkToken);
-        content = content.replace(CONFIRMATION_UNREGISTER_LINK_TOKEN, confirmationUnregisterLinkToken);        
+        content = content.replace(CONFIRMATION_UNREGISTER_LINK_TOKEN, confirmationUnregisterLinkToken);
         content = content.replace(ONLINE_ARTICLE_LINK, onlineArticleLink);
-        
+
         return content;
     }
-    
-    
-    
+
     /**
      * Fix the relative Paths to Absolute Paths on images
      */
@@ -200,25 +194,25 @@ public class EmailFormat {
         File tmp = null;
         OutputStream output = null;
         try {
-            log.error("ContenType: " + contentType);
+            log.info("ContenType: " + contentType);
             String fileExt = "";
-            if (contentType.endsWith("png")){
+            if (contentType.endsWith("png")) {
                 fileExt = ".png";
-            } else if (contentType.endsWith("jpg")){
+            } else if (contentType.endsWith("jpg")) {
                 fileExt = ".jpg";
-            } else if (contentType.endsWith("jpeg")){
+            } else if (contentType.endsWith("jpeg")) {
                 fileExt = ".jpeg";
-            } else if (contentType.endsWith("jpe")){
+            } else if (contentType.endsWith("jpe")) {
                 fileExt = ".jpe";
-            } else if (contentType.endsWith("gif")){
+            } else if (contentType.endsWith("gif")) {
                 fileExt = ".gif";
             }
             tmp = File.createTempFile("image", fileExt);
             output = new FileOutputStream(tmp);
-            int val;  
+            int val;
             while ((val = is.read()) != -1) {
                 output.write(val);
-            }            
+            }
         } catch (IOException e) {
             log.error(e);
         } finally {
@@ -229,7 +223,7 @@ public class EmailFormat {
             } catch (Exception e) {
                 log.error(e);
             }
-        }        
+        }
         return tmp;
     }
 
@@ -243,20 +237,20 @@ public class EmailFormat {
      * @throws Exception 
      */
     public static MailMessage getMailMessageWithAttachedImages(InternetAddress fromIA, InternetAddress toIA, String subject, String content) throws Exception {
-        
+
         ArrayList images = getImagesPathFromHTML(content);
-        
+
         MailMessage message = new MailMessage(fromIA, toIA, subject, content, true);
-            
+
         // embed the images into the multipart
         for (int i = 0; i < images.size(); i++) {
             String image = (String) images.get(i);
             URL imageUrl = null;
             try {
-                String imagePathOriginal = (String) images.get(i);                    
+                String imagePathOriginal = (String) images.get(i);
                 String imagePath = StringEscapeUtils.unescapeHtml(image);
                 imagePath = imagePath.trim().replaceAll(" ", "%20");
-                imageUrl = new URL(imagePath);                    
+                imageUrl = new URL(imagePath);
                 File tempF = getFile(imageUrl);//To Improve probably add Cache
                 content = StringUtils.replace(content, imagePathOriginal, "cid:" + tempF.getName());
                 message.addFileAttachment(tempF);
@@ -265,10 +259,10 @@ public class EmailFormat {
             }
         }
         message.setBody(content);
-        
+
         return message;
     }
-    
+
     /**
      * Method imported from COPS (com.rcs.community.common.MimeMail)
      * Returns an ArrayList with all the different images paths. Duplicated paths are deleted.
@@ -309,7 +303,7 @@ public class EmailFormat {
                 for (int i = 0; i < imagesTag.length; i++) {
                     // get what is in the src attribute
                     String imagePath = imagesTag[i].trim();
-                    log.error("processing: " + imagePath);
+                    log.info("processing: " + imagePath);
                     if (!imagesList.contains(imagePath)) { // don't save the duplicated images
                         imagesList.add(imagePath);
                     }
@@ -320,7 +314,7 @@ public class EmailFormat {
                 for (int i = 0; i < imagesTag.length; i++) {
                     // get what is in the src attribute
                     String imagePath = imagesTag[i].trim();
-                    log.error("processing: " + imagePath);
+                    log.info("processing: " + imagePath);
                     if (!imagesList.contains(imagePath)) { // don't save the duplicated images
                         imagesList.add(imagePath);
                     }
@@ -334,7 +328,6 @@ public class EmailFormat {
         }
         return imagesList;
     }
-    
 
     /**
      * Get the email content based on the template
@@ -342,155 +335,173 @@ public class EmailFormat {
      * @param themeDisplay
      * @return 
      */
-    public static String getEmailFromTemplate(NewsletterMailing mailing, ThemeDisplay themeDisplay) throws Exception { 
+    public static String getEmailFromTemplate(NewsletterMailing mailing, ThemeDisplay themeDisplay) throws Exception {
+        log.debug("Executing getEmailFromTemplate in EmailFormat");
         NewsletterTemplate template = mailing.getTemplate();
         String result = template.getTemplate();
         String fTagBlockOpen = fixTagsToRegex(TEMPLATE_TAG_BLOCK_OPEN);
         String fTagBlockClose = fixTagsToRegex(TEMPLATE_TAG_BLOCK_CLOSE);
         String fTagBlockTitle = fixTagsToRegex(TEMPLATE_TAG_TITLE);
         String fTagBlockContent = fixTagsToRegex(TEMPLATE_TAG_CONTENT);
-        
-        result = result.replace(TEMPLATE_TAG_BLOCK_OPEN, fTagBlockOpen)
-                .replace(TEMPLATE_TAG_BLOCK_CLOSE, fTagBlockClose)
-                .replace(TEMPLATE_TAG_TITLE, fTagBlockTitle)
-                .replace(TEMPLATE_TAG_CONTENT, fTagBlockContent);
-        String resulttmp = result;
-        
+
+        result = result.replace(TEMPLATE_TAG_BLOCK_OPEN, fTagBlockOpen).replace(TEMPLATE_TAG_BLOCK_CLOSE, fTagBlockClose).replace(TEMPLATE_TAG_TITLE, fTagBlockTitle).replace(TEMPLATE_TAG_CONTENT, fTagBlockContent);
+        String resulttmp = new String(result);
+
         List<NewsletterTemplateBlock> ntb = mailing.getBlocks();
         Collections.sort(ntb, new TemplateBlockComparator());
         Pattern patternBlock = Pattern.compile(fTagBlockOpen + ".*?" + fTagBlockClose, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
         Matcher m = patternBlock.matcher(result);
         String toReplaceTmp = "";
         int count = 0;
-        
+
         //Iterate each Block
-        while(m.find()) {             
-            try {               
-               String toReplace = result.substring(m.start(), m.end() );               
-               toReplaceTmp  = result.substring(m.start()+fTagBlockOpen.length(), m.end()-fTagBlockClose.length() );  
-              
-               //If there is a content related to this block
-               if (ntb.size() > count) {                   
-                   if (ntb.get(count).getArticleId() != null && ntb.get(count).getArticleId() != UNDEFINED) {                   
+        while (m.find()) {
+            try {
+                //String toReplace = result.substring(m.start(), m.end() );               
+                
+                
+                toReplaceTmp = resulttmp.substring(m.start() + fTagBlockOpen.length(), m.end() - fTagBlockClose.length());
+
+                
+                //If there is a content related to this block
+                if (ntb.size() > count) {
+                    if (ntb.get(count).getArticleId() != null && ntb.get(count).getArticleId() != UNDEFINED) {
                         JournalArticle ja = JournalArticleLocalServiceUtil.getArticle(ntb.get(count).getArticleId());
-                        JournalArticleDisplay jad = JournalArticleLocalServiceUtil.getArticleDisplay(ja.getGroupId(),ja.getArticleId(),ja.getTemplateId(), "PRINT",themeDisplay.getLocale().getLanguage(),themeDisplay);
+                        JournalArticleDisplay jad = JournalArticleLocalServiceUtil.getArticleDisplay(ja.getGroupId(), ja.getArticleId(), ja.getTemplateId(), "PRINT", themeDisplay.getLocale().getLanguage(), themeDisplay);
                         String content = jad.getContent();
                         toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, jad.getTitle());
-                        toReplaceTmp = toReplaceTmp.replace(fTagBlockContent, content); 
-                        resulttmp = resulttmp.replaceFirst(toReplace, toReplaceTmp);      
-                        
-                   //If there is a NOT content related to this block the block is deleted
-                   } else {
-                    resulttmp = resulttmp.replaceFirst(toReplace, "");
-                   }
-                   
-                //If there is a NOT content related to this block the block is deleted
+                        toReplaceTmp = toReplaceTmp.replace(fTagBlockContent, content);
+
+                        //resulttmp = resulttmp.replaceFirst(toReplace, toReplaceTmp);      
+                        resulttmp = m.replaceFirst(toReplaceTmp);
+
+
+
+                        //If there is a NOT content related to this block the block is deleted
+                    } else {
+                        resulttmp = m.replaceFirst("");
+                        //m = patternBlock.matcher(resulttmp);
+                        //resulttmp = resulttmp.replaceFirst(toReplace, "");
+                    }
+
+                    //If there is a NOT content related to this block the block is deleted
                 } else {
-                    resulttmp = resulttmp.replaceFirst(toReplace, "");
+                    resulttmp = m.replaceFirst("");
+                    //resulttmp = resulttmp.replaceFirst(toReplace, "");
                 }
-               
+                m = patternBlock.matcher(resulttmp);
+
             } catch (PortalException ex) {
                 log.error("Error while trying to read article", ex);
             } catch (SystemException ex) {
                 log.error("Error while trying to read article", ex);
-            }           
-           count++;
+            }
+            count++;
         }
         return resulttmp;
     }
-     
+
     /**
      * Get the edit code that allow the selection of articles on each block
      * @param templateContent
      * @return 
      */
     public static String parseTemplateEdit(String incomingTemplateContent, String newsletterArticleType, String newsletterArticleCategory, String newsletterArticleTag, ThemeDisplay themeDisplay) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        String result = ""; 
-        
+        log.debug("Executing parseTemplateEdit in EmailFormat");
+        String result = "";
+
         ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, themeDisplay.getLocale());
-        String emptySelectorMessage = newsletterMessageBundle.getString(TEMPLATE_BLOCK_EMPTY_SELECTOR);               
+        String emptySelectorMessage = newsletterMessageBundle.getString(TEMPLATE_BLOCK_EMPTY_SELECTOR);
         String fTagBlockOpen = fixTagsToRegex(TEMPLATE_TAG_BLOCK_OPEN);
         String fTagBlockClose = fixTagsToRegex(TEMPLATE_TAG_BLOCK_CLOSE);
         String templateContent = validateTemplateFormat(incomingTemplateContent);
+        
         //If the template contains at least one block with one title or content
         if (templateContent != null && !templateContent.isEmpty()) {
-                String templateContentTmp = templateContent;
-                Pattern patternBlock = Pattern.compile(fTagBlockOpen + ".*?" + fTagBlockClose, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
-                Matcher m = patternBlock.matcher(templateContent);
-                int count = 0;                
-                
-                //Get all newsletter articles to create the selectors
-                HashMap<String, JournalArticle> resultArticleNewsletter = new HashMap<String, JournalArticle>();
-                try {
-                    //Search Articles by Type
-                    List<JournalArticle> articlesByType = ArticleUtils.findArticlesByType(newsletterArticleType);
-                    for (JournalArticle article : articlesByType) {
-                        if (!resultArticleNewsletter.containsKey(article.getArticleId())) {                            
-                            resultArticleNewsletter.put(article.getArticleId(), article);
-                        }
+            String templateContentTmp = templateContent;
+            Pattern patternBlock = Pattern.compile(fTagBlockOpen + ".*?" + fTagBlockClose, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+            Matcher m = patternBlock.matcher(templateContent);
+
+            int count = 0;
+
+            //Get all newsletter articles to create the selectors
+            HashMap<String, JournalArticle> resultArticleNewsletter = new HashMap<String, JournalArticle>();
+            try {
+                //Search Articles by Type
+                List<JournalArticle> articlesByType = ArticleUtils.findArticlesByType(newsletterArticleType);
+                for (JournalArticle article : articlesByType) {
+                    if (!resultArticleNewsletter.containsKey(article.getArticleId())) {
+                        resultArticleNewsletter.put(article.getArticleId(), article);
                     }
-                    //Search Articles by Category
-                    List<JournalArticle> articlesByCategory = ArticleUtils.findArticlesByCategory(newsletterArticleCategory);
-                    for (JournalArticle article : articlesByCategory) {
-                        if (!resultArticleNewsletter.containsKey(article.getArticleId())) {                            
-                            resultArticleNewsletter.put(article.getArticleId(), article);
-                        }
-                    }
-                    //Search Articles by Tag
-                    List<JournalArticle> articlesByTag = ArticleUtils.findArticlesByTag(themeDisplay, newsletterArticleTag);
-                    for (JournalArticle article : articlesByTag) {
-                        if (!resultArticleNewsletter.containsKey(article.getArticleId())) {                            
-                            resultArticleNewsletter.put(article.getArticleId(), article);
-                        }
-                    }                    
-                } catch (SystemException ex) {
-                    log.error("Could not filter the articles by this category, type, or tag", ex);
-                } catch (PortalException ex) {
-                    log.error("Could not filter the articles by this category, type, or tag", ex);
                 }
-                List<JournalArticle> newsletterArticles = new ArrayList<JournalArticle>(resultArticleNewsletter.values());
-                
-                //Create HTML select option with all newsletter articles
-                StringBuilder selectHTMLOptionsSB = new StringBuilder("<option value=\"");
-                selectHTMLOptionsSB.append(String.valueOf(UNDEFINED));
+                //Search Articles by Category
+                List<JournalArticle> articlesByCategory = ArticleUtils.findArticlesByCategory(newsletterArticleCategory);
+                for (JournalArticle article : articlesByCategory) {
+                    if (!resultArticleNewsletter.containsKey(article.getArticleId())) {
+                        resultArticleNewsletter.put(article.getArticleId(), article);
+                    }
+                }
+                //Search Articles by Tag
+                List<JournalArticle> articlesByTag = ArticleUtils.findArticlesByTag(themeDisplay, newsletterArticleTag);
+                for (JournalArticle article : articlesByTag) {
+                    if (!resultArticleNewsletter.containsKey(article.getArticleId())) {
+                        resultArticleNewsletter.put(article.getArticleId(), article);
+                    }
+                }
+            } catch (SystemException ex) {
+                log.error("Could not filter the articles by this category, type, or tag", ex);
+            } catch (PortalException ex) {
+                log.error("Could not filter the articles by this category, type, or tag", ex);
+            }
+            List<JournalArticle> newsletterArticles = new ArrayList<JournalArticle>(resultArticleNewsletter.values());
+
+            //Create HTML select option with all newsletter articles
+            StringBuilder selectHTMLOptionsSB = new StringBuilder("<option value=\"");
+            selectHTMLOptionsSB.append(String.valueOf(UNDEFINED));
+            selectHTMLOptionsSB.append("\">");
+            selectHTMLOptionsSB.append(emptySelectorMessage);
+            selectHTMLOptionsSB.append("</option>");
+            for (JournalArticle journalArticle : newsletterArticles) {
+                selectHTMLOptionsSB.append("<option value=\"");
+                selectHTMLOptionsSB.append(journalArticle.getId());
                 selectHTMLOptionsSB.append("\">");
-                selectHTMLOptionsSB.append(emptySelectorMessage);
-                selectHTMLOptionsSB.append("</option>");                
-                for (JournalArticle journalArticle : newsletterArticles) {
-                    selectHTMLOptionsSB.append("<option value=\"");
-                    selectHTMLOptionsSB.append(journalArticle.getId());
-                    selectHTMLOptionsSB.append("\">");
-                    selectHTMLOptionsSB.append(journalArticle.getTitle());
-                    selectHTMLOptionsSB.append("</option>");
-                }
+                selectHTMLOptionsSB.append(journalArticle.getTitle());
+                selectHTMLOptionsSB.append("</option>");
+            }
+
+            //Iterate each Block and replace by the HTML select
+            
+            while (m.find()) {
                 
-                //Iterate each Block and replace by the HTML select
-                while (m.find()) {
-                    StringBuilder selectHTMLItemSB = new StringBuilder("<div id=\"blockSelector");
-                    selectHTMLItemSB.append(count);
-                    selectHTMLItemSB.append("\">");
-                    selectHTMLItemSB.append("<select class=\"blockSelectorSelect\"");
-                    selectHTMLItemSB.append(" id=\"blockSelectorSelect");
-                    selectHTMLItemSB.append(count);
-                    selectHTMLItemSB.append("\" class=\"newsletter-forms-input-text\" onchange=\"selectArticlesToTemplate() \">");
-                    selectHTMLItemSB.append(selectHTMLOptionsSB.toString());
-                    selectHTMLItemSB.append("</select></div>");
-                    String toReplace = templateContent.substring(m.start(), m.end());
-                    templateContentTmp = templateContentTmp.replaceFirst(toReplace, selectHTMLItemSB.toString());
-                    count++;
-                }
+                StringBuilder selectHTMLItemSB = new StringBuilder("<div id=\"blockSelector");
+                selectHTMLItemSB.append(count);
+                selectHTMLItemSB.append("\">");
+                selectHTMLItemSB.append("<select class=\"blockSelectorSelect\"");
+                selectHTMLItemSB.append(" id=\"blockSelectorSelect");
+                selectHTMLItemSB.append(count);
+                selectHTMLItemSB.append("\" class=\"newsletter-forms-input-text\" onchange=\"selectArticlesToTemplate() \">");
+                selectHTMLItemSB.append(selectHTMLOptionsSB.toString());
+                selectHTMLItemSB.append("</select></div>");
+                //String toReplace = templateContent.substring(m.start(), m.end());
+                //log.info("Text to replace : " + toReplace);
+                //log.info("Text replacement : " + selectHTMLItemSB.toString());
+                templateContentTmp = m.replaceFirst(selectHTMLItemSB.toString());//templateContentTmp.replaceFirst(toReplace, selectHTMLItemSB.toString());
+                m = patternBlock.matcher(templateContentTmp);
                 
-                StringBuilder resultSB = new StringBuilder("<div class=\"templateArticleSelectorEditor\">");
-                resultSB.append(templateContentTmp);
-                resultSB.append("</div>");
-                result = resultSB.toString();            
+                count++;
+            }
+
+            StringBuilder resultSB = new StringBuilder("<div class=\"templateArticleSelectorEditor\">");
+            resultSB.append(templateContentTmp);
+            resultSB.append("</div>");
+            result = resultSB.toString();
         } else {
             log.error("Invalid Template Format");
         }
-
+        
         return result;
     }
-    
+
     /**
      * Validate the template format
      * @param templateContent
@@ -502,32 +513,26 @@ public class EmailFormat {
         String fTagBlockClose = fixTagsToRegex(TEMPLATE_TAG_BLOCK_CLOSE);
         String fTagBlockTitle = fixTagsToRegex(TEMPLATE_TAG_TITLE);
         String fTagBlockContent = fixTagsToRegex(TEMPLATE_TAG_CONTENT);
-        
-        templateContent = templateContent.replace(TEMPLATE_TAG_BLOCK_OPEN, fTagBlockOpen)
-                .replace(TEMPLATE_TAG_BLOCK_CLOSE, fTagBlockClose)
-                .replace(TEMPLATE_TAG_TITLE, fTagBlockTitle)
-                .replace(TEMPLATE_TAG_CONTENT, fTagBlockContent);
-        
+
+        templateContent = templateContent.replace(TEMPLATE_TAG_BLOCK_OPEN, fTagBlockOpen).replace(TEMPLATE_TAG_BLOCK_CLOSE, fTagBlockClose).replace(TEMPLATE_TAG_TITLE, fTagBlockTitle).replace(TEMPLATE_TAG_CONTENT, fTagBlockContent);
+
         //If the template contains at least one block with one title or content
-        if (templateContent.contains(fTagBlockOpen) 
-                && templateContent.contains(fTagBlockClose) 
-                && ( templateContent.contains(fTagBlockTitle) || templateContent.contains(fTagBlockContent) ) 
-        ){
+        if (templateContent.contains(fTagBlockOpen)
+                && templateContent.contains(fTagBlockClose)
+                && (templateContent.contains(fTagBlockTitle) || templateContent.contains(fTagBlockContent))) {
             result = templateContent;
         }
         return result;
     }
-    
+
     /**
      * Fix tags to allow replacements using common regular Expressions
      * @param tag
      * @return 
      */
-    public static String fixTagsToRegex(String tag){
+    public static String fixTagsToRegex(String tag) {
         tag = tag.replace("[", "<");
         tag = tag.replace("]", ">");
         return tag;
     }
-    
-    
 }

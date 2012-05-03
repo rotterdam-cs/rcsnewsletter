@@ -141,12 +141,12 @@ public class SubscriberCRUDManagedBean {
         String message = "";
         if (subscriptorService.update(subscriptor).isSuccess()) {
             message = serverMessageBundle.getString("newsletter.admin.subscriptor.update.succesfull");
-            FacesUtil.infoMessage(message);
+            uiState.setSuccesMessage(message);
         } else {
             message = serverMessageBundle.getString("newsletter.admin.subscriptor.update.failure");
-            FacesUtil.errorMessage(message);
+            uiState.setErrorMessage(message);
         }
-        return "admin";
+        return "admin?faces-redirect=true";
     }
     
     
@@ -175,30 +175,30 @@ public class SubscriberCRUDManagedBean {
             
             List<NewsletterSubscription> nls = subscriptionService.findBySubscriptor(subscriptor);
             for (NewsletterSubscription newsletterSubscription : nls) {
-                log.error("Deleting Subscription :" + newsletterSubscription.getSubscriptor().getFirstName());
+                log.info("Deleting Subscription :" + newsletterSubscription.getSubscriptor().getFirstName());
                 subscriptionService.delete(newsletterSubscription);
             }            
             if (subscriptorService.delete(subscriptor).isSuccess()) {
                 message = serverMessageBundle.getString("newsletter.admin.subscriptor.delete.succesfull");
-                FacesUtil.infoMessage(message);
+                uiState.setSuccesMessage(message);
             } else {
                 message = serverMessageBundle.getString("newsletter.admin.subscriptor.delete.failure");
-                FacesUtil.errorMessage(message);
+                uiState.setErrorMessage(message);
             }
             
         } else {
             
             NewsletterSubscription nls = subscriptionService.findBySubscriptorAndCategory(subscriptor, category);
-            log.error("Deleting subscription for category: " + nls.getCategory().getName() + "and Subscriptor: " + nls.getSubscriptor().getFirstName());
+            log.info("Deleting subscription for category: " + nls.getCategory().getName() + "and Subscriptor: " + nls.getSubscriptor().getFirstName());
             if (subscriptionService.delete(nls).isSuccess()) {
                 message = serverMessageBundle.getString("newsletter.admin.subscriptor.delete.succesfull");                
-                FacesUtil.infoMessage(message);
+                uiState.setSuccesMessage(message);
             } else {
                 message = serverMessageBundle.getString("newsletter.admin.subscriptor.delete.failure");
-                FacesUtil.errorMessage(message);
+                uiState.setErrorMessage(message);
             }
             
         }
-        return "admin";
+        return "admin?faces-redirect=true";
     }
 }

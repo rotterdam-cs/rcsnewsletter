@@ -85,7 +85,7 @@ public class EditMailingManagedBean {
     }
     
     public String save() {
-        log.error(templateArticles);
+        log.info(templateArticles);
         NewsletterMailing mailing = null;
         switch(currentAction) {
             case CREATE:
@@ -105,12 +105,12 @@ public class EditMailingManagedBean {
         ServiceActionResult result = null;
         switch(currentAction) {
             case CREATE:
-                log.error("CREATE");
+                log.info("CREATE");
                                 
                 result = service.save(mailing);
                 break;
             case UPDATE:
-                 log.error("UPDATE");
+                 log.info("UPDATE");
                 result = service.update(mailing);
                 
                 List <NewsletterTemplateBlock> ntbsOld =  templateBlockService.findAllByMailing(mailing);               
@@ -138,7 +138,7 @@ public class EditMailingManagedBean {
             }  
             
             mailingManagedBean.init(); 
-            return "admin";
+            return "admin?faces-redirect=true";
         } else {
             FacesUtil.errorMessage("Failed to create mailing");
             List<String> validationKeys = result.getValidationKeys();
@@ -231,8 +231,8 @@ public class EditMailingManagedBean {
     
     public void changeTemplate() {
         if (templateId != null && templateId != 0) {
-            String templateContent = templateService.findById(templateId).getPayload().getTemplate();
-            templateContent = parseTemplateEdit(templateContent);
+            String templateContent = templateService.findById(templateId).getPayload().getTemplate();            
+            templateContent = parseTemplateEdit(templateContent);            
             setTemplate(templateContent);
         } else {
             setTemplate("");
@@ -240,6 +240,7 @@ public class EditMailingManagedBean {
     }
     
     private String parseTemplateEdit(String template) {
+        log.debug("Executing parseTemplateEdit() in EditMailingManagedBean");
         String result = "";
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();

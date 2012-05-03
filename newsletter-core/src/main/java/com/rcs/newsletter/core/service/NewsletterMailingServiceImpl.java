@@ -97,7 +97,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
                     MailMessage personalMessage = message;
 
                     toIA = new InternetAddress(subscriptor.getEmail(), name);
-                    logger.error("Sending to " + name + "<" + subscriptor.getEmail() + ">");
+                    logger.info("Sending to " + name + "<" + subscriptor.getEmail() + ">");
                     personalMessage.setTo(toIA);
 
                     //Replace User Info
@@ -107,7 +107,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
                     mailingUtil.sendEmail(personalMessage);
                 }
             }
-            logger.error("End Sending personalizable conent");
+            logger.info("End Sending personalizable conent");
         } catch (Exception ex) {
             logger.error("Error while trying to read article", ex);
         }

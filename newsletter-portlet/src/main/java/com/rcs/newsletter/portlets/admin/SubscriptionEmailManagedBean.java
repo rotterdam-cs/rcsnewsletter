@@ -2,35 +2,22 @@ package com.rcs.newsletter.portlets.admin;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.portlet.PortletBag;
-import com.liferay.portal.kernel.portlet.PortletBagPool;
-import com.liferay.portal.kernel.servlet.ServletContextUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.TextFormatter;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import static com.rcs.newsletter.NewsletterConstants.NEWSLETTER_BUNDLE;
 import static com.rcs.newsletter.NewsletterConstants.SERVER_MESSAGE_BUNDLE;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import com.rcs.newsletter.util.FacesUtil;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
-import javax.portlet.ResourceRequest;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Scope;
 
@@ -202,17 +189,17 @@ public class SubscriptionEmailManagedBean {
 
             if (result.isSuccess()) {
                 String infoMsg = serverMessageBundle.getString("newsletter.admin.subscriptionmail.saved");
-                FacesUtil.infoMessage(infoMsg);
+                uiState.setSuccesMessage(infoMsg);
             } else {
                 String errorMsg = serverMessageBundle.getString("newsletter.admin.subscriptionmail.notsaved");
-                FacesUtil.errorMessage(errorMsg);
+                uiState.setErrorMessage(errorMsg);
             }
         } else {
             String errorMsg = serverMessageBundle.getString("newsletter.admin.subscriptionmail.notsaved");
-            FacesUtil.errorMessage(errorMsg);
+            uiState.setErrorMessage(errorMsg);
         }
 
-        return "admin";
+        return "admin?faces-redirect=true";
     }
     public String getEditorLanguage(){
         PortletRequest request = (PortletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -232,7 +219,7 @@ public class SubscriptionEmailManagedBean {
 
         String mainPath = uiState.getThemeDisplay().getPathMain();
 
-        HttpServletRequest request = PortalUtil.getHttpServletRequest((ResourceRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest());
+        HttpServletRequest request = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest());
 
         Map<String, String> fileBrowserParamsMap = (Map<String, String>) request.getAttribute("liferay-ui:input-editor:fileBrowserParams");
 

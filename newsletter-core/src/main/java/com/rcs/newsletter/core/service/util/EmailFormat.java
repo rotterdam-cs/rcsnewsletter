@@ -372,8 +372,9 @@ public class EmailFormat {
                         toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, jad.getTitle());
                         toReplaceTmp = toReplaceTmp.replace(fTagBlockContent, content);
 
-                        //resulttmp = resulttmp.replaceFirst(toReplace, toReplaceTmp);      
-                        resulttmp = m.replaceFirst(toReplaceTmp);
+                        //resulttmp = resulttmp.replaceFirst(toReplace, toReplaceTmp);
+                        //#7467
+                        resulttmp = m.replaceFirst(StringUtils.replace(toReplaceTmp, "$",  "\\$"));
 
 
 

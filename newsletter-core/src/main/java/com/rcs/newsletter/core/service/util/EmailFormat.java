@@ -377,7 +377,9 @@ public class EmailFormat {
                         String content = jad.getContent();
                         toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, jad.getTitle());
                         toReplaceTmp = toReplaceTmp.replace(fTagBlockContent, content); 
-                        resulttmp = resulttmp.replaceFirst(toReplace, toReplaceTmp);      
+                        //#7467
+                        //resulttmp = resulttmp.replaceFirst(toReplace, toReplaceTmp);
+                        resulttmp = StringUtils.replace(resulttmp,toReplace,toReplaceTmp,1);
                         
                    //If there is a NOT content related to this block the block is deleted
                    } else {

@@ -15,6 +15,5 @@ Any value defined here will override the pom.xml file value but is only applicab
 -->
         <org-netbeans-modules-projectapi.jsf_2e_language>Facelets</org-netbeans-modules-projectapi.jsf_2e_language>
         <org-netbeans-modules-html-editor-lib.default-html-public-id>HTML5</org-netbeans-modules-html-editor-lib.default-html-public-id>
-        <netbeans.hint.jdkPlatform>JDK_1.6_SO</netbeans.hint.jdkPlatform>
     </properties>
 </project-shared-configuration>

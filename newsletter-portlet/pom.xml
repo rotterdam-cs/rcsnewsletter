@@ -190,6 +190,12 @@
             <url>http://repository.primefaces.org</url>  
             <layout>default</layout>  
         </repository>
+        <repository> 
+            <id>project</id> 
+            <name>Project Maven Repository</name> 
+            <layout>default</layout> 
+            <url>file://${project.basedir}/lib/</url> 
+        </repository>         
     </repositories>
     
     <properties>

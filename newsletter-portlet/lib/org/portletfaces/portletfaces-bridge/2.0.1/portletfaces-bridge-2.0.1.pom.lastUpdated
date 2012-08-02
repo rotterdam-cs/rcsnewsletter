@@ -1,0 +1,5 @@
+#NOTE: This is an internal implementation file, its format can be changed without prior notice.
+#Wed Nov 23 14:43:50 ART 2011
+http\://repo.portletfaces.org/mvn/maven2/.lastUpdated=1322070230053
+7dcc4f3c9235f914a8e4a6baada3909236c5de60@default-scp\://jupiter/home/maven/.lastUpdated=1322070228474
+scp\://jupiter/home/maven/.error=Could not transfer artifact org.portletfaces\:portletfaces-bridge\:pom\:2.0.1 from/to Rotterdam-CS (scp\://jupiter/home/maven)\: No connector available to access repository Rotterdam-CS (scp\://jupiter/home/maven) of type default using the available factories WagonRepositoryConnectorFactory

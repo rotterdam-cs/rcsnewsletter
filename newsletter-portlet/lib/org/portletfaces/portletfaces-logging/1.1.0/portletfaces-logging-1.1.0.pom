@@ -1,0 +1,90 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<organization>
+		<name>portletfaces.org</name>
+		<url>http://www.portletfaces.org</url>
+	</organization>
+	<groupId>org.portletfaces</groupId>
+	<artifactId>portletfaces-logging</artifactId>
+	<name>${project.artifactId}</name>
+	<version>1.1.0</version>
+	<description />
+
+	<scm>
+		<developerConnection>scm:svn:http://svn.portletfaces.org/svn/portletfaces/logging/tags/1.1.0</developerConnection>
+		<url>http://svn.portletfaces.org/svn/portletfaces/logging/tags/1.1.0</url>
+	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>portletfaces-deploy-id</id>
+			<url>${portletfaces-deploy-path-releases}</url>
+		</repository>
+		<snapshotRepository>
+			<id>portletfaces-deploy-id</id>
+			<url>${portletfaces-deploy-path-snapshots}</url>
+		</snapshotRepository>
+		<site>
+			<id>portletfaces-deploy-id</id>
+			<url>${portletfaces-deploy-path-sites}</url>
+		</site>
+	</distributionManagement>
+
+	<issueManagement>
+		<system>Atlassian JIRA</system>
+		<url>http://jira.portletfaces.org</url>
+	</issueManagement>
+
+	<ciManagement>
+		<system>Atlassian Bamboo</system>
+		<url>http://bamboo.portletfaces.org</url>
+	</ciManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.1</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<tagBase>http://svn.portletfaces.org/svn/portletfaces/logging/tags</tagBase>
+					<branchBase>http://svn.portletfaces.org/svn/portletfaces/logging/branches</branchBase>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

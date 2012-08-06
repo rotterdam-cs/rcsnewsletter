@@ -8,11 +8,11 @@
     <parent>
         <artifactId>newsletter</artifactId>
         <groupId>com.rcs</groupId>
-        <version>1.2</version>
+        <version>2.1.5</version>
     </parent>
     <groupId>com.rcs</groupId>
     <artifactId>newsletter-core</artifactId>
-    <version>1.2</version>
+    <version>2.1.5</version>
     <name>newsletter-core</name>
     <url>http://maven.apache.org</url>
     <properties>

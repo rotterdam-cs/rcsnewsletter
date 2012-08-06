@@ -10,7 +10,6 @@
         <portlet-name>NewsletterAdmin</portlet-name>
         <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <expiration-cache>0</expiration-cache>
-        <resource-bundle>Language</resource-bundle>
         <supports>
             <mime-type>text/html</mime-type>
             <portlet-mode>view</portlet-mode>
@@ -26,7 +25,6 @@
         <portlet-name>NewsletterRegistration</portlet-name>
         <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <expiration-cache>0</expiration-cache>
-        <resource-bundle>Language</resource-bundle>
         <supports>
             <mime-type>text/html</mime-type>
             <portlet-mode>view</portlet-mode>
@@ -42,7 +40,6 @@
         <portlet-name>NewsletterRegistrationConfirm</portlet-name>
         <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <expiration-cache>0</expiration-cache>
-        <resource-bundle>Language</resource-bundle>
         <supports>
             <mime-type>text/html</mime-type>
             <portlet-mode>view</portlet-mode>
@@ -58,7 +55,6 @@
         <portlet-name>OnlineNewsletterViewer</portlet-name>
         <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <expiration-cache>0</expiration-cache>
-        <resource-bundle>Language</resource-bundle>
         <supports>
             <mime-type>text/html</mime-type>
             <portlet-mode>view</portlet-mode>

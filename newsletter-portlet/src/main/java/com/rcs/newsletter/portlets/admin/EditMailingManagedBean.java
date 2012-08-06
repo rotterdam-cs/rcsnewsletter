@@ -19,9 +19,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
+/*import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Named;*/
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 
@@ -29,8 +29,8 @@ import org.springframework.context.annotation.Scope;
  *
  * @author juan
  */
-@Named
-@Scope("request")
+//@Named
+//@Scope("request")
 public class EditMailingManagedBean {
     private static Log log = LogFactoryUtil.getLog(EditMailingManagedBean.class);  
     
@@ -44,7 +44,7 @@ public class EditMailingManagedBean {
     private String newsletterArticleTag;
     
     //////////////// DEPENDENCIES //////////////////
-    @Inject
+    /*@Inject
     private NewsletterMailingService service;
     
     @Inject
@@ -265,7 +265,7 @@ public class EditMailingManagedBean {
      * Get the l10n key for the title of the page.
      * @return 
      */
-    public String getTitleKey() {
+    /*public String getTitleKey() {
         if (currentAction == CRUDActionEnum.CREATE) {
             return CREATE_TITLE_KEY;
         }
@@ -275,13 +275,13 @@ public class EditMailingManagedBean {
         }
         
         return null;
-    }
+    }*/
 
     /**
      * Get the l10n key for the save button of the page.
      * @return 
      */
-    public String getSaveButtonKey() {
+    /*public String getSaveButtonKey() {
         if (currentAction == CRUDActionEnum.CREATE) {
             return CREATE_SAVE_BUTTON_KEY;
         }
@@ -291,17 +291,17 @@ public class EditMailingManagedBean {
         }
         
         return null;
-    }
+    }*/
 
-    public Long getMailingId() {
+    /*public Long getMailingId() {
         return mailingId;
-    }
+    }*/
     
     /**
      * Update the current mailing id and put values so the ui can display them
      * @param mailingId 
      */
-    public void setMailingId(Long mailingId) {
+    /*public void setMailingId(Long mailingId) {
         this.mailingId = mailingId;
         
         ServiceActionResult<NewsletterMailing> result = service.findById(mailingId);
@@ -331,6 +331,6 @@ public class EditMailingManagedBean {
 
     public void setMailingManagedBean(NewsletterMailingManagedBean mailingManagedBean) {
         this.mailingManagedBean = mailingManagedBean;
-    }
+    }*/
     
 }

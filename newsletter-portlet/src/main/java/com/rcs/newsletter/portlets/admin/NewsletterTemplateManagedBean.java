@@ -4,21 +4,21 @@ import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
+//import javax.inject.Inject;
+//import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
 
 /**
  *
  * @author Prj.M@x <pablo.rendon@rotterdam-cs.com>
  */
-@Named
-@Scope("request")
+/*@Named
+@Scope("request")*/
 public class NewsletterTemplateManagedBean {
     
     List<NewsletterTemplate> templates;
     
-    @Inject
+    /*@Inject
     NewsletterTemplateService templateService;
     @Inject
     private UserUiStateManagedBean uiState;
@@ -34,7 +34,7 @@ public class NewsletterTemplateManagedBean {
 
     public void setTemplates(List<NewsletterTemplate> templates) {
         this.templates = templates;
-    }
+    }*/
    
     
 }

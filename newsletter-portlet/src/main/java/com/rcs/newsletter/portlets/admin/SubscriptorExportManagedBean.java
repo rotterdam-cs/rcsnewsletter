@@ -10,28 +10,28 @@ import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
-import javax.faces.event.AjaxBehaviorEvent;
+/*import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Named;*/
 import org.springframework.context.annotation.Scope;
 
 /**
  *
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
-@Named
-@Scope("session")
+/*@Named
+@Scope("session")*/
 public class SubscriptorExportManagedBean implements Serializable{
 
     private static Log log = LogFactoryUtil.getLog(SubscriptorExportManagedBean.class);
     private NewsletterCategory filterCategory;
     private int categoryId = NewsletterConstants.UNDEFINED;
-    @Inject
+    /*@Inject
     NewsletterSubscriptorService subscriptorService;
     @Inject
     NewsletterCategoryService categoryService;
     @Inject
-    NewsletterSubscriptionService subscriptionService;
+    NewsletterSubscriptionService subscriptionService;*/
 
     @PostConstruct
     public void init() {
@@ -41,7 +41,7 @@ public class SubscriptorExportManagedBean implements Serializable{
         return categoryId;
     }
 
-    public NewsletterSubscriptorService getSubscriptorService() {
+    /*public NewsletterSubscriptorService getSubscriptorService() {
         return subscriptorService;
     }
 
@@ -51,7 +51,7 @@ public class SubscriptorExportManagedBean implements Serializable{
 
     public NewsletterSubscriptionService getSubscriptionService() {
         return subscriptionService;
-    }
+    }*/
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
@@ -73,11 +73,11 @@ public class SubscriptorExportManagedBean implements Serializable{
         return ResourceTypeEnum.SUBSCRIPTOR_FROM_EXCEL.toString();
     }
 
-    public void changeCategory(AjaxBehaviorEvent event) {
+    /*public void changeCategory(AjaxBehaviorEvent event) {
         if (getCategoryId() != 0) {
             filterCategory = categoryService.findById(categoryId).getPayload();
         }
-    }
+    }*/
 
     public String redirectImportSubscriptors() {
         return "importSubscriptors";

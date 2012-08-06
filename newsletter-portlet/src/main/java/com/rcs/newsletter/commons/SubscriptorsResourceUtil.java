@@ -54,7 +54,7 @@ public class SubscriptorsResourceUtil {
      * @param request
      * @param response 
      */
-    public static void writeSubscriptorsExcel(ResourceRequest request, ResourceResponse response) {
+    /*public static void writeSubscriptorsExcel(ResourceRequest request, ResourceResponse response) {
 
         SubscriberAdminManagedBean subscriberAdminManagedBean =
                 (SubscriberAdminManagedBean) request.getPortletSession().getAttribute("subscriberAdminManagedBean");
@@ -148,7 +148,7 @@ public class SubscriptorsResourceUtil {
           result = false;
        }
        return result;
-    }
+    }*/
     
     /**
      * Import subscribers from excel file
@@ -156,7 +156,7 @@ public class SubscriptorsResourceUtil {
      * @param exportManagedBean
      * @return 
      */
-    public static HashMap importSubscriptorsFromExcel(FileItem fileItem, SubscriptorExportManagedBean exportManagedBean, ThemeDisplay themeDisplay) {        
+    /*public static HashMap importSubscriptorsFromExcel(FileItem fileItem, SubscriptorExportManagedBean exportManagedBean, ThemeDisplay themeDisplay) {        
         int result = 1;
         String resultRowProblems = "";
         HashMap<Integer, String> resultHM = new HashMap();        
@@ -218,12 +218,12 @@ public class SubscriptorsResourceUtil {
 
                     if (subscriptorResult.isSuccess()) {
                         subscriptor = subscriptorResult.getPayload();
-                        subscription = subscriptionService.findBySubscriptorAndCategory(subscriptor, category);
+                        subscription = subscriptionService.findBySubscriptorAndCategory(subscriptor, category);*/
                         /**
                          * If the subscriptor exists and he hasn't belong
                          * to the current category, we create the subscription
                          */
-                        if (subscription == null) {
+                        /*if (subscription == null) {
                             subscription = new NewsletterSubscription();
                             
                             // #6573
@@ -299,5 +299,5 @@ public class SubscriptorsResourceUtil {
         }
         resultHM.put(result, resultRowProblems);
         return resultHM;
-    }
+    }*/
 }

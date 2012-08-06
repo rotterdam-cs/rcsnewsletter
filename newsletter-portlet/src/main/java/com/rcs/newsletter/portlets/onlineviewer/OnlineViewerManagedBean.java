@@ -14,9 +14,9 @@ import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import javax.faces.context.FacesContext;
+/*import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Named;*/
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import org.springframework.context.annotation.Scope;
@@ -26,8 +26,8 @@ import org.springframework.context.annotation.Scope;
  *
  * @author Prj.M@x <pablo.rendon@rotterdam-cs.com>
  */
-@Named
-@Scope("request")
+/*@Named
+@Scope("request")*/
 public class OnlineViewerManagedBean implements Serializable {
 
     private static Log log = LogFactoryUtil.getLog(OnlineViewerManagedBean.class);
@@ -36,7 +36,7 @@ public class OnlineViewerManagedBean implements Serializable {
     private String requestedsubscriptionId = null;
     private NewsletterArchive article = null;    
     
-    
+  /*  
     @Inject
     private NewsletterArchiveService archiveService;   
     @Inject
@@ -44,7 +44,7 @@ public class OnlineViewerManagedBean implements Serializable {
     @Inject
     private UserUiStateManagedBean uiState;
     
-    
+    */
     public Long getRequestedNewsletterId() {
         return requestedNewsletterId;
     }
@@ -77,7 +77,7 @@ public class OnlineViewerManagedBean implements Serializable {
      * Get the article and user params from the URL and return the article content with replacements
      * @return 
      */
-    public String getNewsletterArticle() {
+    /*public String getNewsletterArticle() {
         String result = "";
         ThemeDisplay themeDisplay = uiState.getThemeDisplay();
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -126,7 +126,7 @@ public class OnlineViewerManagedBean implements Serializable {
         }
         return result;
     }    
-    
+    */
     
     
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
- 
+
 <portlet-app
 	version="2.0"
 	xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
@@ -7,19 +7,14 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">    
     
     <portlet>
-        <portlet-name>Newsletter-Admin-Faces</portlet-name>
-        <display-name>Admin Faces</display-name>
-        <portlet-class>com.rcs.newsletter.commons.NewsletterResourcePortlet</portlet-class>
-        
-        <init-param>
-            <name>javax.portlet.faces.defaultViewId.view</name>
-            <value>/xhtml/admin/admin.xhtml</value>
-        </init-param>
+        <portlet-name>NewsletterAdmin</portlet-name>
+        <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <expiration-cache>0</expiration-cache>
+        <resource-bundle>Language</resource-bundle>
         <supports>
             <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
         </supports>
-                <!--<resource-bundle>Language</resource-bundle> -->
         <portlet-info>
             <title>Newsletter Administration</title>
             <short-title>Newsletter</short-title>
@@ -28,22 +23,13 @@
     </portlet>
 
     <portlet>
-        <portlet-name>Newsletter-Registration</portlet-name>
-        <display-name>Admin Faces</display-name>
-        <portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
-        <init-param>
-            <name>javax.portlet.faces.defaultViewId.view</name>
-            <value>/xhtml/registration.xhtml</value>
-        </init-param>
-        <init-param>
-            <name>javax.portlet.faces.defaultViewId.edit</name>
-            <value>/xhtml/registration-edit.xhtml</value>
-        </init-param>
+        <portlet-name>NewsletterRegistration</portlet-name>
+        <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <expiration-cache>0</expiration-cache>
+        <resource-bundle>Language</resource-bundle>
         <supports>
             <mime-type>text/html</mime-type>
             <portlet-mode>view</portlet-mode>
-            <portlet-mode>edit</portlet-mode>
         </supports>
         <portlet-info>
             <title>Newsletter Registration</title>
@@ -53,18 +39,14 @@
     </portlet>
     
     <portlet>
-        <portlet-name>Newsletter-Registration-Confirm</portlet-name>
-        <display-name>Registration Confirmation</display-name>
-        <portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
-        <init-param>
-            <name>javax.portlet.faces.defaultViewId.view</name>
-            <value>/xhtml/registrationSucess.xhtml</value>
-        </init-param>
+        <portlet-name>NewsletterRegistrationConfirm</portlet-name>
+        <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <expiration-cache>0</expiration-cache>
+        <resource-bundle>Language</resource-bundle>
         <supports>
             <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
         </supports>
-                <!--<resource-bundle>Language</resource-bundle> -->
         <portlet-info>
             <title>Newsletter Confirmation Portlet</title>
             <short-title>Registration Confirmation</short-title>
@@ -73,18 +55,14 @@
     </portlet>
     
     <portlet>
-        <portlet-name>Online-Newsletter-Viewer</portlet-name>
-        <display-name>Online Newsletter Viewer</display-name>
-        <portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
-        <init-param>
-            <name>javax.portlet.faces.defaultViewId.view</name>
-            <value>/xhtml/onlineNewsletterViewer.xhtml</value>
-        </init-param>
+        <portlet-name>OnlineNewsletterViewer</portlet-name>
+        <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <expiration-cache>0</expiration-cache>
+        <resource-bundle>Language</resource-bundle>
         <supports>
             <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
         </supports>
-                <!--<resource-bundle>Language</resource-bundle> -->
         <portlet-info>
             <title>Online Newsletter Viewer Portlet</title>
             <short-title>Online Newsletter Viewer</short-title>

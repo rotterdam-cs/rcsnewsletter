@@ -24,9 +24,9 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
+/*import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Named;*/
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -36,8 +36,8 @@ import org.springframework.context.annotation.Scope;
  *
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
-@Named
-@Scope("request")
+/*@Named
+@Scope("request")*/
 public class SubscriptionManagedBean implements Serializable {
 
     private static Log log = LogFactoryUtil.getLog(SubscriptionManagedBean.class);
@@ -51,7 +51,7 @@ public class SubscriptionManagedBean implements Serializable {
     private String requestedUnsubscriptionId = null;
     
     private RegistrationConfig currentConfig;
-    @Inject
+    /*@Inject
     private NewsletterPortletSettingsService settingsService;
     @Inject
     private NewsletterCategoryService categoryService;
@@ -62,9 +62,9 @@ public class SubscriptionManagedBean implements Serializable {
     @Inject
     private UserUiStateManagedBean uiStateManagedBean;
     @Inject
-    private UserUiStateManagedBean uiState;
+    private UserUiStateManagedBean uiState;*/
 
-    @PostConstruct
+    /*@PostConstruct
     public void init() {
         currentConfig = new RegistrationConfig();        
         currentConfig.setGroupid(uiState.getGroupid());
@@ -76,9 +76,9 @@ public class SubscriptionManagedBean implements Serializable {
             currentConfig.setDisableName(registrationConfig.isDisableName());
         }
         clearData();
-    }
+    }*/
 
-    public void doSaveSettings() {
+    /*public void doSaveSettings() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         ServiceActionResult result = settingsService.updateConfig(uiState.getThemeDisplay(), FacesUtil.getPortletUniqueId(), currentConfig);
@@ -409,14 +409,14 @@ public class SubscriptionManagedBean implements Serializable {
         this.name = "";
         this.lastName = "";
         this.email = "";
-    }
+    }*/
     
     /**
      * Method that is launched when the registration-confirm portlet receive
      * the params from the URL
      * @return 
      */
-    public String getActivationkey() {        
+    /*public String getActivationkey() {        
         String result = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Map<String, Object> map = facesContext.getExternalContext().getRequestMap();
@@ -506,7 +506,7 @@ public class SubscriptionManagedBean implements Serializable {
 
     public void setRequestedUnsubscriptionId(String requestedUnsubscriptionId) {
         this.requestedUnsubscriptionId = requestedUnsubscriptionId;
-    }
+    }*/
     
     
 }

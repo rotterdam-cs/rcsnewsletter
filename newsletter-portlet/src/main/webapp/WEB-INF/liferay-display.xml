@@ -3,8 +3,8 @@
 
 <display>
     <category name="rcs">            
-            <portlet id="Newsletter-Registration" />
-            <portlet id="Newsletter-Registration-Confirm" />
-            <portlet id="Online-Newsletter-Viewer" />
+            <portlet id="NewsletterRegistration" />
+            <portlet id="NewsletterRegistrationConfirm" />
+            <portlet id="OnlineNewsletterViewer" />
     </category>
 </display>

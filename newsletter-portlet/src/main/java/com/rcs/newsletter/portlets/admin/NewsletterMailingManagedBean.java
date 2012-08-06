@@ -19,21 +19,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
+/*import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Named;*/
 import org.springframework.context.annotation.Scope;
 
 /**
  *
  * @author juan
  */
-@Named
-@Scope("request")
+/*@Named
+@Scope("request")*/
 public class NewsletterMailingManagedBean implements Serializable {
     private static Log log = LogFactoryUtil.getLog(NewsletterMailingManagedBean.class);  
     private static final long serialVersionUID = 1L;
-    @Inject
+    /*@Inject
     private UserUiStateManagedBean uiState;
     @Inject
     private EditMailingManagedBean mailingBean;
@@ -48,7 +48,7 @@ public class NewsletterMailingManagedBean implements Serializable {
     @Inject
     private NewsletterArchiveService archiveService;    
     @Inject
-    private NewsletterTemplateBlockService templateBlockService;
+    private NewsletterTemplateBlockService templateBlockService;*/
             
     private List<MailingTableRow> mailingList;
     private Long mailingId;
@@ -58,7 +58,7 @@ public class NewsletterMailingManagedBean implements Serializable {
     /**
      * Load the listings on this managed bean.
      */
-    @PostConstruct
+    /*@PostConstruct
     public void init() {
         mailingList = createMailingsList(service.findAll(uiState.getThemeDisplay()).getPayload());
         //workaround for circular dependency injection.
@@ -168,7 +168,7 @@ public class NewsletterMailingManagedBean implements Serializable {
         }
         
         return "admin?faces-redirect=true";
-    }
+    }*/
     
     /**
      * Save this version of the Mailing
@@ -176,7 +176,7 @@ public class NewsletterMailingManagedBean implements Serializable {
      * @param categoryName
      * @param emailBody 
      */
-    private Long saveArchiveForMailing(String mailingName, String categoryName, String articleTitle, String emailBody) {
+    /*private Long saveArchiveForMailing(String mailingName, String categoryName, String articleTitle, String emailBody) {
         NewsletterArchive archive = new NewsletterArchive();
         archive.setGroupid(uiState.getGroupid());
         archive.setCompanyid(uiState.getCompanyid());
@@ -276,6 +276,6 @@ public class NewsletterMailingManagedBean implements Serializable {
         }
         
         return ret;
-    }
+    }*/
     
 }

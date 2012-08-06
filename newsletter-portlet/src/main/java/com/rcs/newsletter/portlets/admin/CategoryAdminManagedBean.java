@@ -7,22 +7,22 @@ import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
+//import javax.inject.Inject;
+//import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
 
 /**
  *
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
-@Named
-@Scope("request")
+//@Named
+//@Scope("request")
 public class CategoryAdminManagedBean {
     
     private NewsletterSubscriptor subscriptor;
     private long subscriptorId;
     
-    @Inject
+   /* @Inject
     NewsletterCategoryService categoryService;    
     
     List<NewsletterCategory> categorys;
@@ -61,5 +61,5 @@ public class CategoryAdminManagedBean {
     public void setSubscriptorId(long subscriptorId) {
         this.subscriptorId = subscriptorId;
         subscriptor = subscriptorService.findById(subscriptorId).getPayload();
-    }    
+    }    */
 }

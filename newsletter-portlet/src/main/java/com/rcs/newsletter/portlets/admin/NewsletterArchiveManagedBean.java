@@ -8,8 +8,8 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
+//import javax.inject.Inject;
+//import javax.inject.Named;
 import org.springframework.context.annotation.Scope;
 
 
@@ -17,16 +17,16 @@ import org.springframework.context.annotation.Scope;
  *
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
-@Named
-@Scope("request")
+//@Named
+//@Scope("request")
 public class NewsletterArchiveManagedBean implements Serializable {
  
     private static final long serialVersionUID = 1L;
     
-    @Inject    
+    /*@Inject    
     private UserUiStateManagedBean uiState;
     @Inject
-    private NewsletterArchiveService archiveService;
+    private NewsletterArchiveService archiveService;*/
     
     private List<NewsletterArchive> archives;
     
@@ -42,17 +42,17 @@ public class NewsletterArchiveManagedBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        archives = archiveService.findAll(uiState.getThemeDisplay()).getPayload();
-        Collections.sort(archives, new ArchiveComparator());
+        //archives = archiveService.findAll(uiState.getThemeDisplay()).getPayload();
+        //Collections.sort(archives, new ArchiveComparator());
     }
 
     public List<NewsletterArchive> getArchives() {
         return archives;
     }
     
-    public String redirectPreviewContent() {
+    /*public String redirectPreviewContent() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.ARCHIVE_TAB_INDEX);
         
         return "previewArchiveMail";
-    }
+    }*/
 }

@@ -8,26 +8,26 @@ import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.util.FacesUtil;
 import java.util.ResourceBundle;
-import javax.faces.context.FacesContext;
+/*import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Named;*/
 import org.springframework.context.annotation.Scope;
 
 /**
  *
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
-@Named
-@Scope("request")
+/*@Named
+@Scope("request")*/
 public class CategoryCRUDManagedBean {
 
     private static Log log = LogFactoryUtil.getLog(CategoryCRUDManagedBean.class);
     
-    @Inject
+    /*@Inject
     NewsletterCategoryService categoryCRUDService;
     
     @Inject
-    private UserUiStateManagedBean uiState;
+    private UserUiStateManagedBean uiState;*/
     
     /////////////// PROPERTIES ////////////////////
     private long id;
@@ -107,7 +107,7 @@ public class CategoryCRUDManagedBean {
     
 
     //////////////// METHODS //////////////////////
-    
+    /*
     public String redirectCreateCategory() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
         this.setAction(CRUDActionEnum.CREATE);
@@ -214,5 +214,5 @@ public class CategoryCRUDManagedBean {
         }
 
         return "admin?faces-redirect=true";
-    }
+    }*/
 }

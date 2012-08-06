@@ -14,10 +14,10 @@ import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javax.faces.bean.ViewScoped;
+/*import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Named;*/
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Scope;
@@ -26,17 +26,17 @@ import org.springframework.context.annotation.Scope;
  *
  * @author Prj.M@x <pablo.rendon@rotterdam-cs.com>
  */
-@Named
+/*@Named
 @Scope("request")
-@ViewScoped
+@ViewScoped*/
 public class TemplateCRUDManagedBean {
 
     private static Log log = LogFactoryUtil.getLog(TemplateCRUDManagedBean.class);
     private static final String TEMPLATE_HELP_INFO = "newsletter.admin.template.info";
-    @Inject
+    /*@Inject
     NewsletterTemplateService templateCRUDService;
     @Inject
-    private UserUiStateManagedBean uiState;
+    private UserUiStateManagedBean uiState;*/
     /////////////// PROPERTIES ////////////////////
     private long id;
     private CRUDActionEnum action;
@@ -79,7 +79,7 @@ public class TemplateCRUDManagedBean {
         this.name = name;
     }
 
-    public String getHelpPageText() {
+    /*public String getHelpPageText() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, facesContext.getViewRoot().getLocale());
         helpPageText = newsletterMessageBundle.getString(TEMPLATE_HELP_INFO);
@@ -106,10 +106,10 @@ public class TemplateCRUDManagedBean {
 
     public void setDoAsUserId(String doAsUserId) {
         this.doAsUserId = doAsUserId;
-    }
+    }*/
 
     //////////////// METHODS //////////////////////
-    public String redirectCreateTemplate() {
+    /*public String redirectCreateTemplate() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.TEMPLATE_TAB_INDEX);
         this.setAction(CRUDActionEnum.CREATE);
         return "editTemplate";
@@ -282,6 +282,6 @@ public class TemplateCRUDManagedBean {
         }
 
         return sb.toString();
-    }
+    }*/
     
 }

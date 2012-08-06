@@ -14,9 +14,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
+/*import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import org.primefaces.event.TabChangeEvent;
+import org.primefaces.event.TabChangeEvent;*/
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 
@@ -24,8 +24,8 @@ import org.springframework.context.annotation.Scope;
  *
  * @author juan
  */
-@Named
-@Scope("session")
+/*@Named
+@Scope("session")*/
 public class UserUiStateManagedBean implements Serializable {
 
     private static Log logger = LogFactoryUtil.getLog(UserUiStateManagedBean.class);
@@ -51,7 +51,7 @@ public class UserUiStateManagedBean implements Serializable {
     @PostConstruct
     public void init() {
         adminActiveTabIndex = LISTS_TAB_INDEX;
-        refresh();
+        //refresh();
     }
 
     public int getAdminActiveTabIndex() {
@@ -62,10 +62,10 @@ public class UserUiStateManagedBean implements Serializable {
         this.adminActiveTabIndex = adminActiveTabIndex;
     }
 
-    public void onTabsUpdated(TabChangeEvent event) {
+    /*public void onTabsUpdated(TabChangeEvent event) {
         //DUMMY METHOD TO MAKE THE MAGIC HAPPEN
         System.out.println(adminActiveTabIndex);
-    }
+    }*/
 
     /**
      * Obtain an article by his id
@@ -107,11 +107,11 @@ public class UserUiStateManagedBean implements Serializable {
         return result;
     }
 
-    public String getContent(long journalArticleId) {
+    /*public String getContent(long journalArticleId) {
         JournalArticle journalArticle = getJournalArticleByArticleId(journalArticleId);
 
         return getContent(journalArticle);
-    }
+    }*/
 
     /**
      * Obtain the content of the article
@@ -119,7 +119,7 @@ public class UserUiStateManagedBean implements Serializable {
      * @param journalArticle
      * @return
      */
-    public String getContent(JournalArticle journalArticle) {
+    /*public String getContent(JournalArticle journalArticle) {
         String result = null;
         ThemeDisplay themeDisplay = getThemeDisplay();
         result = JournalContentUtil.getContent(journalArticle.getGroupId(),
@@ -139,7 +139,7 @@ public class UserUiStateManagedBean implements Serializable {
         result = (ThemeDisplay) requestMap.get(WebKeys.THEME_DISPLAY);
 
         return result;
-    }
+    }*/
 
     /**
      * @DEPRECATED Method that filter the articles by a specified type
@@ -164,7 +164,7 @@ public class UserUiStateManagedBean implements Serializable {
      *
      * return new ArrayList<JournalArticle>(result.values()); }
      */
-    public void refresh() {
+    /*public void refresh() {
         try {
             //journalArticles = findArticlesByType(newsletterArticleType);
             groupid = getGroupid();
@@ -172,9 +172,9 @@ public class UserUiStateManagedBean implements Serializable {
         } catch (Exception ex) {
             logger.error("Error while trying to get the list of journal articles", ex);
         }
-    }
+    }*/
 
-    public Long getCompanyid() {
+    /*public Long getCompanyid() {
         companyid = getThemeDisplay().getCompanyId();
         return companyid;
     }
@@ -198,7 +198,7 @@ public class UserUiStateManagedBean implements Serializable {
     public void setGroupid(Long groupid) {
         setChangeGroup(!groupid.equals(this.groupid));
         this.groupid = groupid;
-    }
+    }*/
 
     /**
      * Return true is the group was changed

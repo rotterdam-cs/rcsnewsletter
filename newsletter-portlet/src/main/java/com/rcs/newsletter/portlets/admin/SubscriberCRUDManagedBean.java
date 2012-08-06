@@ -13,22 +13,22 @@ import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.util.FacesUtil;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.faces.context.FacesContext;
+/*import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Named;*/
 import org.springframework.context.annotation.Scope;
 
 /**
  *
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
-@Named
-@Scope("request")
+/*@Named
+@Scope("request")*/
 public class SubscriberCRUDManagedBean {    
     
     private static Log log = LogFactoryUtil.getLog(CategoryCRUDManagedBean.class);    
     
-    @Inject
+    /*@Inject
     private UserUiStateManagedBean uiState;
     
     @Inject
@@ -41,7 +41,7 @@ public class SubscriberCRUDManagedBean {
     NewsletterSubscriptorService subscriptorService;
     
     @Inject
-    NewsletterSubscriptionService subscriptionService;
+    NewsletterSubscriptionService subscriptionService;*/
     
     /////////////// PROPERTIES ////////////////////
     private long id;
@@ -107,7 +107,7 @@ public class SubscriberCRUDManagedBean {
      * Redirect Action to Edit
      * @return 
      */
-    public String redirectEditSubscriber() {
+    /*public String redirectEditSubscriber() {
         ServiceActionResult serviceActionResult = subscriptorCRUDService.findById(this.getId());        
         
         if (serviceActionResult.isSuccess()) {
@@ -121,14 +121,14 @@ public class SubscriberCRUDManagedBean {
         }
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
         return "editSubscriber";
-    }       
+    }       */
         
     
     /**
      * Save Subscriber
      * @return 
      */
-    public String save() {
+    /*public String save() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         
@@ -147,24 +147,24 @@ public class SubscriberCRUDManagedBean {
             uiState.setErrorMessage(message);
         }
         return "admin?faces-redirect=true";
-    }
+    }*/
     
     
     /**
      * Redirect Action to Delete
      * @return 
      */
-    public String redirectDeleteSubscriber() {
+    /*public String redirectDeleteSubscriber() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.SUBSCRIBERS_TAB_INDEX);
         return "deleteSubscriber";
-    }
+    }*/
     
     
     /**
      * Delete Subscribtion and Subscriber
      * @return 
      */
-    public String delete() {
+    /*public String delete() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
         
@@ -200,5 +200,5 @@ public class SubscriberCRUDManagedBean {
             
         }
         return "admin?faces-redirect=true";
-    }
+    }*/
 }

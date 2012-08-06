@@ -14,9 +14,9 @@ import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javax.faces.context.FacesContext;
+/*import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Named;*/
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Scope;
@@ -25,18 +25,18 @@ import org.springframework.context.annotation.Scope;
  *
  * @author Ariel Parra <ariel@rotterdam-cs.com>
  */
-@Named
-@Scope("request")
+/*@Named
+@Scope("request")*/
 public class SubscriptionEmailManagedBean {
 
     private static Log log = LogFactoryUtil.getLog(SubscriptionEmailManagedBean.class);
     private static final String GREETING_MAIL_INFO = "newsletter.admin.category.greetingmail.info";
     private static final String SUBSCRIPTION_MAIL_INFO = "newsletter.admin.category.subscriptionmail.info";
     private static final String UNSUBSCRIPTION_MAIL_INFO = "newsletter.admin.category.unsubscriptionmail.info";
-    @Inject
+    /*@Inject
     NewsletterCategoryService categoryService;
     @Inject
-    private UserUiStateManagedBean uiState;
+    private UserUiStateManagedBean uiState;*/
     private int categoryId;
     private NewsletterCategory newsletterCategory;
     private SubscriptionTypeEnum subscriptionType;
@@ -86,25 +86,25 @@ public class SubscriptionEmailManagedBean {
         this.helpPageText = helpPageText;
     }
 
-    public Long getPlid() {
+    /*public Long getPlid() {
         setPlid(uiState.getThemeDisplay().getPlid());
         return plid;
-    }
+    }*/
 
     public void setPlid(Long plid) {
         this.plid = plid;
     }
 
-    public String getDoAsUserId() {
+    /*public String getDoAsUserId() {
         setDoAsUserId(uiState.getThemeDisplay().getDoAsUserId());
         return doAsUserId;
-    }
+    }*/
 
     public void setDoAsUserId(String doAsUserId) {
         this.doAsUserId = doAsUserId;
     }
 
-    public String redirectEditSubscribeMail() {
+    /*public String redirectEditSubscribeMail() {
         uiState.setAdminActiveTabIndex(UserUiStateManagedBean.LISTS_TAB_INDEX);
         this.setSubscriptionType(SubscriptionTypeEnum.SUBSCRIBE);
         fillData();
@@ -126,7 +126,7 @@ public class SubscriptionEmailManagedBean {
         fillData();
 
         return "editSubscriptionMail";
-    }
+    }*/
 
     /**
      * Method that fill the data in the managed bean:
@@ -136,7 +136,7 @@ public class SubscriptionEmailManagedBean {
      * In case that doesnt exists in the category, fills those 
      * fields with empty values
      */
-    private void fillData() {
+    /*private void fillData() {
         uiState.refresh();
         ServiceActionResult serviceActionResult = categoryService.findById(categoryId);
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -263,7 +263,7 @@ public class SubscriptionEmailManagedBean {
 
         return sb.toString();
     }
-    
+    */
     
     
 }

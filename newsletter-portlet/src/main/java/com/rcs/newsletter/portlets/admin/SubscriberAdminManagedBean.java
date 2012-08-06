@@ -17,10 +17,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
+/*import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Named;*/
 import javax.portlet.PortletPreferences;
 import javax.portlet.ReadOnlyException;
 import javax.portlet.RenderRequest;
@@ -31,8 +31,8 @@ import org.springframework.context.annotation.Scope;
  *
  * @author Prj.M@x <pablo.rendon@rotterdam-cs.com>
  */
-@Named
-@Scope("session")
+/*@Named
+@Scope("session")*/
 public class SubscriberAdminManagedBean extends PaginationManagedBean implements Serializable{
 
     private static Log log = LogFactoryUtil.getLog(SubscriberAdminManagedBean.class);
@@ -42,7 +42,7 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean implements
     private SubscriptionStatus status = null;
     private ResourceBundle messageBundle;
     private String importResult = "";
-    @Inject
+    /*@Inject
     NewsletterSubscriptorService subscriptorService;
     @Inject
     NewsletterCategoryService categoryService;
@@ -228,5 +228,5 @@ public class SubscriberAdminManagedBean extends PaginationManagedBean implements
     public void gotoLastPage() {
         super.gotoLastPage();
         updateResults();
-    }
+    }*/
 }

@@ -1,9 +1,9 @@
 package com.rcs.newsletter.util;
 
 import java.util.List;
-import javax.faces.application.FacesMessage;
+/*import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
-import javax.faces.context.FacesContext;
+import javax.faces.context.FacesContext;*/
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.RenderResponse;
@@ -21,7 +21,7 @@ public class FacesUtil {
      * @param message 
      */
     public static void infoMessage(String message) {
-        addMessage(message, FacesMessage.SEVERITY_INFO);
+        //addMessage(message, FacesMessage.SEVERITY_INFO);
     }
     
     /**
@@ -35,7 +35,7 @@ public class FacesUtil {
             errorStringBuilder.append(HTML_BR);
         }
                 
-        addMessage(errorStringBuilder.toString(), FacesMessage.SEVERITY_ERROR);
+        //addMessage(errorStringBuilder.toString(), FacesMessage.SEVERITY_ERROR);
     }
 
     /**
@@ -43,7 +43,7 @@ public class FacesUtil {
      * @param message 
      */
     public static void errorMessage(String message) {
-        addMessage(message, FacesMessage.SEVERITY_ERROR);
+        //addMessage(message, FacesMessage.SEVERITY_ERROR);
     }    
     
     /**
@@ -51,13 +51,13 @@ public class FacesUtil {
      * @param message
      * @param severity 
      */
-    public static void addMessage(String message, Severity severity) {
+    /*public static void addMessage(String message, Severity severity) {
         FacesMessage fm = new FacesMessage(severity, message, message);
         FacesContext.getCurrentInstance().addMessage(null, fm);
-    }
+    }*/
     
     
-    public static String getPortletUniqueId() {
+    /*public static String getPortletUniqueId() {
         PortletRequest request = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         return request.getWindowID();
     }
@@ -72,6 +72,6 @@ public class FacesUtil {
         RenderResponse rresp = (RenderResponse) response;
         
         return rresp.createActionURL().toString();
-    }
+    }*/
     
 }

@@ -11,16 +11,16 @@ import java.io.IOException;
 import java.util.*;
 import javax.portlet.*;
 import org.apache.commons.fileupload.FileItem;
-import org.portletfaces.bridge.GenericFacesPortlet;
+//import org.portletfaces.bridge.GenericFacesPortlet;
 
-public class NewsletterResourcePortlet extends GenericFacesPortlet {
+public class NewsletterResourcePortlet/* extends GenericFacesPortlet */{
 
     private static final Log logger = LogFactoryUtil.getLog(NewsletterResourcePortlet.class);
 
     public NewsletterResourcePortlet() {
         super();
     }
-
+/*
     @Override
     public void serveResource(ResourceRequest request, ResourceResponse response)
             throws PortletException, IOException {
@@ -93,5 +93,5 @@ public class NewsletterResourcePortlet extends GenericFacesPortlet {
         } catch (Exception ex) {
             logger.error("Could not parse the request");
         }
-    }
+    }*/
 }

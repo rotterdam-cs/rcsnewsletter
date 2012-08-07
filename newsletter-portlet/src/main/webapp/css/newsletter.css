@@ -5,6 +5,15 @@
     Description:
         Purpose of the stylesheet follows.
 */
+
+.newsletter-admin-wrapper h1, .newsletter-admin-wrapper h2, .newsletter-admin-wrapper h3{
+    margin: 10px;
+}
+
+.newsletter-admin-wrapper hr{
+    border-top:  1px solid #BFBFBF;
+}
+
 .category-combo {
     width: 150px;
 }
@@ -48,12 +57,17 @@
 
 .newsletter-forms-form {
     margin-bottom: 10px;
+    margin-top: 10px
 }
 
 .newsletter-forms-form-panel {
    margin-top: 10px;
    margin-bottom: 10px;
    
+}
+
+.newsletter-forms-form table td{
+    padding: 5px;
 }
 
 .newsletter-forms-form-panel label{
@@ -71,9 +85,6 @@
     width: 245px!important;
 }
 
-.newsletter-forms-form td {
-    padding: 2px;
-}
 
 .newsletter-forms-column-left{
    width: 120px;
@@ -194,4 +205,8 @@
 
 .ui-pg-input{
     padding: 2px !important;
+}
+
+.ui-icon ui-icon-pencil, .ui-icon ui-icon-trash{
+    cursor:pointer !important;
 }

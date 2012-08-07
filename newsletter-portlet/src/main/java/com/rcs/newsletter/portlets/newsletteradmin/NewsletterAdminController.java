@@ -44,7 +44,7 @@ public class NewsletterAdminController extends GenericController {
         ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> sarCategories = 
                 categoryService.findAllNewsletterCategories(Utils.getThemeDisplay(request),
                                                             gridParams.calculateStart(),
-                                                            gridParams.getPageSize());
+                                                            gridParams.getRows());
         return new ModelAndView (new JacksonJsonView(), JacksonJsonView.MODEL_NAME, sarCategories);
     }
 }

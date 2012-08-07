@@ -27,6 +27,9 @@ public abstract class GenericController {
     public static final String JQFORM_ACTION_EDIT = "edit";
     public static final String JQFORM_ACTION_DEL = "del";
     
+    public static final String MODEL_ERRORS = "errors";
+    
+    
     @Autowired
     protected Utils utils;
 

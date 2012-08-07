@@ -26,13 +26,15 @@
     </head>
     <body>
         
+        <div id="templates-panel">
+            
+            <%--
+                Include Templates List View (by default)
+                ########################################
+            --%>
+            <jsp:include page="templatesList.jsp" />
         
-        <%--
-            Include Templates List View (by default)
-            ########################################
-        --%>
-        <jsp:include page="templatesList.jsp" />
-        
+        </div>
                     
     </body>
 </html>

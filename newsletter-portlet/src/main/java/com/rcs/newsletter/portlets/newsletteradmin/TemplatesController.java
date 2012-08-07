@@ -3,7 +3,7 @@ package com.rcs.newsletter.portlets.newsletteradmin;
 import com.rcs.newsletter.commons.GenericController;
 import com.rcs.newsletter.commons.JacksonJsonView;
 import com.rcs.newsletter.commons.Utils;
-import com.rcs.newsletter.core.model.NewsletterTemplate;
+import com.rcs.newsletter.core.dto.TemplateDTO;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
@@ -36,6 +36,7 @@ public class TemplatesController extends GenericController {
     
     
     
+    
     /**
      * Returns the main content for Templates Tab
      * @param request
@@ -47,6 +48,22 @@ public class TemplatesController extends GenericController {
         Map<String,Object> model = new HashMap<String,Object>();
         return new ModelAndView("admin/templates", model);
     }
+
+    
+    
+    /**
+     * Show view with templates listing
+     * @param request
+     * @param response
+     * @return 
+     */
+    @ResourceMapping("templatesList")
+    public ModelAndView templatesList(ResourceRequest request, ResourceResponse response){
+        Map<String,Object> model = new HashMap<String,Object>();
+        return new ModelAndView("admin/templatesList", model);
+    }
+    
+        
     
     
     /**
@@ -62,7 +79,7 @@ public class TemplatesController extends GenericController {
         logger.info("--------------------------------------------------------------------");
         
         // get records using paging
-        ServiceActionResult<ListResultsDTO<NewsletterTemplate>> result = templateService.findAllTemplates(
+        ServiceActionResult<ListResultsDTO<TemplateDTO>> result = templateService.findAllTemplates(
                                     Utils.getThemeDisplay(request), 
                                     form.calculateStart(), 
                                     form.getRows(), 
@@ -77,7 +94,7 @@ public class TemplatesController extends GenericController {
         }
         
         
-        NewsletterTemplate sample = new NewsletterTemplate();
+        TemplateDTO sample = new TemplateDTO();
         sample.setId(1L);
         sample.setName("Sample Template 1");
         result.getPayload().getResult().add(sample);
@@ -85,4 +102,40 @@ public class TemplatesController extends GenericController {
         
         return new ModelAndView (new JacksonJsonView(), JacksonJsonView.MODEL_NAME, result);
     }
+    
+    
+    /**
+     * Edit a new or existing template
+     * @param request
+     * @param response
+     * @param id
+     * @return 
+     */
+    @ResourceMapping(value="editTemplate")
+    public ModelAndView editTemplate(ResourceRequest request, ResourceResponse response, Long id){
+        Map<String,Object> model = new HashMap<String,Object>();
+        ModelAndView mav = new ModelAndView("admin/templatesEdit", model);
+        
+        TemplateDTO entity = new TemplateDTO();
+        
+        // if editing a particular template, then retrieve it from DB
+        if (id != null){
+            ServiceActionResult<TemplateDTO> findTemplate = templateService.findTemplate(id);
+            
+            // show errors if they occur
+            if (!findTemplate.isSuccess()){
+                model.put(MODEL_ERRORS, new String[]{"newsletter.tab.templates.error.editing"});
+                return mav;
+            }
+            
+            
+            entity = findTemplate.getPayload();
+        }
+        model.put("template", entity);
+        
+        
+        return mav;
+    }
+    
+    
 }

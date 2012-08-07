@@ -1,11 +1,13 @@
 package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
+import com.rcs.newsletter.core.dto.TemplateDTO;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.List;
 import org.hibernate.SessionFactory;
+import org.jdto.DTOBinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +26,14 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
     @Autowired
     private SessionFactory sessionFactory;
     
+     @Autowired
+    private DTOBinder binder;
+    
     private final static Logger logger = LoggerFactory.getLogger(NewsletterTemplateServiceImpl.class);
 
+    
     @Override
-    public ServiceActionResult<ListResultsDTO<NewsletterTemplate>> findAllTemplates(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order) {
+    public ServiceActionResult<ListResultsDTO<TemplateDTO>> findAllTemplates(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order) {
         // get total records count
         int totalRecords = findAllCount(themeDisplay);
         
@@ -38,8 +44,18 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
         }
         
         // create and return ListResultsDTO
-        ListResultsDTO<NewsletterTemplate> dto = new ListResultsDTO<NewsletterTemplate>(limit, start, totalRecords, listResult.getPayload());
+        ListResultsDTO<TemplateDTO> dto = new ListResultsDTO<TemplateDTO>(limit, start, totalRecords, binder.bindFromBusinessObjectList(TemplateDTO.class, listResult.getPayload()));
         return ServiceActionResult.buildSuccess(dto);
+    }
+
+    
+    @Override
+    public ServiceActionResult<TemplateDTO> findTemplate(Long id) {
+        ServiceActionResult<NewsletterTemplate> findResult = findById(id);
+        if (findResult.isSuccess()){
+            return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(TemplateDTO.class, findResult.getPayload()));
+        }
+        return ServiceActionResult.buildFailure(null);
     }
     
    

@@ -18,13 +18,14 @@
     ##################
 --%>
 <portlet:resourceURL id='getTemplatesList' var='getTemplatesUrl'/>
+<portlet:resourceURL id='editTemplate' var='editTemplateUrl'/>
 
 
 <%--
     Header and Actions
     ##################
 --%>
-<input id="btn-help-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.tab.templates.button.addtemplate" />" />
+<input id="btn-addtemplate-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.tab.templates.button.addtemplate" />" />
 <br><br>
 
 
@@ -51,9 +52,9 @@
      * Init UI events
      */
     function initEvents(){
-        jQuery('#btn-help-<portlet:namespace/>').click(function(){
-           alert('load form');
-           
+        // click on 'Add Template' button
+        jQuery('#btn-addtemplate-<portlet:namespace/>').click(function(){
+           jQuery('#templates-panel').load('${editTemplateUrl}');
         });
     }
     
@@ -67,27 +68,34 @@
             autowidth: true,
             colNames:[
                     '<fmt:message key="newsletter.admin.general.id" />',
-                    '<fmt:message key="newsletter.admin.general.name" />'],
+                    '<fmt:message key="newsletter.admin.general.name" />',
+                    ''],
             colModel:[
                     {name:'id', index:'id', width:55},
                     {name:'name',index:'name'},
+                    {name:'action', index:'action', width:80},
             ],
             jsonReader : {
                      root: "payload.result",
                      repeatitems : false,
                      id : "id"
             },
-            /*
-            rowNum:10,
-            rowList:[10,20,30],
-            */
+            gridComplete: function() {
+                var ids = jQuery("#templates-list-<portlet:namespace/>").jqGrid('getDataIDs');
+                for(var i = 0; i < ids.length; i++){
+                    var editIcon = '<div style="float:left; margin-left:20px;" class="ui-icon ui-icon-pencil" onclick="javascript:editTemplate(' + ids[i] + ');"></div>';
+                    var deleteIcon = '<div style="float:left; margin-left:20px;" class="ui-icon ui-icon-trash" onclick="javascript:deleteTemplate(' + ids[i] + ');"></div>';
+
+                    jQuery("#templates-list-<portlet:namespace/>").jqGrid('setRowData',ids[i],{ 'action' : editIcon + deleteIcon } );
+                }
+            },
             pager: '#templates-list-pager<portlet:namespace/>',
             sortname: 'id',
             viewrecords: true,
             sortorder: "asc",
             caption:""
         });
-        jQuery("#templates-list-<portlet:namespace/>").jqGrid('navGrid','#templates-list-pager<portlet:namespace/>',{edit:true,add:false,del:true});
+        jQuery("#templates-list-<portlet:namespace/>").jqGrid('navGrid','#templates-list-pager<portlet:namespace/>',{edit:false,add:false,del:false});
     }
     
     

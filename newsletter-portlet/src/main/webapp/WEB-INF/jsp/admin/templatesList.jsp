@@ -41,11 +41,18 @@
 <script type="text/javascript">
     
     jQuery(document).ready(function(){
-
+       styleUI();
        initEvents();
        createGrid();
-       
     });
+    
+     /**
+     * Apply styles to UI
+     */
+    function styleUI(){
+       // styles on buttons
+       jQuery('#templates-panel input[type="button"]').button();
+    }
     
     
     /**
@@ -83,8 +90,8 @@
             gridComplete: function() {
                 var ids = jQuery("#templates-list-<portlet:namespace/>").jqGrid('getDataIDs');
                 for(var i = 0; i < ids.length; i++){
-                    var editIcon = '<div style="float:left; margin-left:20px;" class="ui-icon ui-icon-pencil" onclick="javascript:editTemplate(' + ids[i] + ');"></div>';
-                    var deleteIcon = '<div style="float:left; margin-left:20px;" class="ui-icon ui-icon-trash" onclick="javascript:deleteTemplate(' + ids[i] + ');"></div>';
+                    var editIcon = '<div style="float:left; margin-left:20px; cursor:pointer" class="ui-icon ui-icon-pencil" onclick="javascript:editTemplate(' + ids[i] + ');"></div>';
+                    var deleteIcon = '<div style="float:left; margin-left:20px; cursor:pointer" class="ui-icon ui-icon-trash" onclick="javascript:deleteTemplate(' + ids[i] + ');"></div>';
 
                     jQuery("#templates-list-<portlet:namespace/>").jqGrid('setRowData',ids[i],{ 'action' : editIcon + deleteIcon } );
                 }
@@ -93,11 +100,27 @@
             sortname: 'id',
             viewrecords: true,
             sortorder: "asc",
-            caption:""
+            caption:"",
+            rowNum: 15
         });
         jQuery("#templates-list-<portlet:namespace/>").jqGrid('navGrid','#templates-list-pager<portlet:namespace/>',{edit:false,add:false,del:false});
     }
     
+    
+    
+    /**
+     * Edit template
+     */
+    function editTemplate(templateId){
+        jQuery('#templates-panel').load('${editTemplateUrl}', {id: templateId});
+    }
+    
+    /**
+     * Delete template
+     */
+    function deleteTemplate(templateId){
+        jQuery('#templates-panel').load('${editTemplateUrl}', {id: templateId, remove: true});
+    }
     
     
     

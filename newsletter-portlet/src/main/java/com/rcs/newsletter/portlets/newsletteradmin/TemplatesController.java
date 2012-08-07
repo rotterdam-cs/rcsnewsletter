@@ -1,7 +1,6 @@
 package com.rcs.newsletter.portlets.newsletteradmin;
 
 import com.rcs.newsletter.commons.GenericController;
-import com.rcs.newsletter.commons.JacksonJsonView;
 import com.rcs.newsletter.commons.Utils;
 import com.rcs.newsletter.core.dto.TemplateDTO;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
@@ -74,10 +73,6 @@ public class TemplatesController extends GenericController {
      */
     @ResourceMapping(value="getTemplatesList")
     public ModelAndView templatesList(ResourceRequest request, ResourceResponse response, @ModelAttribute GridForm form){
-        logger.info("--------------------------------------------------------------------");
-        logger.info("getting templates list");
-        logger.info("--------------------------------------------------------------------");
-        
         // get records using paging
         ServiceActionResult<ListResultsDTO<TemplateDTO>> result = templateService.findAllTemplates(
                                     Utils.getThemeDisplay(request), 
@@ -94,13 +89,7 @@ public class TemplatesController extends GenericController {
         }
         
         
-        TemplateDTO sample = new TemplateDTO();
-        sample.setId(1L);
-        sample.setName("Sample Template 1");
-        result.getPayload().getResult().add(sample);
-        
-        
-        return new ModelAndView (new JacksonJsonView(), JacksonJsonView.MODEL_NAME, result);
+        return jsonResponse(result);
     }
     
     
@@ -113,10 +102,15 @@ public class TemplatesController extends GenericController {
      */
     @ResourceMapping(value="editTemplate")
     public ModelAndView editTemplate(ResourceRequest request, ResourceResponse response, Long id){
-        Map<String,Object> model = new HashMap<String,Object>();
-        ModelAndView mav = new ModelAndView("admin/templatesEdit", model);
+        ModelAndView mav = new ModelAndView("admin/templatesEdit");
         
         TemplateDTO entity = new TemplateDTO();
+        
+         logger.debug("----------------------- editTemplate ------------------------");
+         logger.debug("id:" +  id);
+         logger.debug("------------------------------------------------------------");
+        
+
         
         // if editing a particular template, then retrieve it from DB
         if (id != null){
@@ -124,18 +118,31 @@ public class TemplatesController extends GenericController {
             
             // show errors if they occur
             if (!findTemplate.isSuccess()){
-                model.put(MODEL_ERRORS, new String[]{"newsletter.tab.templates.error.editing"});
+                mav.addObject(MODEL_ERRORS, new String[]{"newsletter.tab.templates.error.editing"});
                 return mav;
             }
             
             
             entity = findTemplate.getPayload();
         }
-        model.put("template", entity);
+        
+        if (entity.getTemplate() != null){
+            entity.setTemplate(entity.getTemplate().replace("\"", "\\\""));
+            entity.setTemplate(entity.getTemplate().replace("\'", "\\\'"));
+        }
+        
+        logger.debug("entity name: " + entity.getName());
+        mav.addObject("template", entity);
         
         
         return mav;
     }
     
+    
+    @ResourceMapping(value="saveTemplate")
+    public ModelAndView saveTemplate(ResourceRequest request, ResourceResponse response, @ModelAttribute TemplateDTO templateDTO){
+         ServiceActionResult<TemplateDTO> result = templateService.saveTemplate(Utils.getThemeDisplay(request), templateDTO);
+         return jsonResponse(result);
+    }
     
 }

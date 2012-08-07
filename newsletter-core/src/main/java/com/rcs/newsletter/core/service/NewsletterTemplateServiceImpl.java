@@ -2,10 +2,14 @@ package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.TemplateDTO;
+import com.rcs.newsletter.core.model.NewsletterEntity;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import javax.validation.Validator;
 import org.hibernate.SessionFactory;
 import org.jdto.DTOBinder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +30,11 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
     @Autowired
     private SessionFactory sessionFactory;
     
-     @Autowired
+    @Autowired
     private DTOBinder binder;
+    
+    @Autowired
+    private Validator validator;
     
     private final static Logger logger = LoggerFactory.getLogger(NewsletterTemplateServiceImpl.class);
 
@@ -56,6 +63,40 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
             return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(TemplateDTO.class, findResult.getPayload()));
         }
         return ServiceActionResult.buildFailure(null);
+    }
+
+    
+    
+    @Override
+    public ServiceActionResult<TemplateDTO> saveTemplate(ThemeDisplay themeDisplay, TemplateDTO templateDTO) {
+        
+        // escape javascript conflictive chars
+        templateDTO.setTemplate(templateDTO.getTemplate().replace("\"", "\\\""));
+        templateDTO.setTemplate(templateDTO.getTemplate().replace("\'", "\\\'"));
+        
+        // conver dto to entity
+        NewsletterTemplate template = binder.extractFromDto(NewsletterTemplate.class, templateDTO);
+
+        // add group and company information
+        template.setCompanyid(themeDisplay.getCompanyId());
+        template.setGroupid(themeDisplay.getScopeGroupId());
+        
+        // validate required fields
+        Set errors = validator.validate(template);
+        if (!errors.isEmpty()){
+            List<String> errorsList = new ArrayList<String>();
+            fillViolations(errors, errorsList);
+            return ServiceActionResult.buildFailure(null, errorsList.toArray(new String[]{}));
+        }
+        
+        
+        
+        ServiceActionResult<NewsletterEntity> result = save(template);
+        if (result.isSuccess()){
+            return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(TemplateDTO.class, result.getPayload()));
+        }else{
+            return ServiceActionResult.buildFailure(null);
+        }
     }
     
    

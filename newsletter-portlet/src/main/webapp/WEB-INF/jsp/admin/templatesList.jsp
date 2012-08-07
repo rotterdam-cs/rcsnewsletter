@@ -62,18 +62,25 @@
      */
     function createGrid(){
         jQuery("#templates-list-<portlet:namespace/>").jqGrid({
-            url:'${getTemplatesUrl}',
+            url:'${getTemplatesUrl}' + "&nocache=" + (new Date()).getTime(),
             datatype: "json",
             autowidth: true,
             colNames:[
                     '<fmt:message key="newsletter.admin.general.id" />',
                     '<fmt:message key="newsletter.admin.general.name" />'],
             colModel:[
-                    {name:'id',index:'id', width:55},
-                    {name:'name',index:'name', width: '100%'},
+                    {name:'id', index:'id', width:55},
+                    {name:'name',index:'name'},
             ],
+            jsonReader : {
+                     root: "payload.result",
+                     repeatitems : false,
+                     id : "id"
+            },
+            /*
             rowNum:10,
             rowList:[10,20,30],
+            */
             pager: '#templates-list-pager<portlet:namespace/>',
             sortname: 'id',
             viewrecords: true,

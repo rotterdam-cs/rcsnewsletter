@@ -1,6 +1,9 @@
 package com.rcs.newsletter.core.service;
 
+import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
+import com.rcs.newsletter.core.service.common.ListResultsDTO;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
 
 /**
  *
@@ -8,5 +11,6 @@ import com.rcs.newsletter.core.model.NewsletterTemplate;
  */
 public interface NewsletterTemplateService extends CRUDService<NewsletterTemplate> {
        
+    ServiceActionResult<ListResultsDTO<NewsletterTemplate>> findAllTemplates(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order);
     
 }

@@ -6,6 +6,9 @@ import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterEntity;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import com.rcs.newsletter.core.model.dtos.NewsletterCategoryDTO;
+import com.rcs.newsletter.core.service.common.ListResultsDTO;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
@@ -52,8 +55,9 @@ public class NewsletterCategoryImpl extends CRUDServiceImpl<NewsletterCategory> 
     }
 
     @Override
-    public List<NewsletterCategory> findAllNewsletterCategorys(ThemeDisplay themeDisplay, boolean fetchSubscriptors) {
-        Session currentSession = sessionFactory.getCurrentSession();
+    public ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> findAllNewsletterCategories(ThemeDisplay themeDisplay, boolean fetchSubscriptors, int start, int limit) {
+        return null;
+/*        Session currentSession = sessionFactory.getCurrentSession();
         Criteria criteria = currentSession.createCriteria(NewsletterCategory.class);
         
         criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
@@ -67,7 +71,7 @@ public class NewsletterCategoryImpl extends CRUDServiceImpl<NewsletterCategory> 
             }
         }
         
-        return result;
+        return result;*/
     }
     
     /**

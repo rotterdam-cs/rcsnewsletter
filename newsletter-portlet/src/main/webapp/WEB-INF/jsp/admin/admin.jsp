@@ -35,10 +35,11 @@
                         }
                     }
                 });
+                createGrid();
                 
                 
                 function createGrid() {
-                    jQuery("#lists<portlet:namespace/>").jqGrid({
+                    jQuery("#listsGrid<portlet:namespace/>").jqGrid({
                         url:'${getListsURL}' + "&nocache=" + (new Date()).getTime(),
                         datatype: "json",
                         autowidth: true,
@@ -91,7 +92,7 @@
             </ul>
 
             <div id="lists<portlet:namespace/>">
-                <div id="listsGrid<portlet:namespace/>">
+                <table id="listsGrid<portlet:namespace/>"/>
                 <div id="listPager<portlet:namespace/>"/>
             </div>
         </div>

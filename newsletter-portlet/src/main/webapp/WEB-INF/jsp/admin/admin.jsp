@@ -118,7 +118,7 @@
         </script>
     </head>
     <body>
-        <div id="newsletterAdmin<portlet:namespace/>">
+        <div id="newsletterAdmin<portlet:namespace/>" class="newsletter-admin-wrapper">
             <ul>
                 <li><a href="#lists<portlet:namespace/>"><fmt:message key="newsletter.admin.lists"/></a></li>
                 <li><a href="${subscribersURL}"><fmt:message key="newsletter.admin.subscribers"/></a></li>

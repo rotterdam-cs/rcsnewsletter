@@ -1,7 +1,6 @@
 package com.rcs.newsletter.portlets.newsletteradmin;
 
 import com.rcs.newsletter.commons.GenericController;
-import com.rcs.newsletter.commons.JacksonJsonView;
 import com.rcs.newsletter.commons.Utils;
 import com.rcs.newsletter.core.model.dtos.NewsletterCategoryDTO;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
@@ -93,6 +92,7 @@ public class NewsletterAdminController extends GenericController {
     
     @ResourceMapping("getListData")
     public ModelAndView getListData(ResourceRequest request, @RequestParam long id){
-        return null;
+        ServiceActionResult result = categoryService.getCategoryDTO(id);
+        return jsonResponse(result);
     }
 }

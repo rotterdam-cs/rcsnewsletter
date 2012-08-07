@@ -113,6 +113,7 @@
                 
                 jQuery('#addList<portlet:namespace/>').click(function(){
                     showAddEditDeleteForm('CREATE');
+                    jQuery("#addEditDeleteCategory<portlet:namespace/> .fieldToDisable").attr("disabled", false);
                 });
                 
                 jQuery('#cancel<portlet:namespace/>').click(function(){
@@ -123,14 +124,14 @@
                 
                 jQuery(document).on('click', '.editActionIcon', function(){
                     var id = jQuery(this).attr('listId');
-                    showAddEditDeleteForm('UPDATE');
-                    alert(id);
+                    getCategoryDataAndShowForm('UPDATE', id);
+                    jQuery("#addEditDeleteCategory<portlet:namespace/> .fieldToDisable").attr("disabled", false);
                 });
                 
                 jQuery(document).on('click', '.deleteActionIcon', function(){
                     var id = jQuery(this).attr('listId');
-                    showAddEditDeleteForm('DELETE');
-                    alert(id);
+                    getCategoryDataAndShowForm('DELETE', id);
+                    jQuery("#addEditDeleteCategory<portlet:namespace/> .fieldToDisable").attr("disabled", true);
                 });
 
                 function showAddEditDeleteForm(action){
@@ -139,6 +140,29 @@
                     jQuery('#action<portlet:namespace/>').val(action);
                     jQuery('#gridContainer<portlet:namespace/>').hide();
                     jQuery('#formContainer<portlet:namespace/>').show();                    
+                }
+                
+                function getCategoryDataAndShowForm(action, id){
+                    jQuery.ajax({
+                        dataType:'json',
+                        url: '${getListDataURL}',
+                        data: {
+                            id: id
+                        },
+                        success: function(data){
+                            if (data && data.success){
+                                showAddEditDeleteForm(action);
+                                jQuery('#addEditDeleteCategory<portlet:namespace/> input[name="id"]').val(data.payload.id);
+                                jQuery('#addEditDeleteCategory<portlet:namespace/> input[name="name"]').val(data.payload.name);
+                                jQuery('#addEditDeleteCategory<portlet:namespace/> textarea[name="description"]').val(data.payload.description);
+                                jQuery('#addEditDeleteCategory<portlet:namespace/> input[name="fromname"]').val(data.payload.fromName);
+                                jQuery('#addEditDeleteCategory<portlet:namespace/> input[name="fromemail"]').val(data.payload.fromEmail);
+                                jQuery('#addEditDeleteCategory<portlet:namespace/> input[name="adminemail"]').val(data.payload.adminEmail);
+                            } else {
+                                showErrors(data.validationKeys);
+                            }
+                        }
+                    });
                 }
             });
         </script>
@@ -170,29 +194,31 @@
                 <div id="formContainer<portlet:namespace/>">
                     <form id="addEditDeleteCategory<portlet:namespace/>" class="newsletter-forms-form">
                         <input type="hidden" id="action<portlet:namespace/>" name="action"/>
+                        <input type="hidden" id="id<portlet:namespace/>" name="id"/>
                         <table>
                             <tr>
                                 <td><label><fmt:message key="newsletter.admin.general.name"/></label></td>
-                                <td><input type="text" class="required" name="name"/></td>
+                                <td><input type="text" class="required fieldToDisable" name="name"/></td>
                             </tr>
                             <tr>
                                 <td><label><fmt:message key="newsletter.admin.general.description"/></label></td>
-                                <td><textarea name="description" class="required"></textarea></td>
+                                <td><textarea name="description" class="required fieldToDisable"></textarea></td>
                             </tr>
                             <tr>
                                 <td><label><fmt:message key="newsletter.admin.category.fromname" bundle="${newsletter}"/></label></td>
-                                <td><input type="text" name="fromname" class="required"/></td>
+                                <td><input type="text" name="fromname" class="required fieldToDisable"/></td>
                             </tr>
                             <tr>
                                 <td><label><fmt:message key="newsletter.admin.category.fromemail" bundle="${newsletter}"/></label></td>
-                                <td><input type="text" name="fromemail" class="required"/></td>
+                                <td><input type="text" name="fromemail" class="required fieldToDisable"/></td>
                             </tr>
                             <tr>
                                 <td><label><fmt:message key="newsletter.admin.category.adminemail" bundle="${newsletter}"/></label></td>
-                                <td><input type="text" name="adminemail" class=""/></td>
+                                <td><input type="text" name="adminemail" class="fieldToDisable"/></td>
                             </tr>
                             <tr>
-                                <td colspan="2"><label>* <fmt:message key="newsletter.admin.category.adminemail.details" bundle="${newsletter}"/></label></td>
+                                <td></td>
+                                <td><label>* <fmt:message key="newsletter.admin.category.adminemail.details" bundle="${newsletter}"/></label></td>
                             </tr>
                             <tr>
                                 <td colspan="2">

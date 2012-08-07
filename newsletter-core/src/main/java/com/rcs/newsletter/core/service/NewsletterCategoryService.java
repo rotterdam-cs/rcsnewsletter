@@ -20,9 +20,11 @@ public interface NewsletterCategoryService extends CRUDService<NewsletterCategor
 
     List<NewsletterCategory> findNewsletterCategorysBySubscriber(NewsletterSubscriptor subscriptor);
 
-    ServiceActionResult createCategory(long groupId, long companyId, String name, String description, String fromname, String fromemail, String adminemail);
+    ServiceActionResult<NewsletterCategoryDTO> getCategoryDTO(long categoryId);
+    
+    ServiceActionResult<NewsletterCategoryDTO> createCategory(long groupId, long companyId, String name, String description, String fromname, String fromemail, String adminemail);
 
-    ServiceActionResult editCategory(long categoryId, String name, String description, String fromname, String fromemail, String adminemail);
+    ServiceActionResult<NewsletterCategoryDTO> editCategory(long categoryId, String name, String description, String fromname, String fromemail, String adminemail);
 
     ServiceActionResult deleteCategory(long categoryId);
 }

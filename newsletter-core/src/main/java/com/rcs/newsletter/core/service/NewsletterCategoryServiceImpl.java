@@ -129,7 +129,7 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
     }
 
     @Override
-    public ServiceActionResult createCategory(long groupId, long companyId, String name, String description, String fromname, String fromemail, String adminemail) {
+    public ServiceActionResult<NewsletterCategoryDTO> createCategory(long groupId, long companyId, String name, String description, String fromname, String fromemail, String adminemail) {
         NewsletterCategory newsletterCategory = new NewsletterCategory();
         newsletterCategory.setGroupid(groupId);
         newsletterCategory.setCompanyid(companyId);
@@ -155,10 +155,10 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
     }
     
     @Override
-    public ServiceActionResult editCategory(long categoryId, String name, String description, String fromname, String fromemail, String adminemail) {
+    public ServiceActionResult<NewsletterCategoryDTO> editCategory(long categoryId, String name, String description, String fromname, String fromemail, String adminemail) {
         ServiceActionResult<NewsletterCategory> sarCategory = findById(categoryId);
         if (!sarCategory.isSuccess()){
-            return sarCategory;
+            return ServiceActionResult.buildFailure(null,sarCategory.getValidationKeys());
         }
         NewsletterCategory newsletterCategory = sarCategory.getPayload();
         fillCategoryData(newsletterCategory, name, description, fromname, fromemail, adminemail);
@@ -166,7 +166,13 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
         Set violations = validator.validate(newsletterCategory);
         if (violations.isEmpty()){
             ServiceActionResult saveResult = update(newsletterCategory);
-            return saveResult;
+            if (saveResult.isSuccess()){
+                NewsletterCategoryDTO dto = binder.bindFromBusinessObject(NewsletterCategoryDTO.class, saveResult.getPayload());
+                return ServiceActionResult.buildSuccess(dto);
+            }else{
+                return ServiceActionResult.buildFailure(null, saveResult.getValidationKeys());
+            }
+
         }else{
             List<String> violationsKeys = new LinkedList<String>();
             fillViolations(violations, violationsKeys);
@@ -183,4 +189,14 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
         NewsletterCategory newsletterCategory = sarCategory.getPayload();
         return delete(newsletterCategory);
     }
+
+    @Override
+    public ServiceActionResult<NewsletterCategoryDTO> getCategoryDTO(long categoryId) {
+        ServiceActionResult<NewsletterCategory> sarCategory = findById(categoryId);
+        if (!sarCategory.isSuccess()){
+            return ServiceActionResult.buildFailure(null, sarCategory.getValidationKeys());
+        }
+        return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(NewsletterCategoryDTO.class, sarCategory.getPayload()));
+    }
+    
 }

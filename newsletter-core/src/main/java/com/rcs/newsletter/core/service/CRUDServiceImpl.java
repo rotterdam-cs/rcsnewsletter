@@ -101,7 +101,7 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
             sessionFactory.getCurrentSession().delete(entity);
         }
 
-        ServiceActionResult<NewsletterEntity> result = new ServiceActionResult<NewsletterEntity>(success, entity, validationKeys);
+        ServiceActionResult<NewsletterEntity> result = new ServiceActionResult<NewsletterEntity>(success, null, validationKeys);
 
         return result;
     }

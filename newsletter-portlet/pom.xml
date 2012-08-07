@@ -95,11 +95,7 @@
             <version>1.2</version>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>1.7.1</version>
-        </dependency>
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>newsletter-core</artifactId>
@@ -121,6 +117,16 @@
             <version>1.2.1</version>
             <scope>compile</scope>
         </dependency>
+        
+        <!-- JACKSON JSON -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-lgpl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-lgpl</artifactId>
+        </dependency>        
         
     </dependencies>
     

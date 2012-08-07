@@ -19,8 +19,8 @@
     
     <import resource="liferay-persistence.xml" />
         
-    <!-- look for faces classes -->
-    <context:component-scan base-package="com.rcs.newsletter.portlets" />
+    <!-- look for spring-mvc classes -->
+    <context:component-scan base-package="com.rcs.newsletter.commons" />
     <!-- look for service classes -->
     <context:component-scan base-package="com.rcs.newsletter.core.service" />
     

@@ -32,8 +32,8 @@
                 </configuration>
             </plugin>
         </plugins>
-    </build>
-  
+    </build> 
+    
     <dependencies>
         <dependency>
             <groupId>com.liferay.portal</groupId>
@@ -114,7 +114,23 @@
             <version>2.2.2</version>
         </dependency>
     </dependencies>
-
+    
+    <!-- dependency management not directly inherited --> 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-core-lgpl</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mapper-lgpl</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>     
+        </dependencies>
+    </dependencyManagement> 
+    
     <properties>
         <liferay.version>6.1.0</liferay.version>
         <hibernate.version>3.6.0.Final</hibernate.version>
@@ -123,6 +139,7 @@
         <junit.version>4.8.2</junit.version>
         <log4j.version>1.2.16</log4j.version>
         <spring.version>3.0.5.RELEASE</spring.version>
+        <jackson.version>1.8.5</jackson.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

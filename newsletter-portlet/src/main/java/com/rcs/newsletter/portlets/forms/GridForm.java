@@ -13,10 +13,8 @@ public class GridForm {
     private String sord;
     private String sidx;
     private int page;
-    private String searchField;
-    private String searchOper;
-    private String searchString;
-    private int pageSize = 15;
+    private int rows = 15;
+    
 
     
     
@@ -62,64 +60,23 @@ public class GridForm {
         this.page = page;
     }
 
-    /**
-     * @return the searchField
-     */
-    public String getSearchField() {
-        return searchField;
-    }
-
-    /**
-     * @param searchField the searchField to set
-     */
-    public void setSearchField(String searchField) {
-        this.searchField = searchField;
-    }
-
-    /**
-     * @return the searchOper
-     */
-    public String getSearchOper() {
-        return searchOper;
-    }
-
-    /**
-     * @param searchOper the searchOper to set
-     */
-    public void setSearchOper(String searchOper) {
-        this.searchOper = searchOper;
-    }
-
-    /**
-     * @return the searchString
-     */
-    public String getSearchString() {
-        return searchString;
-    }
-
-    /**
-     * @param searchString the searchString to set
-     */
-    public void setSearchString(String searchString) {
-        this.searchString = searchString;
-    }
-
-    /**
-     * @return the pageSize
-     */
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    /**
-     * @param pageSize the pageSize to set
-     */
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
     
     public int calculateStart(){
-        return getPage() * getPageSize();
+        return getPage() * getRows();
+    }
+
+    /**
+     * @return the rows
+     */
+    public int getRows() {
+        return rows;
+    }
+
+    /**
+     * @param rows the rows to set
+     */
+    public void setRows(int rows) {
+        this.rows = rows;
     }
     
     

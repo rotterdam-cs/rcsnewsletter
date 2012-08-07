@@ -90,4 +90,19 @@ public class ServiceActionResult<T> implements Serializable {
         
         return new ServiceActionResult<T>(false, payload, keysList);
     }
+
+    /**
+     * Build a failure service result. This will also mark the transaction as
+     * rollback only.
+     *
+     * @param <T>
+     * @param payload
+     * @param keys
+     * @return
+     */
+    public static <T> ServiceActionResult<T> buildFailure(T payload, List<String> keys){
+        //rollback the transaction.
+        TransactionAspectSupport.currentTransactionStatus().isRollbackOnly();
+        return new ServiceActionResult<T>(false, payload, keys);
+    }    
 }

@@ -1,27 +1,27 @@
 package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.rcs.newsletter.NewsletterConstants;
 import com.rcs.newsletter.core.model.NewsletterEntity;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.rcs.newsletter.NewsletterConstants;
-import javax.validation.ConstraintViolation;
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
 
 /**
  * Generic CRUD implementation
@@ -57,7 +57,7 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
         boolean success = true;
         List<String> validationKeys = new ArrayList<String>();
 
-        Set<ConstraintViolation<NewsletterEntity>> violations = validator.validate(entity);
+        Set violations = validator.validate(entity);
         if (!violations.isEmpty()) {
             success = false;
             fillViolations(violations, validationKeys);
@@ -80,7 +80,7 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
             success = false;
             fillViolations(violations, validationKeys);
         } else {
-            sessionFactory.getCurrentSession().update(entity);
+            sessionFactory.getCurrentSession().saveOrUpdate(entity);
         }
 
         ServiceActionResult<NewsletterEntity> result = new ServiceActionResult<NewsletterEntity>(success, entity, validationKeys);
@@ -101,7 +101,7 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
             sessionFactory.getCurrentSession().delete(entity);
         }
 
-        ServiceActionResult<NewsletterEntity> result = new ServiceActionResult<NewsletterEntity>(success, entity, validationKeys);
+        ServiceActionResult<NewsletterEntity> result = new ServiceActionResult<NewsletterEntity>(success, null, validationKeys);
 
         return result;
     }
@@ -148,8 +148,8 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
      * @param violations
      * @param validationKeys 
      */
-    protected void fillViolations(Set<ConstraintViolation<NewsletterEntity>> violations, List<String> validationKeys) {
-        for (ConstraintViolation<NewsletterEntity> constraintViolation : violations) {
+    protected void fillViolations(Set<ConstraintViolation<?>> violations, List<String> validationKeys) {
+        for (ConstraintViolation<?> constraintViolation : violations) {
             validationKeys.add(constraintViolation.getPropertyPath()+" "+constraintViolation.getMessage());
         }
     }

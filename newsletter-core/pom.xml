@@ -47,6 +47,7 @@
         <dependency>
             <groupId>org.jdto</groupId>
             <artifactId>jdto</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>    
   

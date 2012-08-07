@@ -17,7 +17,7 @@ public interface NewsletterCategoryService extends CRUDService<NewsletterCategor
     
     NewsletterCategory findByKey(String categoryKey);
     
-    ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> findAllNewsletterCategories(ThemeDisplay themeDisplay, boolean fetchSubscriptors, int start, int limit);
+    ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> findAllNewsletterCategories(ThemeDisplay themeDisplay, int start, int limit);
     
     List<NewsletterCategory> findNewsletterCategorysBySubscriber(NewsletterSubscriptor subscriptor);
     

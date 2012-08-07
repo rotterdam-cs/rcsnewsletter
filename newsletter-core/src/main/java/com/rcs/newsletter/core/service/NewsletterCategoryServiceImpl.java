@@ -15,12 +15,14 @@ import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.jdto.DTOBinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 
 
 /**
@@ -29,10 +31,13 @@ import org.slf4j.Logger;
  */
 @Service
 @Transactional
-public class NewsletterCategoryImpl extends CRUDServiceImpl<NewsletterCategory> implements NewsletterCategoryService {
+public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCategory> implements NewsletterCategoryService {
 
     @Autowired
     private SessionFactory sessionFactory;
+    
+    @Autowired
+    private DTOBinder binder;
     
     private final static Logger logger = LoggerFactory.getLogger(NewsletterSubscriptionImpl.class);
     
@@ -55,23 +60,32 @@ public class NewsletterCategoryImpl extends CRUDServiceImpl<NewsletterCategory> 
     }
 
     @Override
-    public ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> findAllNewsletterCategories(ThemeDisplay themeDisplay, boolean fetchSubscriptors, int start, int limit) {
-        return null;
-/*        Session currentSession = sessionFactory.getCurrentSession();
-        Criteria criteria = currentSession.createCriteria(NewsletterCategory.class);
+    public ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> findAllNewsletterCategories(ThemeDisplay themeDisplay, int start, int limit) {
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        Criteria criteriaForCount = currentSession.createCriteria(NewsletterCategory.class);
+        criteriaForCount.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
+        criteriaForCount.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
+        criteriaForCount.setProjection(Projections.rowCount());
+        criteriaForCount.setMaxResults(1);
+        int count = ((Long)criteriaForCount.uniqueResult()).intValue();
         
+        Criteria criteria = currentSession.createCriteria(NewsletterCategory.class);
         criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
         criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
         
         List<NewsletterCategory> result = criteria.list();
         
-        if(fetchSubscriptors) {
+        /*if(fetchSubscriptors) {
             for(NewsletterCategory newsletterCategory : result) {
                 newsletterCategory.setSubscriptions(getNewsletterSubscriptionsByCategoryId(newsletterCategory));
             }
-        }
-        
-        return result;*/
+        }*/
+
+        ListResultsDTO<NewsletterCategoryDTO> payload = 
+                new ListResultsDTO(limit, start, count, 
+                    binder.bindFromBusinessObjectList(NewsletterCategoryDTO.class, result));
+        return ServiceActionResult.buildSuccess(payload);
     }
     
     /**
@@ -79,19 +93,19 @@ public class NewsletterCategoryImpl extends CRUDServiceImpl<NewsletterCategory> 
      * @param categoryId
      * @return 
      */
-    private List<NewsletterSubscription> getNewsletterSubscriptionsByCategoryId(NewsletterCategory newsletterCategory) {
+    /*private List<NewsletterSubscription> getNewsletterSubscriptionsByCategoryId(NewsletterCategory newsletterCategory) {
         Criteria subscriptionCriteria = sessionFactory.getCurrentSession().createCriteria(NewsletterSubscription.class);
         subscriptionCriteria.add(Restrictions.eq(NewsletterSubscription.CATEGORY, newsletterCategory));
 
         List<NewsletterSubscription> subscriptions = subscriptionCriteria.list();
 
         return subscriptions;
-    }
+    }*/
     
     @Override
     public List<NewsletterCategory> findNewsletterCategorysBySubscriber(NewsletterSubscriptor subscriptor) {
         List<NewsletterCategory> result = new ArrayList<NewsletterCategory>();
-        List<NewsletterSubscription> newsletterSubscription = new ArrayList<NewsletterSubscription>();
+        List<NewsletterSubscription> newsletterSubscription;
         try {
             Session currentSession = sessionFactory.getCurrentSession();
             Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);

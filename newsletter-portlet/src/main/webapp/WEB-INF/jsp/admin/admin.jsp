@@ -11,6 +11,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <fmt:setBundle basename="Language"/>
+<fmt:setBundle basename="Newsletter" var="newsletter"/>
 <portlet:defineObjects />
 <!-- TABS -->
 <portlet:resourceURL id="subscribers" var="subscribersURL"/>
@@ -35,9 +36,16 @@
                         }
                     }
                 });
+                jQuery('#formContainer<portlet:namespace/>').hide();
                 createGrid();
                 
-                
+                jQuery('#addList<portlet:namespace/>').button();
+                jQuery('#addList<portlet:namespace/>').click(function(){
+                    jQuery('#formContainer<portlet:namespace/>').resetForm();
+                    jQuery('#gridContainer<portlet:namespace/>').hide();
+                    jQuery('#formContainer<portlet:namespace/>').show();
+                });
+
                 function createGrid() {
                     jQuery("#listsGrid<portlet:namespace/>").jqGrid({
                         url:'${getListsURL}' + "&nocache=" + (new Date()).getTime(),
@@ -55,7 +63,7 @@
                             { name : 'description', width : 100, searchoptions: {},  sortable : false, search : false },
                             { name : 'action',      width : 100, searchoptions: {},  sortable : false, search : false }
                         ],
-                        rowNum : 15,
+                        rowNum : 10,
                         rowList : [10,20,30],
                         pager : '#listPager<portlet:namespace/>',
                         sortname : 'id',
@@ -68,7 +76,7 @@
                         caption : "<fmt:message key="newsletter.admin.lists"/>",
                         height: '100%',
                         gridComplete: function() {
-                            var ids = jQuery('#lists<portlet:namespace/>').jqGrid('getDataIDs');
+                            var ids = jQuery('#listsGrid<portlet:namespace/>').jqGrid('getDataIDs');
                             for(var i = 0; i < ids.length; i++){
 
                             }
@@ -92,8 +100,46 @@
             </ul>
 
             <div id="lists<portlet:namespace/>">
-                <table id="listsGrid<portlet:namespace/>"/>
-                <div id="listPager<portlet:namespace/>"/>
+                <div id="gridContainer<portlet:namespace/>">
+                    <button type="button" id="addList<portlet:namespace/>"><fmt:message key="newsletter.admin.lists.add" bundle="${newsletter}"/></button>
+                    <table id="listsGrid<portlet:namespace/>"></table>
+                    <div id="listPager<portlet:namespace/>"></div>
+                </div>
+                <div id="formContainer<portlet:namespace/>">
+                    <form id="addEditDeleteCategory<portlet:namespace/>">
+                        <table>
+                            <tr>
+                                <td><label><fmt:message key="newsletter.admin.general.name"/></label></td>
+                                <td><input type="text" class="required" name="name"/></td>
+                            </tr>
+                            <tr>
+                                <td><label><fmt:message key="newsletter.admin.general.description"/></label></td>
+                                <td><input type="text" name="description" class="required"/></td>
+                            </tr>
+                            <tr>
+                                <td><label><fmt:message key="newsletter.admin.category.fromname" bundle="${newsletter}"/></label></td>
+                                <td><input type="text" name="fromname" class="required"/></td>
+                            </tr>
+                            <tr>
+                                <td><label><fmt:message key="newsletter.admin.category.fromemail" bundle="${newsletter}"/></label></td>
+                                <td><input type="text" name="fromemail" class="required"/></td>
+                            </tr>
+                            <tr>
+                                <td><label><fmt:message key="newsletter.admin.category.adminemail" bundle="${newsletter}"/></label></td>
+                                <td><input type="text" name="adminemail" class=""/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><label>* <fmt:message key="newsletter.admin.category.adminemail.details" bundle="${newsletter}"/></label></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button type="button" id="save<portlet:namespace/>"></button>
+                                    <button type="button" id="cancel<portlet:namespace/>"></button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
             </div>
         </div>
     </body>

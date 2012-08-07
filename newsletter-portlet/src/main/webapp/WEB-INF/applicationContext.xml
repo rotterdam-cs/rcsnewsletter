@@ -55,4 +55,8 @@
     
     <!-- make work @Async methods  -->
     <task:annotation-driven executor="taskExecutor"/>
+    
+    <!-- THE DTO BINDER BEAN -->
+    <bean id="dtobinder" class="org.jdto.spring.SpringDTOBinder" />
+    
 </beans>

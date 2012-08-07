@@ -127,7 +127,12 @@
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-lgpl</artifactId>
         </dependency>        
-        
+
+        <!-- jDTO -->
+        <dependency>
+            <groupId>org.jdto</groupId>
+            <artifactId>jdto</artifactId>
+        </dependency>        
     </dependencies>
     
     <properties>

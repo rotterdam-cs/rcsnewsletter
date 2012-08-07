@@ -36,7 +36,7 @@ public class NewsletterAdminController extends GenericController {
     
     @ResourceMapping("getLists")
     public ModelAndView getLists(ResourceRequest request){
-        List categories = categoryService.findAllNewsletterCategorys(Utils.getThemeDisplay(request), false);
+        List categories = null;//categoryService.findAllNewsletterCategorys(Utils.getThemeDisplay(request), false);
         return new ModelAndView (new JacksonJsonView(), JacksonJsonView.MODEL_NAME, categories);
     }
 }

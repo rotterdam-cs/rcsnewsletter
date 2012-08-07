@@ -128,6 +128,11 @@
                 <artifactId>jackson-mapper-lgpl</artifactId>
                 <version>${jackson.version}</version>
             </dependency>     
+            <dependency>
+                <groupId>org.jdto</groupId>
+                <artifactId>jdto</artifactId>
+                <version>${jdto.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement> 
     
@@ -140,6 +145,7 @@
         <log4j.version>1.2.16</log4j.version>
         <spring.version>3.0.5.RELEASE</spring.version>
         <jackson.version>1.8.5</jackson.version>
+        <jdto.version>1.2</jdto.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

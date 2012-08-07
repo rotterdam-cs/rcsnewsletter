@@ -65,7 +65,7 @@ public class NewsletterAdminController extends GenericController {
         }catch(NullPointerException ex){}
 
         if (enumAction == null){
-            return null; //TODO: Handle errors
+            return null;
         }
         
         ServiceActionResult result = null;
@@ -88,6 +88,11 @@ public class NewsletterAdminController extends GenericController {
         if (result != null){
             return jsonResponse(result);
         }
-        return null; //TODO: handle this
+        return null;
+    }
+    
+    @ResourceMapping("getListData")
+    public ModelAndView getListData(ResourceRequest request, @RequestParam long id){
+        return null;
     }
 }

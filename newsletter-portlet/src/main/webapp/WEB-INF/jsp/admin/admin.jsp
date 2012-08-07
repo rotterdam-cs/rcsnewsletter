@@ -22,6 +22,7 @@
 <!-- AJAX requests -->
 <portlet:resourceURL id="getLists" var="getListsURL"/>
 <portlet:resourceURL id="addEditDeleteList" var="addEditDeleteListURL"/>
+<portlet:resourceURL id="getListData" var="getListDataURL"/>
 
 <html>
     <head>
@@ -43,13 +44,6 @@
                 jQuery('#addList<portlet:namespace/>').button();
                 jQuery('#save<portlet:namespace/>').button();
                 jQuery('#cancel<portlet:namespace/>').button();
-                
-                jQuery('#addList<portlet:namespace/>').click(function(){
-                    jQuery('#formContainer<portlet:namespace/>').resetForm();
-                    jQuery('#action<portlet:namespace/>').val('CREATE');
-                    jQuery('#gridContainer<portlet:namespace/>').hide();
-                    jQuery('#formContainer<portlet:namespace/>').show();
-                });
 
                 function createGrid() {
                     jQuery("#listsGrid<portlet:namespace/>").jqGrid({
@@ -63,8 +57,8 @@
                             '<fmt:message key="newsletter.admin.general.action"/>'
                         ],
                         colModel:[
-                            { name : 'id',          width : 50,  searchoptions: { }, sortable : false, search : false },
-                            { name : 'name' ,       width : 150, searchoptions: { }, sortable : false, search : false },
+                            { name : 'id',          width : 50,  searchoptions: {}, sortable : false, search : false },
+                            { name : 'name' ,       width : 150, searchoptions: {}, sortable : false, search : false },
                             { name : 'description', width : 100, searchoptions: {},  sortable : false, search : false },
                             { name : 'action',      width : 100, searchoptions: {},  sortable : false, search : false }
                         ],
@@ -83,7 +77,9 @@
                         gridComplete: function() {
                             var ids = jQuery('#listsGrid<portlet:namespace/>').jqGrid('getDataIDs');
                             for(var i = 0; i < ids.length; i++){
-
+                                var editIcon = '<div style="float:left; margin-left:20px;" class="ui-icon ui-icon-pencil editActionIcon" listId="' + ids[i] + '"></div>';
+                                var deleteIcon = '<div style="float:left; margin-left:20px;" class="ui-icon ui-icon-trash deleteActionIcon" listId="' + ids[i] + '"></div>';
+                                jQuery("#listsGrid<portlet:namespace/>").jqGrid('setRowData',ids[i],{ 'action' : editIcon + deleteIcon } );
                             }
                         }
                     });
@@ -96,29 +92,60 @@
                     jQuery('#formContainer<portlet:namespace/>').hide();                    
                     jQuery('#gridContainer<portlet:namespace/>').show();
                 }
-
-                jQuery('#cancel<portlet:namespace/>').click(function(){
-                    backToGrid();
-                });
                 
-                jQuery('#addEditDeleteCategory<portlet:namespace/>').validate({
+                var validator = jQuery('#addEditDeleteCategory<portlet:namespace/>').validate({
                     submitHandler: function(form) {
+                        clearErrors();
                         jQuery(form).ajaxSubmit({
                             dataType: 'json',
                             url: '${addEditDeleteListURL}',
                             success: function(data){
                                 if (data && data.success){
+                                    jQuery("#listsGrid<portlet:namespace/>").trigger('reloadGrid');
                                     backToGrid();
+                                }else{
+                                    showErrors(data.validationKeys);
                                 }
-                            }                            
+                            }
                         });
                     }
-                });             
+                });
+                
+                jQuery('#addList<portlet:namespace/>').click(function(){
+                    showAddEditDeleteForm('CREATE');
+                });
+                
+                jQuery('#cancel<portlet:namespace/>').click(function(){
+                    clearErrors();
+                    validator.resetForm();
+                    backToGrid();
+                });
+                
+                jQuery(document).on('click', '.editActionIcon', function(){
+                    var id = jQuery(this).attr('listId');
+                    showAddEditDeleteForm('UPDATE');
+                    alert(id);
+                });
+                
+                jQuery(document).on('click', '.deleteActionIcon', function(){
+                    var id = jQuery(this).attr('listId');
+                    showAddEditDeleteForm('DELETE');
+                    alert(id);
+                });
+
+                function showAddEditDeleteForm(action){
+                    jQuery('#addEditDeleteCategory<portlet:namespace/>').resetForm();
+                    validator.resetForm();
+                    jQuery('#action<portlet:namespace/>').val(action);
+                    jQuery('#gridContainer<portlet:namespace/>').hide();
+                    jQuery('#formContainer<portlet:namespace/>').show();                    
+                }
             });
         </script>
+        <%@include file="../commons/errorsFunctions.jsp" %>
     </head>
     <body>
-        <div id="newsletterAdmin<portlet:namespace/>" class="newsletter-admin-wrapper">
+        <div id="newsletterAdmin<portlet:namespace/>">
             <ul>
                 <li><a href="#lists<portlet:namespace/>"><fmt:message key="newsletter.admin.lists"/></a></li>
                 <li><a href="${subscribersURL}"><fmt:message key="newsletter.admin.subscribers"/></a></li>
@@ -129,6 +156,8 @@
 
             <!-- LISTS TAB -->
             <div id="lists<portlet:namespace/>">
+                <!-- Errors viewer -->
+                <%@include file="../commons/errorsView.jsp" %>
                 
                 <!-- GRID -->
                 <div id="gridContainer<portlet:namespace/>">
@@ -138,8 +167,8 @@
                 </div>
                 
                 <!-- CRUD form -->
-                <div id="formContainer<portlet:namespace/>" class="newsletter-forms-form-panel">
-                    <form id="addEditDeleteCategory<portlet:namespace/>">
+                <div id="formContainer<portlet:namespace/>">
+                    <form id="addEditDeleteCategory<portlet:namespace/>" class="newsletter-forms-form">
                         <input type="hidden" id="action<portlet:namespace/>" name="action"/>
                         <table>
                             <tr>
@@ -148,7 +177,7 @@
                             </tr>
                             <tr>
                                 <td><label><fmt:message key="newsletter.admin.general.description"/></label></td>
-                                <td><input type="text" name="description" class="required"/></td>
+                                <td><textarea name="description" class="required"></textarea></td>
                             </tr>
                             <tr>
                                 <td><label><fmt:message key="newsletter.admin.category.fromname" bundle="${newsletter}"/></label></td>

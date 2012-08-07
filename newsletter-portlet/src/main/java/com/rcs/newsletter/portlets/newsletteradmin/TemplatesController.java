@@ -65,7 +65,7 @@ public class TemplatesController extends GenericController {
         ServiceActionResult<ListResultsDTO<NewsletterTemplate>> result = templateService.findAllTemplates(
                                     Utils.getThemeDisplay(request), 
                                     form.calculateStart(), 
-                                    form.getPageSize(), 
+                                    form.getRows(), 
                                     "name", 
                                     ORDER_BY_ASC);
 
@@ -83,6 +83,6 @@ public class TemplatesController extends GenericController {
         result.getPayload().getResult().add(sample);
         
         
-        return new ModelAndView (new JacksonJsonView(), JacksonJsonView.MODEL_NAME, result.getPayload());
+        return new ModelAndView (new JacksonJsonView(), JacksonJsonView.MODEL_NAME, result);
     }
 }

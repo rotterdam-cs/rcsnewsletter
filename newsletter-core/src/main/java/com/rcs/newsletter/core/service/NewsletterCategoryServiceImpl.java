@@ -10,7 +10,10 @@ import com.rcs.newsletter.core.model.dtos.NewsletterCategoryDTO;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import javax.validation.Validator;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
@@ -38,6 +41,9 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
     
     @Autowired
     private DTOBinder binder;
+    
+    @Autowired
+    private Validator validator;
     
     private final static Logger logger = LoggerFactory.getLogger(NewsletterSubscriptionImpl.class);
     
@@ -120,5 +126,61 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
         }
         
         return result;
+    }
+
+    @Override
+    public ServiceActionResult createCategory(long groupId, long companyId, String name, String description, String fromname, String fromemail, String adminemail) {
+        NewsletterCategory newsletterCategory = new NewsletterCategory();
+        newsletterCategory.setGroupid(groupId);
+        newsletterCategory.setCompanyid(companyId);
+        fillCategoryData(newsletterCategory, name, description, fromname, fromemail, adminemail);
+        
+        Set violations = validator.validate(newsletterCategory);
+        if (violations.isEmpty()){
+            ServiceActionResult saveResult = save(newsletterCategory);
+            return saveResult;
+        }else{
+            List<String> violationsKeys = new LinkedList<String>();
+            fillViolations(violations, violationsKeys);
+            return ServiceActionResult.buildFailure(null, violationsKeys);
+        }
+    }
+
+    private void fillCategoryData(NewsletterCategory newsletterCategory, String name, String description, String fromname, String fromemail, String adminemail){
+        newsletterCategory.setName(name);
+        newsletterCategory.setDescription(description);
+        newsletterCategory.setFromName(fromname);
+        newsletterCategory.setFromEmail(fromemail);
+        newsletterCategory.setAdminEmail(adminemail);        
+    }
+    
+    @Override
+    public ServiceActionResult editCategory(long categoryId, String name, String description, String fromname, String fromemail, String adminemail) {
+        ServiceActionResult<NewsletterCategory> sarCategory = findById(categoryId);
+        if (!sarCategory.isSuccess()){
+            return sarCategory;
+        }
+        NewsletterCategory newsletterCategory = sarCategory.getPayload();
+        fillCategoryData(newsletterCategory, name, description, fromname, fromemail, adminemail);
+        
+        Set violations = validator.validate(newsletterCategory);
+        if (violations.isEmpty()){
+            ServiceActionResult saveResult = update(newsletterCategory);
+            return saveResult;
+        }else{
+            List<String> violationsKeys = new LinkedList<String>();
+            fillViolations(violations, violationsKeys);
+            return ServiceActionResult.buildFailure(null, violationsKeys);
+        }
+    }
+
+    @Override
+    public ServiceActionResult deleteCategory(long categoryId) {
+        ServiceActionResult<NewsletterCategory> sarCategory = findById(categoryId);
+        if (!sarCategory.isSuccess()){
+            return sarCategory;
+        }
+        NewsletterCategory newsletterCategory = sarCategory.getPayload();
+        return delete(newsletterCategory);
     }
 }

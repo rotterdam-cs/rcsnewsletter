@@ -21,6 +21,7 @@
 
 <!-- AJAX requests -->
 <portlet:resourceURL id="getLists" var="getListsURL"/>
+<portlet:resourceURL id="addEditDeleteList" var="addEditDeleteListURL"/>
 
 <html>
     <head>
@@ -40,8 +41,12 @@
                 createGrid();
                 
                 jQuery('#addList<portlet:namespace/>').button();
+                jQuery('#save<portlet:namespace/>').button();
+                jQuery('#cancel<portlet:namespace/>').button();
+                
                 jQuery('#addList<portlet:namespace/>').click(function(){
                     jQuery('#formContainer<portlet:namespace/>').resetForm();
+                    jQuery('#action<portlet:namespace/>').val('CREATE');
                     jQuery('#gridContainer<portlet:namespace/>').hide();
                     jQuery('#formContainer<portlet:namespace/>').show();
                 });
@@ -85,7 +90,30 @@
                     jQuery("#listsGrid<portlet:namespace/>")
                         .jqGrid('navGrid','#listPager<portlet:namespace/>',
                             {edit:false,add:false,del:false});
-                }                
+                }
+                
+                function backToGrid(){
+                    jQuery('#formContainer<portlet:namespace/>').hide();                    
+                    jQuery('#gridContainer<portlet:namespace/>').show();
+                }
+
+                jQuery('#cancel<portlet:namespace/>').click(function(){
+                    backToGrid();
+                });
+                
+                jQuery('#addEditDeleteCategory<portlet:namespace/>').validate({
+                    submitHandler: function(form) {
+                        jQuery(form).ajaxSubmit({
+                            dataType: 'json',
+                            url: '${addEditDeleteListURL}',
+                            success: function(data){
+                                if (data && data.success){
+                                    backToGrid();
+                                }
+                            }                            
+                        });
+                    }
+                });             
             });
         </script>
     </head>
@@ -99,14 +127,20 @@
                 <li><a href="${templatesURL}"><fmt:message key="newsletter.admin.templates"/></a></li>
             </ul>
 
+            <!-- LISTS TAB -->
             <div id="lists<portlet:namespace/>">
+                
+                <!-- GRID -->
                 <div id="gridContainer<portlet:namespace/>">
                     <button type="button" id="addList<portlet:namespace/>"><fmt:message key="newsletter.admin.lists.add" bundle="${newsletter}"/></button>
                     <table id="listsGrid<portlet:namespace/>"></table>
                     <div id="listPager<portlet:namespace/>"></div>
                 </div>
-                <div id="formContainer<portlet:namespace/>">
+                
+                <!-- CRUD form -->
+                <div id="formContainer<portlet:namespace/>" class="newsletter-forms-form-panel">
                     <form id="addEditDeleteCategory<portlet:namespace/>">
+                        <input type="hidden" id="action<portlet:namespace/>" name="action"/>
                         <table>
                             <tr>
                                 <td><label><fmt:message key="newsletter.admin.general.name"/></label></td>
@@ -133,8 +167,8 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <button type="button" id="save<portlet:namespace/>"></button>
-                                    <button type="button" id="cancel<portlet:namespace/>"></button>
+                                    <button type="submit" id="save<portlet:namespace/>"><fmt:message key="general.save"/></button>
+                                    <button type="button" id="cancel<portlet:namespace/>"><fmt:message key="newsletter.admin.general.cancel"/></button>
                                 </td>
                             </tr>
                         </table>

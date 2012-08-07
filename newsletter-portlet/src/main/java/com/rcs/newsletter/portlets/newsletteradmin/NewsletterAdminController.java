@@ -7,6 +7,7 @@ import com.rcs.newsletter.core.model.dtos.NewsletterCategoryDTO;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import com.rcs.newsletter.portlets.admin.CRUDActionEnum;
 import com.rcs.newsletter.portlets.forms.GridForm;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +45,49 @@ public class NewsletterAdminController extends GenericController {
         ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> sarCategories = 
                 categoryService.findAllNewsletterCategories(Utils.getThemeDisplay(request),
                                                             gridParams.calculateStart(),
-                                                            gridParams.getPageSize());
-        return new ModelAndView (new JacksonJsonView(), JacksonJsonView.MODEL_NAME, sarCategories);
+                                                            gridParams.getRows());
+        return jsonResponse(sarCategories);
+    }
+    
+    @ResourceMapping("addEditDeleteList")
+    public ModelAndView addEditDeleteList(ResourceRequest request, 
+                                          String action,
+                                          @RequestParam(defaultValue="0") long id,
+                                          String name,
+                                          String description, 
+                                          String fromname,
+                                          String fromemail,
+                                          String adminemail){
+        CRUDActionEnum enumAction = null;
+        try{
+            enumAction = CRUDActionEnum.valueOf(action);
+        }catch(IllegalArgumentException ex){
+        }catch(NullPointerException ex){}
+
+        if (enumAction == null){
+            return null; //TODO: Handle errors
+        }
+        
+        ServiceActionResult result = null;
+        switch (enumAction){
+            case CREATE:
+                long companyId = Utils.getThemeDisplay(request).getCompanyId();
+                long groupId = Utils.getThemeDisplay(request).getScopeGroupId();
+                result = categoryService.createCategory(groupId, companyId, name, description, fromname, fromemail, adminemail);
+                break;
+                
+            case UPDATE:
+                result = categoryService.editCategory(id, name, description, fromname, fromemail, adminemail);
+                break;
+                
+            case DELETE:
+                result = categoryService.deleteCategory(id);
+                break;
+        }
+        
+        if (result != null){
+            return jsonResponse(result);
+        }
+        return null; //TODO: handle this
     }
 }

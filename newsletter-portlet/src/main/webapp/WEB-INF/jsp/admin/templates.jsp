@@ -25,6 +25,22 @@
         </script>
     </head>
     <body>
+        
+        <h1><fmt:message key="newsletter.tab.templates.title.addtemplate" /></h1>
+        
+        <form>
+            <table>
+                <tr>
+                    <td>
+                        <label><fmt:message key="newsletter.tab.templates.field.label.name" /></label> 
+                    </td>
+                    <td>
+                        <input type="text" name="name" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+                    
         <p>templates</p>
     </body>
 </html>

@@ -56,6 +56,10 @@
    
 }
 
+.newsletter-forms-form-panel label{
+    margin-right: 10px;
+}
+
 .newsletter-forms-form-listbox{
     margin-right: 10px!important;
 }
@@ -176,4 +180,18 @@
 }
 .hiddenMsg{
     display: none;
+}
+
+
+/*
+  JQuery Styles Fixes
+ --------------------
+*/
+
+.ui-pg-selbox{
+    padding: 0px !important;
+}
+
+.ui-pg-input{
+    padding: 2px;
 }

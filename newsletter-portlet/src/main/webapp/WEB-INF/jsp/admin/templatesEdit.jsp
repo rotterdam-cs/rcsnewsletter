@@ -49,7 +49,7 @@
         <tr>
             <td colspan="2" id="td-ckeditor">
                      <input type="hidden" id="inputEditor" name="template"/>
-                    <liferay-ui:input-editor   width="250" height="100"   />
+                     <liferay-ui:input-editor   width="250" height="100" name="template_editor"     />
             </td>
         </tr>
         <tr>
@@ -124,7 +124,9 @@
            var form = jQuery('#template-form-<portlet:namespace/>');
            
            // extract text from ckeditor
-           jQuery("#inputEditor").val(jQuery("#cke_contents_<portlet:namespace/>editor iframe")[0].contentWindow.document.body.innerHTML);
+           
+           var html = window.<portlet:namespace/>template_editor.getHTML();
+           jQuery("#inputEditor").val(html);
            
            // validate form
            var formValid = form.valid();
@@ -140,7 +142,6 @@
                        jQuery('#btn-cancel-<portlet:namespace/>').trigger('click');
                    }
                    ,failure: function(response){
-                       alert('error');
                        console.log(response);
                    }
                });
@@ -152,10 +153,13 @@
     * Function that initializes the html editor component
     */
     function _NewsletterAdmin_WAR_newsletterportlet_initEditor(e){
+        <%--
         jQuery('#template-form-<portlet:namespace/> .cke_contents').css('height','150px');                      
+        --%>
 
         // Load description in html editor field
-        return "${template.template}";
+        
+        return "${template.template}"
     }
 
 
@@ -163,8 +167,7 @@
      * Validate template structure
      */
     function isTemplateValid() {
-                                
-            var content = jQuery('#cke_contents_<portlet:namespace/>editor iframe')[0].contentWindow.document.body.innerHTML;                
+            var content = window.<portlet:namespace/>template_editor.getHTML();  
             var result = true;
             if (content.length == 0){
                 result = false;

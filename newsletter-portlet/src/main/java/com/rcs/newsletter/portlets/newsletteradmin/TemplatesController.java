@@ -104,13 +104,8 @@ public class TemplatesController extends GenericController {
     public ModelAndView editTemplate(ResourceRequest request, ResourceResponse response, Long id){
         ModelAndView mav = new ModelAndView("admin/templatesEdit");
         
-        TemplateDTO entity = new TemplateDTO();
+        TemplateDTO template = new TemplateDTO();
         
-         logger.debug("----------------------- editTemplate ------------------------");
-         logger.debug("id:" +  id);
-         logger.debug("------------------------------------------------------------");
-        
-
         
         // if editing a particular template, then retrieve it from DB
         if (id != null){
@@ -123,16 +118,10 @@ public class TemplatesController extends GenericController {
             }
             
             
-            entity = findTemplate.getPayload();
+            template = findTemplate.getPayload();
         }
         
-        if (entity.getTemplate() != null){
-            entity.setTemplate(entity.getTemplate().replace("\"", "\\\""));
-            entity.setTemplate(entity.getTemplate().replace("\'", "\\\'"));
-        }
-        
-        logger.debug("entity name: " + entity.getName());
-        mav.addObject("template", entity);
+        mav.addObject("template", template);
         
         
         return mav;
@@ -141,7 +130,7 @@ public class TemplatesController extends GenericController {
     
     @ResourceMapping(value="saveTemplate")
     public ModelAndView saveTemplate(ResourceRequest request, ResourceResponse response, @ModelAttribute TemplateDTO templateDTO){
-         ServiceActionResult<TemplateDTO> result = templateService.saveTemplate(Utils.getThemeDisplay(request), templateDTO);
+        ServiceActionResult<TemplateDTO> result = templateService.saveTemplate(Utils.getThemeDisplay(request), templateDTO);
          return jsonResponse(result);
     }
     

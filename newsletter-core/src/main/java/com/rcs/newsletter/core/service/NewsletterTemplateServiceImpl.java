@@ -1,5 +1,6 @@
 package com.rcs.newsletter.core.service;
 
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.TemplateDTO;
 import com.rcs.newsletter.core.model.NewsletterEntity;
@@ -70,12 +71,20 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
     @Override
     public ServiceActionResult<TemplateDTO> saveTemplate(ThemeDisplay themeDisplay, TemplateDTO templateDTO) {
         
-        // escape javascript conflictive chars
-        templateDTO.setTemplate(templateDTO.getTemplate().replace("\"", "\\\""));
-        templateDTO.setTemplate(templateDTO.getTemplate().replace("\'", "\\\'"));
+        // fix template undesired chars
+        String templateHTML = templateDTO.getTemplate();
+        templateHTML =  templateHTML.replace("\u200B", "");
+        templateHTML = HtmlUtil.escapeJS(templateHTML);
+        templateDTO.setTemplate(templateHTML);
         
-        // conver dto to entity
-        NewsletterTemplate template = binder.extractFromDto(NewsletterTemplate.class, templateDTO);
+        // find existing template or creat a new one
+        NewsletterTemplate template = null;
+        if (templateDTO.getId() != null){
+            template = findById(templateDTO.getId()).getPayload();
+            fillTemplate(templateDTO, template);
+        }else{
+            template = binder.extractFromDto(NewsletterTemplate.class, templateDTO);
+        }
 
         // add group and company information
         template.setCompanyid(themeDisplay.getCompanyId());
@@ -97,6 +106,12 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
         }else{
             return ServiceActionResult.buildFailure(null);
         }
+    }
+
+    
+    private void fillTemplate(TemplateDTO templateDTO, NewsletterTemplate template) {
+        template.setName(templateDTO.getName());
+        template.setTemplate(templateDTO.getTemplate());
     }
     
    

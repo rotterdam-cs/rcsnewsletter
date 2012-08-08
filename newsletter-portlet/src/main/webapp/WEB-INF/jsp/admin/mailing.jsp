@@ -1,7 +1,7 @@
 <%-- 
     Document   : mailing
     Created on : 06/08/2012, 17:07:17
-    Author     : ggenovese <gustavo.genovese@rotterdam-cs.com>
+    Author     : Marcos
 --%>
 
 
@@ -19,12 +19,38 @@
         <script type="text/javascript">
             Liferay.on('portletReady', function(event) {
                 if('_' + event.portletId + '_' != '<portlet:namespace/>') {
+                    initUI();
                     return;
                 }
             });
         </script>
     </head>
     <body>
-        <p>mailing</p>
+
+        <%--
+            Errors and Messages common view
+            ###############################
+        --%>
+        <%@include file="../commons/errorsView.jsp" %>
+
+        <div id="mailing-panel">
+
+
+
+            <%--
+                Include Malining List View (by default)
+                ########################################
+            --%>
+            <jsp:include page="mailingList.jsp" />
+
+        </div>
+
     </body>
+
+
+    <script type="text/javascript">
+        function initUI(){
+            clearMessages();
+        }
+    </script>
 </html>

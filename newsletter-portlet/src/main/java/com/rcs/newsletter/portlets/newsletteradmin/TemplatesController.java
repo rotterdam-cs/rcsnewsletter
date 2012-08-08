@@ -11,6 +11,7 @@ import com.rcs.newsletter.portlets.forms.GridForm;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import org.apache.log4j.Logger;
@@ -116,14 +117,6 @@ public class TemplatesController extends GenericController {
         // if editing a particular template, then retrieve it from DB
         if (id != null){
             ServiceActionResult<TemplateDTO> findTemplate = templateService.findTemplate(id);
-            
-            // show errors if they occur
-            if (!findTemplate.isSuccess()){
-                mav.addObject(MODEL_ERRORS, new String[]{"newsletter.tab.templates.error.editing"});
-                return mav;
-            }
-            
-            
             template = findTemplate.getPayload();
         }
         if (template.getTemplate() != null && !showToRemove){
@@ -148,8 +141,15 @@ public class TemplatesController extends GenericController {
      */
     @ResourceMapping(value="saveTemplate")
     public ModelAndView saveTemplate(ResourceRequest request, ResourceResponse response, @ModelAttribute TemplateDTO templateDTO){
+        ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, request.getLocale());
+        
         ServiceActionResult<TemplateDTO> result = templateService.saveTemplate(Utils.getThemeDisplay(request), templateDTO);
-         return jsonResponse(result);
+        if (result.isSuccess()){
+            result.addMessage(bundle.getString("newsletter.tab.templates.message.saved"));
+        }else{
+            result.addValidationKey(bundle.getString("newsletter.tab.templates.error.saving"));
+        }
+        return jsonResponse(result);
     }
     
      
@@ -162,7 +162,14 @@ public class TemplatesController extends GenericController {
      */
     @ResourceMapping(value="deleteTemplate")
     public ModelAndView deleteTemplate(ResourceRequest request, ResourceResponse response, @RequestParam Long id){
-        ServiceActionResult result = templateService.deleteTemplate(id);
+        ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, request.getLocale());
+        
+        ServiceActionResult result = templateService.deleteTemplate(Utils.getThemeDisplay(request), id);
+        if (result.isSuccess()){
+            result.addMessage(bundle.getString("newsletter.tab.templates.message.deleted"));
+        }else{
+            result.addValidationKey(bundle.getString("newsletter.tab.templates.error.deleting"));
+        }
         return jsonResponse(result);
     }
     

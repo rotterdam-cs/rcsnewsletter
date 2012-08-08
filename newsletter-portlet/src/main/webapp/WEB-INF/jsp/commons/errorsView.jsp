@@ -9,3 +9,6 @@
 
 <div id="errorsView<portlet:namespace/>" style="padding: 0 .7em;">
 </div>
+
+<div id="messagesView<portlet:namespace/>" style="padding: 0 .7em;">
+</div>

@@ -2,7 +2,6 @@ package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.TemplateDTO;
-import com.rcs.newsletter.core.model.NewsletterEntity;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
@@ -93,7 +92,7 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
         if (!errors.isEmpty()){
             List<String> errorsList = new ArrayList<String>();
             fillViolations(errors, errorsList);
-            return ServiceActionResult.buildFailure(null, errorsList.toArray(new String[]{}));
+            return ServiceActionResult.buildFailure(null, errorsList);
         }
         
         
@@ -114,7 +113,7 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
 
     
     @Override
-    public ServiceActionResult deleteTemplate(Long templateId) {
+    public ServiceActionResult deleteTemplate(ThemeDisplay themeDisplay, Long templateId) {
         ServiceActionResult<NewsletterTemplate> findResult = findById(templateId);
         if (findResult.isSuccess()){
             return delete(findResult.getPayload());

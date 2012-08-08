@@ -19,22 +19,38 @@
         <script type="text/javascript">
             Liferay.on('portletReady', function(event) {
                 if('_' + event.portletId + '_' != '<portlet:namespace/>') {
+                    initUI();
                     return;
                 }
             });
         </script>
     </head>
     <body>
-        
+
+        <%--
+            Errors and Messages common view
+            ###############################
+        --%>
+        <%@include file="../commons/errorsView.jsp" %>
+
         <div id="templates-panel">
-            
+
+
+
             <%--
                 Include Templates List View (by default)
                 ########################################
             --%>
             <jsp:include page="templatesList.jsp" />
-        
+
         </div>
-                    
+
     </body>
+
+
+    <script type="text/javascript">
+        function initUI(){
+            clearMessages();
+        }
+    </script>
 </html>

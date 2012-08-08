@@ -96,7 +96,7 @@
     jQuery(document).ready(function(){
        styleUI();
        initEvents();
-       
+       clearMessages();
     });
     
     
@@ -170,6 +170,7 @@
                    ,type: 'POST'
                    ,data: form.serialize()
                    ,success: function(response){
+                       showMessages(response.messages);
                        jQuery('#btn-cancel-<portlet:namespace/>').trigger('click');
                    }
                    ,failure: function(response){
@@ -237,6 +238,7 @@
                             ,type: 'POST'
                             ,data: {id: templateId}
                             ,success: function(response){
+                                showMessages(response.messages);
                                 $(this).dialog("close");
                                 jQuery('#btn-cancel-<portlet:namespace/>').trigger('click');
                             }

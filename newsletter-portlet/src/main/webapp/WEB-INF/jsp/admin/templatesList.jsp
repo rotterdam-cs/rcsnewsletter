@@ -38,13 +38,6 @@
 
 
 
-<%--
-    Dialogs
-    ##############
---%>
-<div stly="display:none">
-    
-</div>
 
 
 <script type="text/javascript">

@@ -18,11 +18,19 @@ public class ServiceActionResult<T> implements Serializable {
     private final boolean success;
     private final T payload;
     private final List<String> validationKeys;
+    private List<String> messages;
 
     protected ServiceActionResult(boolean success, T payload, List<String> validationKeys) {
         this.success = success;
         this.payload = payload;
         this.validationKeys = validationKeys;
+    }
+    
+    protected ServiceActionResult(boolean success, T payload, List<String> validationKeys, List<String> messages) {
+        this.success = success;
+        this.payload = payload;
+        this.validationKeys = validationKeys;
+        this.messages = messages;
     }
 
     /**
@@ -70,7 +78,7 @@ public class ServiceActionResult<T> implements Serializable {
         LinkedList<String> keysList = new LinkedList<String>();
         keysList.addAll(Arrays.asList(keys));
 
-        return new ServiceActionResult<T>(true, payload, keysList);
+        return new ServiceActionResult<T>(true, payload, null, keysList);
     }
     
     /**
@@ -104,5 +112,27 @@ public class ServiceActionResult<T> implements Serializable {
         //rollback the transaction.
         TransactionAspectSupport.currentTransactionStatus().isRollbackOnly();
         return new ServiceActionResult<T>(false, payload, keys);
-    }    
+    }
+
+    /**
+     * @return the messages
+     */
+    public List<String> getMessages() {
+        return messages;
+    }
+
+    /**
+     * @param messages the messages to set
+     */
+    public void setMessages(List<String> messages) {
+        this.messages = messages;
+    }
+    
+    /**
+     * Add a new message
+     * @param message 
+     */
+    public void addMessage(String message){
+        this.messages.add(message);
+    }
 }

@@ -39,6 +39,11 @@ public class NewsletterAdminController extends GenericController {
         return new ModelAndView("admin/admin", model);
     }
     
+    @ResourceMapping("lists")
+    public ModelAndView listsTab(){
+        return new ModelAndView("admin/lists");
+    }
+    
     @ResourceMapping("getLists")
     public ModelAndView getLists(ResourceRequest request, @ModelAttribute GridForm gridParams){
         ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> sarCategories = 

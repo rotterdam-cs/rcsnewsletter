@@ -51,12 +51,13 @@ public class NewsletterAdminController extends GenericController {
     @ResourceMapping("addEditDeleteList")
     public ModelAndView addEditDeleteList(ResourceRequest request, 
                                           String action,
-                                          @RequestParam(defaultValue="0") long id,
+                                          String id,
                                           String name,
                                           String description, 
                                           String fromname,
                                           String fromemail,
                                           String adminemail){
+        
         CRUDActionEnum enumAction = null;
         try{
             enumAction = CRUDActionEnum.valueOf(action);
@@ -67,6 +68,11 @@ public class NewsletterAdminController extends GenericController {
             return null;
         }
         
+        long categoryId = 0;
+        try {
+            categoryId = Long.parseLong(id);
+        }catch(NumberFormatException ex){}
+        
         ServiceActionResult result = null;
         switch (enumAction){
             case CREATE:
@@ -76,11 +82,11 @@ public class NewsletterAdminController extends GenericController {
                 break;
                 
             case UPDATE:
-                result = categoryService.editCategory(id, name, description, fromname, fromemail, adminemail);
+                result = categoryService.editCategory(categoryId, name, description, fromname, fromemail, adminemail);
                 break;
                 
             case DELETE:
-                result = categoryService.deleteCategory(id);
+                result = categoryService.deleteCategory(categoryId);
                 break;
         }
         

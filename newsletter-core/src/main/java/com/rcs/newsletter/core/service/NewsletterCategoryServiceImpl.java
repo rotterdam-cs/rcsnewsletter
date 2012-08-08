@@ -13,11 +13,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import javax.validation.Validator;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.jdto.DTOBinder;
@@ -35,16 +33,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCategory> implements NewsletterCategoryService {
-
-    @Autowired
-    private SessionFactory sessionFactory;
     
     @Autowired
     private DTOBinder binder;
-    
-    @Autowired
-    private Validator validator;
-    
+
     private final static Logger logger = LoggerFactory.getLogger(NewsletterSubscriptionImpl.class);
     
     @Override
@@ -84,12 +76,6 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
         Criteria criteria = createCriteriaForCategories(themeDisplay);
         
         List<NewsletterCategory> result = criteria.list();
-        
-        /*if(fetchSubscriptors) {
-            for(NewsletterCategory newsletterCategory : result) {
-                newsletterCategory.setSubscriptions(getNewsletterSubscriptionsByCategoryId(newsletterCategory));
-            }
-        }*/
 
         ListResultsDTO<NewsletterCategoryDTO> payload = 
                 new ListResultsDTO(limit, start, count, 
@@ -103,21 +89,7 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
         List<NewsletterCategory> result = criteria.list();
         List<NewsletterCategoryDTO> listDTO = binder.bindFromBusinessObjectList(NewsletterCategoryDTO.class, result);
         return listDTO;
-    }    
-    
-    /**
-     * Obtain all the subscriptors for the specified category id
-     * @param categoryId
-     * @return 
-     */
-    /*private List<NewsletterSubscription> getNewsletterSubscriptionsByCategoryId(NewsletterCategory newsletterCategory) {
-        Criteria subscriptionCriteria = sessionFactory.getCurrentSession().createCriteria(NewsletterSubscription.class);
-        subscriptionCriteria.add(Restrictions.eq(NewsletterSubscription.CATEGORY, newsletterCategory));
-
-        List<NewsletterSubscription> subscriptions = subscriptionCriteria.list();
-
-        return subscriptions;
-    }*/
+    }
     
     @Override
     public List<NewsletterCategory> findNewsletterCategorysBySubscriber(NewsletterSubscriptor subscriptor) {
@@ -172,10 +144,15 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
             return ServiceActionResult.buildFailure(null,sarCategory.getValidationKeys());
         }
         NewsletterCategory newsletterCategory = sarCategory.getPayload();
-        fillCategoryData(newsletterCategory, name, description, fromname, fromemail, adminemail);
         
-        Set violations = validator.validate(newsletterCategory);
+        NewsletterCategory dummyNewsletterCategory = new NewsletterCategory();
+        dummyNewsletterCategory.setGroupid(newsletterCategory.getGroupid());
+        dummyNewsletterCategory.setCompanyid(newsletterCategory.getCompanyid());
+        fillCategoryData(dummyNewsletterCategory, name, description, fromname, fromemail, adminemail);
+
+        Set violations = validator.validate(dummyNewsletterCategory);
         if (violations.isEmpty()){
+            fillCategoryData(newsletterCategory, name, description, fromname, fromemail, adminemail);
             ServiceActionResult saveResult = update(newsletterCategory);
             if (saveResult.isSuccess()){
                 NewsletterCategoryDTO dto = binder.bindFromBusinessObject(NewsletterCategoryDTO.class, saveResult.getPayload());

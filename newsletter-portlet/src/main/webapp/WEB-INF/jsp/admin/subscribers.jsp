@@ -35,12 +35,12 @@
                     jQuery("#subscribersGrid<portlet:namespace/>").jqGrid({
                         url:'${getSubscribersURL}',
                         datatype: "json",
+                        autowidth: true,
                         postData: {
                             nocache: (new Date()).getTime(),
                             selectedList: jQuery('#listsCombo<portlet:namespace/>').val(),
                             onlyInactive: jQuery('#activeStatusCheck<portlet:namespace/>').is(':checked')
                         },
-                        autowidth: true,
                         colNames:[
                             '<fmt:message key="newsletter.admin.general.id"/>',
                             '<fmt:message key="newsletter.admin.general.name"/>',
@@ -53,11 +53,6 @@
                             { name : 'subscriptorEmail',  width : 100, searchoptions: {},  sortable : false, search : false },
                             { name : 'action', width : 100, searchoptions: {},  sortable : false, search : false }
                         ],
-                        rowNum : 10,
-                        rowList : [10,20,30],
-                        pager : '#subscribersPager<portlet:namespace/>',
-                        sortname : 'id',
-                        viewRecords: true,
                         jsonReader : {
                             root: "payload.result",
                             page: "payload.currentPage",
@@ -65,13 +60,18 @@
                             repeatitems : false,
                             id : "id"
                         },
-                        caption : "<fmt:message key="newsletter.admin.subscribers"/>",
-                        height: '100%',
                         gridComplete: function() {
                             var ids = jQuery('#subscribersGrid<portlet:namespace/>').jqGrid('getDataIDs');
                             for(var i = 0; i < ids.length; i++){
                             }
-                        }
+                        },
+                        pager : '#subscribersPager<portlet:namespace/>',
+                        sortname : 'id',
+                        viewRecords: true,
+                        sortorder: 'asc',
+                        caption : "<fmt:message key="newsletter.admin.subscribers"/>",
+                        height: '100%',
+                        rowNum : 15
                     });
                     jQuery("#subscribersGrid<portlet:namespace/>")
                         .jqGrid('navGrid','#subscribersPager<portlet:namespace/>',

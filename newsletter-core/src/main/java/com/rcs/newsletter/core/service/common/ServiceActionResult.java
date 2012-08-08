@@ -19,7 +19,7 @@ public class ServiceActionResult<T> implements Serializable {
     private final T payload;
     private final List<String> validationKeys;
 
-    public ServiceActionResult(boolean success, T payload, List<String> validationKeys) {
+    protected ServiceActionResult(boolean success, T payload, List<String> validationKeys) {
         this.success = success;
         this.payload = payload;
         this.validationKeys = validationKeys;

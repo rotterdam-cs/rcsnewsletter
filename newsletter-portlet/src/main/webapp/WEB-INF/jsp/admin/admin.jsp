@@ -62,8 +62,7 @@
                             { name : 'description', width : 100, searchoptions: {},  sortable : false, search : false },
                             { name : 'action',      width : 100, searchoptions: {},  sortable : false, search : false }
                         ],
-                        rowNum : 10,
-                        rowList : [10,20,30],
+                        rowNum : 15,
                         pager : '#listPager<portlet:namespace/>',
                         sortname : 'id',
                         viewRecords: true,

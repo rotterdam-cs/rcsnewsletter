@@ -98,7 +98,7 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
         
         
         
-        ServiceActionResult<NewsletterEntity> result = save(template);
+        ServiceActionResult<NewsletterTemplate> result = save(template);
         if (result.isSuccess()){
             return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(TemplateDTO.class, result.getPayload()));
         }else{

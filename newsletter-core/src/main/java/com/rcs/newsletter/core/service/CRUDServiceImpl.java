@@ -13,10 +13,7 @@ import java.util.List;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import org.hibernate.Criteria;
-import org.hibernate.NonUniqueResultException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<E> {
 
     @Autowired
-    private SessionFactory sessionFactory;
-    @Autowired
-    private Validator validator;
+    protected SessionFactory sessionFactory;
     
-    private static Log logger = LogFactoryUtil.getLog(CRUDServiceImpl.class);
+    @Autowired
+    protected Validator validator;
+    
+    protected Log logger = LogFactoryUtil.getLog(getClass());
 
     private Class getEntityClass() {
         Class result = null;
@@ -53,84 +51,62 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
     }
 
     @Override
-    public ServiceActionResult<NewsletterEntity> save(NewsletterEntity entity) {
-        boolean success = true;
+    public ServiceActionResult<E> save(E entity) {
         List<String> validationKeys = new ArrayList<String>();
 
         Set violations = validator.validate(entity);
         if (!violations.isEmpty()) {
-            success = false;
             fillViolations(violations, validationKeys);
+            String[] dummy = null;
+            return ServiceActionResult.buildFailure(entity, validationKeys.toArray(dummy));
         } else {
             sessionFactory.getCurrentSession().save(entity);
+            return ServiceActionResult.buildSuccess(entity);
         }
-
-        ServiceActionResult<NewsletterEntity> result = new ServiceActionResult<NewsletterEntity>(success, entity, validationKeys);
-
-        return result;
     }
 
     @Override
-    public ServiceActionResult<NewsletterEntity> update(NewsletterEntity entity) {
-        boolean success = true;
+    public ServiceActionResult<E> update(E entity) {
         List<String> validationKeys = new ArrayList<String>();
 
         Set violations = validator.validate(entity);
         if (!violations.isEmpty()) {
-            success = false;
             fillViolations(violations, validationKeys);
+            return ServiceActionResult.buildFailure(entity, validationKeys);
         } else {
             sessionFactory.getCurrentSession().saveOrUpdate(entity);
+            return ServiceActionResult.buildSuccess(entity);
         }
-
-        ServiceActionResult<NewsletterEntity> result = new ServiceActionResult<NewsletterEntity>(success, entity, validationKeys);
-
-        return result;
     }
 
     @Override
-    public ServiceActionResult<NewsletterEntity> delete(NewsletterEntity entity) {
-        boolean success = true;
-        List<String> validationKeys = new ArrayList<String>();
-
-        Set violations = validator.validate(entity);
-        if (!violations.isEmpty()) {
-            success = false;
-            fillViolations(violations, validationKeys);
-        } else {
-            sessionFactory.getCurrentSession().delete(entity);
+    public ServiceActionResult<E> delete(E entity) {
+        sessionFactory.getCurrentSession().delete(entity);
+        try {
+            sessionFactory.getCurrentSession().flush();
+            return ServiceActionResult.buildSuccess(null);
+        }catch(HibernateException ex){
+            return ServiceActionResult.buildFailure(entity);
         }
-
-        ServiceActionResult<NewsletterEntity> result = new ServiceActionResult<NewsletterEntity>(success, null, validationKeys);
-
-        return result;
     }
 
     @Override
     public ServiceActionResult<E> findById(long entityId) {
-        boolean success = false;
-        List<String> validationKeys = new ArrayList<String>();
-        E entity = null;
-
+        String error = "";
         try {
             Criteria criteria = sessionFactory.getCurrentSession().createCriteria(getEntityClass());
             criteria.add(Restrictions.eq(NewsletterEntity.ID, entityId));
             criteria.setMaxResults(1);
             Object entityObject = criteria.uniqueResult();
             if(entityObject != null) {
-                entity = (E) entityObject;
-                success = true;
+                E entity = (E) entityObject;
+                return ServiceActionResult.buildSuccess(entity);
             }
-        } catch (NonUniqueResultException ex) {
-            String error = "Exists more than unique id";
-            logger.error(error, ex);
         } catch (Exception ex) {
-            String error = "General error";
+            error = "General error";
             logger.error(error, ex);
         }
-        ServiceActionResult<E> result = new ServiceActionResult<E>(success, entity, validationKeys);
-
-        return result;
+        return ServiceActionResult.buildFailure(null, error);
     }
 
     @Override
@@ -177,13 +153,7 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
         }
         List<E> entities = criteria.list();
         
-        boolean success = true;
-        List<String> validationKeys = new ArrayList<String>();
-        
-        ServiceActionResult<List<E>> result = new ServiceActionResult<List<E>>(success, entities, validationKeys);
-
-        return result;
-        
+        return ServiceActionResult.buildSuccess(entities);        
     }
 
     @Override

@@ -69,6 +69,8 @@
                         viewRecords: true,
                         jsonReader : {
                             root: "payload.result",
+                            page: "payload.currentPage",
+                            total: "payload.totalPages",
                             repeatitems : false,
                             id : "id"
                         },

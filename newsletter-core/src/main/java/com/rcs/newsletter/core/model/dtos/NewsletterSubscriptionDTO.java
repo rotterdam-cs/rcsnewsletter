@@ -3,6 +3,8 @@ package com.rcs.newsletter.core.model.dtos;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import java.io.Serializable;
 import org.jdto.annotation.Source;
+import org.jdto.annotation.Sources;
+import org.jdto.mergers.StringFormatMerger;
 
 /**
  *
@@ -18,6 +20,14 @@ public class NewsletterSubscriptionDTO implements Serializable{
     
     @Source("subscriptor.lastName")
     private String subscriptorLastName;
+    
+    @Sources( value = {
+                    @Source("subscriptor.firstName"),
+                    @Source("subscriptor.lastName")
+              },
+              merger=StringFormatMerger.class,
+              mergerParam="%s %s")
+    private String subscriptorFullname;
     
     @Source("subscriptor.email")
     private String subscriptorEmail;
@@ -79,5 +89,13 @@ public class NewsletterSubscriptionDTO implements Serializable{
 
     public void setSubscriptorLastName(String subscriptorLastName) {
         this.subscriptorLastName = subscriptorLastName;
+    }
+
+    public String getSubscriptorFullname() {
+        return subscriptorFullname;
+    }
+
+    public void setSubscriptorFullname(String subscriptorFullname) {
+        this.subscriptorFullname = subscriptorFullname;
     }
 }

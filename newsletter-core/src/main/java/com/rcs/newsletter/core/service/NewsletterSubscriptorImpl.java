@@ -1,26 +1,26 @@
 package com.rcs.newsletter.core.service;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.NewsletterConstants;
-import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterEntity;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import com.rcs.newsletter.core.model.dtos.NewsletterSubscriptionDTO;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
+import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
-import org.hibernate.NonUniqueResultException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.jdto.DTOBinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 /**
  *
  * @author Ariel Parra <ariel@rotterdam-cs.com>
@@ -33,7 +33,10 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
     @Autowired
     private SessionFactory sessionFactory;
     
-    @Override
+    @Autowired
+    private DTOBinder binder;
+    
+    /*@Override
     public ServiceActionResult<NewsletterSubscriptor> findByEmail(ThemeDisplay themeDisplay, String email) {
         boolean success = true;
         List<String> validationKeys = new ArrayList<String>();
@@ -175,50 +178,53 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
             log.error(error);
         }   
         return result;
+    }*/
+    
+    private Criteria createCriteriaForStatusAndCategory(ThemeDisplay themeDisplay, SubscriptionStatus status, long categoryId){
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(NewsletterSubscription.class);
+        criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));
+        criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
+        if (status != null) {
+            criteria.add(Restrictions.eq(NewsletterSubscription.STATUS, status));
+        }
+        if (categoryId > 0){
+            criteria.createCriteria(NewsletterSubscription.CATEGORY).add(Restrictions.idEq(categoryId));
+        }
+        return criteria;
     }
     
     @Override
-    public List<NewsletterSubscriptor> findAllByStatus(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order, SubscriptionStatus status) {        
-        List <NewsletterSubscriptor> result = new ArrayList<NewsletterSubscriptor>();        
-        List<NewsletterSubscription> newsletterSubscription = new ArrayList<NewsletterSubscription>();
-        try {            
-            Session currentSession = sessionFactory.getCurrentSession();
-            Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
-            
-            criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
-            criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
-            
-            if (status != null) {
-                criteria.add(Restrictions.sqlRestriction("status = '" + status.toString() + "'"));
-            }
-            
-            if (start != -1) {
-                criteria.setFirstResult(start);
-            }
-            if (limit != -1) {
-                criteria.setMaxResults(limit);
-            }
-            if (!ordercrit.isEmpty()) {                
-                if (NewsletterConstants.ORDER_BY_DESC.equals(order)) {
-                    criteria.addOrder(Order.desc(ordercrit)); 
-                } else {
-                    criteria.addOrder(Order.asc(ordercrit)); 
-                }
-            }
-            
-            newsletterSubscription = criteria.list();                    
-            for (NewsletterSubscription sls : newsletterSubscription) {
-                result.add(sls.getSubscriptor());
-            }            
-        } catch (NonUniqueResultException ex) {
-            String error = "Error loading Subscriptor by Category" + ex;
-            log.error(error);
-        }   
+    public ServiceActionResult<ListResultsDTO<NewsletterSubscriptionDTO>> findAllByStatusAndCategory(
+            ThemeDisplay themeDisplay, 
+            int start, int limit, String ordercrit, String order,
+            SubscriptionStatus status, long categoryId) {
         
-        return result;
-        
+        List<NewsletterSubscription> newsletterSubscription;
+       
+        int count = findAllByStatusAndCategoryCount(themeDisplay, status, categoryId);
+
+        Criteria criteria = createCriteriaForStatusAndCategory(themeDisplay, status, categoryId);
+        if (start != -1) {
+            criteria.setFirstResult(start);
+        }
+        if (limit != -1) {
+            criteria.setMaxResults(limit);
+        }
+        if (!ordercrit.isEmpty()) {                
+            if (NewsletterConstants.ORDER_BY_DESC.equals(order)) {
+                criteria.addOrder(Order.desc(ordercrit)); 
+            } else {
+                criteria.addOrder(Order.asc(ordercrit)); 
+            }
+        }
+        newsletterSubscription = criteria.list();
+        ListResultsDTO<NewsletterSubscriptionDTO> payload = new ListResultsDTO(limit, start, count, 
+                binder.bindFromBusinessObjectList(NewsletterSubscriptionDTO.class, newsletterSubscription));
+
+        return ServiceActionResult.buildSuccess(payload);
+
     }
-    
+    /*
     @Override
     public List<NewsletterSubscriptor> findAllByStatus(ThemeDisplay themeDisplay, SubscriptionStatus status) {        
         List <NewsletterSubscriptor> result = new ArrayList<NewsletterSubscriptor>();        
@@ -245,29 +251,14 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
         
         return result;
         
-    }
+    }*/
 
     @Override
-    public int findAllByStatusCount(ThemeDisplay themeDisplay, SubscriptionStatus status) {
-        int result = 0;
-        try {            
-            Session currentSession = sessionFactory.getCurrentSession();
-            Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);            
-        
-            criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
-            criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
-            
-            if (status != null) {
-                criteria.add(Restrictions.sqlRestriction("status = '" + status.toString() + "'"));
-            }
-            result = criteria.list().size();                    
-                        
-        } catch (NonUniqueResultException ex) {
-            String error = "Error in findAllCount" + ex;
-            log.error(error);
-        }   
-        return result;
+    public int findAllByStatusAndCategoryCount(ThemeDisplay themeDisplay, SubscriptionStatus status, long categoryId) {
+        Criteria criteria = createCriteriaForStatusAndCategory(themeDisplay, status, categoryId);
+        criteria.setProjection(Projections.rowCount());
+        criteria.setMaxResults(1);
+        int count = ((Long)criteria.uniqueResult()).intValue();
+        return count;
     }
-    
-    
 }

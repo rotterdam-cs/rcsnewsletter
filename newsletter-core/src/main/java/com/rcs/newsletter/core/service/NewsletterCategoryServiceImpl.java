@@ -65,20 +65,23 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
         return result;
     }
 
+    private Criteria createCriteriaForCategories(ThemeDisplay themeDisplay){
+        Session currentSession = sessionFactory.getCurrentSession();
+        Criteria criteria = currentSession.createCriteria(NewsletterCategory.class);
+        criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
+        criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
+        return criteria;
+    }
+    
     @Override
     public ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> findAllNewsletterCategories(ThemeDisplay themeDisplay, int start, int limit) {
-        Session currentSession = sessionFactory.getCurrentSession();
 
-        Criteria criteriaForCount = currentSession.createCriteria(NewsletterCategory.class);
-        criteriaForCount.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
-        criteriaForCount.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
+        Criteria criteriaForCount = createCriteriaForCategories(themeDisplay);
         criteriaForCount.setProjection(Projections.rowCount());
         criteriaForCount.setMaxResults(1);
         int count = ((Long)criteriaForCount.uniqueResult()).intValue();
         
-        Criteria criteria = currentSession.createCriteria(NewsletterCategory.class);
-        criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
-        criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
+        Criteria criteria = createCriteriaForCategories(themeDisplay);
         
         List<NewsletterCategory> result = criteria.list();
         
@@ -93,6 +96,14 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
                     binder.bindFromBusinessObjectList(NewsletterCategoryDTO.class, result));
         return ServiceActionResult.buildSuccess(payload);
     }
+    
+    @Override
+    public List<NewsletterCategoryDTO> findAllNewsletterCategories(ThemeDisplay themeDisplay) {
+        Criteria criteria = createCriteriaForCategories(themeDisplay);
+        List<NewsletterCategory> result = criteria.list();
+        List<NewsletterCategoryDTO> listDTO = binder.bindFromBusinessObjectList(NewsletterCategoryDTO.class, result);
+        return listDTO;
+    }    
     
     /**
      * Obtain all the subscriptors for the specified category id

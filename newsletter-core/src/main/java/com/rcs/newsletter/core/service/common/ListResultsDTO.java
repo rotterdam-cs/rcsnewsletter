@@ -17,7 +17,7 @@ public class ListResultsDTO<T> implements Serializable {
 
     public ListResultsDTO(int limit, int startRecord, int totalRecords, List<T> result) {
         this.limit = limit;
-        this.currentPage = (int)Math.ceil((double)startRecord / limit);
+        this.currentPage = 1 + (int)Math.ceil((double)startRecord / limit);
         this.totalRecords = totalRecords;
         this.result = result;
     }

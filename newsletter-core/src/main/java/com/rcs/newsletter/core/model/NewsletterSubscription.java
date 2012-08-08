@@ -20,6 +20,7 @@ public class NewsletterSubscription extends NewsletterEntity {
     
     public static final String SUBSCRIPTOR = "subscriptor";
     public static final String CATEGORY = "category";
+    public static final String STATUS = "status";
 
     private static final long serialVersionUID = 1L;
         

@@ -14,11 +14,14 @@ import org.hibernate.validator.constraints.NotBlank;
 public class NewsletterSubscriptor extends NewsletterEntity {
 
     public static final String EMAIL = "email";
+
     private static final long serialVersionUID = 1L;
+
     private String firstName;
+
     private String lastName;
+
     @NotBlank
-    //#7392
     @Pattern(regexp = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
     private String email;
 

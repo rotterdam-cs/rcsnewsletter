@@ -26,7 +26,8 @@
     ##################
 --%>
 <input id="btn-addtemplate-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.tab.templates.button.addtemplate" />" />
-<br><br>
+<hr>
+
 
 
 <%--

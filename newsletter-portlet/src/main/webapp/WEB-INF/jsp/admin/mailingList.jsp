@@ -26,7 +26,7 @@
     ##################
 --%>
 <input id="btn-addmailing-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.tab.mailing.button.addmailing" />" />
-<br><br>
+<hr>
 
 
 <%--

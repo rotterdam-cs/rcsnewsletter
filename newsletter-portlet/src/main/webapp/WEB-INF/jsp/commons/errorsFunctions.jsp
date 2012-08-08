@@ -20,7 +20,7 @@
             errorMessage += errors[i];
             errorMessage += '<br/>';
         }
-        var htmlContent = '<p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-alert"></span><strong><fmt:message key="newsletter.general.error" />:</strong>' + errorMessage +'</p>';
+        var htmlContent = '<p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-alert"></span><strong><fmt:message key="newsletter.general.error" />:</strong> ' + errorMessage +'</p>';
         jQuery('#errorsView<portlet:namespace/>').addClass('ui-state-error ui-corner-all');
         jQuery('#errorsView<portlet:namespace/>').html(htmlContent);
     }
@@ -43,7 +43,7 @@
             infoMessage += '<br/>';
         }
         
-        var htmlContent = '<p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span><strong><fmt:message key="newsletter.general.info" />:</strong>' + infoMessage +'</p>';
+        var htmlContent = '<p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span><strong><fmt:message key="newsletter.general.info" />:</strong> ' + infoMessage +'</p>';
         jQuery('#messagesView<portlet:namespace/>').addClass('ui-state-highlight ui-corner-all');
         jQuery('#messagesView<portlet:namespace/>').html(htmlContent);
     }

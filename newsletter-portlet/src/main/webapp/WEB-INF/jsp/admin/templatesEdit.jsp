@@ -28,7 +28,6 @@
     ##################
 --%>
 
-<h1><fmt:message key="newsletter.tab.templates.title.addtemplate" /></h1>
 <input id="btn-help-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.admin.category.general.help" />" />
 <hr>
 

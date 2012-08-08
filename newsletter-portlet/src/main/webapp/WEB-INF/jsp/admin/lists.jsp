@@ -162,6 +162,9 @@
             <!-- GRID -->
             <div id="gridContainer<portlet:namespace/>">
                 <button type="button" id="addList<portlet:namespace/>"><fmt:message key="newsletter.admin.lists.add" bundle="${newsletter}"/></button>
+                <hr>
+
+                
                 <table id="listsGrid<portlet:namespace/>"></table>
                 <div id="listPager<portlet:namespace/>"></div>
             </div>

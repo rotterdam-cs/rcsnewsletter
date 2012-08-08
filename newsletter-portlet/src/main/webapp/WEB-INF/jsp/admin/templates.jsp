@@ -14,43 +14,31 @@
 <fmt:setBundle basename="Language"/>
 <portlet:defineObjects />
 
-<html>
-    <head>
-        <script type="text/javascript">
-            Liferay.on('portletReady', function(event) {
-                if('_' + event.portletId + '_' != '<portlet:namespace/>') {
-                    initUI();
-                    return;
-                }
-            });
-        </script>
-    </head>
-    <body>
+
+
+    <%--
+        Errors and Messages common view
+        ###############################
+    --%>
+    <%@include file="../commons/errorsView.jsp" %>
+
+    <div id="templates-panel">
+
+
 
         <%--
-            Errors and Messages common view
-            ###############################
+            Include Templates List View (by default)
+            ########################################
         --%>
-        <%@include file="../commons/errorsView.jsp" %>
+        <jsp:include page="templatesList.jsp" />
 
-        <div id="templates-panel">
+    </div>
 
-
-
-            <%--
-                Include Templates List View (by default)
-                ########################################
-            --%>
-            <jsp:include page="templatesList.jsp" />
-
-        </div>
-
-    </body>
+</body>
 
 
-    <script type="text/javascript">
-        function initUI(){
-            clearMessages();
-        }
-    </script>
-</html>
+<script type="text/javascript">
+    function initTab(){
+        clearMessages();
+    }
+</script>

@@ -12,3 +12,5 @@
 
 <div id="messagesView<portlet:namespace/>" style="padding: 0 .7em;">
 </div>
+
+<br>

@@ -19,8 +19,6 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.jdto.DTOBinder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +34,6 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
     
     @Autowired
     private DTOBinder binder;
-
-    private final static Logger logger = LoggerFactory.getLogger(NewsletterSubscriptionImpl.class);
     
     @Override
     public NewsletterCategory findByKey(String categoryKey) {

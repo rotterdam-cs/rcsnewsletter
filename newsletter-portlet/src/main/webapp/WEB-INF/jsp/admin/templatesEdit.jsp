@@ -20,6 +20,7 @@
 --%>
 <portlet:resourceURL id='templatesList' var='templatesListUrl'/>
 <portlet:resourceURL id='saveTemplate' var='saveTemplateUrl'/>
+<portlet:resourceURL id='deleteTemplate' var='deleteTemplateUrl'/>
 
 
 <%--
@@ -48,14 +49,25 @@
         </tr>
         <tr>
             <td colspan="2" id="td-ckeditor">
-                     <input type="hidden" id="inputEditor" name="template"/>
-                     <liferay-ui:input-editor   width="250" height="100" name="template_editor"     />
+                    <c:if test="${remove}">
+                        <br>
+                        ${template.template}
+                    </c:if>
+                    <c:if test="${!remove}">
+                        <input type="hidden" id="inputEditor" name="template"/>
+                        <liferay-ui:input-editor   width="250" height="100" name="template_editor"     />
+                     </c:if>
             </td>
         </tr>
         <tr>
             <td colspan="2">
                 <br>
-                <input id="btn-save-<portlet:namespace/>" type="button" value="<fmt:message key="general.save" />" />
+                <c:if test="${remove}">
+                   <input id="btn-remove-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.admin.general.remove" />" />
+                </c:if>
+                <c:if test="${!remove}">
+                   <input id="btn-save-<portlet:namespace/>" type="button" value="<fmt:message key="general.save" />" />
+                </c:if>
                 <input id="btn-cancel-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.common.cancel" />" />
             </td>
         </tr>
@@ -71,6 +83,10 @@
     
     <div id="templates-help-<portlet:namespace/>">
         <fmt:message key="newsletter.tab.templates.help.addtemplate.body" />
+    </div>
+   
+    <div id="delete-template-dialog-<portlet:namespace/>" title="<fmt:message key="newsletter.confim.delete.title"/>">
+        <fmt:message key="newsletter.confim.delete.body"/>
     </div>
 </div>
             
@@ -100,6 +116,17 @@
            ,width: 450
            ,title: '<fmt:message key="newsletter.tab.templates.help.addtemplate.title" />'
        });
+       
+       //  confirm delete dialog
+       jQuery("#delete-template-dialog-<portlet:namespace/>").dialog({
+            autoOpen: false,
+            modal: true
+       });
+       
+       
+        <c:if test="${remove}">
+            disableComponents();
+        </c:if>
     }
     
     
@@ -108,11 +135,15 @@
      */
     function initEvents(){
         
-        // click on 'Cancel' button
+        // click on 'Help' button
         jQuery('#btn-help-<portlet:namespace/>').click(function(){
            jQuery('#templates-help-<portlet:namespace/>').dialog('open');
         });
         
+        // click on 'Remove' button
+        jQuery('#btn-remove-<portlet:namespace/>').click(function(){
+           deleteTemplate();
+        });
         
         // click on 'Cancel' button
         jQuery('#btn-cancel-<portlet:namespace/>').click(function(){
@@ -149,18 +180,15 @@
         });
     }
     
+    <c:if test="${!remove}">
     /**
     * Function that initializes the html editor component
     */
     function _NewsletterAdmin_WAR_newsletterportlet_initEditor(e){
-        <%--
-        jQuery('#template-form-<portlet:namespace/> .cke_contents').css('height','150px');                      
-        --%>
-
-        // Load description in html editor field
-        
-        return "${template.template}"
+        // Load template in html editor field
+        return "${template.template}";
     }
+    </c:if>
 
 
     /**
@@ -193,7 +221,46 @@
 
             return result;            
         }      
-    
+        
+        /**
+         * Delete the template
+         */
+        function deleteTemplate(){
+             var templateId = '${template.id}';
+             jQuery("#delete-template-dialog-<portlet:namespace/>").dialog({
+                autoOpen: false,
+                modal: true,
+                buttons : {
+                    "<fmt:message key="newsletter.confirm.button.yes"/>" : function() {
+                        jQuery.ajax({
+                             url: '${deleteTemplateUrl}'
+                            ,type: 'POST'
+                            ,data: {id: templateId}
+                            ,success: function(response){
+                                $(this).dialog("close");
+                                jQuery('#btn-cancel-<portlet:namespace/>').trigger('click');
+                            }
+                            ,failure: function(response){
+                                $(this).dialog("close");
+                            }
+                        });
+                        $(this).dialog("close");
+                    },
+                    "<fmt:message key="newsletter.common.cancel" />" : function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            jQuery("#delete-template-dialog-<portlet:namespace/>").dialog("open");
+        }
+        
+        
+        /**
+         * Disable components (readonly)
+         */
+        function disableComponents(){
+            jQuery('#template-form-<portlet:namespace/> input[name="name"]').attr('readonly', 'readonly');
+        }
     
     
 </script>

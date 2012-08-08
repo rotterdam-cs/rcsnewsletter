@@ -1,6 +1,5 @@
 package com.rcs.newsletter.core.service;
 
-import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.TemplateDTO;
 import com.rcs.newsletter.core.model.NewsletterEntity;
@@ -74,7 +73,6 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
         // fix template undesired chars
         String templateHTML = templateDTO.getTemplate();
         templateHTML =  templateHTML.replace("\u200B", "");
-        templateHTML = HtmlUtil.escapeJS(templateHTML);
         templateDTO.setTemplate(templateHTML);
         
         // find existing template or creat a new one
@@ -112,6 +110,16 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
     private void fillTemplate(TemplateDTO templateDTO, NewsletterTemplate template) {
         template.setName(templateDTO.getName());
         template.setTemplate(templateDTO.getTemplate());
+    }
+
+    
+    @Override
+    public ServiceActionResult deleteTemplate(Long templateId) {
+        ServiceActionResult<NewsletterTemplate> findResult = findById(templateId);
+        if (findResult.isSuccess()){
+            return delete(findResult.getPayload());
+        }
+        return ServiceActionResult.buildFailure(null);
     }
     
    

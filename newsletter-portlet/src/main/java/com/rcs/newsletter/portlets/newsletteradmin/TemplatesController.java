@@ -1,5 +1,6 @@
 package com.rcs.newsletter.portlets.newsletteradmin;
 
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.rcs.newsletter.commons.GenericController;
 import com.rcs.newsletter.commons.Utils;
 import com.rcs.newsletter.core.dto.TemplateDTO;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
@@ -82,7 +84,9 @@ public class TemplatesController extends GenericController {
                                     ORDER_BY_ASC);
 
         // if an error occurrs then return no record
-        if (!result.isSuccess()){
+        if (result.isSuccess()){
+            result.getPayload().setCurrentPage(form.getPage());
+        }else{
             result.getPayload().setCurrentPage(0);
             result.getPayload().setResult(new ArrayList());
             result.getPayload().setTotalRecords(0);
@@ -104,6 +108,8 @@ public class TemplatesController extends GenericController {
     public ModelAndView editTemplate(ResourceRequest request, ResourceResponse response, Long id){
         ModelAndView mav = new ModelAndView("admin/templatesEdit");
         
+        boolean showToRemove = request.getParameter("remove") != null;
+        
         TemplateDTO template = new TemplateDTO();
         
         
@@ -120,18 +126,44 @@ public class TemplatesController extends GenericController {
             
             template = findTemplate.getPayload();
         }
+        if (template.getTemplate() != null && !showToRemove){
+            template.setTemplate(HtmlUtil.escapeJS(template.getTemplate()));
+        }else if (template.getTemplate() == null){
+            template.setTemplate("");
+        }
         
         mav.addObject("template", template);
+        mav.addObject("remove", showToRemove);
         
         
         return mav;
     }
     
-    
+    /**
+     * Saves the template
+     * @param request
+     * @param response
+     * @param templateDTO
+     * @return 
+     */
     @ResourceMapping(value="saveTemplate")
     public ModelAndView saveTemplate(ResourceRequest request, ResourceResponse response, @ModelAttribute TemplateDTO templateDTO){
         ServiceActionResult<TemplateDTO> result = templateService.saveTemplate(Utils.getThemeDisplay(request), templateDTO);
          return jsonResponse(result);
+    }
+    
+     
+    /**
+     * Deletes the template
+     * @param request
+     * @param response
+     * @param templateDTO
+     * @return 
+     */
+    @ResourceMapping(value="deleteTemplate")
+    public ModelAndView deleteTemplate(ResourceRequest request, ResourceResponse response, @RequestParam Long id){
+        ServiceActionResult result = templateService.deleteTemplate(id);
+        return jsonResponse(result);
     }
     
 }

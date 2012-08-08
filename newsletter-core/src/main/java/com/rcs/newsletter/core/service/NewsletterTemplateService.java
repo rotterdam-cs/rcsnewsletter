@@ -38,5 +38,13 @@ public interface NewsletterTemplateService extends CRUDService<NewsletterTemplat
      * @return 
      */
     ServiceActionResult<TemplateDTO> saveTemplate(ThemeDisplay themeDisplay, TemplateDTO templateDTO);
+
+    
+    /**
+     * Deletes the template from the database
+     * @param id
+     * @return 
+     */
+    public ServiceActionResult deleteTemplate(Long templateId);
     
 }

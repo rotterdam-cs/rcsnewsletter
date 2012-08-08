@@ -38,20 +38,29 @@
 
 
 
+<%--
+    Dialogs
+    ##############
+--%>
+<div stly="display:none">
+    
+</div>
+
+
 <script type="text/javascript">
     
     jQuery(document).ready(function(){
-       styleUI();
-       initEvents();
-       createGrid();
+        styleUI();
+        initEvents();
+        createGrid();
     });
     
-     /**
+    /**
      * Apply styles to UI
      */
     function styleUI(){
-       // styles on buttons
-       jQuery('#templates-panel input[type="button"]').button();
+        // styles on buttons
+        jQuery('#templates-panel input[type="button"]').button();
     }
     
     
@@ -61,8 +70,10 @@
     function initEvents(){
         // click on 'Add Template' button
         jQuery('#btn-addtemplate-<portlet:namespace/>').click(function(){
-           jQuery('#templates-panel').load('${editTemplateUrl}');
+            jQuery('#templates-panel').load('${editTemplateUrl}');
         });
+        
+        
     }
     
     /**
@@ -74,18 +85,20 @@
             datatype: "json",
             autowidth: true,
             colNames:[
-                    '<fmt:message key="newsletter.admin.general.id" />',
-                    '<fmt:message key="newsletter.admin.general.name" />',
-                    ''],
+                '<fmt:message key="newsletter.admin.general.id" />',
+                '<fmt:message key="newsletter.admin.general.name" />',
+                ''],
             colModel:[
-                    {name:'id', index:'id', width:55},
-                    {name:'name',index:'name'},
-                    {name:'action', index:'action', width:80},
+                {name:'id', index:'id', width:40, sortable: false},
+                {name:'name',index:'name', sortable: false},
+                {name:'action', index:'action', width:40, sortable: false}
             ],
             jsonReader : {
-                     root: "payload.result",
-                     repeatitems : false,
-                     id : "id"
+                root: "payload.result",
+                repeatitems : false,
+                id : "id",
+                page: "payload.currentPage",
+                total: "payload.totalPages"
             },
             gridComplete: function() {
                 var ids = jQuery("#templates-list-<portlet:namespace/>").jqGrid('getDataIDs');
@@ -101,7 +114,9 @@
             viewrecords: true,
             sortorder: "asc",
             caption:"",
-            rowNum: 15
+            height: '100%',
+            rowNum: 10
+            
         });
         jQuery("#templates-list-<portlet:namespace/>").jqGrid('navGrid','#templates-list-pager<portlet:namespace/>',{edit:false,add:false,del:false});
     }
@@ -120,6 +135,9 @@
      */
     function deleteTemplate(templateId){
         jQuery('#templates-panel').load('${editTemplateUrl}', {id: templateId, remove: true});
+       
+        
+        
     }
     
     

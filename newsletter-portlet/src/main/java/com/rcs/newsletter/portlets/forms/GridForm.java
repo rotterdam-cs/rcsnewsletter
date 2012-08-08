@@ -62,7 +62,7 @@ public class GridForm {
 
     
     public int calculateStart(){
-        return (getPage()) -1 * getRows();
+        return (getPage() -1) * getRows();
     }
 
     /**

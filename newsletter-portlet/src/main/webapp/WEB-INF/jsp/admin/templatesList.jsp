@@ -89,9 +89,9 @@
                 '<fmt:message key="newsletter.admin.general.name" />',
                 ''],
             colModel:[
-                {name:'id', index:'id', width:40, sortable: false},
-                {name:'name',index:'name', sortable: false},
-                {name:'action', index:'action', width:40, sortable: false}
+                {name:'id',     index:'id',     width:40,         sortable: false, search:false},
+                {name:'name',   index:'name',   sortable: false,  search:false},
+                {name:'action', index:'action', width:40,         sortable: false, search:false}
             ],
             jsonReader : {
                 root: "payload.result",
@@ -109,7 +109,7 @@
                     jQuery("#templates-list-<portlet:namespace/>").jqGrid('setRowData',ids[i],{ 'action' : editIcon + deleteIcon } );
                 }
                 // Fix jQGrid scroll issue
-                jQuery('#templates-list-<portlet:namespace/> .ui-jqgrid-bdiv').css('overflow-y', 'hidden');
+                jQuery('#templates-panel .ui-jqgrid-bdiv').css('overflow', 'hidden');
             },
             pager: '#templates-list-pager<portlet:namespace/>',
             sortname: 'id',

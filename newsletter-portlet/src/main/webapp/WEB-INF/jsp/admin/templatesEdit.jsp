@@ -173,7 +173,7 @@
                        jQuery('#btn-cancel-<portlet:namespace/>').trigger('click');
                    }
                    ,failure: function(response){
-                       console.log(response);
+                       // TODO: display errors here
                    }
                });
            }
@@ -242,6 +242,7 @@
                             }
                             ,failure: function(response){
                                 $(this).dialog("close");
+                                // TODO: display errors here
                             }
                         });
                         $(this).dialog("close");

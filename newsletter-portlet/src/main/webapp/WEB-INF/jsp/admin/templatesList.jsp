@@ -108,6 +108,8 @@
 
                     jQuery("#templates-list-<portlet:namespace/>").jqGrid('setRowData',ids[i],{ 'action' : editIcon + deleteIcon } );
                 }
+                // Fix jQGrid scroll issue
+                jQuery('#templates-list-<portlet:namespace/> .ui-jqgrid-bdiv').css('overflow-y', 'hidden');
             },
             pager: '#templates-list-pager<portlet:namespace/>',
             sortname: 'id',

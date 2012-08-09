@@ -15,6 +15,8 @@
 <fmt:setBundle basename="Newsletter" var="newsletter"/>
 <portlet:defineObjects />
 <portlet:resourceURL id="getSubscribers" var="getSubscribersURL"/>
+<portlet:resourceURL id="getSubscriptorData" var="getSubscriptorDataURL"/>
+<portlet:resourceURL id="editDeleteSubscriptor" var="editDeleteSubscriptorURL"/>
 
 <html>
     <head>
@@ -22,6 +24,8 @@
             jQuery(document).ready(function(){
                 fillListsCombo();
                 createGrid();
+                jQuery('#saveSubscriber<portlet:namespace/>').button();
+                jQuery('#cancelSubscriber<portlet:namespace/>').button();
                 
                 function fillListsCombo(){
                     var elements = '<option value=""><fmt:message key="newsletter.admin.general.all.lists"/></option>';
@@ -48,7 +52,7 @@
                             '<fmt:message key="newsletter.admin.general.action"/>'
                         ],
                         colModel:[
-                            { name : 'id',   index: 'id',  width : 50,  searchoptions: {}, sortable : false, search : false },
+                            { name : 'subscriptorId',  width : 50,  searchoptions: {}, sortable : false, search : false },
                             { name : 'subscriptorFullname' ,  width : 150, searchoptions: {}, sortable : false, search : false },
                             { name : 'subscriptorEmail',  width : 100, searchoptions: {},  sortable : false, search : false },
                             { name : 'action', width : 100, searchoptions: {},  sortable : false, search : false }
@@ -57,17 +61,21 @@
                             root: "payload.result",
                             page: "payload.currentPage",
                             total: "payload.totalPages",
+                            records: "payload.totalRecords",
                             repeatitems : false,
-                            id : "id"
+                            id : "subscriptorId"
                         },
                         gridComplete: function() {
                             var ids = jQuery('#subscribersGrid<portlet:namespace/>').jqGrid('getDataIDs');
                             for(var i = 0; i < ids.length; i++){
+                                var editIcon = '<div style="float:left; margin-left:20px;" class="ui-icon ui-icon-pencil editSubscriptorActionIcon" subscriptorId="' + ids[i] + '"></div>';
+                                var deleteIcon = '<div style="float:left; margin-left:20px;" class="ui-icon ui-icon-trash deleteSubscriptorActionIcon" subscriptorId="' + ids[i] + '"></div>';
+                                jQuery("#subscribersGrid<portlet:namespace/>").jqGrid('setRowData',ids[i],{ 'action' : editIcon + deleteIcon } );                                
                             }
                         },
                         pager : '#subscribersPager<portlet:namespace/>',
-                        sortname : 'id',
-                        viewRecords: true,
+                        sortname : 'subscriptorId',
+                        viewrecords: true,
                         sortorder: 'asc',
                         caption : "<fmt:message key="newsletter.admin.subscribers"/>",
                         height: '100%',
@@ -88,18 +96,109 @@
                     }).trigger("reloadGrid");
                 });
                 
+                jQuery(document).on('click', '.editSubscriptorActionIcon', function(){
+                    var id=jQuery(this).attr("subscriptorId");
+                    getRowSubscriptorShowForm(id, 'UPDATE', false);
+                });
+                
+                jQuery(document).on('click', '.deleteSubscriptorActionIcon', function(){
+                    var id=jQuery(this).attr("subscriptorId");
+                    getRowSubscriptorShowForm(id, 'DELETE', true);
+                });
+                
+                function getRowSubscriptorShowForm(id, action, disabledFields){
+                    jQuery.ajax({
+                       url: '${getSubscriptorDataURL}',
+                       dataType: 'json',
+                       data:{
+                           subscriptorId: id
+                       },
+                       success: function(data){
+                           if (data && data.success){
+                               jQuery('.fieldsToDisable').attr("disabled", disabledFields);
+                               jQuery('#subscribersForm<portlet:namespace/> input[name="action"]').val(action);
+                               jQuery('#subscribersForm<portlet:namespace/> input[name="subscriptorId"]').val(id);
+                               jQuery('#subscribersForm<portlet:namespace/> input[name="firstName"]').val(data.payload.subscriptorFirstName);
+                               jQuery('#subscribersForm<portlet:namespace/> input[name="lastName"]').val(data.payload.subscriptorLastName);
+                               jQuery('#subscribersForm<portlet:namespace/> input[name="email"]').val(data.payload.subscriptorEmail);
+                               
+                               jQuery('#gridSubscribersContainer<portlet:namespace/>').hide();
+                               jQuery('#subscribersCrudContainer<portlet:namespace/>').show();
+                           }
+                       }
+                    });
+                }
+
+                jQuery('#cancelSubscriber<portlet:namespace/>').click(function(){
+                    clearErrors();
+                    validator.resetForm();
+                    backToGrid();
+                });
+                
+                function backToGrid(){
+                    jQuery('#subscribersCrudContainer<portlet:namespace/>').hide();                
+                    jQuery('#gridSubscribersContainer<portlet:namespace/>').show();
+                }
+                
+                var validator = jQuery('#subscribersForm<portlet:namespace/>').validate({
+                    submitHandler: function(form) {
+                        clearErrors();
+                        jQuery(form).ajaxSubmit({
+                            dataType: 'json',
+                            url: '${editDeleteSubscriptorURL}',
+                            success: function(data){
+                                if (data && data.success){
+                                    jQuery("#subscribersGrid<portlet:namespace/>").trigger('reloadGrid');
+                                    backToGrid();
+                                }else{
+                                    showErrors(data.validationKeys);
+                                }
+                            }
+                        });
+                    }
+                });
+                
             });
         </script>
     </head>
     <body>
         <%@include file="../commons/errorsView.jsp" %>
-        <label><fmt:message key="newsletter.admin.subscribers.only.show.subscribers.off"/></label>
-        <select id="listsCombo<portlet:namespace/>"></select><br/>
         
-        <input type="checkbox" id="activeStatusCheck<portlet:namespace/>"/>
-            <fmt:message key="newsletter.admin.subscribers.only.show.inactive.subscribers" bundle="${newsletter}"/><br/>
-        
-        <table id="subscribersGrid<portlet:namespace/>"></table>
-        <div id="subscribersPager<portlet:namespace/>"></div>
+        <div id="gridSubscribersContainer<portlet:namespace/>">
+            <label><fmt:message key="newsletter.admin.subscribers.only.show.subscribers.off"/></label>
+            <select id="listsCombo<portlet:namespace/>"></select><br/>
+
+            <input type="checkbox" id="activeStatusCheck<portlet:namespace/>"/>
+                <fmt:message key="newsletter.admin.subscribers.only.show.inactive.subscribers" bundle="${newsletter}"/><br/>
+
+            <table id="subscribersGrid<portlet:namespace/>"></table>
+            <div id="subscribersPager<portlet:namespace/>"></div>
+        </div>
+        <div style="display: none;" id="subscribersCrudContainer<portlet:namespace/>">
+            <form id="subscribersForm<portlet:namespace/>" class="newsletter-forms-form">
+                <input type="hidden" name="action"/>
+                <input type="hidden" name="subscriptorId"/>
+                <table>
+                    <tr>
+                        <td><label><fmt:message key="general.firstname"/></label></td>
+                        <td><input class="newsletter-forms-input-text fieldsToDisable required" type="text" name="firstName"/></td>
+                    </tr>
+                    <tr>
+                        <td><label><fmt:message key="general.lastname"/></label></td>
+                        <td><input class="newsletter-forms-input-text fieldsToDisable required" type="text" name="lastName"/></td>
+                    </tr>
+                    <tr>
+                        <td><label><fmt:message key="general.email"/></label></td>
+                        <td><input class="newsletter-forms-input-text fieldsToDisable required" type="text" name="email"/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button type="submit" id="saveSubscriber<portlet:namespace/>"><fmt:message key="general.save"/></button>
+                            <button type="button" id="cancelSubscriber<portlet:namespace/>"><fmt:message key="newsletter.admin.general.cancel"/></button>
+                        </td>
+                    </tr>                    
+                </table>
+            </form>
+        </div>
     </body>
 </html>

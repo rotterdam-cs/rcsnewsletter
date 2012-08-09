@@ -3,7 +3,8 @@ package com.rcs.newsletter.core.service;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
-import java.util.List;
+import com.rcs.newsletter.core.model.dtos.NewsletterSubscriptionDTO;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
 
 /**
  *
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public interface NewsletterSubscriptionService extends CRUDService<NewsletterSubscription> {    
     
-    List<NewsletterSubscription> findBySubscriptor(NewsletterSubscriptor newsletterSubscriptor);
+    ServiceActionResult<NewsletterSubscriptionDTO> findSubscriptionBySubscriptorId(long subscriptorId);
     
     NewsletterSubscription findBySubscriptorAndCategory(NewsletterSubscriptor newsletterSubscriptor, NewsletterCategory newsletterCategory);
 }

@@ -14,29 +14,14 @@ import com.rcs.newsletter.core.service.common.ServiceActionResult;
  */
 public interface NewsletterSubscriptorService extends CRUDService<NewsletterSubscriptor> {
     
-    //ServiceActionResult<NewsletterSubscriptor> findByEmail(ThemeDisplay themeDisplay, String email);   
-    
-    //List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory);
-    
-    //List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory, int start, int limit);
-    
-    //List<NewsletterSubscriptor> findByCategory(NewsletterCategory newsletterCategory, int start, int limit, String ordercrit, String order);
-    
-    //List<NewsletterSubscriptor> findByCategoryAndStatus(NewsletterCategory newsletterCategory, int start, int limit, String ordercrit, String order, SubscriptionStatus status);
-    
-    //List<NewsletterSubscriptor> findByCategoryAndStatus(NewsletterCategory newsletterCategory, SubscriptionStatus status);
-    
     ServiceActionResult<ListResultsDTO<NewsletterSubscriptionDTO>> findAllByStatusAndCategory(
             ThemeDisplay themeDisplay, 
             int start, int limit, String ordercrit, String order, 
             SubscriptionStatus status, long categoryId);
     
-    //List<NewsletterSubscriptor> findAllByStatus(ThemeDisplay themeDisplay, SubscriptionStatus status);    
-    
     int findAllByStatusAndCategoryCount(ThemeDisplay themeDisplay, SubscriptionStatus status, long categoryId);
     
-    //int findByCategoryCount(NewsletterCategory newsletterCategory);
+    ServiceActionResult updateSubscriptor(long subscriptorId, String firstName, String lastName, String email);
     
-    //int findByCategoryAndStatusCount(NewsletterCategory newsletterCategory, SubscriptionStatus status);
-    
+    ServiceActionResult deleteSubscriptor(long subscriptorId);    
 }

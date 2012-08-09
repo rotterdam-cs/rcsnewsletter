@@ -50,7 +50,7 @@
                         rowNum : 15,
                         pager : '#listPager<portlet:namespace/>',
                         sortname : 'id',
-                        viewRecords: true,
+                        viewrecords: true,
                         jsonReader : {
                             root: "payload.result",
                             page: "payload.currentPage",

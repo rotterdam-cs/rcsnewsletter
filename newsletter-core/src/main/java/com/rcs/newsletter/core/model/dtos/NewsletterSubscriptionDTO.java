@@ -15,6 +15,9 @@ public class NewsletterSubscriptionDTO implements Serializable{
 
     private SubscriptionStatus status;    
 
+    @Source("subscriptor.id")
+    private long subscriptorId;
+    
     @Source("subscriptor.firstName")
     private String subscriptorFirstName;
     
@@ -97,5 +100,13 @@ public class NewsletterSubscriptionDTO implements Serializable{
 
     public void setSubscriptorFullname(String subscriptorFullname) {
         this.subscriptorFullname = subscriptorFullname;
+    }
+
+    public long getSubscriptorId() {
+        return subscriptorId;
+    }
+
+    public void setSubscriptorId(long subscriptorId) {
+        this.subscriptorId = subscriptorId;
     }
 }

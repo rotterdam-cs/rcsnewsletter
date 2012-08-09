@@ -6,9 +6,11 @@ import com.rcs.newsletter.core.model.dtos.NewsletterCategoryDTO;
 import com.rcs.newsletter.core.model.dtos.NewsletterSubscriptionDTO;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
+import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import com.rcs.newsletter.portlets.admin.CRUDActionEnum;
 import com.rcs.newsletter.portlets.forms.GridForm;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +35,9 @@ public class SubscriberController extends GenericController {
     
     @Autowired
     private NewsletterSubscriptorService subscriptorService;
+    
+    @Autowired
+    private NewsletterSubscriptionService subscriptionService;
     
     @Autowired
     private NewsletterCategoryService categoryService;    
@@ -69,4 +74,43 @@ public class SubscriberController extends GenericController {
                                                     listId);
         return jsonResponse(subscriptions);
     }
+    
+    @ResourceMapping("getSubscriptorData")
+    public ModelAndView getSubscriptorData(ResourceRequest request, long subscriptorId){
+        ServiceActionResult<NewsletterSubscriptionDTO> result = subscriptionService.findSubscriptionBySubscriptorId(subscriptorId);
+        return jsonResponse(result);
+    }
+    
+    @ResourceMapping("editDeleteSubscriptor")
+    public ModelAndView editDeleteSubscriptor(String action,
+                                              String subscriptorId,
+                                              String firstName, String lastName, String email){
+        CRUDActionEnum enumAction = null;
+        try{
+            enumAction = CRUDActionEnum.valueOf(action);
+        }catch(IllegalArgumentException ex){
+        }catch(NullPointerException ex){}
+        
+        long id = 0;
+        try {
+            id = Long.parseLong(subscriptorId);
+        }catch(NumberFormatException ex){}
+        
+        ServiceActionResult result = null;
+        switch (enumAction){
+            case UPDATE:
+                result = subscriptorService.updateSubscriptor(id, firstName, lastName, email);
+                break;
+                
+            case DELETE:
+                result = subscriptorService.deleteSubscriptor(id);
+                break;
+        }
+        
+        if (result == null){
+            return null;
+        }
+        return jsonResponse(result);
+    }
+
 }

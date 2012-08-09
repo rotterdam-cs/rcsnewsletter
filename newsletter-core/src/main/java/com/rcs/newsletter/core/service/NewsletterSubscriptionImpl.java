@@ -3,15 +3,15 @@ package com.rcs.newsletter.core.service;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import com.rcs.newsletter.core.model.dtos.NewsletterSubscriptionDTO;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jdto.DTOBinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,32 +25,26 @@ import org.springframework.transaction.annotation.Transactional;
 public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscription> implements NewsletterSubscriptionService {
 
     @Autowired
-    private SessionFactory sessionFactory;
-    private final static Logger logger = LoggerFactory.getLogger(NewsletterSubscriptionImpl.class);
-
+    private DTOBinder binder;
+    
     @Override
-    public List<NewsletterSubscription> findBySubscriptor(NewsletterSubscriptor newsletterSubscriptor) {
-        List<NewsletterSubscription> result = new ArrayList<NewsletterSubscription>();
-        try {
-            Session currentSession = sessionFactory.getCurrentSession();
-            Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
-            criteria.add(Restrictions.eq(NewsletterSubscription.SUBSCRIPTOR, newsletterSubscriptor));
-            result = criteria.list();
-
-        } catch (NonUniqueResultException ex) {
-            String error = "Exists more than unique email";
-            logger.error(error);
+    public ServiceActionResult<NewsletterSubscriptionDTO> findSubscriptionBySubscriptorId(long subscriptorId) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
+        criteria.createCriteria(NewsletterSubscription.SUBSCRIPTOR).add(Restrictions.idEq(subscriptorId));
+        criteria.setMaxResults(1);
+        NewsletterSubscription subscription = (NewsletterSubscription) criteria.uniqueResult();
+        if (subscription == null){
+            return ServiceActionResult.buildFailure(null, "Could not find the subscription");
         }
-
-        return result;
+        return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(NewsletterSubscriptionDTO.class, subscription));        
     }
-
+    
     @Override
     public NewsletterSubscription findBySubscriptorAndCategory(NewsletterSubscriptor newsletterSubscriptor, NewsletterCategory newsletterCategory) {
         NewsletterSubscription result = null;
 
         try {
-
             Session currentSession = sessionFactory.getCurrentSession();
             Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
             criteria.add(Restrictions.eq(NewsletterSubscription.SUBSCRIPTOR, newsletterSubscriptor));

@@ -19,7 +19,7 @@ import com.rcs.newsletter.core.service.util.EmailFormat;
 import com.rcs.newsletter.core.service.util.LiferayMailingUtil;
 import com.rcs.newsletter.portlets.admin.UserUiStateManagedBean;
 import com.rcs.newsletter.util.FacesUtil;
-import com.rcs.newsletter.util.SubscriptionUtil;
+import com.rcs.newsletter.core.service.util.SubscriptionUtil;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.ResourceBundle;

@@ -82,6 +82,17 @@ public class ServiceActionResult<T> implements Serializable {
     }
     
     /**
+     * Build a successful service result.
+     * @param <T>
+     * @param payload
+     * @param keyList
+     * @return 
+     */
+    public static <T> ServiceActionResult<T> buildSuccess(T payload, List<String> keyList) {
+        return new ServiceActionResult<T>(true, payload, null, keyList);
+    }
+    
+    /**
      * Build a failure service result. This will also mark the transaction as 
      * rollback only.
      * @param <T>

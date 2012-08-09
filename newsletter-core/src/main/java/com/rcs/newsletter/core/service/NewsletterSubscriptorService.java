@@ -23,5 +23,5 @@ public interface NewsletterSubscriptorService extends CRUDService<NewsletterSubs
     
     ServiceActionResult updateSubscriptor(long subscriptorId, String firstName, String lastName, String email);
     
-    ServiceActionResult deleteSubscriptor(long subscriptorId);    
+    ServiceActionResult deleteSubscriptor(long subscriptorId);
 }

@@ -177,23 +177,23 @@
                     <table>
                         <tr>
                             <td><label><fmt:message key="newsletter.admin.general.name"/></label></td>
-                            <td><input type="text" class="required fieldToDisable" name="name"/></td>
+                            <td><input type="text" class="newsletter-forms-input-text required fieldToDisable" name="name"/></td>
                         </tr>
                         <tr>
                             <td><label><fmt:message key="newsletter.admin.general.description"/></label></td>
-                            <td><textarea name="description" class="required fieldToDisable"></textarea></td>
+                            <td><textarea name="description" class="newsletter-forms-input-textarea required fieldToDisable"></textarea></td>
                         </tr>
                         <tr>
                             <td><label><fmt:message key="newsletter.admin.category.fromname" bundle="${newsletter}"/></label></td>
-                            <td><input type="text" name="fromname" class="required fieldToDisable"/></td>
+                            <td><input type="text" name="fromname" class="newsletter-forms-input-text required fieldToDisable"/></td>
                         </tr>
                         <tr>
                             <td><label><fmt:message key="newsletter.admin.category.fromemail" bundle="${newsletter}"/></label></td>
-                            <td><input type="text" name="fromemail" class="required fieldToDisable"/></td>
+                            <td><input type="text" name="fromemail" class="newsletter-forms-input-text required fieldToDisable"/></td>
                         </tr>
                         <tr>
                             <td><label><fmt:message key="newsletter.admin.category.adminemail" bundle="${newsletter}"/></label></td>
-                            <td><input type="text" name="adminemail" class="fieldToDisable"/></td>
+                            <td><input type="text" name="adminemail" class="newsletter-forms-input-text fieldToDisable"/></td>
                         </tr>
                         <tr>
                             <td></td>

@@ -17,6 +17,9 @@
 <portlet:resourceURL id="getSubscribers" var="getSubscribersURL"/>
 <portlet:resourceURL id="getSubscriptorData" var="getSubscriptorDataURL"/>
 <portlet:resourceURL id="editDeleteSubscriptor" var="editDeleteSubscriptorURL"/>
+<portlet:actionURL var="importSubscribersURL">
+    <portlet:param name="action" value="importSubscribers"/>
+</portlet:actionURL>
 
 <html>
     <head>
@@ -26,13 +29,17 @@
                 createGrid();
                 jQuery('#saveSubscriber<portlet:namespace/>').button();
                 jQuery('#cancelSubscriber<portlet:namespace/>').button();
+                jQuery('#importButton<portlet:namespace/>').button();
+                jQuery('#exportButton<portlet:namespace/>').button();
+                jQuery('#importSubscribersButton<portlet:namespace/>').button();
+                jQuery('#cancelImportSubscribers<portlet:namespace/>').button();
                 
                 function fillListsCombo(){
                     var elements = '<option value=""><fmt:message key="newsletter.admin.general.all.lists"/></option>';
                     <c:forEach items="${lists}" var="list">
                     elements += '<option value="${list.id}">${list.name}</option>';
                     </c:forEach>
-                    jQuery('#listsCombo<portlet:namespace/>').append(elements);    
+                    jQuery('#listsCombo<portlet:namespace/>').append(elements);
                 }
                 
                 function createGrid() {
@@ -158,12 +165,54 @@
                     }
                 });
                 
+                jQuery('#importButton<portlet:namespace/>').click(function(){
+                    clearErrors();
+                    validatorImport.resetForm();
+                    jQuery('#gridSubscribersContainer<portlet:namespace/>').hide();
+                    jQuery('#importSubscribers<portlet:namespace/>').show();
+                });
+
+                jQuery('#cancelImportSubscribers<portlet:namespace/>').click(function(){
+                    jQuery('#importSubscribers<portlet:namespace/>').hide();                
+                    jQuery('#gridSubscribersContainer<portlet:namespace/>').show();
+                });
+                
+                var validatorImport = jQuery('#importSubscribersForm<portlet:namespace/>').validate({
+                    rules: {
+                        file: {
+                            required: true,
+                            accept: "xls|xlsx" 
+                        }
+                    },
+                    submitHandler: function(form) {
+                        clearErrors();
+                        clearMessages();
+                        jQuery(form).ajaxSubmit({
+                            url: '${importSubscribersURL}',
+                            dataType: 'json',
+                            data: {
+                                list: jQuery('#listsComboImport<portlet:namespace/>').val()
+                            },
+                            type: 'POST',
+                            success:function(data){
+                                if (data && data.success){
+                                    showMessages(data.errors);
+                                }else{
+                                    showErrors(data.errors);
+                                }
+                            }
+                        });
+                        
+                    }
+                });
+                
             });
         </script>
     </head>
     <body>
         <%@include file="../commons/errorsView.jsp" %>
         
+        <%-- GRID --%>
         <div id="gridSubscribersContainer<portlet:namespace/>">
             <label><fmt:message key="newsletter.admin.subscribers.only.show.subscribers.off"/></label>
             <select id="listsCombo<portlet:namespace/>"></select><br/>
@@ -173,7 +222,12 @@
 
             <table id="subscribersGrid<portlet:namespace/>"></table>
             <div id="subscribersPager<portlet:namespace/>"></div>
+            
+            <button id="importButton<portlet:namespace/>" type="button"><fmt:message key="newsletter.admin.subscribers.import" bundle="${newsletter}"/></button>
+            <button id="exportButton<portlet:namespace/>" type="button"><fmt:message key="newsletter.admin.subscribers.export" bundle="${newsletter}"/></button>                         
         </div>
+        
+        <%-- EDIT/DELETE FORM --%>
         <div style="display: none;" id="subscribersCrudContainer<portlet:namespace/>">
             <form id="subscribersForm<portlet:namespace/>" class="newsletter-forms-form">
                 <input type="hidden" name="action"/>
@@ -197,6 +251,46 @@
                             <button type="button" id="cancelSubscriber<portlet:namespace/>"><fmt:message key="newsletter.admin.general.cancel"/></button>
                         </td>
                     </tr>                    
+                </table>
+            </form>
+        </div>
+
+        <%-- IMPORT SUBSCRIBERS FORM --%>
+        <div style="display: none;" id="importSubscribers<portlet:namespace/>">
+            <form id="importSubscribersForm<portlet:namespace/>" class="newsletter-forms-form" enctype="multipart/form-data" method="post">
+                <table>
+                    <tr>
+                        <td>
+                            <label><fmt:message key="newsletter.admin.subscribers.import.category.select" bundle="${newsletter}"/></label><br/>
+                            <select id="listsComboImport<portlet:namespace/>" class="required">
+                                <option value=""><fmt:message key="newsletter.admin.category.select" bundle="${newsletter}"/></option>
+                                <c:forEach items="${lists}" var="list">
+                                    <option value="${list.id}">${list.name}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="file" name="file" class="required newsletter-forms-input-text"/><br/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <fmt:message key="newsletter.admin.subscriber.import.excel.format.instructions1" bundle="${newsletter}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <fmt:message key="newsletter.admin.subscriber.import.excel.format.instructions2" bundle="${newsletter}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="submit" id="importSubscribersButton<portlet:namespace/>">Import</button>
+                            <button type="button" id="cancelImportSubscribers<portlet:namespace/>"><fmt:message key="newsletter.admin.general.back"/></button>
+                        </td>
+                    </tr>
                 </table>
             </form>
         </div>

@@ -1,4 +1,4 @@
-package com.rcs.newsletter.util;
+package com.rcs.newsletter.core.service.util;
 
 import java.util.UUID;
 
@@ -27,7 +27,7 @@ public class SubscriptionUtil {
      * @return 
      */
     public static String getUniqueKey() {
-        String result = "";
+        String result;
         UUID uuid = UUID.randomUUID();
         
         result = uuid.toString();

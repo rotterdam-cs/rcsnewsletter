@@ -78,13 +78,14 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     
     @Value("${newsletter.articles.tag}")
     private String newsletterArticleTag;
-
+    
     @Async
     @Override
     public void sendTestMailing(Long mailingId, String testEmail, ThemeDisplay themeDisplay) {
         try {
 
             NewsletterMailing mailing = findById(mailingId).getPayload();
+            
             String content = EmailFormat.getEmailFromTemplate(mailing, themeDisplay);
             content = content.replace(LIST_NAME_TOKEN, mailing.getName());
             //Add full path to images
@@ -98,6 +99,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
             InternetAddress fromIA = new InternetAddress(mailing.getList().getFromEmail());
             InternetAddress toIA = new InternetAddress(testEmail);
             MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, title, content);
+            message.setHTMLFormat(true);
             mailingUtil.sendEmail(message);
 
             //mailingUtil.sendArticleByEmail(mailing.getArticleId(), themeDisplay, testEmail, fromEmailAddress);
@@ -393,4 +395,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         }
         return dtos;
     }
+
+   
+   
 }

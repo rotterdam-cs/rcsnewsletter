@@ -12,8 +12,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
-import com.rcs.newsletter.core.service.NewsletterTemplateBlockService;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
 import java.util.List;
 import java.net.MalformedURLException;
@@ -45,9 +43,7 @@ public class EmailFormat {
     //Boundle Keys
     private static final String TEMPLATE_BLOCK_EMPTY_SELECTOR = "newsletter.admin.mailing.template.select.article";
     private static final String DEFAULT_REPLACEMENT_USER_TOKEN = "newsletter.admin.mailing.default.replacement.user";
-    @Autowired
-    private static NewsletterTemplateBlockService templateBlockService;
-
+    
     /**
      * To determine if the content is personalizable or not
      * @param content
@@ -347,7 +343,16 @@ public class EmailFormat {
         result = result.replace(TEMPLATE_TAG_BLOCK_OPEN, fTagBlockOpen).replace(TEMPLATE_TAG_BLOCK_CLOSE, fTagBlockClose).replace(TEMPLATE_TAG_TITLE, fTagBlockTitle).replace(TEMPLATE_TAG_CONTENT, fTagBlockContent);
         String resulttmp = new String(result);
 
-        List<NewsletterTemplateBlock> ntb = mailing.getBlocks();
+        List<NewsletterTemplateBlock> ntbAll = mailing.getBlocks();
+        
+        // FIX (remove null blocks until we fix mapping problem)
+        List<NewsletterTemplateBlock> ntb = new ArrayList();
+        for(NewsletterTemplateBlock b :ntbAll){
+            if (b != null){
+                ntb.add(b);
+            }
+        }
+        
         Collections.sort(ntb, new TemplateBlockComparator());
         Pattern patternBlock = Pattern.compile(fTagBlockOpen + ".*?" + fTagBlockClose, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
         Matcher m = patternBlock.matcher(result);

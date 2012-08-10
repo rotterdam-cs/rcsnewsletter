@@ -237,7 +237,11 @@
                             ,type: 'POST'
                             ,data: {id: templateId}
                             ,success: function(response){
-                                showMessages(response.messages);
+                                if (response.success){
+                                    showMessages(response.messages);
+                                }else{
+                                    showErrors(response.validationKeys);
+                                }
                                 $(this).dialog("close");
                                 jQuery('#btn-cancel-<portlet:namespace/>').trigger('click');
                             }

@@ -190,4 +190,29 @@ public class MailingController extends GenericController {
         }
         return jsonResponse(result);
     }
+    
+    
+    /**
+     * Send test emails according to a email address and a mailing list
+     * @param request
+     * @param response
+     * @param mailingId
+     * @param emailAddress
+     * @return 
+     */
+    @ResourceMapping(value="testEmail")
+    public ModelAndView sendTestEmail(ResourceRequest request, ResourceResponse response, @RequestParam Long mailingId, @RequestParam String emailAddress){
+        ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, request.getLocale());
+        try{
+            mailingService.sendTestMailing(mailingId, emailAddress, Utils.getThemeDisplay(request));
+            return jsonResponse(ServiceActionResult.buildSuccess(null, bundle.getString("newsletter.tab.mailing.message.testemailsent")));
+        }catch(Exception e){
+            logger.error("Error while trying to send test email. Exception: " + e.getMessage(), e);
+            return jsonResponse(ServiceActionResult.buildFailure(null, bundle.getString("newsletter.tab.mailing.error.sendingtestemail")));
+        }
+       
+    }
+    
+    
+    
 }

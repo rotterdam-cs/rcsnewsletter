@@ -32,8 +32,7 @@ public class NewsletterMailing extends NewsletterEntity {
     @ManyToOne
     private NewsletterTemplate template;
     
-    @OneToMany
-    @JoinColumn(name = "mailing_id")
+    @OneToMany(mappedBy="mailing")
     @OrderColumn(name = "blockOrder")    
     private List<NewsletterTemplateBlock> blocks;
 

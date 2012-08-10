@@ -19,6 +19,7 @@
 --%>
 <portlet:resourceURL id='getMailingList' var='getMailingUrl'/>
 <portlet:resourceURL id='editMailing' var='editMailingUrl'/>
+<portlet:resourceURL id='testEmail' var='testEmailUrl'/>
 
 
 <%--
@@ -37,12 +38,14 @@
 <div id="mailing-list-pager<portlet:namespace/>"></div>
 
 <br>
-<table>
-    <tr>
-        <td><input type="text" style="width:200px" placeholder="<fmt:message key="newsletter.tab.mailing.field.placeholder.testemail" />"  />&nbsp;</td>
-        <td><input type="button" id="btn-send-test-<portlet:namespace/>" value="<fmt:message key="newsletter.tab.mailing.button.sendtest" />"  /></td>
-    </tr>
-</table>
+<form id="send-test-form-<portlet:namespace/>">
+    <table>
+        <tr>
+            <td><input type="text" id="input-send-test-<portlet:namespace/>" name="sendTestEmail" class="required email" style="width:200px" placeholder="<fmt:message key="newsletter.tab.mailing.field.placeholder.testemail" />"  />&nbsp;</td>
+            <td><input type="button" id="btn-send-test-<portlet:namespace/>" value="<fmt:message key="newsletter.tab.mailing.button.sendtest" />"  /></td>
+        </tr>
+    </table>
+</form>
 <br>
 <input type="button" id="btn-send-test-<portlet:namespace/>" value="<fmt:message key="newsletter.tab.mailing.button.sendnewsletter" />"  />
 
@@ -77,6 +80,26 @@
         });
         
         
+        // click on 'Send Test' button
+        jQuery('#btn-send-test-<portlet:namespace/>').click(function(){
+            clearMessages();
+            clearErrors();
+            
+            // validate mailing selection and email address
+            var fieldValid = jQuery('#send-test-form-<portlet:namespace/>').valid();
+            var rowSelectionValid = jQuery('#mailing-list-<portlet:namespace/> input.radio-field:checked').size() == 1;
+            
+            if (!rowSelectionValid){
+                showErrors(['<fmt:message key="newsletter.tab.mailing.error.nomailingselection"/>']);
+            }
+            
+            if (fieldValid && rowSelectionValid){
+                var mailingId = jQuery('#mailing-list-<portlet:namespace/> input.radio-field:checked').val();
+                var emailAddress = jQuery('#input-send-test-<portlet:namespace/>').val();
+                sendTestEmail(mailingId, emailAddress);
+            }
+        });
+        
     }
     
     /**
@@ -88,15 +111,17 @@
             datatype: "json",
             autowidth: true,
             colNames:[
+                '',
                 '<fmt:message key="newsletter.admin.general.id" />',
                 '<fmt:message key="newsletter.admin.general.name" />',
                 '<fmt:message key="newsletter.tab.mailing.field.label.list" />',
                 ''],
             colModel:[
-                {name:'id',      index:'id',        width:40,         sortable: false, search:false},
-                {name:'name',    index:'name',      sortable: false,  search:false},
-                {name:'listName',    index:'listName',      sortable: false,  search:false},
-                {name:'action',  index:'action',    width:40,         sortable: false, search:false}
+                {name:'radio',     index:'id',        width:30,         sortable: false,  search:false, formatter: radioColumnFormatter},
+                {name:'id',        index:'id',        width:40,         sortable: false,  search:false},
+                {name:'name',      index:'name',                        sortable: false,  search:false},
+                {name:'listName',  index:'listName',                    sortable: false,  search:false},
+                {name:'action',    index:'action',    width:40,         sortable: false,  search:false}
             ],
             jsonReader : {
                 root: "payload.result",
@@ -115,6 +140,9 @@
                 }
                 // Fix jQGrid scroll issue
                 jQuery('#mailing-panel .ui-jqgrid-bdiv').css('overflow', 'hidden');
+            },
+            onSelectRow: function(id){ 
+                jQuery(this).find('tr[id="' + id + '"] input.radio-field').attr('checked', 'checked');
             },
             pager: '#mailing-list-pager<portlet:namespace/>',
             sortname: 'id',
@@ -147,6 +175,36 @@
         
     }
     
+    /**
+     * Formatter for Radio Column
+     */
+    function radioColumnFormatter ( cellvalue, options, rowObject )
+    {
+        return '<input type="radio" class="radio-field" name="selectedRow" value="' + rowObject.id + '" style="margin:auto; width:100%" />';
+    }
     
+    /**
+     * 
+     */
+    function sendTestEmail(mailingId, emailAddress){
+         jQuery.ajax({
+            url: '${testEmailUrl}'
+            ,type: 'POST'
+            ,data: {
+                mailingId: mailingId, 
+                emailAddress: emailAddress
+            }
+            ,success: function(response){
+                if (response.success){
+                    showMessages(response.messages);
+                }else{
+                    showErrors(response.validationKeys);
+                }
+            }
+            ,failure: function(response){
+                showErrors(['<fmt:message key="newsletter.tab.mailing.error.sendingtestemail"/>']);
+            }
+        });
+    }
     
 </script>

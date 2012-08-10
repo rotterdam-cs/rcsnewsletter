@@ -240,6 +240,7 @@
                 }else{
                     showErrors(response.validationKeys);
                 }
+                jQuery("#mailing-list-<portlet:namespace/>").trigger('reloadGrid')
             }
             ,failure: function(response){
                 showErrors(['<fmt:message key="newsletter.tab.mailing.error.sendingnewsletter"/>']);

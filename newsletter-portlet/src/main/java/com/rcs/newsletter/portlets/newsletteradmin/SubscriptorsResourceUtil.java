@@ -8,6 +8,7 @@ import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.commons.NewsletterResourcePortlet;
 import com.rcs.newsletter.commons.Utils;
+import com.rcs.newsletter.core.dto.CreateMultipleSubscriptionsResult;
 import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
@@ -26,7 +27,6 @@ import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.fileupload.FileItem;
 import org.apache.poi.hssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -152,36 +152,42 @@ public class SubscriptorsResourceUtil {
         }
     }
 
-    public List<String> importSubscriptorsFromExcel(InputStream inputStream, long categoryId, ThemeDisplay themeDisplay) {
-        List<String> ret = new LinkedList<String>();
+    public CreateMultipleSubscriptionsResult importSubscriptorsFromExcel(InputStream inputStream, long categoryId, ThemeDisplay themeDisplay) {
+        CreateMultipleSubscriptionsResult result = new CreateMultipleSubscriptionsResult();
         try {
             HSSFWorkbook workbook = new HSSFWorkbook(inputStream);
 
             if (workbook == null){
-                ret.add("Error loading the workbook");
-                return ret;
+                result.setSuccess(false);
+                logger.warn("Error loading the workbook");
+                return result;
             }
 
-            if ( categoryId == 0) {
-                ret.add("Error loading the list");
-                return ret;
+            if (categoryId == 0) {
+                result.setSuccess(false);
+                logger.warn("Error loading the list");
+                return result;
             }
 
             HSSFSheet sheet = workbook.getSheetAt(0);
             List<NewsletterSubscriptionDTO> newSubscriptions = new LinkedList<NewsletterSubscriptionDTO>();
             
+            long processed = 0;
+            long omitted = 0;
             for (int i = 0; i < sheet.getPhysicalNumberOfRows(); i++) {
                 HSSFRow row = sheet.getRow(i);
-
-                String firstName = "";
-                String lastName = "";
-                String email = "";
+                processed++;
+                
+                String firstName;
+                String lastName;
+                String email;
 
                 HSSFCell nameCell = row.getCell(NAME_INDEX);
                 if (nameCell != null && nameCell.getCellType() == HSSFCell.CELL_TYPE_STRING && StringUtils.hasText(nameCell.getStringCellValue())) {
                     firstName = nameCell.getStringCellValue();
                 }else{
-                    ret.add(String.format("Error loading first name from row %d", i + 1));
+                    logger.warn(String.format("Error loading first name from row %d", i + 1));
+                    omitted++;
                     continue;
                 }
 
@@ -189,7 +195,8 @@ public class SubscriptorsResourceUtil {
                 if (lastNameCell != null && lastNameCell.getCellType() == HSSFCell.CELL_TYPE_STRING && StringUtils.hasText(lastNameCell.getStringCellValue())) {
                     lastName = lastNameCell.getStringCellValue();
                 }else{
-                    ret.add(String.format("Error loading last name from row %d", i + 1));
+                    logger.warn(String.format("Error loading last name from row %d", i + 1));
+                    omitted++;
                     continue;
                 }
                 
@@ -197,7 +204,8 @@ public class SubscriptorsResourceUtil {
                 if (emailCell != null && emailCell.getCellType() == HSSFCell.CELL_TYPE_STRING && isValidEmailAddress(emailCell.getStringCellValue().trim())) {
                     email = emailCell.getStringCellValue().trim();
                 }else{
-                    ret.add(String.format("Error loading email address from row %d", i + 1));
+                    logger.warn(String.format("Error loading email address from row %d", i + 1));
+                    omitted++;
                     continue;                    
                 }
                 NewsletterSubscriptionDTO newSubscription = new NewsletterSubscriptionDTO();
@@ -206,9 +214,10 @@ public class SubscriptorsResourceUtil {
                 newSubscription.setSubscriptorEmail(email);
                 newSubscriptions.add(newSubscription);
             }
-            ServiceActionResult result = subscriptionService.createSubscriptionsForCategory(themeDisplay, categoryId, newSubscriptions);
-            ret.addAll(result.getMessages());
-            return ret;
+            result.setRowsProcessed(processed);
+            result.setRowsOmitted(omitted);
+            subscriptionService.createSubscriptionsForCategory(result, themeDisplay, categoryId, newSubscriptions);
+            return result;
         } catch (IOException ex) {
             logger.error("Error in importSubscriptorsFromExcel " + ex);
             return null;

@@ -1,8 +1,9 @@
 package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
-import com.rcs.newsletter.core.model.NewsletterSubscription;
+import com.rcs.newsletter.core.dto.CreateMultipleSubscriptionsResult;
 import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
+import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.List;
 
@@ -14,5 +15,5 @@ public interface NewsletterSubscriptionService extends CRUDService<NewsletterSub
     
     ServiceActionResult<List<NewsletterSubscriptionDTO>> findSubscriptionsBySubscriptorId(long subscriptorId);
 
-    ServiceActionResult createSubscriptionsForCategory(ThemeDisplay themeDisplay, long categoryId, List<NewsletterSubscriptionDTO> newSubscriptions);
+    void createSubscriptionsForCategory(CreateMultipleSubscriptionsResult result, ThemeDisplay themeDisplay, long categoryId, List<NewsletterSubscriptionDTO> newSubscriptions);
 }

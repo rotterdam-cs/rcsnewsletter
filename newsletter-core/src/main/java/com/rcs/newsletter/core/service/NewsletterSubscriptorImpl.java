@@ -9,7 +9,9 @@ import com.rcs.newsletter.core.model.dtos.NewsletterSubscriptionDTO;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -25,6 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscriptor> implements NewsletterSubscriptorService {
+
+    @Autowired
+    private NewsletterSubscriptionService subscriptionService;
 
     @Autowired
     private DTOBinder binder;
@@ -63,6 +68,7 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(NewsletterSubscription.class);
         criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));
         criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
+        criteria.createAlias(NewsletterSubscription.SUBSCRIPTOR, "subscriptor");
         if (status != null) {
             criteria.add(Restrictions.eq(NewsletterSubscription.STATUS, status));
         }
@@ -91,9 +97,9 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
         }
         if (!ordercrit.isEmpty()) {                
             if (NewsletterConstants.ORDER_BY_DESC.equals(order)) {
-                criteria.addOrder(Order.desc(ordercrit)); 
+                criteria.addOrder(Order.desc(getActualOrderField(ordercrit))); 
             } else {
-                criteria.addOrder(Order.asc(ordercrit)); 
+                criteria.addOrder(Order.asc(getActualOrderField(ordercrit))); 
             }
         }
         newsletterSubscription = criteria.list();
@@ -103,6 +109,14 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
         return ServiceActionResult.buildSuccess(payload);
     }
 
+    private String getActualOrderField(String requestedField){
+        if ("subscriptorId".equalsIgnoreCase(requestedField)){
+            return "subscriptor.id";
+        }else{
+            return requestedField;
+        }
+    }
+    
     @Override
     public int findAllByStatusAndCategoryCount(ThemeDisplay themeDisplay, SubscriptionStatus status, long categoryId) {
         Criteria criteria = createCriteriaForStatusAndCategory(themeDisplay, status, categoryId);
@@ -110,5 +124,57 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
         criteria.setMaxResults(1);
         int count = ((Long)criteria.uniqueResult()).intValue();
         return count;
+    }
+
+
+    @Override
+    public ServiceActionResult updateSubscriptor(long subscriptorId, String firstName, String lastName, String email) {
+        ServiceActionResult<NewsletterSubscriptor> sarSubscriptor = findById(subscriptorId);
+        if (!sarSubscriptor.isSuccess()){
+            return sarSubscriptor;
+        }
+        NewsletterSubscriptor subscriptor = sarSubscriptor.getPayload();
+        
+        NewsletterSubscriptor dummySubscriptor = new NewsletterSubscriptor();
+        dummySubscriptor.setFirstName(firstName);
+        dummySubscriptor.setLastName(lastName);
+        dummySubscriptor.setEmail(email);
+        
+        Set violations = validator.validate(dummySubscriptor);
+        if (violations.isEmpty()){
+            subscriptor.setFirstName(firstName);
+            subscriptor.setLastName(lastName);
+            subscriptor.setEmail(email);
+            return update(subscriptor);
+        }
+        
+        List<String> violationsKeys = new LinkedList<String>();
+        fillViolations(violations, violationsKeys);
+        return ServiceActionResult.buildFailure(null, violationsKeys);
+    }
+
+    @Override
+    public ServiceActionResult deleteSubscriptor(long subscriptorId) {
+        ServiceActionResult<NewsletterSubscriptionDTO> sarSubscriptionDTO = subscriptionService.findSubscriptionBySubscriptorId(subscriptorId);
+        if (!sarSubscriptionDTO.isSuccess()){
+            return sarSubscriptionDTO;
+        }
+        
+        ServiceActionResult<NewsletterSubscription> sarSubscription = subscriptionService.findById(sarSubscriptionDTO.getPayload().getId());
+        if (!sarSubscription.isSuccess()){
+            return sarSubscription;
+        }
+        
+        ServiceActionResult<NewsletterSubscription> sarDeleteSubscription = subscriptionService.delete(sarSubscription.getPayload());
+        if (!sarSubscription.isSuccess()){
+            return sarDeleteSubscription;
+        }
+        
+        ServiceActionResult<NewsletterSubscriptor> sarSubscriptor = findById(subscriptorId);
+        if (!sarSubscriptor.isSuccess()){
+            return sarSubscriptor;
+        }
+        NewsletterSubscriptor subscriptor = sarSubscriptor.getPayload();
+        return delete(subscriptor);
     }
 }

@@ -1,4 +1,4 @@
-package com.rcs.newsletter.core.model.dtos;
+package com.rcs.newsletter.core.dto;
 
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import java.io.Serializable;

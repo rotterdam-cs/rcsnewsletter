@@ -6,7 +6,7 @@ import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterEntity;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
-import com.rcs.newsletter.core.model.dtos.NewsletterCategoryDTO;
+import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.ArrayList;

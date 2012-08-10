@@ -20,6 +20,7 @@
 <portlet:resourceURL id='getMailingList' var='getMailingUrl'/>
 <portlet:resourceURL id='editMailing' var='editMailingUrl'/>
 <portlet:resourceURL id='testEmail' var='testEmailUrl'/>
+<portlet:resourceURL id='sendNewsletter' var='sendNewsletterUrl'/>
 
 
 <%--
@@ -47,7 +48,7 @@
     </table>
 </form>
 <br>
-<input type="button" id="btn-send-test-<portlet:namespace/>" value="<fmt:message key="newsletter.tab.mailing.button.sendnewsletter" />"  />
+<input type="button" id="btn-send-newsletter-<portlet:namespace/>" value="<fmt:message key="newsletter.tab.mailing.button.sendnewsletter" />"  />
 
 
 
@@ -97,6 +98,24 @@
                 var mailingId = jQuery('#mailing-list-<portlet:namespace/> input.radio-field:checked').val();
                 var emailAddress = jQuery('#input-send-test-<portlet:namespace/>').val();
                 sendTestEmail(mailingId, emailAddress);
+            }
+        });
+        
+        // click on 'Send Test' button
+        jQuery('#btn-send-newsletter-<portlet:namespace/>').click(function(){
+            clearMessages();
+            clearErrors();
+            
+            // validate mailing selection and email address
+            var rowSelectionValid = jQuery('#mailing-list-<portlet:namespace/> input.radio-field:checked').size() == 1;
+            
+            if (!rowSelectionValid){
+                showErrors(['<fmt:message key="newsletter.tab.mailing.error.nomailingselection"/>']);
+            }
+            
+            if (rowSelectionValid){
+                var mailingId = jQuery('#mailing-list-<portlet:namespace/> input.radio-field:checked').val();
+                sendNewsletter(mailingId);
             }
         });
         
@@ -203,6 +222,27 @@
             }
             ,failure: function(response){
                 showErrors(['<fmt:message key="newsletter.tab.mailing.error.sendingtestemail"/>']);
+            }
+        });
+    }
+    
+    
+    function sendNewsletter(mailingId){
+        jQuery.ajax({
+            url: '${sendNewsletterUrl}'
+            ,type: 'POST'
+            ,data: {
+                mailingId: mailingId
+            }
+            ,success: function(response){
+                if (response.success){
+                    showMessages(response.messages);
+                }else{
+                    showErrors(response.validationKeys);
+                }
+            }
+            ,failure: function(response){
+                showErrors(['<fmt:message key="newsletter.tab.mailing.error.sendingnewsletter"/>']);
             }
         });
     }

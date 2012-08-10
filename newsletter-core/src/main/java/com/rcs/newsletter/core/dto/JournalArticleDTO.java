@@ -8,7 +8,7 @@ package com.rcs.newsletter.core.dto;
  *
  * @author marcoslacoste
  */
-public class ArticleDTO extends DataTransferObject{
+public class JournalArticleDTO extends DataTransferObject{
     private Long id;
     private String name;
 

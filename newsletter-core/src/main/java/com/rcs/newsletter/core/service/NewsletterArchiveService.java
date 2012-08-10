@@ -2,6 +2,7 @@
 package com.rcs.newsletter.core.service;
 
 import com.rcs.newsletter.core.model.NewsletterArchive;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
 
 /**
  *
@@ -9,4 +10,6 @@ import com.rcs.newsletter.core.model.NewsletterArchive;
  */
 public interface NewsletterArchiveService extends CRUDService<NewsletterArchive> {
         
+    
+    //public ServiceActionResult<NewsletterArchive
 }

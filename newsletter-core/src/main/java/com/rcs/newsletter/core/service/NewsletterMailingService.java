@@ -1,8 +1,8 @@
 package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
-import com.rcs.newsletter.core.dto.ArticleDTO;
-import com.rcs.newsletter.core.dto.MailingDTO;
+import com.rcs.newsletter.core.dto.JournalArticleDTO;
+import com.rcs.newsletter.core.dto.NewsletterMailingDTO;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
@@ -55,7 +55,7 @@ public interface NewsletterMailingService extends CRUDService<NewsletterMailing>
      * @param ORDER_BY_ASC
      * @return 
      */
-    ServiceActionResult<ListResultsDTO<MailingDTO>> findAllMailings(ThemeDisplay themeDisplay, int start, int limit, String orderField, String orderType);
+    ServiceActionResult<ListResultsDTO<NewsletterMailingDTO>> findAllMailings(ThemeDisplay themeDisplay, int start, int limit, String orderField, String orderType);
 
     
     /**
@@ -63,7 +63,7 @@ public interface NewsletterMailingService extends CRUDService<NewsletterMailing>
      * @param id
      * @return 
      */
-    ServiceActionResult<MailingDTO> findMailing(Long id, ThemeDisplay themeDisplay);
+    ServiceActionResult<NewsletterMailingDTO> findMailing(Long id, ThemeDisplay themeDisplay);
     
     /**
      * Saves a mailing instance
@@ -71,7 +71,7 @@ public interface NewsletterMailingService extends CRUDService<NewsletterMailing>
      * @param mailingDTO
      * @return 
      */
-    ServiceActionResult<MailingDTO> saveMailing(ThemeDisplay themeDisplay, MailingDTO mailingDTO);
+    ServiceActionResult<NewsletterMailingDTO> saveMailing(ThemeDisplay themeDisplay, NewsletterMailingDTO mailingDTO);
     
     /**
      * Deletes a mailing instance
@@ -79,7 +79,7 @@ public interface NewsletterMailingService extends CRUDService<NewsletterMailing>
      * @param mailingId
      * @return 
      */
-    ServiceActionResult<MailingDTO> deleteMailing(ThemeDisplay themeDisplay, Long mailingId);
+    ServiceActionResult<NewsletterMailingDTO> deleteMailing(ThemeDisplay themeDisplay, Long mailingId);
     
     
      /**
@@ -87,9 +87,18 @@ public interface NewsletterMailingService extends CRUDService<NewsletterMailing>
      * @param themeDisplay
      * @return 
      */
-    List<ArticleDTO> findAllArticlesForMailing(ThemeDisplay themeDisplay);
+    List<JournalArticleDTO> findAllArticlesForMailing(ThemeDisplay themeDisplay);
 
     
+    
+    
+    /**
+     * Send newsletter and store in archive
+     * @param mailingId
+     * @param themeDisplay
+     * @return 
+     */
+    ServiceActionResult<NewsletterMailingDTO> sendNewsletter(Long mailingId, ThemeDisplay themeDisplay);
     
     
 }

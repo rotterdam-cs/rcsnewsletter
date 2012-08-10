@@ -10,7 +10,7 @@ import org.jdto.annotation.DTOTransient;
  *
  * @author marcoslacoste
  */
-public class TemplateDTO  extends DataTransferObject {
+public class NewsletterTemplateDTO  extends DataTransferObject {
     
     private Long id;
     private String name;

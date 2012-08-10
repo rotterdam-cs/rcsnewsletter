@@ -12,7 +12,7 @@ import org.jdto.annotation.Source;
  *
  * @author marcoslacoste
  */
-public class MailingDTO  extends DataTransferObject {
+public class NewsletterMailingDTO  extends DataTransferObject {
     
     private Long id;
     private String name;
@@ -30,7 +30,7 @@ public class MailingDTO  extends DataTransferObject {
     private String templateName;
 
     @DTOTransient
-    private List<ArticleDTO> articles;
+    private List<JournalArticleDTO> articles;
     
     @DTOTransient
     private Long[] articleIds;
@@ -123,14 +123,14 @@ public class MailingDTO  extends DataTransferObject {
     /**
      * @return the articles
      */
-    public List<ArticleDTO> getArticles() {
+    public List<JournalArticleDTO> getArticles() {
         return articles;
     }
 
     /**
      * @param articles the articles to set
      */
-    public void setArticles(List<ArticleDTO> articles) {
+    public void setArticles(List<JournalArticleDTO> articles) {
         this.articles = articles;
     }
 

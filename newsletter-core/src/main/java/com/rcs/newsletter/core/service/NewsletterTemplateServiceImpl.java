@@ -1,7 +1,7 @@
 package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
-import com.rcs.newsletter.core.dto.TemplateDTO;
+import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
 import com.rcs.newsletter.core.model.NewsletterEntity;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
@@ -47,7 +47,7 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
 
     
     @Override
-    public ServiceActionResult<ListResultsDTO<TemplateDTO>> findAllTemplates(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order) {
+    public ServiceActionResult<ListResultsDTO<NewsletterTemplateDTO>> findAllTemplates(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order) {
         // get total records count
         int totalRecords = findAllCount(themeDisplay);
         
@@ -58,16 +58,16 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
         }
         
         // create and return ListResultsDTO
-        ListResultsDTO<TemplateDTO> dto = new ListResultsDTO<TemplateDTO>(limit, start, totalRecords, binder.bindFromBusinessObjectList(TemplateDTO.class, listResult.getPayload()));
+        ListResultsDTO<NewsletterTemplateDTO> dto = new ListResultsDTO<NewsletterTemplateDTO>(limit, start, totalRecords, binder.bindFromBusinessObjectList(NewsletterTemplateDTO.class, listResult.getPayload()));
         return ServiceActionResult.buildSuccess(dto);
     }
 
     
     @Override
-    public ServiceActionResult<TemplateDTO> findTemplate(Long id) {
+    public ServiceActionResult<NewsletterTemplateDTO> findTemplate(Long id) {
         ServiceActionResult<NewsletterTemplate> findResult = findById(id);
         if (findResult.isSuccess()){
-            return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(TemplateDTO.class, findResult.getPayload()));
+            return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(NewsletterTemplateDTO.class, findResult.getPayload()));
         }
         return ServiceActionResult.buildFailure(null);
     }
@@ -75,7 +75,7 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
     
     
     @Override
-    public ServiceActionResult<TemplateDTO> saveTemplate(ThemeDisplay themeDisplay, TemplateDTO templateDTO) {
+    public ServiceActionResult<NewsletterTemplateDTO> saveTemplate(ThemeDisplay themeDisplay, NewsletterTemplateDTO templateDTO) {
         
         // fix template undesired chars
         String templateHTML = templateDTO.getTemplate();
@@ -110,19 +110,19 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
         
         ServiceActionResult<NewsletterTemplate> result = save(template);
         if (result.isSuccess()){
-            return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(TemplateDTO.class, result.getPayload()));
+            return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(NewsletterTemplateDTO.class, result.getPayload()));
         }else{
             return ServiceActionResult.buildFailure(null);
         }
     }
 
     
-    private void fillTemplate(TemplateDTO templateDTO, NewsletterTemplate template) {
+    private void fillTemplate(NewsletterTemplateDTO templateDTO, NewsletterTemplate template) {
         template.setName(templateDTO.getName());
         template.setTemplate(templateDTO.getTemplate());
     }
 
-    private void fillTemplateDTO(NewsletterTemplate template, TemplateDTO templateDTO) {
+    private void fillTemplateDTO(NewsletterTemplate template, NewsletterTemplateDTO templateDTO) {
         templateDTO.setBlocks(countBlocksInTemplate(template.getId()));
     }
     
@@ -142,15 +142,15 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
 
     
     @Override
-    public List<TemplateDTO> findAllTemplates(ThemeDisplay themeDisplay) {
+    public List<NewsletterTemplateDTO> findAllTemplates(ThemeDisplay themeDisplay) {
         Criteria criteria = createCriteriaForTemplates(themeDisplay);
         criteria.addOrder(Order.asc("name"));
         
         List<NewsletterTemplate> result = criteria.list();
-        List<TemplateDTO> dtos = new ArrayList<TemplateDTO>();
+        List<NewsletterTemplateDTO> dtos = new ArrayList<NewsletterTemplateDTO>();
         
         for(NewsletterTemplate entity: result){
-            TemplateDTO dto = binder.bindFromBusinessObject(TemplateDTO.class, entity);
+            NewsletterTemplateDTO dto = binder.bindFromBusinessObject(NewsletterTemplateDTO.class, entity);
             fillTemplateDTO(entity, dto);
             dtos.add(dto);
         }
@@ -168,7 +168,7 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
 
     @Override
     public int countBlocksInTemplate(Long templateId) {
-        TemplateDTO templateDTO = findTemplate(templateId).getPayload();
+        NewsletterTemplateDTO templateDTO = findTemplate(templateId).getPayload();
         return StringUtils.countMatches(templateDTO.getTemplate(), "[block]");
     }
     

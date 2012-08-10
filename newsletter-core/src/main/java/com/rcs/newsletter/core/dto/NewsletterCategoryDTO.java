@@ -1,4 +1,4 @@
-package com.rcs.newsletter.core.model.dtos;
+package com.rcs.newsletter.core.dto;
 
 import java.io.Serializable;
 

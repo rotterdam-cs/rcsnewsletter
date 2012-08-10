@@ -20,8 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.rcs.newsletter.NewsletterConstants.*;
-import com.rcs.newsletter.core.dto.ArticleDTO;
-import com.rcs.newsletter.core.dto.MailingDTO;
+import com.rcs.newsletter.core.dto.JournalArticleDTO;
+import com.rcs.newsletter.core.dto.NewsletterMailingDTO;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
@@ -191,7 +191,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     }
 
     @Override
-    public ServiceActionResult<ListResultsDTO<MailingDTO>> findAllMailings(ThemeDisplay themeDisplay, int start, int limit, String orderField, String orderType) {
+    public ServiceActionResult<ListResultsDTO<NewsletterMailingDTO>> findAllMailings(ThemeDisplay themeDisplay, int start, int limit, String orderField, String orderType) {
         // get total records count
         int totalRecords = findAllCount(themeDisplay);
 
@@ -202,23 +202,23 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         }
         
         // fill dtos
-        List<MailingDTO> dtos = new ArrayList<MailingDTO>();
+        List<NewsletterMailingDTO> dtos = new ArrayList<NewsletterMailingDTO>();
         for(NewsletterMailing entity: listResult.getPayload()){
-            MailingDTO dto = binder.bindFromBusinessObject(MailingDTO.class, entity);
+            NewsletterMailingDTO dto = binder.bindFromBusinessObject(NewsletterMailingDTO.class, entity);
             dto = fillMailingDTO(entity, dto, themeDisplay);
             dtos.add(dto);
         }
 
         // create and return ListResultsDTO
-        ListResultsDTO<MailingDTO> dto = new ListResultsDTO<MailingDTO>(limit, start, totalRecords, dtos);
+        ListResultsDTO<NewsletterMailingDTO> dto = new ListResultsDTO<NewsletterMailingDTO>(limit, start, totalRecords, dtos);
         return ServiceActionResult.buildSuccess(dto);
     }
 
     @Override
-    public ServiceActionResult<MailingDTO> findMailing(Long id, ThemeDisplay themeDisplay) {
+    public ServiceActionResult<NewsletterMailingDTO> findMailing(Long id, ThemeDisplay themeDisplay) {
         ServiceActionResult<NewsletterMailing> findResult = findById(id);
         if (findResult.isSuccess()) {
-            MailingDTO dto = binder.bindFromBusinessObject(MailingDTO.class, findResult.getPayload());
+            NewsletterMailingDTO dto = binder.bindFromBusinessObject(NewsletterMailingDTO.class, findResult.getPayload());
             dto = fillMailingDTO(findResult.getPayload(), dto, themeDisplay);
             return ServiceActionResult.buildSuccess(dto);
         }
@@ -226,7 +226,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     }
 
     @Override
-    public ServiceActionResult<MailingDTO> saveMailing(ThemeDisplay themeDisplay, MailingDTO mailingDTO) {
+    public ServiceActionResult<NewsletterMailingDTO> saveMailing(ThemeDisplay themeDisplay, NewsletterMailingDTO mailingDTO) {
 
         // find existing mailing or creat a new one
         NewsletterMailing mailing = null;
@@ -280,7 +280,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
 
             
             
-            MailingDTO savedDTO = binder.bindFromBusinessObject(MailingDTO.class, result.getPayload());
+            NewsletterMailingDTO savedDTO = binder.bindFromBusinessObject(NewsletterMailingDTO.class, result.getPayload());
             savedDTO = fillMailingDTO(result.getPayload(), savedDTO, themeDisplay);
             return ServiceActionResult.buildSuccess(savedDTO);
         } else {
@@ -288,12 +288,12 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         }
     }
     
-    private MailingDTO fillMailingDTO(NewsletterMailing mailing, MailingDTO mailingDTO, ThemeDisplay themeDisplay) {
+    private NewsletterMailingDTO fillMailingDTO(NewsletterMailing mailing, NewsletterMailingDTO mailingDTO, ThemeDisplay themeDisplay) {
         List<NewsletterTemplateBlock> blocks = templateBlockService.findAllByMailing(mailing);
-        mailingDTO.setArticles(new ArrayList<ArticleDTO>());
+        mailingDTO.setArticles(new ArrayList<JournalArticleDTO>());
         if (blocks != null){
             for(NewsletterTemplateBlock block: blocks){
-                ArticleDTO articleDTO = new ArticleDTO();
+                JournalArticleDTO articleDTO = new JournalArticleDTO();
                 try{
                     JournalArticle article =  JournalArticleLocalServiceUtil.getLatestArticle(themeDisplay.getScopeGroupId(), String.valueOf(block.getArticleId()));
                     articleDTO.setId(block.getArticleId());
@@ -308,7 +308,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
 
     }
 
-    private void fillMailing(MailingDTO mailingDTO, NewsletterMailing mailing) {
+    private void fillMailing(NewsletterMailingDTO mailingDTO, NewsletterMailing mailing) {
         mailing.setName(mailingDTO.getName());
 
         NewsletterCategory category = categoryService.findById(mailingDTO.getListId()).getPayload();
@@ -340,8 +340,8 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     }
 
     @Override
-    public List<ArticleDTO> findAllArticlesForMailing(ThemeDisplay themeDisplay) {
-        List<ArticleDTO> articlesDTO = new ArrayList<ArticleDTO>();
+    public List<JournalArticleDTO> findAllArticlesForMailing(ThemeDisplay themeDisplay) {
+        List<JournalArticleDTO> articlesDTO = new ArrayList<JournalArticleDTO>();
         
         //Get all newsletter articles to create the selectors
         try{
@@ -385,10 +385,10 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         
     }
 
-    private List<ArticleDTO> fillArticlesDTO(List<JournalArticle> articles, ThemeDisplay themeDisplay) {
-        List<ArticleDTO> dtos = new ArrayList<ArticleDTO>();
+    private List<JournalArticleDTO> fillArticlesDTO(List<JournalArticle> articles, ThemeDisplay themeDisplay) {
+        List<JournalArticleDTO> dtos = new ArrayList<JournalArticleDTO>();
         for(JournalArticle a: articles){
-            ArticleDTO dto = new ArticleDTO();
+            JournalArticleDTO dto = new JournalArticleDTO();
             dto.setId(Long.valueOf(a.getArticleId()));
             dto.setName(a.getTitle(themeDisplay.getLocale()));
             dtos.add(dto);
@@ -396,6 +396,12 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         return dtos;
     }
 
+    @Override
+    public ServiceActionResult<NewsletterMailingDTO> sendNewsletter(Long mailingId, ThemeDisplay themeDisplay) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    
    
    
 }

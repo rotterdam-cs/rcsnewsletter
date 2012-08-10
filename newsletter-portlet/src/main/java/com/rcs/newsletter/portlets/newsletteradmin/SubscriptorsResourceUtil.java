@@ -8,7 +8,7 @@ import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.commons.NewsletterResourcePortlet;
 import com.rcs.newsletter.commons.Utils;
-import com.rcs.newsletter.core.model.dtos.NewsletterSubscriptionDTO;
+import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;

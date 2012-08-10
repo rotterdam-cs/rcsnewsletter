@@ -2,7 +2,7 @@ package com.rcs.newsletter.portlets.newsletteradmin;
 
 import com.rcs.newsletter.commons.GenericController;
 import com.rcs.newsletter.commons.Utils;
-import com.rcs.newsletter.core.model.dtos.NewsletterCategoryDTO;
+import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;

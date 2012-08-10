@@ -3,10 +3,11 @@ package com.rcs.newsletter.portlets.newsletteradmin;
 import com.liferay.portal.util.PortalUtil;
 import com.rcs.newsletter.commons.GenericController;
 import com.rcs.newsletter.commons.Utils;
-import com.rcs.newsletter.core.dto.ArticleDTO;
-import com.rcs.newsletter.core.dto.MailingDTO;
-import com.rcs.newsletter.core.dto.TemplateDTO;
-import com.rcs.newsletter.core.model.dtos.NewsletterCategoryDTO;
+import com.rcs.newsletter.core.dto.JournalArticleDTO;
+import com.rcs.newsletter.core.dto.NewsletterMailingDTO;
+import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
+import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
+import com.rcs.newsletter.core.service.NewsletterArchiveService;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterMailingService;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
@@ -43,6 +44,8 @@ public class MailingController extends GenericController {
     private NewsletterCategoryService categoryService;
     @Autowired
     private NewsletterTemplateService templateService;
+    @Autowired
+    private NewsletterArchiveService archiveService;
     
     private Logger logger = Logger.getLogger(MailingController.class);
     
@@ -77,7 +80,7 @@ public class MailingController extends GenericController {
     @ResourceMapping(value="getMailingList")
     public ModelAndView mailingList(ResourceRequest request, ResourceResponse response, @ModelAttribute GridForm form){
         // get records using paging
-        ServiceActionResult<ListResultsDTO<MailingDTO>> result = mailingService.findAllMailings(
+        ServiceActionResult<ListResultsDTO<NewsletterMailingDTO>> result = mailingService.findAllMailings(
                                     Utils.getThemeDisplay(request), 
                                     form.calculateStart(), 
                                     form.getRows(), 
@@ -111,12 +114,12 @@ public class MailingController extends GenericController {
         
         boolean showToRemove = request.getParameter("remove") != null;
         
-        MailingDTO mailing = new MailingDTO();
+        NewsletterMailingDTO mailing = new NewsletterMailingDTO();
         
         
         // if editing a particular mailing, then retrieve it from DB
         if (id != null){
-            ServiceActionResult<MailingDTO> findMailingResult = mailingService.findMailing(id, Utils.getThemeDisplay(request));
+            ServiceActionResult<NewsletterMailingDTO> findMailingResult = mailingService.findMailing(id, Utils.getThemeDisplay(request));
             mailing = findMailingResult.getPayload();
         }
         
@@ -128,12 +131,12 @@ public class MailingController extends GenericController {
         
         
         // get all templates
-        List<TemplateDTO> templates = templateService.findAllTemplates(Utils.getThemeDisplay(request));
-        TemplateDTO emptyTemplate = new TemplateDTO();
+        List<NewsletterTemplateDTO> templates = templateService.findAllTemplates(Utils.getThemeDisplay(request));
+        NewsletterTemplateDTO emptyTemplate = new NewsletterTemplateDTO();
         templates.add(0,emptyTemplate);
         
         // get all articles
-        List<ArticleDTO> articles = mailingService.findAllArticlesForMailing(Utils.getThemeDisplay(request));
+        List<JournalArticleDTO> articles = mailingService.findAllArticlesForMailing(Utils.getThemeDisplay(request));
         
         String namespace = PortalUtil.getPortletNamespace(PortalUtil.getPortletId(request));
         
@@ -158,10 +161,10 @@ public class MailingController extends GenericController {
      * @return 
      */
     @ResourceMapping(value="saveMailing")
-    public ModelAndView saveMailing(ResourceRequest request, ResourceResponse response, @ModelAttribute MailingDTO mailingDTO){
+    public ModelAndView saveMailing(ResourceRequest request, ResourceResponse response, @ModelAttribute NewsletterMailingDTO mailingDTO){
         ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, request.getLocale());
         
-        ServiceActionResult<MailingDTO> result = mailingService.saveMailing(Utils.getThemeDisplay(request), mailingDTO);
+        ServiceActionResult<NewsletterMailingDTO> result = mailingService.saveMailing(Utils.getThemeDisplay(request), mailingDTO);
         if (result.isSuccess()){
             result.addMessage(bundle.getString("newsletter.tab.mailing.message.saved"));
         }else{
@@ -213,6 +216,23 @@ public class MailingController extends GenericController {
        
     }
     
+    
+    
+    @ResourceMapping(value="sendNewsletter")
+    public ModelAndView sendNewsletter(ResourceRequest request, ResourceResponse response, @RequestParam Long mailingId){
+        ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, request.getLocale());
+        /*
+        try{
+            mailingService.sendTestMailing(mailingId, emailAddress, Utils.getThemeDisplay(request));
+            return jsonResponse(ServiceActionResult.buildSuccess(null, bundle.getString("newsletter.tab.mailing.message.testemailsent")));
+        }catch(Exception e){
+            logger.error("Error while trying to send test email. Exception: " + e.getMessage(), e);
+            return jsonResponse(ServiceActionResult.buildFailure(null, bundle.getString("newsletter.tab.mailing.error.sendingtestemail")));
+        }
+       
+       * */
+        return null;
+    }
     
     
 }

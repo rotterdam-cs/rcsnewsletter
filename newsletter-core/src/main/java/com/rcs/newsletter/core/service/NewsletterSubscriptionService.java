@@ -2,7 +2,7 @@ package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
-import com.rcs.newsletter.core.model.dtos.NewsletterSubscriptionDTO;
+import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.List;
 

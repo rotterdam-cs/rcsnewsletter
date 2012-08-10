@@ -3,7 +3,7 @@ package com.rcs.newsletter.portlets.newsletteradmin;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.rcs.newsletter.commons.GenericController;
 import com.rcs.newsletter.commons.Utils;
-import com.rcs.newsletter.core.dto.TemplateDTO;
+import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
@@ -77,7 +77,7 @@ public class TemplatesController extends GenericController {
     @ResourceMapping(value="getTemplatesList")
     public ModelAndView templatesList(ResourceRequest request, ResourceResponse response, @ModelAttribute GridForm form){
         // get records using paging
-        ServiceActionResult<ListResultsDTO<TemplateDTO>> result = templateService.findAllTemplates(
+        ServiceActionResult<ListResultsDTO<NewsletterTemplateDTO>> result = templateService.findAllTemplates(
                                     Utils.getThemeDisplay(request), 
                                     form.calculateStart(), 
                                     form.getRows(), 
@@ -111,12 +111,12 @@ public class TemplatesController extends GenericController {
         
         boolean showToRemove = request.getParameter("remove") != null;
         
-        TemplateDTO template = new TemplateDTO();
+        NewsletterTemplateDTO template = new NewsletterTemplateDTO();
         
         
         // if editing a particular template, then retrieve it from DB
         if (id != null){
-            ServiceActionResult<TemplateDTO> findTemplate = templateService.findTemplate(id);
+            ServiceActionResult<NewsletterTemplateDTO> findTemplate = templateService.findTemplate(id);
             template = findTemplate.getPayload();
         }
         if (template.getTemplate() != null && !showToRemove){
@@ -140,10 +140,10 @@ public class TemplatesController extends GenericController {
      * @return 
      */
     @ResourceMapping(value="saveTemplate")
-    public ModelAndView saveTemplate(ResourceRequest request, ResourceResponse response, @ModelAttribute TemplateDTO templateDTO){
+    public ModelAndView saveTemplate(ResourceRequest request, ResourceResponse response, @ModelAttribute NewsletterTemplateDTO templateDTO){
         ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, request.getLocale());
         
-        ServiceActionResult<TemplateDTO> result = templateService.saveTemplate(Utils.getThemeDisplay(request), templateDTO);
+        ServiceActionResult<NewsletterTemplateDTO> result = templateService.saveTemplate(Utils.getThemeDisplay(request), templateDTO);
         if (result.isSuccess()){
             result.addMessage(bundle.getString("newsletter.tab.templates.message.saved"));
         }else{

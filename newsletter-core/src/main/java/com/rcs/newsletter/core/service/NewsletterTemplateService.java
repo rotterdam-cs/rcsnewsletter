@@ -1,7 +1,7 @@
 package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
-import com.rcs.newsletter.core.dto.TemplateDTO;
+import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
@@ -22,14 +22,14 @@ public interface NewsletterTemplateService extends CRUDService<NewsletterTemplat
      * @param order
      * @return 
      */
-    ServiceActionResult<ListResultsDTO<TemplateDTO>> findAllTemplates(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order);
+    ServiceActionResult<ListResultsDTO<NewsletterTemplateDTO>> findAllTemplates(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order);
 
     /**
      * Returns all templates
      * @param themeDisplay
      * @return 
      */
-    List<TemplateDTO> findAllTemplates(ThemeDisplay themeDisplay);
+    List<NewsletterTemplateDTO> findAllTemplates(ThemeDisplay themeDisplay);
     
     
     /**
@@ -37,7 +37,7 @@ public interface NewsletterTemplateService extends CRUDService<NewsletterTemplat
      * @param id
      * @return 
      */
-    ServiceActionResult<TemplateDTO> findTemplate(Long id);
+    ServiceActionResult<NewsletterTemplateDTO> findTemplate(Long id);
 
     
     /**
@@ -45,7 +45,7 @@ public interface NewsletterTemplateService extends CRUDService<NewsletterTemplat
      * @param templateDTO
      * @return 
      */
-    ServiceActionResult<TemplateDTO> saveTemplate(ThemeDisplay themeDisplay, TemplateDTO templateDTO);
+    ServiceActionResult<NewsletterTemplateDTO> saveTemplate(ThemeDisplay themeDisplay, NewsletterTemplateDTO templateDTO);
 
     
     /**

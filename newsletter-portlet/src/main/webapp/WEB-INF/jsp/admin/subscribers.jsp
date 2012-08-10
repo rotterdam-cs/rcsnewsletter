@@ -79,6 +79,16 @@
                                 var deleteIcon = '<div style="float:left; margin-left:20px;" class="ui-icon ui-icon-trash deleteSubscriptorActionIcon" subscriptorId="' + ids[i] + '"></div>';
                                 jQuery("#subscribersGrid<portlet:namespace/>").jqGrid('setRowData',ids[i],{ 'action' : editIcon + deleteIcon } );                                
                             }
+                            
+                            jQuery('.editSubscriptorActionIcon').click(function(){
+                                var id=jQuery(this).attr("subscriptorId");
+                                getRowSubscriptorShowForm(id, 'UPDATE', false);
+                            });
+
+                            jQuery('.deleteSubscriptorActionIcon').click(function(){
+                                var id=jQuery(this).attr("subscriptorId");
+                                getRowSubscriptorShowForm(id, 'DELETE', true);
+                            });                            
                         },
                         pager : '#subscribersPager<portlet:namespace/>',
                         sortname : 'subscriptorId',
@@ -103,15 +113,7 @@
                     }).trigger("reloadGrid");
                 });
                 
-                jQuery(document).on('click', '.editSubscriptorActionIcon', function(){
-                    var id=jQuery(this).attr("subscriptorId");
-                    getRowSubscriptorShowForm(id, 'UPDATE', false);
-                });
-                
-                jQuery(document).on('click', '.deleteSubscriptorActionIcon', function(){
-                    var id=jQuery(this).attr("subscriptorId");
-                    getRowSubscriptorShowForm(id, 'DELETE', true);
-                });
+
                 
                 function getRowSubscriptorShowForm(id, action, disabledFields){
                     jQuery.ajax({
@@ -125,9 +127,17 @@
                                jQuery('.fieldsToDisable').attr("disabled", disabledFields);
                                jQuery('#subscribersForm<portlet:namespace/> input[name="action"]').val(action);
                                jQuery('#subscribersForm<portlet:namespace/> input[name="subscriptorId"]').val(id);
-                               jQuery('#subscribersForm<portlet:namespace/> input[name="firstName"]').val(data.payload.subscriptorFirstName);
-                               jQuery('#subscribersForm<portlet:namespace/> input[name="lastName"]').val(data.payload.subscriptorLastName);
-                               jQuery('#subscribersForm<portlet:namespace/> input[name="email"]').val(data.payload.subscriptorEmail);
+                               jQuery('#subscribersForm<portlet:namespace/> input[name="firstName"]').val(data.payload[0].subscriptorFirstName);
+                               jQuery('#subscribersForm<portlet:namespace/> input[name="lastName"]').val(data.payload[0].subscriptorLastName);
+                               jQuery('#subscribersForm<portlet:namespace/> input[name="email"]').val(data.payload[0].subscriptorEmail);
+                               
+                               var subscribedLists = '';
+                               for (var i=0; i<data.payload.length; i++){
+                                   subscribedLists += data.payload[i].categoryName;
+                                   if (i+1 < data.payload.length)
+                                       subscribedLists += ', ';
+                               }
+                               jQuery('#subscribedLists<portlet:namespace/>').html(subscribedLists);
                                
                                jQuery('#gridSubscribersContainer<portlet:namespace/>').hide();
                                jQuery('#subscribersCrudContainer<portlet:namespace/>').show();
@@ -175,6 +185,8 @@
                 jQuery('#cancelImportSubscribers<portlet:namespace/>').click(function(){
                     jQuery('#importSubscribers<portlet:namespace/>').hide();                
                     jQuery('#gridSubscribersContainer<portlet:namespace/>').show();
+                    clearErrors();
+                    clearMessages();                    
                 });
                 
                 var validatorImport = jQuery('#importSubscribersForm<portlet:namespace/>').validate({
@@ -244,6 +256,10 @@
                     <tr>
                         <td><label><fmt:message key="general.email"/></label></td>
                         <td><input class="newsletter-forms-input-text fieldsToDisable required" type="text" name="email"/></td>
+                    </tr>
+                    <tr>
+                        <td><label><fmt:message key="newsletter.admin.lists"/></label></td>
+                        <td><span id="subscribedLists<portlet:namespace/>"></span></td>
                     </tr>
                     <tr>
                         <td colspan="2">

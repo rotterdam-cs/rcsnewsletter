@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface NewsletterSubscriptionService extends CRUDService<NewsletterSubscription> {    
     
-    ServiceActionResult<NewsletterSubscriptionDTO> findSubscriptionBySubscriptorId(long subscriptorId);
+    ServiceActionResult<List<NewsletterSubscriptionDTO>> findSubscriptionsBySubscriptorId(long subscriptorId);
 
     ServiceActionResult createSubscriptionsForCategory(ThemeDisplay themeDisplay, long categoryId, List<NewsletterSubscriptionDTO> newSubscriptions);
 }

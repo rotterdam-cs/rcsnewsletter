@@ -2,7 +2,6 @@ package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.model.NewsletterCategory;
-import com.rcs.newsletter.core.model.NewsletterEntity;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.model.dtos.NewsletterSubscriptionDTO;
@@ -34,16 +33,15 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
     private NewsletterCategoryService categoryService;
     
     @Override
-    public ServiceActionResult<NewsletterSubscriptionDTO> findSubscriptionBySubscriptorId(long subscriptorId) {
+    public ServiceActionResult<List<NewsletterSubscriptionDTO>> findSubscriptionsBySubscriptorId(long subscriptorId) {
         Session currentSession = sessionFactory.getCurrentSession();
         Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
         criteria.createCriteria(NewsletterSubscription.SUBSCRIPTOR).add(Restrictions.idEq(subscriptorId));
-        criteria.setMaxResults(1);
-        NewsletterSubscription subscription = (NewsletterSubscription) criteria.uniqueResult();
-        if (subscription == null){
-            return ServiceActionResult.buildFailure(null, "Could not find the subscription");
+        List<NewsletterSubscription> subscriptions = criteria.list();
+        if (subscriptions == null){
+            return ServiceActionResult.buildFailure(null, "Could not find subscriptions");
         }
-        return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(NewsletterSubscriptionDTO.class, subscription));        
+        return ServiceActionResult.buildSuccess(binder.bindFromBusinessObjectList(NewsletterSubscriptionDTO.class, subscriptions));        
     }
     
     private NewsletterSubscription findByEmailAndCategory(ThemeDisplay themeDisplay, String email, long newsletterCategoryId) {

@@ -88,7 +88,7 @@ public class SubscriberController extends GenericController {
     
     @ResourceMapping("getSubscriptorData")
     public ModelAndView getSubscriptorData(ResourceRequest request, long subscriptorId){
-        ServiceActionResult<NewsletterSubscriptionDTO> result = subscriptionService.findSubscriptionBySubscriptorId(subscriptorId);
+        ServiceActionResult<List<NewsletterSubscriptionDTO>> result = subscriptionService.findSubscriptionsBySubscriptorId(subscriptorId);
         return jsonResponse(result);
     }
     

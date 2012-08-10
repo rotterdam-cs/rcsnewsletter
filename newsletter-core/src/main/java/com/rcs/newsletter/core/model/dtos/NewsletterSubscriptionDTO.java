@@ -37,6 +37,12 @@ public class NewsletterSubscriptionDTO implements Serializable{
     
     private String activationKey;
     private String deactivationKey;
+    
+    @Source("category.id")
+    private String categoryId;
+    
+    @Source("category.name")
+    private String categoryName;
 
     public String getActivationKey() {
         return activationKey;
@@ -108,5 +114,21 @@ public class NewsletterSubscriptionDTO implements Serializable{
 
     public void setSubscriptorId(long subscriptorId) {
         this.subscriptorId = subscriptorId;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }

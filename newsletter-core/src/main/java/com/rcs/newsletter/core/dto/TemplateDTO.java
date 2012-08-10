@@ -4,6 +4,8 @@
  */
 package com.rcs.newsletter.core.dto;
 
+import org.jdto.annotation.DTOTransient;
+
 /**
  *
  * @author marcoslacoste
@@ -13,6 +15,8 @@ public class TemplateDTO  extends DataTransferObject {
     private Long id;
     private String name;
     private String template;
+    @DTOTransient
+    private int blocks;
 
     /**
      * @return the id
@@ -54,6 +58,20 @@ public class TemplateDTO  extends DataTransferObject {
      */
     public void setTemplate(String template) {
         this.template = template;
+    }
+
+    /**
+     * @return the blocks
+     */
+    public int getBlocks() {
+        return blocks;
+    }
+
+    /**
+     * @param blocks the blocks to set
+     */
+    public void setBlocks(int blocks) {
+        this.blocks = blocks;
     }
     
     

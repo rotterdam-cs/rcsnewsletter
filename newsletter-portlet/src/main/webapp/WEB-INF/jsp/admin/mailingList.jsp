@@ -36,6 +36,16 @@
 <table id="mailing-list-<portlet:namespace/>"></table>
 <div id="mailing-list-pager<portlet:namespace/>"></div>
 
+<br>
+<table>
+    <tr>
+        <td><input type="text" style="width:200px" placeholder="<fmt:message key="newsletter.tab.mailing.field.placeholder.testemail" />"  />&nbsp;</td>
+        <td><input type="button" id="btn-send-test-<portlet:namespace/>" value="<fmt:message key="newsletter.tab.mailing.button.sendtest" />"  /></td>
+    </tr>
+</table>
+<br>
+<input type="button" id="btn-send-test-<portlet:namespace/>" value="<fmt:message key="newsletter.tab.mailing.button.sendnewsletter" />"  />
+
 
 
 
@@ -63,7 +73,7 @@
     function initEvents(){
         // click on 'Add Mailing' button
         jQuery('#btn-addmailing-<portlet:namespace/>').click(function(){
-            jQuery('#addmailing-panel').load('${editMailingUrl}');
+            jQuery('#mailing-panel').load('${editMailingUrl}');
         });
         
         
@@ -81,13 +91,11 @@
                 '<fmt:message key="newsletter.admin.general.id" />',
                 '<fmt:message key="newsletter.admin.general.name" />',
                 '<fmt:message key="newsletter.tab.mailing.field.label.list" />',
-                '<fmt:message key="newsletter.tab.mailing.field.label.article" />',
                 ''],
             colModel:[
                 {name:'id',      index:'id',        width:40,         sortable: false, search:false},
                 {name:'name',    index:'name',      sortable: false,  search:false},
-                {name:'list',    index:'list',      sortable: false,  search:false},
-                {name:'article', index:'article',   sortable: false,  search:false},
+                {name:'listName',    index:'listName',      sortable: false,  search:false},
                 {name:'action',  index:'action',    width:40,         sortable: false, search:false}
             ],
             jsonReader : {
@@ -112,7 +120,7 @@
             sortname: 'id',
             viewrecords: true,
             sortorder: "asc",
-            caption:"",
+            caption: '<fmt:message key="newsletter.tab.mailing.grid.title" />',
             height: '100%',
             rowNum: 10
             

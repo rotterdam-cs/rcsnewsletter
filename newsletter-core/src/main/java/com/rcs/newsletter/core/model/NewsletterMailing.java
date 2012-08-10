@@ -9,8 +9,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -37,7 +35,6 @@ public class NewsletterMailing extends NewsletterEntity {
     @OneToMany
     @JoinColumn(name = "mailing_id")
     @OrderColumn(name = "blockOrder")    
-    @Cascade(CascadeType.DELETE)    
     private List<NewsletterTemplateBlock> blocks;
 
     public List<NewsletterTemplateBlock> getBlocks() {

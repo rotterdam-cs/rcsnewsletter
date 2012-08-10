@@ -109,7 +109,7 @@
             sortname: 'id',
             viewrecords: true,
             sortorder: "asc",
-            caption:"",
+            caption: '<fmt:message key="newsletter.tab.templates.grid.title" />',
             height: '100%',
             rowNum: 10
             

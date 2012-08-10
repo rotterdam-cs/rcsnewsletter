@@ -2,6 +2,7 @@ package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.TemplateDTO;
+import com.rcs.newsletter.core.model.NewsletterEntity;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
@@ -9,7 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.validation.Validator;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.jdto.DTOBinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -111,6 +117,9 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
         template.setTemplate(templateDTO.getTemplate());
     }
 
+    private void fillTemplateDTO(NewsletterTemplate template, TemplateDTO templateDTO) {
+        templateDTO.setBlocks(countBlocksInTemplate(template.getId()));
+    }
     
     @Override
     public ServiceActionResult deleteTemplate(ThemeDisplay themeDisplay, Long templateId) {
@@ -120,7 +129,38 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
         }
         return ServiceActionResult.buildFailure(null);
     }
+
     
+    @Override
+    public List<TemplateDTO> findAllTemplates(ThemeDisplay themeDisplay) {
+        Criteria criteria = createCriteriaForTemplates(themeDisplay);
+        criteria.addOrder(Order.asc("name"));
+        
+        List<NewsletterTemplate> result = criteria.list();
+        List<TemplateDTO> dtos = new ArrayList<TemplateDTO>();
+        
+        for(NewsletterTemplate entity: result){
+            TemplateDTO dto = binder.bindFromBusinessObject(TemplateDTO.class, entity);
+            fillTemplateDTO(entity, dto);
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+    
+    
+     private Criteria createCriteriaForTemplates(ThemeDisplay themeDisplay){
+        Session currentSession = sessionFactory.getCurrentSession();
+        Criteria criteria = currentSession.createCriteria(NewsletterTemplate.class);
+        criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
+        criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
+        return criteria;
+    }
+
+    @Override
+    public int countBlocksInTemplate(Long templateId) {
+        TemplateDTO templateDTO = findTemplate(templateId).getPayload();
+        return StringUtils.countMatches(templateDTO.getTemplate(), "[block]");
+    }
    
     
 }

@@ -12,4 +12,5 @@ public interface NewsletterTemplateBlockService  extends CRUDService<NewsletterT
     
     List<NewsletterTemplateBlock> findAllByMailing(NewsletterMailing mailing);
 
+    
 }

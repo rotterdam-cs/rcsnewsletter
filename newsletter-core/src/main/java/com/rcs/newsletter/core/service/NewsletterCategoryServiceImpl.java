@@ -16,6 +16,7 @@ import java.util.Set;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.jdto.DTOBinder;
@@ -82,6 +83,7 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
     @Override
     public List<NewsletterCategoryDTO> findAllNewsletterCategories(ThemeDisplay themeDisplay) {
         Criteria criteria = createCriteriaForCategories(themeDisplay);
+        criteria.addOrder(Order.asc("name"));
         List<NewsletterCategory> result = criteria.list();
         List<NewsletterCategoryDTO> listDTO = binder.bindFromBusinessObjectList(NewsletterCategoryDTO.class, result);
         return listDTO;

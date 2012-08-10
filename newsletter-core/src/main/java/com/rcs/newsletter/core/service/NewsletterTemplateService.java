@@ -5,6 +5,7 @@ import com.rcs.newsletter.core.dto.TemplateDTO;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import java.util.List;
 
 /**
  *
@@ -22,6 +23,13 @@ public interface NewsletterTemplateService extends CRUDService<NewsletterTemplat
      * @return 
      */
     ServiceActionResult<ListResultsDTO<TemplateDTO>> findAllTemplates(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order);
+
+    /**
+     * Returns all templates
+     * @param themeDisplay
+     * @return 
+     */
+    List<TemplateDTO> findAllTemplates(ThemeDisplay themeDisplay);
     
     
     /**
@@ -47,4 +55,14 @@ public interface NewsletterTemplateService extends CRUDService<NewsletterTemplat
      */
     public ServiceActionResult deleteTemplate(ThemeDisplay themeDisplay, Long templateId);
     
+    
+    
+    /**
+     * Returns a count of all blocks [block] [/block] in the template
+     * @param templateId
+     * @return 
+     */
+    int countBlocksInTemplate(Long templateId);
+   
+        
 }

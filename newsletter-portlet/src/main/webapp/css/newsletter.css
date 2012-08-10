@@ -193,6 +193,9 @@
     display: none;
 }
 
+.field-long{
+    width: 250px;
+}
 
 /*
   JQuery Styles Fixes

@@ -3,11 +3,13 @@ package com.rcs.newsletter.core.service;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.TemplateDTO;
 import com.rcs.newsletter.core.model.NewsletterEntity;
+import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 import javax.validation.Validator;
 import org.apache.commons.lang.StringUtils;
@@ -78,6 +80,9 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
         // fix template undesired chars
         String templateHTML = templateDTO.getTemplate();
         templateHTML =  templateHTML.replace("\u200B", "");
+        templateHTML = templateHTML.replace("&lt;", "<");
+        templateHTML = templateHTML.replace("&gt;", ">");
+        
         templateDTO.setTemplate(templateHTML);
         
         // find existing template or creat a new one
@@ -123,8 +128,13 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
     
     @Override
     public ServiceActionResult deleteTemplate(ThemeDisplay themeDisplay, Long templateId) {
+        ResourceBundle bundle = ResourceBundle.getBundle("Language", themeDisplay.getLocale());
         ServiceActionResult<NewsletterTemplate> findResult = findById(templateId);
         if (findResult.isSuccess()){
+            List<NewsletterMailing> mailings = findByMailingsUsedByTemplate(templateId);
+            if (mailings.size() > 0){
+                return ServiceActionResult.buildFailure(null, bundle.getString("newsletter.tab.templates.error.deleting.existingmailing"));
+            }
             return delete(findResult.getPayload());
         }
         return ServiceActionResult.buildFailure(null);
@@ -160,6 +170,13 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
     public int countBlocksInTemplate(Long templateId) {
         TemplateDTO templateDTO = findTemplate(templateId).getPayload();
         return StringUtils.countMatches(templateDTO.getTemplate(), "[block]");
+    }
+    
+    
+     private List<NewsletterMailing> findByMailingsUsedByTemplate(Long templateId) {
+       Criteria criteria = sessionFactory.getCurrentSession().createCriteria(NewsletterMailing.class);
+       criteria.add(Restrictions.eq("template.id", templateId));
+       return criteria.list();
     }
    
     

@@ -199,7 +199,6 @@
                 
                 // validate form
                 var form = jQuery('#mailing-form-<portlet:namespace/>');
-                console.log(form.serialize());
                 if (form.valid()){
                
                     // save via ajax
@@ -217,6 +216,10 @@
                     });
                 }
             });
+            
+            
+            
+            
         }
     
    
@@ -237,7 +240,11 @@
                             ,type: 'POST'
                             ,data: {id: mailingId}
                             ,success: function(response){
-                                showMessages(response.messages);
+                                if (response.success){
+                                    showMessages(response.messages);
+                                }else{
+                                    showErrors(response.validationKeys);
+                                }
                                 $(this).dialog("close");
                                 jQuery('#btn-cancel-<portlet:namespace/>').trigger('click');
                             }

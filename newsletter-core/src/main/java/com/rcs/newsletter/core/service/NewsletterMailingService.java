@@ -87,7 +87,9 @@ public interface NewsletterMailingService extends CRUDService<NewsletterMailing>
      * @param themeDisplay
      * @return 
      */
-    public List<ArticleDTO> findAllArticlesForMailing(ThemeDisplay themeDisplay);
+    List<ArticleDTO> findAllArticlesForMailing(ThemeDisplay themeDisplay);
+
+    
     
     
 }

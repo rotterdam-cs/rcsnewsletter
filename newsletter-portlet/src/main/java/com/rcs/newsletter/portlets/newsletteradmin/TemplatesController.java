@@ -167,8 +167,6 @@ public class TemplatesController extends GenericController {
         ServiceActionResult result = templateService.deleteTemplate(Utils.getThemeDisplay(request), id);
         if (result.isSuccess()){
             result.addMessage(bundle.getString("newsletter.tab.templates.message.deleted"));
-        }else{
-            result.addValidationKey(bundle.getString("newsletter.tab.templates.error.deleting"));
         }
         return jsonResponse(result);
     }

@@ -4,6 +4,7 @@ import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.rcs.newsletter.commons.GenericController;
 import com.rcs.newsletter.commons.Utils;
+import com.rcs.newsletter.core.dto.CreateMultipleSubscriptionsResult;
 import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
 import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
@@ -138,15 +139,16 @@ public class SubscriberController extends GenericController {
         ResourceBundle newsletterBundle = ResourceBundle.getBundle("Newsletter", Utils.getCurrentLocale(request));
         try {
             if (!file.isEmpty()){
-                List<String> result = subscriptorsResourceUtil.importSubscriptorsFromExcel(file.getInputStream(), listId, Utils.getThemeDisplay(request));
-                
-                
-                String errors = newsletterBundle.getString("newsletter.admin.subscribers.import.success") + "<br/>";
-                for (String message: result){
-                    errors += message + "<br/>";
+                CreateMultipleSubscriptionsResult result = subscriptorsResourceUtil.importSubscriptorsFromExcel(file.getInputStream(), listId, Utils.getThemeDisplay(request));
+                if (result.isSuccess()){
+                    
                 }
-                String json = mapper.writeValueAsString(new UploadResult(errors, true));
-                write(response, String.format(json, true, errors));
+                
+                String resultText = newsletterBundle.getString("newsletter.admin.subscribers.import.success") + "<br/>" +
+                    String.format(newsletterBundle.getString("newsletter.admin.subscribers.import.result"), result.getRowsProcessed(), result.getRowsOmitted(), result.getSubscriptionsCreated());
+
+                String json = mapper.writeValueAsString(new UploadResult(resultText, true));
+                write(response, json);
                 return;
             }
             write(response,  mapper.writeValueAsString(new UploadResult(newsletterBundle.getString("newsletter.admin.subscribers.import.unsuccess"), false)));

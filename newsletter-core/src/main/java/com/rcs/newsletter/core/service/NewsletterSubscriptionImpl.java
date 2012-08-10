@@ -1,14 +1,14 @@
 package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
+import com.rcs.newsletter.core.dto.CreateMultipleSubscriptionsResult;
+import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
-import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.core.service.util.SubscriptionUtil;
-import java.util.LinkedList;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -66,26 +66,31 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
     }    
     
     @Override
-    public ServiceActionResult createSubscriptionsForCategory(ThemeDisplay themeDisplay, long categoryId, List<NewsletterSubscriptionDTO> newSubscriptions) {
+    public void createSubscriptionsForCategory(CreateMultipleSubscriptionsResult result, ThemeDisplay themeDisplay, long categoryId, List<NewsletterSubscriptionDTO> newSubscriptions) {
         if (newSubscriptions == null){
-            return ServiceActionResult.buildFailure(null, "Error creating the subscriptions");
+            result.setSuccess(false);
+            return;
         }
         if (newSubscriptions.isEmpty()){
-            return ServiceActionResult.buildSuccess(null, "No new emails to subscribe");
+            result.setSuccess(false);
+            return; 
         }
         
         ServiceActionResult<NewsletterCategory> sarCategory = categoryService.findById(categoryId);
         if (!sarCategory.isSuccess()){
-            return sarCategory;
+            result.setSuccess(false);
+            return;
         }
         
-        List<String> warnings = new LinkedList<String>();
+        long omitted = 0;
+        long created = 0;
         for (NewsletterSubscriptionDTO subscriptionData : newSubscriptions){
             String subscriptorEmail = subscriptionData.getSubscriptorEmail();
             
             NewsletterSubscription subscription = findByEmailAndCategory(themeDisplay, subscriptorEmail, categoryId);
             if (subscription != null){
-                warnings.add(String.format("Email address %s is already subscribed to the list", subscriptorEmail ));
+                logger.warn(String.format("Email address %s is already subscribed to the list", subscriptorEmail));
+                omitted++;
                 continue;
             }
             
@@ -109,7 +114,10 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
             subscription.setActivationKey(SubscriptionUtil.getUniqueKey());
             subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
             sessionFactory.getCurrentSession().save(subscription);
+            created++;
         }
-        return ServiceActionResult.buildSuccess(null, warnings);
+        result.setSuccess(true);
+        result.setRowsOmitted(result.getRowsOmitted() + omitted);
+        result.setSubscriptionsCreated(created);
     }
 }

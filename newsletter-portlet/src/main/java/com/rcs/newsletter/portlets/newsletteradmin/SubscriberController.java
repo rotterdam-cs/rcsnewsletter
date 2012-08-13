@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
+import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 /**
@@ -170,6 +171,16 @@ public class SubscriberController extends GenericController {
         }
     }
     
+    @ResourceMapping("exportSubscribers")
+    public void exportSubscribers(ResourceRequest request, ResourceResponse response, String categoryId){
+        long catId = 0;
+        try{
+            catId = Long.parseLong(categoryId);
+        }catch(NumberFormatException ex){}
+        
+        subscriptorsResourceUtil.writeSubscriptorsExcel(request, catId, Utils.getThemeDisplay(request), response);
+    }
+
     class UploadResult implements Serializable {
         private String errors;
         private boolean success;

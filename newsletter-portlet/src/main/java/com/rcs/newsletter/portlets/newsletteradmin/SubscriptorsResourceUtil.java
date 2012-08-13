@@ -2,20 +2,21 @@ package com.rcs.newsletter.portlets.newsletteradmin;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
-import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.commons.NewsletterResourcePortlet;
 import com.rcs.newsletter.commons.Utils;
 import com.rcs.newsletter.core.dto.CreateMultipleSubscriptionsResult;
+import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
 import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
+import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.util.ExcelExporterUtil;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,9 +25,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-import javax.servlet.http.HttpServletResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 import org.apache.poi.hssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,6 +44,9 @@ public class SubscriptorsResourceUtil {
     
     @Autowired
     private NewsletterSubscriptionService subscriptionService;
+    
+    @Autowired
+    private NewsletterCategoryService categoryService;
 
     private static final Log logger = LogFactoryUtil.getLog(NewsletterResourcePortlet.class);
 
@@ -66,14 +69,15 @@ public class SubscriptorsResourceUtil {
     private static final int EMAIL_INDEX = 3;
 
     private static final int LIST_INDEX = 4;
+    
+    private static final int PAGE_SIZE = 5000;
 
-    public void writeSubscriptorsExcel(PortletRequest request, long categoryId, ThemeDisplay themeDisplay, PortletResponse response) {
+    public void writeSubscriptorsExcel(ResourceRequest request, long categoryId, ThemeDisplay themeDisplay, ResourceResponse response) {
 
         ResourceBundle messageBundle = ResourceBundle.getBundle("Language", Utils.getCurrentLocale(request));
-        String categoryName = messageBundle.getString("newsletter.admin.general.undefined");
         String fileName = messageBundle.getString("newsletter.admin.subscribers");
-
-        ServiceActionResult<ListResultsDTO<NewsletterSubscriptionDTO>> sarSubscriptions = subscriptorService.findAllByStatusAndCategory(themeDisplay, -1, -1, "id", "asc", SubscriptionStatus.ACTIVE, categoryId);
+        
+        int recordsCount = subscriptorService.findAllByStatusAndCategoryCount(themeDisplay, SubscriptionStatus.ACTIVE, categoryId);
 
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet();
@@ -97,44 +101,57 @@ public class SubscriptorsResourceUtil {
         cell4.setCellStyle(cellStyle);
 
         HSSFCell cell5;
+        String categoryName = messageBundle.getString("newsletter.admin.general.undefined");
         if (categoryId != 0) {
             cell5 = row.createCell(LIST_INDEX);
             cell5.setCellValue(LIST_COLUMN);
             cell5.setCellStyle(cellStyle);
-        }
-
-        int index = 1;
-        for (NewsletterSubscriptionDTO subscription : sarSubscriptions.getPayload().getResult()) {
-            row = sheet.createRow((short) index);
-            row.createCell(0).setCellValue(subscription.getSubscriptorId());
-            row.createCell(1).setCellValue(subscription.getSubscriptorFirstName());
-            row.createCell(2).setCellValue(subscription.getSubscriptorLastName());
-            row.createCell(3).setCellValue(subscription.getSubscriptorEmail());
-
-            if (categoryId != 0) {
-                row.createCell(4).setCellValue(categoryName);
+            ServiceActionResult<NewsletterCategoryDTO> sarCategoryDTO = categoryService.getCategoryDTO(categoryId);
+            if (sarCategoryDTO.isSuccess()){
+                categoryName = sarCategoryDTO.getPayload().getName();
             }
-            index++;
         }
 
-        OutputStream os = null;
+        int start = 0;
+        int excelRow = 1;
+        while (start < recordsCount){
+            ServiceActionResult<ListResultsDTO<NewsletterSubscriptionDTO>> sarSubscriptions = 
+                    subscriptorService.findAllByStatusAndCategory(themeDisplay, start, PAGE_SIZE, "subscriptorId", "asc", SubscriptionStatus.ACTIVE, categoryId);
+
+            start += sarSubscriptions.getPayload().getResult().size();
+            
+            for (NewsletterSubscriptionDTO subscription : sarSubscriptions.getPayload().getResult()) {
+                row = sheet.createRow(excelRow);
+                row.createCell(0).setCellValue(subscription.getSubscriptorId());
+                row.createCell(1).setCellValue(subscription.getSubscriptorFirstName());
+                row.createCell(2).setCellValue(subscription.getSubscriptorLastName());
+                row.createCell(3).setCellValue(subscription.getSubscriptorEmail());
+
+                if (categoryId != 0) {
+                    row.createCell(4).setCellValue(categoryName);
+                }
+                excelRow++;
+            }
+        }        
+        
+
         try {
-            HttpServletResponse servletResponse = ((LiferayPortletResponse) response).getHttpServletResponse();
+            response.reset();
+            response.setContentType("application/excel");
+            response.setProperty(HttpHeaders.CACHE_CONTROL, "must-revalidate, post-check=0, pre-check=0");
+            response.setProperty(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + fileName + ".xls\"");
+            response.setProperty(HttpHeaders.PRAGMA, "public");
+            response.setProperty(HttpHeaders.EXPIRES, "0");
 
-            servletResponse.setContentType(ContentTypes.TEXT_XML_UTF8);
-            servletResponse.addHeader(HttpHeaders.CACHE_CONTROL, "must-revalidate, post-check=0, pre-check=0");
-            servletResponse.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + fileName + ".xls\"");
-            servletResponse.addHeader(HttpHeaders.PRAGMA, "public");
-            servletResponse.addHeader(HttpHeaders.EXPIRES, "0");
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            workbook.write(output);
+            
+            OutputStream out = response.getPortletOutputStream();
+            out.write(output.toByteArray());
+            out.flush();
+            out.close();
 
-            os = servletResponse.getOutputStream();
-            workbook.write(os);
         } catch (IOException ex) {
-        } finally {
-            try {
-                os.close();
-            } catch (IOException ex) {
-            }
         }
     }
 

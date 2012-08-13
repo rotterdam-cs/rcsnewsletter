@@ -20,6 +20,7 @@
 <portlet:actionURL var="importSubscribersURL">
     <portlet:param name="action" value="importSubscribers"/>
 </portlet:actionURL>
+<portlet:resourceURL var="exportSubscribersURL" id="exportSubscribers"/>
 
 <html>
     <head>
@@ -214,8 +215,13 @@
                                 }
                             }
                         });
-                        
                     }
+                });
+                
+                jQuery('#exportButton<portlet:namespace/>').click(function(){
+                    var categoryId = jQuery('#listsCombo<portlet:namespace/>').val();
+                    jQuery('#exportSubscribersForm<portlet:namespace/> input[name="categoryId"]').val(categoryId);
+                    jQuery('#exportSubscribersForm<portlet:namespace/>').submit();
                 });
                 
             });
@@ -236,7 +242,10 @@
             <div id="subscribersPager<portlet:namespace/>"></div>
             
             <button id="importButton<portlet:namespace/>" type="button"><fmt:message key="newsletter.admin.subscribers.import" bundle="${newsletter}"/></button>
-            <button id="exportButton<portlet:namespace/>" type="button"><fmt:message key="newsletter.admin.subscribers.export" bundle="${newsletter}"/></button>                         
+            <button id="exportButton<portlet:namespace/>" type="button"><fmt:message key="newsletter.admin.subscribers.export" bundle="${newsletter}"/></button>
+            <form id="exportSubscribersForm<portlet:namespace/>" action="${exportSubscribersURL}" method="POST">
+                <input type="hidden" name="categoryId" value="">
+            </form>
         </div>
         
         <%-- EDIT/DELETE FORM --%>

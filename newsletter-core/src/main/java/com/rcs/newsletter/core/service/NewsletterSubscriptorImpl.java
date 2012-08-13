@@ -2,23 +2,17 @@ package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.NewsletterConstants;
-import com.rcs.newsletter.core.model.NewsletterEntity;
+import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
-import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import edu.emory.mathcs.backport.java.util.Collections;
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.SQLQuery;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import org.jdto.DTOBinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,20 +30,6 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
 
     @Autowired
     private DTOBinder binder;
-
-    private Criteria createCriteriaForStatusAndCategory(ThemeDisplay themeDisplay, SubscriptionStatus status, long categoryId, boolean addRowCountProjection){
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(NewsletterSubscription.class);
-        criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));
-        criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
-        criteria.createAlias(NewsletterSubscription.SUBSCRIPTOR, "subscriptor");
-        if (status != null) {
-            criteria.add(Restrictions.eq(NewsletterSubscription.STATUS, status));
-        }
-        if (categoryId > 0){
-            criteria.createCriteria(NewsletterSubscription.CATEGORY).add(Restrictions.idEq(categoryId));
-        }
-        return criteria;
-    }
     
     @Override
     public ServiceActionResult<ListResultsDTO<NewsletterSubscriptionDTO>> findAllByStatusAndCategory(
@@ -59,26 +39,31 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
         
         int count = findAllByStatusAndCategoryCount(themeDisplay, status, categoryId);
         
-        
-        String hql = "SELECT min(s.id) FROM NewsletterSubscription s INNER JOIN s.subscriptor o INNER JOIN s.category c WHERE s.companyid=? AND s.groupid=? ";
+        String sql = "SELECT subscription.* FROM newsletter_subscription subscription "
+                   + "WHERE subscription.id IN ( "
+                   + "  SELECT min(s.id) FROM newsletter_subscription s "
+                   + "      INNER JOIN newsletter_subscriptor o ON (s.subscriptor_id = o.id) "
+                   + "      WHERE s.companyid = ? AND s.groupid = ? ";
         if (status != null){
-            hql += " AND s.status = ? ";
+            sql += " AND s.status = ? ";
         }
         if (categoryId != 0){
-            hql += " AND c.id = ? ";
-        }        
-        hql += " GROUP BY o.id ";
+            sql += " AND category_id = ? ";
+        }
+        sql += " GROUP BY o.id) ";
 
         if (!ordercrit.isEmpty()) {
-            hql += " ORDER BY " + getActualOrderFieldForHQL(ordercrit);
+            sql += " ORDER BY " + getActualOrderFieldForSQL(ordercrit);
             if (NewsletterConstants.ORDER_BY_DESC.equals(order)) {
-                hql += " DESC";
+                sql += " DESC";
             } else {
-                hql += " ASC";
+                sql += " ASC";
             }
         }
+
+        SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(sql);
+        query.addEntity("subscription", NewsletterSubscription.class);
         
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
         int paramIndex = 0;
         query.setLong(paramIndex++, themeDisplay.getCompanyId());
         query.setLong(paramIndex++, themeDisplay.getScopeGroupId());
@@ -94,24 +79,7 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
         if (limit != -1) {
             query.setMaxResults(limit);
         }
-        List<Long> subscriptionIds = query.list();
-        
-        List<NewsletterSubscription> newsletterSubscription;
-        if (subscriptionIds.isEmpty()){
-            newsletterSubscription = Collections.emptyList();
-        }else{
-            Criteria criteria = sessionFactory.getCurrentSession().createCriteria(NewsletterSubscription.class);
-            criteria.add(Restrictions.in(NewsletterSubscription.ID, subscriptionIds));
-            if (!ordercrit.isEmpty()) {
-                String sortField = getActualOrderFieldForCriteria(ordercrit);
-                if (NewsletterConstants.ORDER_BY_DESC.equals(order)) {
-                    criteria.addOrder(Order.desc(sortField));
-                } else {
-                    criteria.addOrder(Order.asc(sortField));
-                }
-            }
-            newsletterSubscription = criteria.list();
-        }
+        List<NewsletterSubscription> newsletterSubscription = query.list();
 
         ListResultsDTO<NewsletterSubscriptionDTO> payload = new ListResultsDTO(limit, start, count, 
                 binder.bindFromBusinessObjectList(NewsletterSubscriptionDTO.class, newsletterSubscription));
@@ -119,17 +87,9 @@ public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscri
         return ServiceActionResult.buildSuccess(payload);
     }
 
-    private String getActualOrderFieldForHQL(String requestedField){
+    private String getActualOrderFieldForSQL(String requestedField){
         if ("subscriptorId".equalsIgnoreCase(requestedField)){
-            return "o.id";
-        }else{
-            return requestedField;
-        }
-    }
-    
-    private String getActualOrderFieldForCriteria(String requestedField){
-        if ("subscriptorId".equalsIgnoreCase(requestedField)){
-            return "subscriptor.id";
+            return "subscriptor_id";
         }else{
             return requestedField;
         }

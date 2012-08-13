@@ -5,6 +5,8 @@
 package com.rcs.newsletter.core.dto;
 
 import java.util.Date;
+import org.jdto.annotation.Source;
+import org.jdto.mergers.DateFormatMerger;
 
 /**
  *
@@ -18,6 +20,10 @@ public class NewsletterArchiveDTO  extends DataTransferObject {
     private String articleTitle;
     private String emailBody;    
     private Date date;
+    
+    @Source(value = "date",
+    merger=DateFormatMerger.class, mergerParam="yyyy-MM-dd hh:mm")
+    private String dateFormatted;
 
     /**
      * @return the name
@@ -101,6 +107,20 @@ public class NewsletterArchiveDTO  extends DataTransferObject {
      */
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * @return the dateFormatted
+     */
+    public String getDateFormatted() {
+        return dateFormatted;
+    }
+
+    /**
+     * @param dateFormatted the dateFormatted to set
+     */
+    public void setDateFormatted(String dateFormatted) {
+        this.dateFormatted = dateFormatted;
     }
 
     

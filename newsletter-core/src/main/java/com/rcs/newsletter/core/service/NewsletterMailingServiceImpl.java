@@ -64,6 +64,10 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
 
     @Autowired
     private NewsletterArchiveService archiveService;
+
+    @Autowired
+    private NewsletterSubscriptorService subscriptorService;
+
     
     @Autowired
     private LiferayMailingUtil mailingUtil;
@@ -294,6 +298,8 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     
     private NewsletterMailingDTO fillMailingDTO(NewsletterMailing mailing, NewsletterMailingDTO mailingDTO, ThemeDisplay themeDisplay) {
         List<NewsletterTemplateBlock> blocks = templateBlockService.findAllByMailing(mailing);
+        
+        // blocks information
         mailingDTO.setArticles(new ArrayList<JournalArticleDTO>());
         if (blocks != null){
             for(NewsletterTemplateBlock block: blocks){
@@ -301,13 +307,26 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
                 try{
                     JournalArticle article =  JournalArticleLocalServiceUtil.getLatestArticle(themeDisplay.getScopeGroupId(), String.valueOf(block.getArticleId()));
                     articleDTO.setId(block.getArticleId());
-                    articleDTO.setName(article.getTitle());
+                    articleDTO.setName(article.getTitle(themeDisplay.getLocale()));
                     mailingDTO.getArticles().add(articleDTO);
                 }catch(Exception e){
                     logger.error("Error trying to obtain article. Exception: " + e.getMessage(), e);
                 }
             }
         }
+        mailingDTO.setSubscribersNumber(subscriptorService.findAllByStatusAndCategoryCount(themeDisplay, SubscriptionStatus.ACTIVE, mailing.getList().getId()));
+        
+        // article names
+        String articleNames = "";
+        for(int i = 0; i < mailingDTO.getArticles().size() ; i++){
+            articleNames+=mailingDTO.getArticles().get(i).getName();
+            if (i < (mailingDTO.getArticles().size() - 1)){
+                articleNames+=", ";
+            }
+        }
+        mailingDTO.setArticleNames(articleNames);
+        
+        
         return mailingDTO;
 
     }

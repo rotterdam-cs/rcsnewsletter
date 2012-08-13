@@ -51,7 +51,15 @@
 <input type="button" id="btn-send-newsletter-<portlet:namespace/>" value="<fmt:message key="newsletter.tab.mailing.button.sendnewsletter" />"  />
 
 
+<%--
+    Dialogs
+    ##################
+--%>
+<div style="display:none">
 
+    <div id="send-newsletter-dialog-<portlet:namespace/>" title="<fmt:message key="newsletter.tab.mailing.dialog.sendnewsletter.title"/>">
+    </div>
+</div>
 
 
 <script type="text/javascript">
@@ -68,6 +76,26 @@
     function styleUI(){
         // styles on buttons
         jQuery('#mailing-panel input[type="button"]').button();
+        
+        //  confirm send newsletter dialog
+        jQuery("#send-newsletter-dialog-<portlet:namespace/>").dialog({
+            autoOpen: false,
+            modal: true,
+            width: 400,
+            buttons: {
+                "<fmt:message key="newsletter.tab.mailing.button.sendnewsletter" />": function(){
+                    jQuery("#send-newsletter-dialog-<portlet:namespace/>").dialog('close');
+                    var rowId = jQuery('#mailing-list-<portlet:namespace/>').jqGrid('getGridParam', 'selrow');
+                    var rowData = jQuery('#mailing-list-<portlet:namespace/>').jqGrid('getRowData', rowId);
+                    sendNewsletter(rowData.id);
+                },
+                "<fmt:message key="newsletter.common.cancel" />": function(){
+                    jQuery("#send-newsletter-dialog-<portlet:namespace/>").dialog('close');
+                }
+            }
+        });
+        
+        
     }
     
     
@@ -114,8 +142,7 @@
             }
             
             if (rowSelectionValid){
-                var mailingId = jQuery('#mailing-list-<portlet:namespace/> input.radio-field:checked').val();
-                sendNewsletter(mailingId);
+                openSendNewsletterDialog();
             }
         });
         
@@ -134,13 +161,17 @@
                 '<fmt:message key="newsletter.admin.general.id" />',
                 '<fmt:message key="newsletter.admin.general.name" />',
                 '<fmt:message key="newsletter.tab.mailing.field.label.list" />',
+                '',
+                '',
                 ''],
             colModel:[
-                {name:'radio',     index:'id',        width:30,         sortable: false,  search:false, formatter: radioColumnFormatter},
-                {name:'id',        index:'id',        width:40,         sortable: false,  search:false},
-                {name:'name',      index:'name',                        sortable: false,  search:false},
-                {name:'listName',  index:'listName',                    sortable: false,  search:false},
-                {name:'action',    index:'action',    width:40,         sortable: false,  search:false}
+                {name:'radio',              index:'id',                 width:30,   sortable: false,  search:false, formatter: radioColumnFormatter},
+                {name:'id',                 index:'id',                 width:40,   sortable: false,  search:false},
+                {name:'name',               index:'name',                           sortable: false,  search:false},
+                {name:'listName',           index:'listName',                       sortable: false,  search:false},
+                {name:'subscribersNumber',  index:'subscribersNumber',              sortable: false,  search:false},
+                {name:'articleNames',       index:'articleNames',                   sortable: false,  search:false},
+                {name:'action',             index:'action',             width:40,   sortable: false,  search:false}
             ],
             jsonReader : {
                 root: "payload.result",
@@ -173,6 +204,8 @@
             
         });
         jQuery("#mailing-list-<portlet:namespace/>").jqGrid('navGrid','#mailing-list-pager<portlet:namespace/>',{edit:false,add:false,del:false});
+        jQuery("#mailing-list-<portlet:namespace/>").hideCol('articleNames');
+        jQuery("#mailing-list-<portlet:namespace/>").hideCol('subscribersNumber');
     }
     
     
@@ -199,7 +232,15 @@
      */
     function radioColumnFormatter ( cellvalue, options, rowObject )
     {
-        return '<input type="radio" class="radio-field" name="selectedRow" value="' + rowObject.id + '" style="margin:auto; width:100%" />';
+        return '<input type="radio" class="radio-field" name="selectedRow" value="' + rowObject.id + '" style="margin:auto; width:100%" onclick="selectRow(\'' + options.rowId + '\')"  />';
+    }
+    
+    
+    /**
+     * Select a particular grid row
+     */ 
+    function selectRow(rowId){
+        jQuery('#mailing-list-<portlet:namespace/>').jqGrid('setSelection', rowId);
     }
     
     /**
@@ -226,7 +267,21 @@
         });
     }
     
-    
+
+    function openSendNewsletterDialog(){
+         var rowId = jQuery('#mailing-list-<portlet:namespace/>').jqGrid('getGridParam', 'selrow');
+         var rowData = jQuery('#mailing-list-<portlet:namespace/>').jqGrid('getRowData', rowId);
+         
+         var message = '<fmt:message key="newsletter.tab.mailing.dialog.sendnewsletter.msg" />';
+         message = message.replace('{MAILING_NAME}', '<b>' + rowData.name + '</b>');
+         message = message.replace('{ARTICLE_NAMES}', '<b>' + rowData.articleNames + '</b>');
+         message = message.replace('{LIST_NAME}', '<b>' + rowData.listName + '</b>');
+         message = message.replace('{SUBSCRIBERS_NUMBER}', '<b>' + rowData.subscribersNumber + '</b>');
+         
+         jQuery('#send-newsletter-dialog-<portlet:namespace/>').html(message);
+         jQuery('#send-newsletter-dialog-<portlet:namespace/>').dialog('open');
+    }
+
     function sendNewsletter(mailingId){
         jQuery.ajax({
             url: '${sendNewsletterUrl}'

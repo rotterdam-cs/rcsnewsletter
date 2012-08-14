@@ -30,8 +30,6 @@
         <icon>/icon.png</icon>
         <instanceable>true</instanceable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
-        <header-portlet-css>/js/ckeditor/contents.css</header-portlet-css>
-        <header-portlet-css>/js/ckeditor/skins/kama/editor.css</header-portlet-css>
         <header-portlet-css>/js/jquery-validation-1.9.0/demo/css/screen.css</header-portlet-css>
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
         <header-portlet-css>/js/jquery.jqGrid-4.3.1/css/ui.jqgrid.css</header-portlet-css>
@@ -44,7 +42,6 @@
         <footer-portlet-javascript>/js/jquery-validation-1.9.0/jquery.validate.min.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery-validation-1.9.0/jquery.validate.custom.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery-validation-1.9.0/localization/messageslocale.jsp</footer-portlet-javascript>
-        <footer-portlet-javascript>/js/ckeditor/ckeditor.js</footer-portlet-javascript>
     </portlet>
 
     <portlet>
@@ -52,8 +49,6 @@
         <icon>/icon.png</icon>
         <instanceable>true</instanceable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
-        <header-portlet-css>/js/ckeditor/contents.css</header-portlet-css>
-        <header-portlet-css>/js/ckeditor/skins/kama/editor.css</header-portlet-css>
         <header-portlet-css>/js/jquery-validation-1.9.0/demo/css/screen.css</header-portlet-css>
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
         <header-portlet-css>/js/jquery.jqGrid-4.3.1/css/ui.jqgrid.css</header-portlet-css>
@@ -65,7 +60,6 @@
         <footer-portlet-javascript>/js/jquery.form/jquery.form.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery-validation-1.9.0/jquery.validate.min.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery-validation-1.9.0/localization/messageslocale.jsp</footer-portlet-javascript>
-        <footer-portlet-javascript>/js/ckeditor/ckeditor.js</footer-portlet-javascript>
         <css-class-wrapper>newsletter-confirmation-msg</css-class-wrapper>
     </portlet>
 
@@ -74,8 +68,6 @@
         <icon>/icon.png</icon>
         <instanceable>true</instanceable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
-        <header-portlet-css>/js/ckeditor/contents.css</header-portlet-css>
-        <header-portlet-css>/js/ckeditor/skins/kama/editor.css</header-portlet-css>
         <header-portlet-css>/js/jquery-validation-1.9.0/demo/css/screen.css</header-portlet-css>
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
         <header-portlet-css>/js/jquery.jqGrid-4.3.1/css/ui.jqgrid.css</header-portlet-css>
@@ -87,7 +79,6 @@
         <footer-portlet-javascript>/js/jquery.form/jquery.form.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery-validation-1.9.0/jquery.validate.min.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery-validation-1.9.0/localization/messageslocale.jsp</footer-portlet-javascript>
-        <footer-portlet-javascript>/js/ckeditor/ckeditor.js</footer-portlet-javascript>
         <css-class-wrapper>online-newsletter-viewer</css-class-wrapper>
     </portlet>
 

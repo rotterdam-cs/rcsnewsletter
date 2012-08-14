@@ -26,4 +26,8 @@ public interface NewsletterCategoryService extends CRUDService<NewsletterCategor
     ServiceActionResult<NewsletterCategoryDTO> createCategory(long groupId, long companyId, String name, String description, String fromname, String fromemail, String adminemail);
     ServiceActionResult<NewsletterCategoryDTO> editCategory(long categoryId, String name, String description, String fromname, String fromemail, String adminemail);
     ServiceActionResult deleteCategory(long categoryId);
+    
+    ServiceActionResult setCategoryGreetingEmailContent(long categoryId, String content);
+    ServiceActionResult setCategorySubscribeEmailContent(long categoryId, String content);
+    ServiceActionResult setCategoryUnsubscribeEmailContent(long categoryId, String content);
 }

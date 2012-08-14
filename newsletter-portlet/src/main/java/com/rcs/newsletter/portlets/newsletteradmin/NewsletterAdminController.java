@@ -9,10 +9,13 @@ import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.portlets.admin.CRUDActionEnum;
 import com.rcs.newsletter.portlets.forms.GridForm;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -104,6 +107,85 @@ public class NewsletterAdminController extends GenericController {
     @ResourceMapping("getListData")
     public ModelAndView getListData(ResourceRequest request, @RequestParam long id){
         ServiceActionResult result = categoryService.getCategoryDTO(id);
+        return jsonResponse(result);
+    }
+    
+    @ResourceMapping("getCKEditor")
+    public ModelAndView getCKEditor(ResourceRequest request, String listId, String type, ResourceResponse response){
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        long categoryId = 0;
+        try{
+            categoryId = Long.parseLong(listId);
+        }catch(NumberFormatException ex){}
+
+        ServiceActionResult<NewsletterCategoryDTO> sarCategory = categoryService.getCategoryDTO(categoryId);
+        if (!sarCategory.isSuccess()){
+            model.put("currentContent", "");
+            return new ModelAndView("admin/listsEditMails", model);
+        }
+        
+        model.put("listId", categoryId);
+        ResourceBundle newsletterBundle = ResourceBundle.getBundle("Newsletter", Utils.getCurrentLocale(request));
+        String currentContent = null;
+        if ("greeting".equalsIgnoreCase(type)){
+            currentContent = sarCategory.getPayload().getGreetingEmail();
+            model.put("title", newsletterBundle.getString("newsletter.admin.list.menu.greetingmail.edit"));
+            model.put("type", type);
+            model.put("helpContent", newsletterBundle.getString("newsletter.admin.category.greetingmail.info"));
+
+        } else if ("subscribe".equalsIgnoreCase(type)){
+            currentContent = sarCategory.getPayload().getSubscriptionEmail();
+            model.put("title", newsletterBundle.getString("newsletter.admin.list.menu.subscribemail.edit"));
+            model.put("type", type);
+            model.put("helpContent", newsletterBundle.getString("newsletter.admin.category.subscriptionmail.info"));
+
+        } else if ("unsubscribe".equalsIgnoreCase(type)){
+            currentContent = sarCategory.getPayload().getUnsubscriptionEmail();
+            model.put("title", newsletterBundle.getString("newsletter.admin.list.menu.unsubscribemail.edit"));
+            model.put("type", type);
+            model.put("helpContent", newsletterBundle.getString("newsletter.admin.category.unsubscriptionmail.info"));
+        }
+
+        if (currentContent == null){
+            currentContent = "";
+        }
+
+        currentContent = currentContent.replace("\n", "")
+                            .replace("\r", "")
+                            .replace("\"", "\\\"");
+
+        model.put("currentContent", currentContent);
+
+        return new ModelAndView("admin/listsEditMails", model);
+    }
+
+    @ResourceMapping("saveEmail")
+    public ModelAndView saveEmail(ResourceRequest request, ResourceResponse response, String listId, String type, String content){
+        long categoryId = 0;
+        try{
+            categoryId = Long.parseLong(listId);
+        }catch(NumberFormatException ex){}
+
+        ServiceActionResult result = null;
+        if ("greeting".equalsIgnoreCase(type)){
+            result = categoryService.setCategoryGreetingEmailContent(categoryId, content);
+        }else if ("subscribe".equalsIgnoreCase(type)){
+            result = categoryService.setCategorySubscribeEmailContent(categoryId, content);
+        }else if ("unsubscribe".equalsIgnoreCase(type)){
+            result = categoryService.setCategoryUnsubscribeEmailContent(categoryId, content);
+        }
+
+        if (result == null){
+            return null;
+        }
+
+        if (!result.isSuccess()){
+            ResourceBundle newsletterBundle = ResourceBundle.getBundle("ServerMessages", Utils.getCurrentLocale(request));
+            result.setMessages(new LinkedList<String>());
+            result.addMessage(newsletterBundle.getString("newsletter.admin.subscriptionmail.notsaved"));
+        }
+
         return jsonResponse(result);
     }
 }

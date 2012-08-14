@@ -184,5 +184,35 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
         }
         return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(NewsletterCategoryDTO.class, sarCategory.getPayload()));
     }
+
+    @Override
+    public ServiceActionResult setCategoryGreetingEmailContent(long categoryId, String content) {
+        ServiceActionResult<NewsletterCategory> sarCategory = findById(categoryId);
+        if (!sarCategory.isSuccess()){
+            return sarCategory;
+        }
+        sarCategory.getPayload().setGreetingEmail(content);
+        return ServiceActionResult.buildSuccess(null);
+    }
+
+    @Override
+    public ServiceActionResult setCategorySubscribeEmailContent(long categoryId, String content) {
+        ServiceActionResult<NewsletterCategory> sarCategory = findById(categoryId);
+        if (!sarCategory.isSuccess()){
+            return sarCategory;
+        }
+        sarCategory.getPayload().setSubscriptionEmail(content);
+        return ServiceActionResult.buildSuccess(null);
+    }
+
+    @Override
+    public ServiceActionResult setCategoryUnsubscribeEmailContent(long categoryId, String content) {
+        ServiceActionResult<NewsletterCategory> sarCategory = findById(categoryId);
+        if (!sarCategory.isSuccess()){
+            return sarCategory;
+        }
+        sarCategory.getPayload().setUnsubscriptionEmail(content);
+        return ServiceActionResult.buildSuccess(null);
+    }
     
 }

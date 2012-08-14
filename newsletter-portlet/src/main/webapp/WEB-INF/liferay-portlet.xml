@@ -42,6 +42,7 @@
         <footer-portlet-javascript>/js/jquery.jqGrid-4.3.1/js/jquery.jqGrid.src.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery.form/jquery.form.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery-validation-1.9.0/jquery.validate.min.js</footer-portlet-javascript>
+        <footer-portlet-javascript>/js/jquery-validation-1.9.0/jquery.validate.custom.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery-validation-1.9.0/localization/messageslocale.jsp</footer-portlet-javascript>
         <footer-portlet-javascript>/js/ckeditor/ckeditor.js</footer-portlet-javascript>
     </portlet>

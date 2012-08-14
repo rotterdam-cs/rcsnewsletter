@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.rcs.newsletter.NewsletterConstants.*;
 import com.rcs.newsletter.core.dto.JournalArticleDTO;
+import com.rcs.newsletter.core.dto.NewsletterArchiveDTO;
 import com.rcs.newsletter.core.dto.NewsletterMailingDTO;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
@@ -60,6 +61,13 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
 
     @Autowired
     private NewsletterTemplateBlockService templateBlockService;
+
+    @Autowired
+    private NewsletterArchiveService archiveService;
+
+    @Autowired
+    private NewsletterSubscriptorService subscriptorService;
+
     
     @Autowired
     private LiferayMailingUtil mailingUtil;
@@ -290,6 +298,8 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     
     private NewsletterMailingDTO fillMailingDTO(NewsletterMailing mailing, NewsletterMailingDTO mailingDTO, ThemeDisplay themeDisplay) {
         List<NewsletterTemplateBlock> blocks = templateBlockService.findAllByMailing(mailing);
+        
+        // blocks information
         mailingDTO.setArticles(new ArrayList<JournalArticleDTO>());
         if (blocks != null){
             for(NewsletterTemplateBlock block: blocks){
@@ -297,13 +307,26 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
                 try{
                     JournalArticle article =  JournalArticleLocalServiceUtil.getLatestArticle(themeDisplay.getScopeGroupId(), String.valueOf(block.getArticleId()));
                     articleDTO.setId(block.getArticleId());
-                    articleDTO.setName(article.getTitle());
+                    articleDTO.setName(article.getTitle(themeDisplay.getLocale()));
                     mailingDTO.getArticles().add(articleDTO);
                 }catch(Exception e){
                     logger.error("Error trying to obtain article. Exception: " + e.getMessage(), e);
                 }
             }
         }
+        mailingDTO.setSubscribersNumber(subscriptorService.findAllByStatusAndCategoryCount(themeDisplay, SubscriptionStatus.ACTIVE, mailing.getList().getId()));
+        
+        // article names
+        String articleNames = "";
+        for(int i = 0; i < mailingDTO.getArticles().size() ; i++){
+            articleNames+=mailingDTO.getArticles().get(i).getName();
+            if (i < (mailingDTO.getArticles().size() - 1)){
+                articleNames+=", ";
+            }
+        }
+        mailingDTO.setArticleNames(articleNames);
+        
+        
         return mailingDTO;
 
     }
@@ -397,8 +420,39 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     }
 
     @Override
-    public ServiceActionResult<NewsletterMailingDTO> sendNewsletter(Long mailingId, ThemeDisplay themeDisplay) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public ServiceActionResult sendNewsletter(Long mailingId, ThemeDisplay themeDisplay) {
+        // obtain mailing info
+        ServiceActionResult<NewsletterMailing> findMailingResult= findById(mailingId);
+        if (!findMailingResult.isSuccess()){
+            return ServiceActionResult.buildFailure(null);
+        }
+        
+        // get email body
+        String emailBody = getEmailFromTemplate(mailingId, themeDisplay);
+        
+        // create archive entry
+        logger.info("Creating archive instance");
+        ServiceActionResult<NewsletterArchiveDTO> saveArchiveResult = archiveService.saveArchive(findMailingResult.getPayload(), emailBody, themeDisplay);
+        if (!saveArchiveResult.isSuccess()){
+            return ServiceActionResult.buildFailure(null);
+        }
+        NewsletterArchiveDTO archiveDTO = saveArchiveResult.getPayload();
+        
+        
+        // send newsletter
+        logger.info("Sending newsletter...");
+        sendMailing(mailingId, themeDisplay, archiveDTO.getId());
+        
+        
+        // delete mailing after it's sent
+        logger.info("Deleting mailing...");
+        ServiceActionResult deleteMailing = deleteMailing(themeDisplay, mailingId);
+        if (!deleteMailing.isSuccess()){
+            return ServiceActionResult.buildFailure(null);
+        }
+        return ServiceActionResult.buildSuccess(null);
+        
+        
     }
     
     

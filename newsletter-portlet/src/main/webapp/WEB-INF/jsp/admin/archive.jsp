@@ -14,17 +14,30 @@
 <fmt:setBundle basename="Language"/>
 <portlet:defineObjects />
 
-<html>
-    <head>
-        <script type="text/javascript">
-            Liferay.on('portletReady', function(event) {
-                if('_' + event.portletId + '_' != '<portlet:namespace/>') {
-                    return;
-                }
-            });
-        </script>
-    </head>
-    <body>
-        <p>archive</p>
-    </body>
-</html>
+
+    <%--
+        Errors and Messages common view
+        ###############################
+    --%>
+    <%@include file="../commons/errorsView.jsp" %>
+
+    <div id="archives-panel">
+
+
+
+        <%--
+            Include Archive List View (by default)
+            ########################################
+        --%>
+        <jsp:include page="archiveList.jsp" />
+
+    </div>
+
+</body>
+
+
+<script type="text/javascript">
+    function initTab(){
+        clearMessages();
+    }
+</script>

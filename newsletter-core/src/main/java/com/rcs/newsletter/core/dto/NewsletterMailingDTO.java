@@ -35,6 +35,11 @@ public class NewsletterMailingDTO  extends DataTransferObject {
     @DTOTransient
     private Long[] articleIds;
     
+    @DTOTransient
+    private String articleNames;
+    
+    @DTOTransient
+    private int subscribersNumber;
     
     /**
      * @return the id
@@ -146,6 +151,34 @@ public class NewsletterMailingDTO  extends DataTransferObject {
      */
     public void setArticleIds(Long[] articleIds) {
         this.articleIds = articleIds;
+    }
+
+    /**
+     * @return the subscribersNumber
+     */
+    public int getSubscribersNumber() {
+        return subscribersNumber;
+    }
+
+    /**
+     * @param subscribersNumber the subscribersNumber to set
+     */
+    public void setSubscribersNumber(int subscribersNumber) {
+        this.subscribersNumber = subscribersNumber;
+    }
+
+    /**
+     * @return the articleNames
+     */
+    public String getArticleNames() {
+        return articleNames;
+    }
+
+    /**
+     * @param articleNames the articleNames to set
+     */
+    public void setArticleNames(String articleNames) {
+        this.articleNames = articleNames;
     }
 
     

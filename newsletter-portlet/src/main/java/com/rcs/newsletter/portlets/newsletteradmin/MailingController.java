@@ -220,18 +220,15 @@ public class MailingController extends GenericController {
     
     @ResourceMapping(value="sendNewsletter")
     public ModelAndView sendNewsletter(ResourceRequest request, ResourceResponse response, @RequestParam Long mailingId){
+        logger.info("Sending newsletter for mailing: " + mailingId);
         ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, request.getLocale());
-        /*
         try{
-            mailingService.sendTestMailing(mailingId, emailAddress, Utils.getThemeDisplay(request));
-            return jsonResponse(ServiceActionResult.buildSuccess(null, bundle.getString("newsletter.tab.mailing.message.testemailsent")));
+            mailingService.sendNewsletter(mailingId, Utils.getThemeDisplay(request));
+            return jsonResponse(ServiceActionResult.buildSuccess(null, bundle.getString("newsletter.tab.mailing.message.newslettersent")));
         }catch(Exception e){
             logger.error("Error while trying to send test email. Exception: " + e.getMessage(), e);
-            return jsonResponse(ServiceActionResult.buildFailure(null, bundle.getString("newsletter.tab.mailing.error.sendingtestemail")));
+            return jsonResponse(ServiceActionResult.buildFailure(null, bundle.getString("newsletter.tab.mailing.error.sendingnewsletter")));
         }
-       
-       * */
-        return null;
     }
     
     

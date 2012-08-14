@@ -44,7 +44,7 @@
         </tr>
         <tr>
             <td><label><fmt:message key="newsletter.tab.templates.field.label.name" /></label></td>
-            <td><input type="text" name="name" class="required field-long" style="width:200px" value="<c:out value="${template.name}" />" /></td>
+            <td><input type="text" name="name" class="required field-long" value="<c:out value="${template.name}" />" /></td>
         </tr>
         <tr>
             <td colspan="2" id="td-ckeditor">

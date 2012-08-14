@@ -18,6 +18,7 @@
 <portlet:resourceURL id="getLists" var="getListsURL"/>
 <portlet:resourceURL id="addEditDeleteList" var="addEditDeleteListURL"/>
 <portlet:resourceURL id="getListData" var="getListDataURL"/>
+<portlet:resourceURL id="getCKEditor" var="getCKEditorURL"/>
 
 <html>
     <head>
@@ -63,10 +64,49 @@
                         gridComplete: function() {
                             var ids = jQuery('#listsGrid<portlet:namespace/>').jqGrid('getDataIDs');
                             for(var i = 0; i < ids.length; i++){
-                                var editIcon = '<div style="float:left; margin-left:20px;" class="ui-icon ui-icon-pencil editActionIcon" listId="' + ids[i] + '"></div>';
-                                var deleteIcon = '<div style="float:left; margin-left:20px;" class="ui-icon ui-icon-trash deleteActionIcon" listId="' + ids[i] + '"></div>';
-                                jQuery("#listsGrid<portlet:namespace/>").jqGrid('setRowData',ids[i],{ 'action' : editIcon + deleteIcon } );
+                                var editIcon = '<div title="<fmt:message key="newsletter.admin.category.edit" bundle="${newsletter}"/>" style="float:left; margin-left:20px;" class="ui-icon ui-icon-pencil editActionIcon" listId="' + ids[i] + '"></div>';
+                                var deleteIcon = '<div title="<fmt:message key="newsletter.admin.category.delete.title" bundle="${newsletter}"/>" style="float:left; margin-left:20px;" class="ui-icon ui-icon-trash deleteActionIcon" listId="' + ids[i] + '"></div>';
+                                var editSubscribe = '<div title="<fmt:message key="newsletter.admin.list.menu.subscribemail.edit" bundle="${newsletter}"/>" style="float:left; margin-left:20px;" class="ui-icon ui-icon-mail-closed editSubscribeIcon" listId="' + ids[i] + '"></div>';
+                                var editUnsubscribe = '<div title="<fmt:message key="newsletter.admin.list.menu.unsubscribemail.edit" bundle="${newsletter}"/>" style="float:left; margin-left:20px;" class="ui-icon ui-icon-mail-closed editUnsubscribeIcon" listId="' + ids[i] + '"></div>';
+                                var editGreeting = '<div title="<fmt:message key="newsletter.admin.list.menu.greetingmail.edit" bundle="${newsletter}"/>" style="float:left; margin-left:20px;" class="ui-icon ui-icon-mail-closed editGreeting" listId="' + ids[i] + '"></div>';
+                                jQuery("#listsGrid<portlet:namespace/>").jqGrid('setRowData',ids[i],{ 'action' : editIcon + deleteIcon + editSubscribe + editUnsubscribe + editGreeting } );
                             }
+
+                            jQuery('.editActionIcon').click(function(){
+                                var id = jQuery(this).attr('listId');
+                                getCategoryDataAndShowForm('UPDATE', id);
+                                jQuery("#addEditDeleteCategory<portlet:namespace/> .fieldToDisable").attr("disabled", false);
+                            });
+
+                            jQuery('.deleteActionIcon').click(function(){
+                                var id = jQuery(this).attr('listId');
+                                getCategoryDataAndShowForm('DELETE', id);
+                                jQuery("#addEditDeleteCategory<portlet:namespace/> .fieldToDisable").attr("disabled", true);
+                            });
+
+                            jQuery('.editSubscribeIcon').click(function(){
+                                var id = jQuery(this).attr('listId');
+                                jQuery('#ckEditorContainer<portlet:namespace/>').load('${getCKEditorURL}', {listId: id, type:'subscribe'}, function(){
+                                    jQuery('#gridContainer<portlet:namespace/>').hide();
+                                    jQuery('#ckEditorContainer<portlet:namespace/>').show();                                      
+                                });
+                            });
+
+                            jQuery('.editUnsubscribeIcon').click(function(){
+                                var id = jQuery(this).attr('listId');
+                                jQuery('#ckEditorContainer<portlet:namespace/>').load('${getCKEditorURL}', {listId: id, type:'unsubscribe'}, function(){
+                                    jQuery('#gridContainer<portlet:namespace/>').hide();
+                                    jQuery('#ckEditorContainer<portlet:namespace/>').show();                                      
+                                });
+                            });
+
+                            jQuery('.editGreeting').click(function(){
+                                var id = jQuery(this).attr('listId');
+                                jQuery('#ckEditorContainer<portlet:namespace/>').load('${getCKEditorURL}', {listId: id, type:'greeting'}, function(){
+                                    jQuery('#gridContainer<portlet:namespace/>').hide();
+                                    jQuery('#ckEditorContainer<portlet:namespace/>').show();                                      
+                                });
+                            });
                         }
                     });
                     jQuery("#listsGrid<portlet:namespace/>")
@@ -106,18 +146,6 @@
                     clearErrors();
                     validator.resetForm();
                     backToGrid();
-                });
-                
-                jQuery(document).on('click', '.editActionIcon', function(){
-                    var id = jQuery(this).attr('listId');
-                    getCategoryDataAndShowForm('UPDATE', id);
-                    jQuery("#addEditDeleteCategory<portlet:namespace/> .fieldToDisable").attr("disabled", false);
-                });
-                
-                jQuery(document).on('click', '.deleteActionIcon', function(){
-                    var id = jQuery(this).attr('listId');
-                    getCategoryDataAndShowForm('DELETE', id);
-                    jQuery("#addEditDeleteCategory<portlet:namespace/> .fieldToDisable").attr("disabled", true);
                 });
 
                 function showAddEditDeleteForm(action){
@@ -208,6 +236,7 @@
                     </table>
                 </form>
             </div>
+            <div style="display: none;" id="ckEditorContainer<portlet:namespace/>"></div>
         </div>
     </body>
 </html>

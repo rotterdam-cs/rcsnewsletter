@@ -237,10 +237,12 @@
 
             <input type="checkbox" id="activeStatusCheck<portlet:namespace/>"/>
                 <fmt:message key="newsletter.admin.subscribers.only.show.inactive.subscribers" bundle="${newsletter}"/><br/>
-
+            <hr/>
+            
             <table id="subscribersGrid<portlet:namespace/>"></table>
             <div id="subscribersPager<portlet:namespace/>"></div>
             
+            <br/>
             <button id="importButton<portlet:namespace/>" type="button"><fmt:message key="newsletter.admin.subscribers.import" bundle="${newsletter}"/></button>
             <button id="exportButton<portlet:namespace/>" type="button"><fmt:message key="newsletter.admin.subscribers.export" bundle="${newsletter}"/></button>
             <form id="exportSubscribersForm<portlet:namespace/>" action="${exportSubscribersURL}" method="POST">

@@ -107,6 +107,9 @@
                                     jQuery('#ckEditorContainer<portlet:namespace/>').show();                                      
                                 });
                             });
+                            
+                            // Fix jQGrid scroll issue
+                            jQuery('#listsGrid<portlet:namespace/> .ui-jqgrid-bdiv').css('overflow', 'hidden');
                         }
                     });
                     jQuery("#listsGrid<portlet:namespace/>")

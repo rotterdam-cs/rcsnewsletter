@@ -38,25 +38,30 @@
 
 
 <form:form id="register-form-${namespace}"  cssClass="newsletter-forms-form" modelAttribute="registerForm" >
+    <form:hidden path="categoryId"  />
     <table>
+        <c:if test="${showNameFields}">
         <tr>
             <td><label><fmt:message key="newsletter.registration.firstname" /></label></td>
-            <td><form:input path="firstName"  cssClass="field-long required" /></td>
+            <td><form:input path="firstName"  cssClass="field-long" /></td>
         </tr>
         <tr>
             <td><label><fmt:message key="newsletter.registration.lastname" /></label></td>
-            <td><form:input path="lastName"  cssClass="field-long required" /></td>
+            <td><form:input path="lastName"  cssClass="field-long" /></td>
         </tr>
+        </c:if>
         <tr>
             <td><label><fmt:message key="newsletter.registration.email" />*</label></td>
             <td><form:input path="email"  cssClass="field-long required custom-email" /></td>
         </tr>
+        <c:if test="${!(registerForm.categoryId eq 0)}">
         <tr>
             <td><a href="javascript:loadUnregisterView()"><fmt:message key="newsletter.registration.link.unregister" /></a> </td>
             <td>
                 <input id="btn-register-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.registration.button.register" />" />
             </td>
         </tr>
+        </c:if>
     </table>
 </form:form>
 
@@ -77,6 +82,10 @@
         styleUI();
         initEvents();
         clearMessages();
+        
+        <c:if test="${registerForm.categoryId eq 0}">
+               showErrors(['<fmt:message key="newsletter.registration.settings.error.nolistfound" />']);
+        </c:if>
     });
     
     /**
@@ -97,6 +106,8 @@
         
         // click on 'Remove' button
         jQuery('#btn-register-<portlet:namespace/>').click(function(){
+            clearMessages();
+            clearErrors();
             // validate form
              var form = jQuery('#register-form-${namespace}');
              if (form.valid()){ 

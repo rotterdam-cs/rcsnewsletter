@@ -6,6 +6,9 @@ package com.rcs.newsletter.portlets.newsletterregistration;
 
 import com.liferay.portal.util.PortalUtil;
 import com.rcs.newsletter.commons.GenericController;
+import com.rcs.newsletter.commons.Utils;
+import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
+import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.portlets.forms.SubscriptionForm;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +16,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +32,9 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 @RequestMapping("VIEW")
 public class NewsletterRegistrationController extends GenericController{
  
+    @Autowired
+    private NewsletterSubscriptionService subscriptionService;
+    
     @RenderMapping
     public ModelAndView initialView(RenderRequest request, RenderResponse response){
         Map<String,Object> model = new HashMap<String,Object>();
@@ -48,6 +55,14 @@ public class NewsletterRegistrationController extends GenericController{
         ModelAndView mav = new ModelAndView("registration/registerForm");
         mav.addObject("namespace", namespace);       // portlet namespace
         mav.addObject("registerForm", registerForm); // register form
+        
+        Long listId = Long.valueOf(request.getPreferences().getValue(NewsletterRegistrationEditController.PORTLET_PROPERTY_NEWSLETTER_LIST, "0"));
+        registerForm.setCategoryId(listId);
+        
+        boolean showNameFields = !Boolean.valueOf(request.getPreferences().getValue(NewsletterRegistrationEditController.PORTLET_PROPERTY_DISABLED_NAME_FIELDS, "false"));
+        mav.addObject("showNameFields", showNameFields); // show first name/last name fields flag
+
+        
 
         return mav;
     }
@@ -66,5 +81,25 @@ public class NewsletterRegistrationController extends GenericController{
         mav.addObject("namespace", namespace);       // portlet namespace
 
         return mav;
+    }
+    
+    
+    /**
+     * Register a new user to the selected list
+     * @param request
+     * @param response
+     * @return 
+     */
+    @ResourceMapping("register")
+    public ModelAndView register(ResourceRequest request, ResourceResponse response, @ModelAttribute SubscriptionForm registerForm){
+
+       NewsletterSubscriptionDTO subscriptionDTO = new NewsletterSubscriptionDTO();
+       subscriptionDTO.setCategoryId(String.valueOf(registerForm.getCategoryId()));
+       subscriptionDTO.setSubscriptorEmail(registerForm.getEmail());
+       subscriptionDTO.setSubscriptorFirstName(registerForm.getFirstName());
+       subscriptionDTO.setSubscriptorLastName(registerForm.getLastName());
+       
+       return jsonResponse(subscriptionService.createSubscription(subscriptionDTO, Utils.getThemeDisplay(request)));
+       
     }
 }

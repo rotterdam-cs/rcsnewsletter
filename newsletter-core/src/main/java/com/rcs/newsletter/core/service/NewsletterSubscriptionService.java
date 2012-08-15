@@ -13,7 +13,29 @@ import java.util.List;
  */
 public interface NewsletterSubscriptionService extends CRUDService<NewsletterSubscription> {    
     
+    /**
+     * Returns a subscription by subscriptorId
+     * @param subscriptorId
+     * @return 
+     */
     ServiceActionResult<List<NewsletterSubscriptionDTO>> findSubscriptionsBySubscriptorId(long subscriptorId);
 
+    
+    /**
+     * Saves multiple subscriptions (used when importing)
+     * @param result
+     * @param themeDisplay
+     * @param categoryId
+     * @param newSubscriptions 
+     */
     void createSubscriptionsForCategory(CreateMultipleSubscriptionsResult result, ThemeDisplay themeDisplay, long categoryId, List<NewsletterSubscriptionDTO> newSubscriptions);
+    
+    
+    /**
+     * Saves a subscription for a particular subscriptor
+     * @param subscriptionDTO
+     * @param themeDisplay
+     * @return 
+     */
+    ServiceActionResult createSubscription(NewsletterSubscriptionDTO subscriptionDTO, ThemeDisplay themeDisplay);
 }

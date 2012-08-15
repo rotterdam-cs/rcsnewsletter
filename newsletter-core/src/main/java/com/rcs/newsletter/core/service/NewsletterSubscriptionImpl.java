@@ -10,6 +10,7 @@ import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.core.service.util.SubscriptionUtil;
 import java.util.List;
+import java.util.ResourceBundle;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -119,5 +120,50 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
         result.setSuccess(true);
         result.setRowsOmitted(result.getRowsOmitted() + omitted);
         result.setSubscriptionsCreated(created);
+    }
+
+    @Override
+    public ServiceActionResult createSubscription(NewsletterSubscriptionDTO subscriptionDTO, ThemeDisplay themeDisplay) {
+        ResourceBundle bundle = ResourceBundle.getBundle("Language", themeDisplay.getLocale());
+        
+        // check if the subscription already exists
+        NewsletterSubscription subscription = findByEmailAndCategory(themeDisplay, subscriptionDTO.getSubscriptorEmail(), Long.valueOf(subscriptionDTO.getCategoryId()));
+        if (subscription != null){
+            String error = bundle.getString("newsletter.registration.register.error.alreadyregisterd");
+            error = error.replace("{EMAIL_ADDRESS}", subscriptionDTO.getSubscriptorEmail());
+            error = error.replace("{LIST_NAME}", subscription.getCategory().getName());
+            return ServiceActionResult.buildFailure(null, error);
+        }
+        
+        NewsletterCategory category = categoryService.findById(Long.valueOf(subscriptionDTO.getCategoryId())).getPayload();
+        
+        
+        NewsletterSubscriptor subscriptor = subscriptorForEmail(subscriptionDTO.getSubscriptorEmail(), themeDisplay);
+            if (subscriptor == null){
+                subscriptor = new NewsletterSubscriptor();
+                subscriptor.setEmail(subscriptionDTO.getSubscriptorEmail());
+                subscriptor.setFirstName(subscriptionDTO.getSubscriptorFirstName());
+                subscriptor.setLastName(subscriptionDTO.getSubscriptorLastName());
+                subscriptor.setCompanyid(themeDisplay.getCompanyId());
+                subscriptor.setGroupid(themeDisplay.getScopeGroupId());
+                sessionFactory.getCurrentSession().save(subscriptor);
+            }
+            
+        subscription = new NewsletterSubscription();
+        subscription.setSubscriptor(subscriptor);
+        subscription.setCategory(category);
+        subscription.setStatus(SubscriptionStatus.ACTIVE);
+        subscription.setGroupid(themeDisplay.getScopeGroupId());
+        subscription.setCompanyid(themeDisplay.getCompanyId());
+        subscription.setActivationKey(SubscriptionUtil.getUniqueKey());
+        subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
+        sessionFactory.getCurrentSession().save(subscription);
+        
+        
+        String message = bundle.getString("newsletter.registration.register.message.emailregistered");
+        message = message.replace("{EMAIL_ADDRESS}", subscriptionDTO.getSubscriptorEmail());
+        message = message.replace("{LIST_NAME}", category.getName());
+
+        return ServiceActionResult.buildSuccess(null, message);
     }
 }

@@ -28,6 +28,7 @@
     <portlet>
         <portlet-name>NewsletterRegistration</portlet-name>
         <icon>/icon.png</icon>
+        <configuration-action-class>com.rcs.newsletter.portlets.newsletterregistration.NewsletterRegistrationConfigurationAction</configuration-action-class>
         <instanceable>true</instanceable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
         <header-portlet-css>/js/jquery-validation-1.9.0/demo/css/screen.css</header-portlet-css>

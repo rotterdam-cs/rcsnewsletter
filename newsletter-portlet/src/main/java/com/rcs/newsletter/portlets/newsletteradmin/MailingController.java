@@ -7,7 +7,6 @@ import com.rcs.newsletter.core.dto.JournalArticleDTO;
 import com.rcs.newsletter.core.dto.NewsletterMailingDTO;
 import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
 import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
-import com.rcs.newsletter.core.service.NewsletterArchiveService;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterMailingService;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
@@ -44,8 +43,6 @@ public class MailingController extends GenericController {
     private NewsletterCategoryService categoryService;
     @Autowired
     private NewsletterTemplateService templateService;
-    @Autowired
-    private NewsletterArchiveService archiveService;
     
     private Logger logger = Logger.getLogger(MailingController.class);
     

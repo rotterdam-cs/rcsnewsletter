@@ -99,7 +99,7 @@
                     ,success: function(response){
                         if (response.success){
                             showMessages(response.messages);
-                            jQuery('#settings-form-${namespace}').reset();
+                            form.resetForm();
                         }else{
                             showErrors(response.validationKeys);
                         }

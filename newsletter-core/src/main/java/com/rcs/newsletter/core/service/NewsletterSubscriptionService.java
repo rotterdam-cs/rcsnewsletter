@@ -38,4 +38,23 @@ public interface NewsletterSubscriptionService extends CRUDService<NewsletterSub
      * @return 
      */
     ServiceActionResult createSubscription(NewsletterSubscriptionDTO subscriptionDTO, ThemeDisplay themeDisplay);
+
+    
+    /**
+     * Activates a subscription
+     * @param subscriptionId
+     * @param activationKey
+     * @param themeDisplay
+     * @return 
+     */
+    ServiceActionResult activateSubscription(Long subscriptionId, String activationKey, ThemeDisplay themeDisplay);
+    
+     /**
+     * Deactivates a subscription
+     * @param subscriptionId
+     * @param activationKey
+     * @param themeDisplay
+     * @return 
+     */
+    ServiceActionResult deactivateSubscription(Long subscriptionId, String deactivationKey, ThemeDisplay themeDisplay);
 }

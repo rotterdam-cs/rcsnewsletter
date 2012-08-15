@@ -156,7 +156,7 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
         subscription = new NewsletterSubscription();
         subscription.setSubscriptor(subscriptor);
         subscription.setCategory(category);
-        subscription.setStatus(SubscriptionStatus.INACTIVE);
+        subscription.setStatus(SubscriptionStatus.INACTIVE); // wait for confirmation
         subscription.setGroupid(themeDisplay.getScopeGroupId());
         subscription.setCompanyid(themeDisplay.getCompanyId());
         subscription.setActivationKey(SubscriptionUtil.getUniqueKey());
@@ -187,4 +187,83 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
 
         return ServiceActionResult.buildSuccess(null, resultMessage);
     }
+    
+    
+
+    @Override
+    public ServiceActionResult activateSubscription(Long subscriptionId, String activationKey, ThemeDisplay themeDisplay) {
+        ResourceBundle bundle = ResourceBundle.getBundle("Language", themeDisplay.getLocale());
+        
+        // validate subscription
+        ServiceActionResult<NewsletterSubscription> result = findById(subscriptionId);
+        if (!result.isSuccess()){
+            return ServiceActionResult.buildFailure(null, "newsletter.confirmation.error.subscriptionnotfound");
+        }
+        NewsletterSubscription subscription = result.getPayload();
+        
+        
+        // validate key
+        if (!subscription.getActivationKey().equals(activationKey)){
+            return ServiceActionResult.buildFailure(null, "newsletter.confirmation.error.invalidactivationkey");
+        }
+        
+        // activate account
+        boolean alreadyActive = subscription.getStatus().equals(SubscriptionStatus.ACTIVE);
+        
+        subscription.setStatus(SubscriptionStatus.ACTIVE);
+        
+        // send greetings email if the subscription was not activated before
+        if (!alreadyActive){
+            try{
+                String content = subscription.getCategory().getGreetingEmail();
+                String subject = bundle.getString("newsletter.subscription.mail.greetings.subject");
+                content = EmailFormat.replaceUserInfo(content, subscription, themeDisplay);
+                content = EmailFormat.fixImagesPath(content, themeDisplay);                            
+                InternetAddress fromIA = new InternetAddress(subscription.getCategory().getFromEmail());
+                InternetAddress toIA = new InternetAddress(subscription.getSubscriptor().getEmail());
+                MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);
+                LiferayMailingUtil.sendEmail(message);
+            }catch(Exception e){
+                logger.error("An error occurred when trying to send greeting email. Exception: " + e.getMessage(), e);
+                return ServiceActionResult.buildFailure(null, bundle.getString("newsletter.registration.register.error.sendgreetings"));
+            }
+        }
+        
+        String successMessage = bundle.getString("newsletter.confirmation.message.activated");
+        successMessage = successMessage.replace("{LIST_NAME}", subscription.getCategory().getName());
+        return ServiceActionResult.buildSuccess( successMessage, successMessage);
+        
+    }
+    
+    
+     @Override
+    public ServiceActionResult deactivateSubscription(Long subscriptionId, String deactivationKey, ThemeDisplay themeDisplay) {
+        ResourceBundle bundle = ResourceBundle.getBundle("Language", themeDisplay.getLocale());
+        
+        // validate subscription
+        ServiceActionResult<NewsletterSubscription> result = findById(subscriptionId);
+        if (!result.isSuccess()){
+            return ServiceActionResult.buildFailure(null, "newsletter.confirmation.error.subscriptionnotfound");
+        }
+        NewsletterSubscription subscription = result.getPayload();
+        
+        
+        // validate key
+        if (!subscription.getDeactivationKey().equals(deactivationKey)){
+            return ServiceActionResult.buildFailure(null, "newsletter.confirmation.error.invaliddeactivationkey");
+        }
+        
+        // deactivate account
+        String listName =  subscription.getCategory().getName();
+        delete(subscription);
+        
+        
+        String successMessage = bundle.getString("newsletter.confirmation.message.deactivated");
+        successMessage = successMessage.replace("{LIST_NAME}", listName);
+        return ServiceActionResult.buildSuccess(null, successMessage);
+        
+    }
+    
+    
+     
 }

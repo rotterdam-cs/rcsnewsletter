@@ -155,8 +155,10 @@
 }
 
 .newsletter-confirmation-msg {    
+    /*
     text-align: center!important;
     display: none;
+    */
     padding-bottom: 15px;
 }
 .newsletter-forms-column-1-filterlist{

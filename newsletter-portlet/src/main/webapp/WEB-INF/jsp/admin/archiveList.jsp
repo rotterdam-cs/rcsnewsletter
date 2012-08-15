@@ -85,7 +85,7 @@
             gridComplete: function() {
                 var ids = jQuery("#archives-list-<portlet:namespace/>").jqGrid('getDataIDs');
                 for(var i = 0; i < ids.length; i++){
-                    var viewIcon = '<div style="float:left; margin-left:20px; cursor:pointer" class="ui-icon ui-icon-zoomin" onclick="javascript:viewArchive(' + ids[i] + ');"></div>';
+                    var viewIcon = '<div title="<fmt:message key="newsletter.common.actions.view" />"  style="float:left; margin-left:20px; cursor:pointer" class="ui-icon ui-icon-zoomin" onclick="javascript:viewArchive(' + ids[i] + ');"></div>';
                     jQuery("#archives-list-<portlet:namespace/>").jqGrid('setRowData',ids[i],{ 'action' : viewIcon } );
                 }
                 // Fix jQGrid scroll issue

@@ -1,5 +1,6 @@
 package com.rcs.newsletter.core.service;
 
+import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.CreateMultipleSubscriptionsResult;
 import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
@@ -8,9 +9,12 @@ import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import com.rcs.newsletter.core.service.util.EmailFormat;
+import com.rcs.newsletter.core.service.util.LiferayMailingUtil;
 import com.rcs.newsletter.core.service.util.SubscriptionUtil;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.mail.internet.InternetAddress;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -152,18 +156,35 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
         subscription = new NewsletterSubscription();
         subscription.setSubscriptor(subscriptor);
         subscription.setCategory(category);
-        subscription.setStatus(SubscriptionStatus.ACTIVE);
+        subscription.setStatus(SubscriptionStatus.INACTIVE);
         subscription.setGroupid(themeDisplay.getScopeGroupId());
         subscription.setCompanyid(themeDisplay.getCompanyId());
         subscription.setActivationKey(SubscriptionUtil.getUniqueKey());
         subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
         sessionFactory.getCurrentSession().save(subscription);
         
-        
-        String message = bundle.getString("newsletter.registration.register.message.emailregistered");
-        message = message.replace("{EMAIL_ADDRESS}", subscriptionDTO.getSubscriptorEmail());
-        message = message.replace("{LIST_NAME}", category.getName());
 
-        return ServiceActionResult.buildSuccess(null, message);
+        // send confirmation email
+        try{
+            String content = category.getSubscriptionEmail();
+            String subject = bundle.getString("newsletter.subscription.mail.subject");
+            content = EmailFormat.replaceUserInfo(content, subscription, themeDisplay);
+            content = EmailFormat.fixImagesPath(content, themeDisplay);                            
+            InternetAddress fromIA = new InternetAddress(category.getFromEmail());
+            InternetAddress toIA = new InternetAddress(subscriptor.getEmail());
+            MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);
+            LiferayMailingUtil.sendEmail(message);
+        }catch(Exception e){
+            logger.error("An error occurred when trying to send confirmation email. Exception: " + e.getMessage(), e);
+            return ServiceActionResult.buildFailure(null, bundle.getString("newsletter.registration.register.error.sendconfirmation"));
+        }
+
+        
+        // send feedback message to UI
+        String resultMessage = bundle.getString("newsletter.registration.register.message.emailregistered");
+        resultMessage = resultMessage.replace("{EMAIL_ADDRESS}", subscriptionDTO.getSubscriptorEmail());
+        resultMessage = resultMessage.replace("{LIST_NAME}", category.getName());
+
+        return ServiceActionResult.buildSuccess(null, resultMessage);
     }
 }

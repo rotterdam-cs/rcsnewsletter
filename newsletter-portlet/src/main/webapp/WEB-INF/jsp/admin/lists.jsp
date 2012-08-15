@@ -64,11 +64,11 @@
                         gridComplete: function() {
                             var ids = jQuery('#listsGrid<portlet:namespace/>').jqGrid('getDataIDs');
                             for(var i = 0; i < ids.length; i++){
-                                var editIcon = '<div title="<fmt:message key="newsletter.admin.category.edit" bundle="${newsletter}"/>" style="float:left; margin-left:20px;" class="ui-icon ui-icon-pencil editActionIcon" listId="' + ids[i] + '"></div>';
-                                var deleteIcon = '<div title="<fmt:message key="newsletter.admin.category.delete.title" bundle="${newsletter}"/>" style="float:left; margin-left:20px;" class="ui-icon ui-icon-trash deleteActionIcon" listId="' + ids[i] + '"></div>';
-                                var editSubscribe = '<div title="<fmt:message key="newsletter.admin.list.menu.subscribemail.edit" bundle="${newsletter}"/>" style="float:left; margin-left:20px;" class="ui-icon ui-icon-mail-closed editSubscribeIcon" listId="' + ids[i] + '"></div>';
-                                var editUnsubscribe = '<div title="<fmt:message key="newsletter.admin.list.menu.unsubscribemail.edit" bundle="${newsletter}"/>" style="float:left; margin-left:20px;" class="ui-icon ui-icon-mail-closed editUnsubscribeIcon" listId="' + ids[i] + '"></div>';
-                                var editGreeting = '<div title="<fmt:message key="newsletter.admin.list.menu.greetingmail.edit" bundle="${newsletter}"/>" style="float:left; margin-left:20px;" class="ui-icon ui-icon-mail-closed editGreeting" listId="' + ids[i] + '"></div>';
+                                var editIcon = '<div title="<fmt:message key="newsletter.common.actions.edit"  bundle="${newsletter}"/>" style="float:left; margin-left:20px; cursor:pointer" class="ui-icon ui-icon-pencil editActionIcon" listId="' + ids[i] + '"></div>';
+                                var deleteIcon = '<div title="<fmt:message key="newsletter.common.actions.delete"  bundle="${newsletter}"/>" style="float:left; margin-left:20px; cursor:pointer" class="ui-icon ui-icon-trash deleteActionIcon" listId="' + ids[i] + '"></div>';
+                                var editSubscribe = '<div title="<fmt:message key="newsletter.admin.list.menu.subscribemail.edit" bundle="${newsletter}"/>" style="float:left; margin-left:20px; cursor:pointer" class="ui-icon ui-icon-mail-closed editSubscribeIcon" listId="' + ids[i] + '"></div>';
+                                var editUnsubscribe = '<div title="<fmt:message key="newsletter.admin.list.menu.unsubscribemail.edit" bundle="${newsletter}"/>" style="float:left; margin-left:20px; cursor:pointer" class="ui-icon ui-icon-mail-closed editUnsubscribeIcon" listId="' + ids[i] + '"></div>';
+                                var editGreeting = '<div title="<fmt:message key="newsletter.admin.list.menu.greetingmail.edit" bundle="${newsletter}"/>" style="float:left; margin-left:20px; cursor:pointer" class="ui-icon ui-icon-mail-closed editGreeting" listId="' + ids[i] + '"></div>';
                                 jQuery("#listsGrid<portlet:namespace/>").jqGrid('setRowData',ids[i],{ 'action' : editIcon + deleteIcon + editSubscribe + editUnsubscribe + editGreeting } );
                             }
 
@@ -109,7 +109,7 @@
                             });
                             
                             // Fix jQGrid scroll issue
-                            jQuery('#listsGrid<portlet:namespace/> .ui-jqgrid-bdiv').css('overflow', 'hidden');
+                            jQuery('#lists<portlet:namespace/> .ui-jqgrid-bdiv').css('overflow', 'hidden');
                         }
                     });
                     jQuery("#listsGrid<portlet:namespace/>")

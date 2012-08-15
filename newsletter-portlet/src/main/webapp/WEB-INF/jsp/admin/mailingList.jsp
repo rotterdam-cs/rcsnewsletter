@@ -183,8 +183,8 @@
             gridComplete: function() {
                 var ids = jQuery("#mailing-list-<portlet:namespace/>").jqGrid('getDataIDs');
                 for(var i = 0; i < ids.length; i++){
-                    var editIcon = '<div style="float:left; margin-left:20px; cursor:pointer" class="ui-icon ui-icon-pencil" onclick="javascript:editMailing(' + ids[i] + ');"></div>';
-                    var deleteIcon = '<div style="float:left; margin-left:20px; cursor:pointer" class="ui-icon ui-icon-trash" onclick="javascript:deleteMailing(' + ids[i] + ');"></div>';
+                    var editIcon = '<div title="<fmt:message key="newsletter.common.actions.edit"/>"  style="float:left; margin-left:20px; cursor:pointer" class="ui-icon ui-icon-pencil" onclick="javascript:editMailing(' + ids[i] + ');"></div>';
+                    var deleteIcon = '<div title="<fmt:message key="newsletter.common.actions.delete"/>"  style="float:left; margin-left:20px; cursor:pointer" class="ui-icon ui-icon-trash" onclick="javascript:deleteMailing(' + ids[i] + ');"></div>';
 
                     jQuery("#mailing-list-<portlet:namespace/>").jqGrid('setRowData',ids[i],{ 'action' : editIcon + deleteIcon } );
                 }

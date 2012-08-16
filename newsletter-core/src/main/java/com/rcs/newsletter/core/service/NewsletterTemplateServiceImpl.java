@@ -2,6 +2,8 @@ package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
+import com.rcs.newsletter.core.forms.jqgrid.GridRestrictionsUtil;
 import com.rcs.newsletter.core.model.NewsletterEntity;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
@@ -16,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.jdto.DTOBinder;
@@ -47,18 +50,26 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
 
     
     @Override
-    public ServiceActionResult<ListResultsDTO<NewsletterTemplateDTO>> findAllTemplates(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order) {
+    public ServiceActionResult<ListResultsDTO<NewsletterTemplateDTO>> findAllTemplates(ThemeDisplay themeDisplay, GridForm gridForm, String orderField, String orderType) {
         // get total records count
         int totalRecords = findAllCount(themeDisplay);
         
         // get records
-        ServiceActionResult<List<NewsletterTemplate>> listResult = findAll(themeDisplay, start, limit, ordercrit, order);
-        if (!listResult.isSuccess()){
-            return ServiceActionResult.buildFailure(null);
+        Session currentSession = sessionFactory.getCurrentSession();
+        Criteria criteria = currentSession.createCriteria(NewsletterTemplate.class);
+        criteria.addOrder(Order.asc(orderField));
+        
+        // add search filters
+        if (gridForm != null){
+            Criterion criterion = GridRestrictionsUtil.createCriterion(gridForm.getFiltersForm());
+            if (criterion != null){
+                criteria.add(criterion);
+            }
         }
+        List<NewsletterTemplate> list = criteria.list();
         
         // create and return ListResultsDTO
-        ListResultsDTO<NewsletterTemplateDTO> dto = new ListResultsDTO<NewsletterTemplateDTO>(limit, start, totalRecords, binder.bindFromBusinessObjectList(NewsletterTemplateDTO.class, listResult.getPayload()));
+        ListResultsDTO<NewsletterTemplateDTO> dto = new ListResultsDTO<NewsletterTemplateDTO>(gridForm.getRows(), gridForm.calculateStart(), totalRecords, binder.bindFromBusinessObjectList(NewsletterTemplateDTO.class, list));
         return ServiceActionResult.buildSuccess(dto);
     }
 

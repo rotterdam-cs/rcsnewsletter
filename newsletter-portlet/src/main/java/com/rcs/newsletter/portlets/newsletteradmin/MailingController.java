@@ -7,12 +7,12 @@ import com.rcs.newsletter.core.dto.JournalArticleDTO;
 import com.rcs.newsletter.core.dto.NewsletterMailingDTO;
 import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
 import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterMailingService;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import com.rcs.newsletter.portlets.forms.GridForm;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,11 +76,12 @@ public class MailingController extends GenericController {
      */
     @ResourceMapping(value="getMailingList")
     public ModelAndView mailingList(ResourceRequest request, ResourceResponse response, @ModelAttribute GridForm form){
+        
         // get records using paging
+        form.addFieldAlias("listName", "list.name");
         ServiceActionResult<ListResultsDTO<NewsletterMailingDTO>> result = mailingService.findAllMailings(
                                     Utils.getThemeDisplay(request), 
-                                    form.calculateStart(), 
-                                    form.getRows(), 
+                                    form, 
                                     "name", 
                                     ORDER_BY_ASC);
 

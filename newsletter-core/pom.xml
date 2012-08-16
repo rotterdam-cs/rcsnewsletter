@@ -49,6 +49,18 @@
             <artifactId>jdto</artifactId>
             <scope>provided</scope>
         </dependency>
+        
+        
+         <!-- JACKSON JSON -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-lgpl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-lgpl</artifactId>
+        </dependency>        
+        
     </dependencies>    
   
     <packaging>jar</packaging>

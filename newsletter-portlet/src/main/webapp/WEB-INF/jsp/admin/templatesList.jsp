@@ -84,7 +84,7 @@
                 ''],
             colModel:[
                 {name:'id',     index:'id',     width:40,         sortable: false, search:false},
-                {name:'name',   index:'name',   sortable: false,  search:false},
+                {name:'name',   index:'name',   searchoptions:{sopt:['cn']},  sortable: false,  search:true},
                 {name:'action', index:'action', width:40,         sortable: false, search:false}
             ],
             jsonReader : {
@@ -114,7 +114,7 @@
             rowNum: 10
             
         });
-        jQuery("#templates-list-<portlet:namespace/>").jqGrid('navGrid','#templates-list-pager<portlet:namespace/>',{edit:false,add:false,del:false});
+        jQuery("#templates-list-<portlet:namespace/>").jqGrid('navGrid','#templates-list-pager<portlet:namespace/>',{edit:false,add:false,del:false},{},{},{},{multipleSearch:true});
     }
     
     

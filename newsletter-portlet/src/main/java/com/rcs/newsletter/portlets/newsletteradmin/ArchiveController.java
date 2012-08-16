@@ -3,10 +3,10 @@ package com.rcs.newsletter.portlets.newsletteradmin;
 import com.rcs.newsletter.commons.GenericController;
 import com.rcs.newsletter.commons.Utils;
 import com.rcs.newsletter.core.dto.NewsletterArchiveDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
 import com.rcs.newsletter.core.service.NewsletterArchiveService;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import com.rcs.newsletter.portlets.forms.GridForm;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,8 +63,7 @@ public class ArchiveController extends GenericController {
         // get records using paging
         ServiceActionResult<ListResultsDTO<NewsletterArchiveDTO>> result = archiveService.findAllArchives(
                                     Utils.getThemeDisplay(request), 
-                                    form.calculateStart(), 
-                                    form.getRows(), 
+                                    form, 
                                     "date", 
                                     ORDER_BY_DESC);
 

@@ -3,6 +3,7 @@ package com.rcs.newsletter.core.service;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.JournalArticleDTO;
 import com.rcs.newsletter.core.dto.NewsletterMailingDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
@@ -55,7 +56,7 @@ public interface NewsletterMailingService extends CRUDService<NewsletterMailing>
      * @param ORDER_BY_ASC
      * @return 
      */
-    ServiceActionResult<ListResultsDTO<NewsletterMailingDTO>> findAllMailings(ThemeDisplay themeDisplay, int start, int limit, String orderField, String orderType);
+    ServiceActionResult<ListResultsDTO<NewsletterMailingDTO>> findAllMailings(ThemeDisplay themeDisplay, GridForm gridForm, String orderField, String orderType);
 
     
     /**

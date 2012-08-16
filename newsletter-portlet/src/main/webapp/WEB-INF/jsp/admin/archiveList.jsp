@@ -70,7 +70,7 @@
                 ''],
             colModel:[
                 {name:'id',             index:'id',          width:40,      sortable: false,  search:false},
-                {name:'name',           index:'name',                       sortable: false,  search:false},
+                {name:'name',           index:'name',        searchoptions:{sopt:['cn']},  sortable: false,  search:true},
                 {name:'categoryName',   index:'categoryName',               sortable: false,  search:false},
                 {name:'dateFormatted',  index:'dateFormatted',              sortable: false,  search:false},
                 {name:'action',         index:'action',      width:40,      sortable: false,  search:false}
@@ -100,7 +100,7 @@
             rowNum: 10
             
         });
-        jQuery("#archives-list-<portlet:namespace/>").jqGrid('navGrid','#archives-list-pager<portlet:namespace/>',{edit:false,add:false,del:false});
+        jQuery("#archives-list-<portlet:namespace/>").jqGrid('navGrid','#archives-list-pager<portlet:namespace/>',{edit:false,add:false,del:false},{},{},{},{multipleSearch:true});
     }
     
     

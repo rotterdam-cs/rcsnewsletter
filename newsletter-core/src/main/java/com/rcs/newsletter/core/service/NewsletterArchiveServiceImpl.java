@@ -4,6 +4,8 @@ package com.rcs.newsletter.core.service;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.NewsletterArchiveDTO;
 import com.rcs.newsletter.core.dto.NewsletterOnlineViewDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
+import com.rcs.newsletter.core.forms.jqgrid.GridRestrictionsUtil;
 import com.rcs.newsletter.core.model.NewsletterArchive;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
@@ -13,6 +15,10 @@ import com.rcs.newsletter.core.service.util.EmailFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.jdto.DTOBinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,18 +59,27 @@ public class NewsletterArchiveServiceImpl extends CRUDServiceImpl<NewsletterArch
     }
 
     @Override
-    public ServiceActionResult<ListResultsDTO<NewsletterArchiveDTO>> findAllArchives(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order) {
+    public ServiceActionResult<ListResultsDTO<NewsletterArchiveDTO>> findAllArchives(ThemeDisplay themeDisplay, GridForm gridForm, String orderField, String orderType) {
         // get total records count
         int totalRecords = findAllCount(themeDisplay);
         
         // get records
-        ServiceActionResult<List<NewsletterArchive>> listResult = findAll(themeDisplay, start, limit, ordercrit, order);
-        if (!listResult.isSuccess()){
-            return ServiceActionResult.buildFailure(null);
+        Session currentSession = sessionFactory.getCurrentSession();
+        Criteria criteria = currentSession.createCriteria(NewsletterArchive.class);
+        criteria.addOrder(Order.asc(orderField));
+        
+        // add search filters
+        if (gridForm != null){
+            Criterion criterion = GridRestrictionsUtil.createCriterion(gridForm.getFiltersForm());
+            if (criterion != null){
+                criteria.add(criterion);
+            }
         }
+
+        List<NewsletterArchive> list = criteria.list();
         
         // create and return ListResultsDTO
-        ListResultsDTO<NewsletterArchiveDTO> dto = new ListResultsDTO<NewsletterArchiveDTO>(limit, start, totalRecords, binder.bindFromBusinessObjectList(NewsletterArchiveDTO.class, listResult.getPayload()));
+        ListResultsDTO<NewsletterArchiveDTO> dto = new ListResultsDTO<NewsletterArchiveDTO>(gridForm.getRows(), gridForm.calculateStart(), totalRecords, binder.bindFromBusinessObjectList(NewsletterArchiveDTO.class, list));
         return ServiceActionResult.buildSuccess(dto);
     }
 

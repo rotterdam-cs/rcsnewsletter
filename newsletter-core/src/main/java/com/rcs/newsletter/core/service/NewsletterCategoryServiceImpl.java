@@ -7,15 +7,19 @@ import com.rcs.newsletter.core.model.NewsletterEntity;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
+import com.rcs.newsletter.core.forms.jqgrid.GridRestrictionsUtil;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -33,6 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCategory> implements NewsletterCategoryService {
     
+    private Logger logger = Logger.getLogger(NewsletterCategoryServiceImpl.class);
+          
     @Autowired
     private DTOBinder binder;
     
@@ -54,35 +60,43 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
         return result;
     }
 
-    private Criteria createCriteriaForCategories(ThemeDisplay themeDisplay){
+    private Criteria createCriteriaForCategories(ThemeDisplay themeDisplay, GridForm gridForm){
         Session currentSession = sessionFactory.getCurrentSession();
         Criteria criteria = currentSession.createCriteria(NewsletterCategory.class);
         criteria.add(Restrictions.eq(NewsletterEntity.COMPANYID, themeDisplay.getCompanyId()));        
         criteria.add(Restrictions.eq(NewsletterEntity.GROUPID, themeDisplay.getScopeGroupId()));
+        
+        // add search filters
+        if (gridForm != null){
+            Criterion criterion = GridRestrictionsUtil.createCriterion(gridForm.getFiltersForm());
+            if (criterion != null){
+                criteria.add(criterion);
+            }
+        }
+        
         return criteria;
     }
     
     @Override
-    public ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> findAllNewsletterCategories(ThemeDisplay themeDisplay, int start, int limit) {
+    public ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> findAllNewsletterCategories(ThemeDisplay themeDisplay, GridForm gridForm) {
 
-        Criteria criteriaForCount = createCriteriaForCategories(themeDisplay);
+        Criteria criteriaForCount = createCriteriaForCategories(themeDisplay, gridForm);
         criteriaForCount.setProjection(Projections.rowCount());
         criteriaForCount.setMaxResults(1);
+        
         int count = ((Long)criteriaForCount.uniqueResult()).intValue();
         
-        Criteria criteria = createCriteriaForCategories(themeDisplay);
+        Criteria criteria = createCriteriaForCategories(themeDisplay, gridForm);
         
         List<NewsletterCategory> result = criteria.list();
 
-        ListResultsDTO<NewsletterCategoryDTO> payload = 
-                new ListResultsDTO(limit, start, count, 
-                    binder.bindFromBusinessObjectList(NewsletterCategoryDTO.class, result));
+        ListResultsDTO<NewsletterCategoryDTO> payload = new ListResultsDTO(gridForm.getRows(), gridForm.calculateStart(), count, binder.bindFromBusinessObjectList(NewsletterCategoryDTO.class, result));
         return ServiceActionResult.buildSuccess(payload);
     }
     
     @Override
     public List<NewsletterCategoryDTO> findAllNewsletterCategories(ThemeDisplay themeDisplay) {
-        Criteria criteria = createCriteriaForCategories(themeDisplay);
+        Criteria criteria = createCriteriaForCategories(themeDisplay, null);
         criteria.addOrder(Order.asc("name"));
         List<NewsletterCategory> result = criteria.list();
         List<NewsletterCategoryDTO> listDTO = binder.bindFromBusinessObjectList(NewsletterCategoryDTO.class, result);

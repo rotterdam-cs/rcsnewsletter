@@ -2,6 +2,7 @@ package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
@@ -22,7 +23,7 @@ public interface NewsletterTemplateService extends CRUDService<NewsletterTemplat
      * @param order
      * @return 
      */
-    ServiceActionResult<ListResultsDTO<NewsletterTemplateDTO>> findAllTemplates(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order);
+    ServiceActionResult<ListResultsDTO<NewsletterTemplateDTO>> findAllTemplates(ThemeDisplay themeDisplay, GridForm gridForm, String orderField, String orderType);
 
     /**
      * Returns all templates

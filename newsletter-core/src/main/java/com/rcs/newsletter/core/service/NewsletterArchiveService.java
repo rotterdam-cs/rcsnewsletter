@@ -4,6 +4,7 @@ package com.rcs.newsletter.core.service;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.NewsletterArchiveDTO;
 import com.rcs.newsletter.core.dto.NewsletterOnlineViewDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
 import com.rcs.newsletter.core.model.NewsletterArchive;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
@@ -32,7 +33,7 @@ public interface NewsletterArchiveService extends CRUDService<NewsletterArchive>
      * @param ORDER_BY_ASC
      * @return 
      */
-    ServiceActionResult<ListResultsDTO<NewsletterArchiveDTO>> findAllArchives(ThemeDisplay themeDisplay, int start, int limit, String ordercrit, String order);
+    ServiceActionResult<ListResultsDTO<NewsletterArchiveDTO>> findAllArchives(ThemeDisplay themeDisplay, GridForm gridForm, String ordercrit, String order);
 
     
     /**

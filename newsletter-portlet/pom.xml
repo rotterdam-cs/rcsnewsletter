@@ -117,8 +117,8 @@
             <version>1.2.1</version>
             <scope>compile</scope>
         </dependency>
-        
-        <!-- JACKSON JSON -->
+       
+         <!-- JACKSON JSON -->
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-lgpl</artifactId>
@@ -126,8 +126,8 @@
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-lgpl</artifactId>
-        </dependency>        
-
+        </dependency>       
+          
         <!-- jDTO -->
         <dependency>
             <groupId>org.jdto</groupId>

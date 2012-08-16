@@ -2,6 +2,7 @@ package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
@@ -16,7 +17,7 @@ public interface NewsletterCategoryService extends CRUDService<NewsletterCategor
 
     NewsletterCategory findByKey(String categoryKey);
 
-    ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> findAllNewsletterCategories(ThemeDisplay themeDisplay, int start, int limit);
+    ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> findAllNewsletterCategories(ThemeDisplay themeDisplay, GridForm gridForm);
     List<NewsletterCategoryDTO> findAllNewsletterCategories(ThemeDisplay themeDisplay);
 
     List<NewsletterCategory> findNewsletterCategorysBySubscriber(NewsletterSubscriptor subscriptor);

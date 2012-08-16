@@ -23,6 +23,8 @@ import static com.rcs.newsletter.NewsletterConstants.*;
 import com.rcs.newsletter.core.dto.JournalArticleDTO;
 import com.rcs.newsletter.core.dto.NewsletterArchiveDTO;
 import com.rcs.newsletter.core.dto.NewsletterMailingDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
+import com.rcs.newsletter.core.forms.jqgrid.GridRestrictionsUtil;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterTemplate;
 import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
@@ -35,6 +37,10 @@ import java.util.List;
 import java.util.Set;
 import javax.validation.Validator;
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.jdto.DTOBinder;
 
 /**
@@ -199,28 +205,39 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     }
 
     @Override
-    public ServiceActionResult<ListResultsDTO<NewsletterMailingDTO>> findAllMailings(ThemeDisplay themeDisplay, int start, int limit, String orderField, String orderType) {
+    public ServiceActionResult<ListResultsDTO<NewsletterMailingDTO>> findAllMailings(ThemeDisplay themeDisplay, GridForm gridForm, String orderField, String orderType) {
         // get total records count
         int totalRecords = findAllCount(themeDisplay);
 
         // get records
-        ServiceActionResult<List<NewsletterMailing>> listResult = findAll(themeDisplay, start, limit, orderField, orderType);
-        if (!listResult.isSuccess()) {
-            return ServiceActionResult.buildFailure(null);
+        Session currentSession = sessionFactory.getCurrentSession();
+        Criteria criteria = currentSession.createCriteria(NewsletterMailing.class);
+        criteria.addOrder(Order.asc(orderField));
+        
+        // add search filters
+        if (gridForm != null){
+            Criterion criterion = GridRestrictionsUtil.createCriterion(gridForm.getFiltersForm());
+            if (criterion != null){
+                criteria.add(criterion);
+            }
         }
+        List<NewsletterMailing> list = criteria.list();
+        
         
         // fill dtos
         List<NewsletterMailingDTO> dtos = new ArrayList<NewsletterMailingDTO>();
-        for(NewsletterMailing entity: listResult.getPayload()){
+        for(NewsletterMailing entity: list){
             NewsletterMailingDTO dto = binder.bindFromBusinessObject(NewsletterMailingDTO.class, entity);
             dto = fillMailingDTO(entity, dto, themeDisplay);
             dtos.add(dto);
         }
 
         // create and return ListResultsDTO
-        ListResultsDTO<NewsletterMailingDTO> dto = new ListResultsDTO<NewsletterMailingDTO>(limit, start, totalRecords, dtos);
+        ListResultsDTO<NewsletterMailingDTO> dto = new ListResultsDTO<NewsletterMailingDTO>(gridForm.getRows(), gridForm.calculateStart(), totalRecords, dtos);
         return ServiceActionResult.buildSuccess(dto);
     }
+    
+    
 
     @Override
     public ServiceActionResult<NewsletterMailingDTO> findMailing(Long id, ThemeDisplay themeDisplay) {

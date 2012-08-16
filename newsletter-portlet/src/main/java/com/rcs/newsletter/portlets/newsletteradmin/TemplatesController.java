@@ -4,10 +4,10 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.rcs.newsletter.commons.GenericController;
 import com.rcs.newsletter.commons.Utils;
 import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import com.rcs.newsletter.portlets.forms.GridForm;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -79,8 +79,7 @@ public class TemplatesController extends GenericController {
         // get records using paging
         ServiceActionResult<ListResultsDTO<NewsletterTemplateDTO>> result = templateService.findAllTemplates(
                                     Utils.getThemeDisplay(request), 
-                                    form.calculateStart(), 
-                                    form.getRows(), 
+                                    form, 
                                     "name", 
                                     ORDER_BY_ASC);
 

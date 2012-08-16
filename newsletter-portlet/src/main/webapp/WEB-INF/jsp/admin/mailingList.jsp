@@ -167,7 +167,7 @@
             colModel:[
                 {name:'radio',              index:'id',                 width:30,   sortable: false,  search:false, formatter: radioColumnFormatter},
                 {name:'id',                 index:'id',                 width:40,   sortable: false,  search:false},
-                {name:'name',               index:'name',                           sortable: false,  search:false},
+                {name:'name',               index:'name',               searchoptions:{sopt:['cn']},  sortable: false,  search:true},
                 {name:'listName',           index:'listName',                       sortable: false,  search:false},
                 {name:'subscribersNumber',  index:'subscribersNumber',              sortable: false,  search:false},
                 {name:'articleNames',       index:'articleNames',                   sortable: false,  search:false},
@@ -203,7 +203,7 @@
             rowNum: 10
             
         });
-        jQuery("#mailing-list-<portlet:namespace/>").jqGrid('navGrid','#mailing-list-pager<portlet:namespace/>',{edit:false,add:false,del:false});
+        jQuery("#mailing-list-<portlet:namespace/>").jqGrid('navGrid','#mailing-list-pager<portlet:namespace/>',{edit:false,add:false,del:false},{},{},{},{multipleSearch:true});
         jQuery("#mailing-list-<portlet:namespace/>").hideCol('articleNames');
         jQuery("#mailing-list-<portlet:namespace/>").hideCol('subscribersNumber');
     }

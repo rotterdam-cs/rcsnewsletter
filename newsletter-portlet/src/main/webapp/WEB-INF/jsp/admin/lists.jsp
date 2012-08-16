@@ -31,6 +31,7 @@
                 jQuery('#save<portlet:namespace/>').button();
                 jQuery('#cancel<portlet:namespace/>').button();
 
+             
                 function createGrid() {
                     jQuery("#listsGrid<portlet:namespace/>").jqGrid({
                         url:'${getListsURL}' + "&nocache=" + (new Date()).getTime(),
@@ -43,9 +44,9 @@
                             '<fmt:message key="newsletter.admin.general.action"/>'
                         ],
                         colModel:[
-                            { name : 'id',          width : 50,  searchoptions: {}, sortable : false, search : false },
-                            { name : 'name' ,       width : 150, searchoptions: {}, sortable : false, search : false },
-                            { name : 'description', width : 100, searchoptions: {},  sortable : false, search : false },
+                            { name : 'id',          width : 50,  searchoptions: {},  sortable : false, search : false },
+                            { name : 'name' ,       width : 150, searchoptions:{sopt:['cn']},  sortable : false,  search : true },
+                            { name : 'description', width : 100, searchoptions:{sopt:['cn']},  sortable : false,  search : true },
                             { name : 'action',      width : 100, searchoptions: {},  sortable : false, search : false }
                         ],
                         rowNum : 15,
@@ -111,10 +112,11 @@
                             // Fix jQGrid scroll issue
                             jQuery('#lists<portlet:namespace/> .ui-jqgrid-bdiv').css('overflow', 'hidden');
                         }
+                       
                     });
                     jQuery("#listsGrid<portlet:namespace/>")
                         .jqGrid('navGrid','#listPager<portlet:namespace/>',
-                            {edit:false,add:false,del:false});
+                            {edit:false,add:false,del:false},{},{},{},{multipleSearch:true});
                 }
                 
                 function backToGrid(){

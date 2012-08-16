@@ -113,6 +113,7 @@
             <artifactId>cglib-nodep</artifactId>
             <version>2.2.2</version>
         </dependency>
+        
     </dependencies>
     
     <!-- dependency management not directly inherited --> 
@@ -134,6 +135,9 @@
                 <version>${jdto.version}</version>
             </dependency>
         </dependencies>
+        
+        
+        
     </dependencyManagement> 
     
     <properties>

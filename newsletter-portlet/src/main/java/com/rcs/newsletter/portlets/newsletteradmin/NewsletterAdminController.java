@@ -3,11 +3,11 @@ package com.rcs.newsletter.portlets.newsletteradmin;
 import com.rcs.newsletter.commons.GenericController;
 import com.rcs.newsletter.commons.Utils;
 import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.portlets.admin.CRUDActionEnum;
-import com.rcs.newsletter.portlets.forms.GridForm;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -16,6 +16,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,6 +34,8 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 @RequestMapping("VIEW")
 public class NewsletterAdminController extends GenericController {
     
+    private Logger logger = Logger.getLogger(NewsletterAdminController.class);
+    
     @Autowired
     private NewsletterCategoryService categoryService;
     
@@ -47,12 +50,11 @@ public class NewsletterAdminController extends GenericController {
         return new ModelAndView("admin/lists");
     }
     
+    
     @ResourceMapping("getLists")
-    public ModelAndView getLists(ResourceRequest request, @ModelAttribute GridForm gridParams){
+    public ModelAndView getLists(ResourceRequest request, @ModelAttribute GridForm gridForm){
         ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> sarCategories = 
-                categoryService.findAllNewsletterCategories(Utils.getThemeDisplay(request),
-                                                            gridParams.calculateStart(),
-                                                            gridParams.getRows());
+                categoryService.findAllNewsletterCategories(Utils.getThemeDisplay(request), gridForm);
         return jsonResponse(sarCategories);
     }
     

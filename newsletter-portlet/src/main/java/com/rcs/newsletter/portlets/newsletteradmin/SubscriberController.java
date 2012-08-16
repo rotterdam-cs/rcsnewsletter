@@ -7,6 +7,7 @@ import com.rcs.newsletter.commons.Utils;
 import com.rcs.newsletter.core.dto.CreateMultipleSubscriptionsResult;
 import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
 import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
@@ -14,7 +15,6 @@ import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.portlets.admin.CRUDActionEnum;
-import com.rcs.newsletter.portlets.forms.GridForm;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 /**

@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscription> implements NewsletterSubscriptionService {
+public class NewsletterSubscriptionServiceImpl extends CRUDServiceImpl<NewsletterSubscription> implements NewsletterSubscriptionService {
 
     @Autowired
     private DTOBinder binder;
@@ -170,7 +170,7 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
             String subject = bundle.getString("newsletter.subscription.mail.subject");
             content = EmailFormat.replaceUserInfo(content, subscription, themeDisplay);
             content = EmailFormat.fixImagesPath(content, themeDisplay);                            
-            InternetAddress fromIA = new InternetAddress(category.getFromEmail());
+            InternetAddress fromIA = new InternetAddress(category.getFromEmail(), category.getFromName());
             InternetAddress toIA = new InternetAddress(subscriptor.getEmail());
             MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);
             LiferayMailingUtil.sendEmail(message);
@@ -219,7 +219,7 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
                 String subject = bundle.getString("newsletter.subscription.mail.greetings.subject");
                 content = EmailFormat.replaceUserInfo(content, subscription, themeDisplay);
                 content = EmailFormat.fixImagesPath(content, themeDisplay);                            
-                InternetAddress fromIA = new InternetAddress(subscription.getCategory().getFromEmail());
+                InternetAddress fromIA = new InternetAddress(subscription.getCategory().getFromEmail(), subscription.getCategory().getFromName());
                 InternetAddress toIA = new InternetAddress(subscription.getSubscriptor().getEmail());
                 MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);
                 LiferayMailingUtil.sendEmail(message);
@@ -281,7 +281,7 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
             String subject = bundle.getString("newsletter.subscription.mail.unsubscription.subject");
             content = EmailFormat.replaceUserInfo(content, subscription, themeDisplay);
             content = EmailFormat.fixImagesPath(content, themeDisplay);                            
-            InternetAddress fromIA = new InternetAddress(subscription.getCategory().getFromEmail());
+            InternetAddress fromIA = new InternetAddress(subscription.getCategory().getFromEmail(), subscription.getCategory().getFromName());
             InternetAddress toIA = new InternetAddress(subscription.getSubscriptor().getEmail());
             MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);
             LiferayMailingUtil.sendEmail(message);

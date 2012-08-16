@@ -3,6 +3,7 @@ package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.NewsletterArchiveDTO;
+import com.rcs.newsletter.core.dto.NewsletterOnlineViewDTO;
 import com.rcs.newsletter.core.model.NewsletterArchive;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
@@ -40,4 +41,13 @@ public interface NewsletterArchiveService extends CRUDService<NewsletterArchive>
      * @return 
      */
     ServiceActionResult<NewsletterArchiveDTO> findArchive(Long archiveId);
+
+    
+    /**
+     * Returns a particular newsletter content for online viewer
+     * @param archiveId
+     * @param themeDisplay
+     * @return 
+     */
+    ServiceActionResult<NewsletterOnlineViewDTO> getNewsletterForViewer(Long archiveId, Long subscriptionId, ThemeDisplay themeDisplay);
 }

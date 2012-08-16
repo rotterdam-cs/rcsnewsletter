@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class NewsletterSubscriptorImpl extends CRUDServiceImpl<NewsletterSubscriptor> implements NewsletterSubscriptorService {
+public class NewsletterSubscriptorServiceImpl extends CRUDServiceImpl<NewsletterSubscriptor> implements NewsletterSubscriptorService {
 
     @Autowired
     private NewsletterSubscriptionService subscriptionService;

@@ -3,12 +3,16 @@ package com.rcs.newsletter.core.service;
 
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.NewsletterArchiveDTO;
+import com.rcs.newsletter.core.dto.NewsletterOnlineViewDTO;
 import com.rcs.newsletter.core.model.NewsletterArchive;
 import com.rcs.newsletter.core.model.NewsletterMailing;
+import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import com.rcs.newsletter.core.service.util.EmailFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 import org.jdto.DTOBinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class NewsletterArchiveServiceImpl extends CRUDServiceImpl<NewsletterArchive> implements NewsletterArchiveService {
 
+    @Autowired
+    private NewsletterSubscriptionService subscriptionService;
     
     @Autowired
     DTOBinder binder;
     
-@Override
+    @Override
     public ServiceActionResult<NewsletterArchiveDTO> saveArchive(NewsletterMailing mailing, String emailBody, ThemeDisplay themeDisplay) {
         NewsletterArchive archive = new NewsletterArchive();
         archive.setGroupid(mailing.getGroupid());
@@ -69,5 +75,36 @@ public class NewsletterArchiveServiceImpl extends CRUDServiceImpl<NewsletterArch
             return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(NewsletterArchiveDTO.class, findResult.getPayload()));
         }
         return ServiceActionResult.buildFailure(null);
+    }
+
+    @Override
+    public ServiceActionResult<NewsletterOnlineViewDTO> getNewsletterForViewer(Long archiveId, Long subscriptionId, ThemeDisplay themeDisplay) {
+        ResourceBundle bundle = ResourceBundle.getBundle("Language", themeDisplay.getLocale());
+        
+        // find archive
+        ServiceActionResult<NewsletterArchiveDTO> archiveResult = findArchive(archiveId);
+        if (!archiveResult.isSuccess()){
+            return ServiceActionResult.buildFailure(null, bundle.getString("newsletter.tab.archives.error.notfound"));
+        }
+        ServiceActionResult<NewsletterSubscription> subscriptionResult = subscriptionService.findById(subscriptionId);
+        if (!subscriptionResult.isSuccess()){
+            return ServiceActionResult.buildFailure(null, bundle.getString("newsletter.tab.subscription.error.notfound"));
+        }
+        
+        NewsletterArchiveDTO archiveDTO = archiveResult.getPayload();
+        NewsletterSubscription subscription = subscriptionResult.getPayload();
+        
+        String emailBody = archiveDTO.getEmailBody();
+        emailBody = EmailFormat.replaceUserInfo(emailBody, subscription, themeDisplay, archiveId);
+
+
+        // fill dto for viewer
+        NewsletterOnlineViewDTO viewDTO = new NewsletterOnlineViewDTO();
+        viewDTO.setListName(archiveDTO.getCategoryName());
+        viewDTO.setNewsletterBody(emailBody);
+        
+        return ServiceActionResult.buildSuccess(viewDTO);
+        
+        
     }
 }

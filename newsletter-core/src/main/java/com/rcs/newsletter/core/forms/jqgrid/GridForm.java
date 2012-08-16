@@ -107,7 +107,7 @@ public class GridForm {
     public GridFiltersForm getFiltersForm() {
         if (filtersForm == null){
             ObjectMapper mapper = new ObjectMapper();
-            if (filters != null){
+            if (filters != null && filters.trim().length() > 0){
                 try {
                     filtersForm =  mapper.readValue(filters.getBytes(), GridFiltersForm.class);
                 } catch (Exception ex) {

@@ -57,4 +57,15 @@ public interface NewsletterSubscriptionService extends CRUDService<NewsletterSub
      * @return 
      */
     ServiceActionResult deactivateSubscription(Long subscriptionId, String deactivationKey, ThemeDisplay themeDisplay);
+
+    
+    /**
+     * Sends an email to the subscriber to confirm the unsubscription
+     * @param subscriptionDTO
+     * @param themeDisplay
+     * @return 
+     */
+    ServiceActionResult removeSubscription(NewsletterSubscriptionDTO subscriptionDTO, ThemeDisplay themeDisplay);
+
+    
 }

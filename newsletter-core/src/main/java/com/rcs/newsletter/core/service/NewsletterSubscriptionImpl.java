@@ -197,14 +197,14 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
         // validate subscription
         ServiceActionResult<NewsletterSubscription> result = findById(subscriptionId);
         if (!result.isSuccess()){
-            return ServiceActionResult.buildFailure(null, "newsletter.confirmation.error.subscriptionnotfound");
+            return ServiceActionResult.buildFailure(null, bundle.getString("newsletter.confirmation.error.subscriptionnotfound"));
         }
         NewsletterSubscription subscription = result.getPayload();
         
         
         // validate key
         if (!subscription.getActivationKey().equals(activationKey)){
-            return ServiceActionResult.buildFailure(null, "newsletter.confirmation.error.invalidactivationkey");
+            return ServiceActionResult.buildFailure(null, bundle.getString("newsletter.confirmation.error.invalidactivationkey"));
         }
         
         // activate account
@@ -243,14 +243,14 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
         // validate subscription
         ServiceActionResult<NewsletterSubscription> result = findById(subscriptionId);
         if (!result.isSuccess()){
-            return ServiceActionResult.buildFailure(null, "newsletter.confirmation.error.subscriptionnotfound");
+            return ServiceActionResult.buildFailure(null, bundle.getString("newsletter.confirmation.error.subscriptionnotfound"));
         }
         NewsletterSubscription subscription = result.getPayload();
         
         
         // validate key
         if (!subscription.getDeactivationKey().equals(deactivationKey)){
-            return ServiceActionResult.buildFailure(null, "newsletter.confirmation.error.invaliddeactivationkey");
+            return ServiceActionResult.buildFailure(null, bundle.getString("newsletter.confirmation.error.invaliddeactivationkey"));
         }
         
         // deactivate account
@@ -260,6 +260,40 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
         
         String successMessage = bundle.getString("newsletter.confirmation.message.deactivated");
         successMessage = successMessage.replace("{LIST_NAME}", listName);
+        return ServiceActionResult.buildSuccess(null, successMessage);
+        
+    }
+
+    @Override
+    public ServiceActionResult removeSubscription(NewsletterSubscriptionDTO subscriptionDTO, ThemeDisplay themeDisplay) {
+        ResourceBundle bundle = ResourceBundle.getBundle("Language", themeDisplay.getLocale());
+        
+         // validate subscription
+        NewsletterSubscription subscription = findByEmailAndCategory(themeDisplay, subscriptionDTO.getSubscriptorEmail(), Long.valueOf(subscriptionDTO.getCategoryId()));
+        if (subscription == null){
+            return ServiceActionResult.buildFailure(null, bundle.getString("newsletter.confirmation.error.subscriptionnotfound"));
+        }
+        
+        
+        // send greetings email if the subscription was not activated before
+        try{
+            String content = subscription.getCategory().getUnsubscriptionEmail();
+            String subject = bundle.getString("newsletter.subscription.mail.unsubscription.subject");
+            content = EmailFormat.replaceUserInfo(content, subscription, themeDisplay);
+            content = EmailFormat.fixImagesPath(content, themeDisplay);                            
+            InternetAddress fromIA = new InternetAddress(subscription.getCategory().getFromEmail());
+            InternetAddress toIA = new InternetAddress(subscription.getSubscriptor().getEmail());
+            MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);
+            LiferayMailingUtil.sendEmail(message);
+        }catch(Exception e){
+            logger.error("An error occurred when trying to send unsubscription email. Exception: " + e.getMessage(), e);
+            return ServiceActionResult.buildFailure(null, bundle.getString("newsletter.registration.register.error.sendingunsubscription"));
+        }
+        
+        
+        String successMessage = bundle.getString("newsletter.confirmation.message.removedfromlist");
+        successMessage = successMessage.replace("{EMAIL_ADDRESS}", subscription.getSubscriptor().getEmail());
+        successMessage = successMessage.replace("{LIST_NAME}", subscription.getCategory().getName());
         return ServiceActionResult.buildSuccess(null, successMessage);
         
     }

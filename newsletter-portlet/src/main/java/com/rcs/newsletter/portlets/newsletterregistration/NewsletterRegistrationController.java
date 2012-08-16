@@ -74,11 +74,15 @@ public class NewsletterRegistrationController extends GenericController{
      * @return 
      */
     @ResourceMapping("showUnregisterForm")
-    public ModelAndView showUnregisterForm(ResourceRequest request, ResourceResponse response){
+    public ModelAndView showUnregisterForm(ResourceRequest request, ResourceResponse response, @ModelAttribute SubscriptionForm registerForm){
        String namespace = PortalUtil.getPortletNamespace(PortalUtil.getPortletId(request));
 
         ModelAndView mav = new ModelAndView("registration/unregisterForm");
         mav.addObject("namespace", namespace);       // portlet namespace
+        mav.addObject("registerForm", registerForm); // register form
+        
+        Long listId = Long.valueOf(request.getPreferences().getValue(NewsletterRegistrationEditController.PORTLET_PROPERTY_NEWSLETTER_LIST, "0"));
+        registerForm.setCategoryId(listId);
 
         return mav;
     }
@@ -100,6 +104,24 @@ public class NewsletterRegistrationController extends GenericController{
        subscriptionDTO.setSubscriptorLastName(registerForm.getLastName());
        
        return jsonResponse(subscriptionService.createSubscription(subscriptionDTO, Utils.getThemeDisplay(request)));
+       
+    }
+    
+    
+    /**
+     * Unregister a new user from the selected list
+     * @param request
+     * @param response
+     * @return 
+     */
+    @ResourceMapping("unregister")
+    public ModelAndView unregister(ResourceRequest request, ResourceResponse response, @ModelAttribute SubscriptionForm registerForm){
+
+       NewsletterSubscriptionDTO subscriptionDTO = new NewsletterSubscriptionDTO();
+       subscriptionDTO.setCategoryId(String.valueOf(registerForm.getCategoryId()));
+       subscriptionDTO.setSubscriptorEmail(registerForm.getEmail());
+       
+       return jsonResponse(subscriptionService.removeSubscription(subscriptionDTO, Utils.getThemeDisplay(request)));
        
     }
 }

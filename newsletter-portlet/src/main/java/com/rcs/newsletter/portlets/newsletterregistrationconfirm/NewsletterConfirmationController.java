@@ -40,11 +40,17 @@ public class NewsletterConfirmationController extends GenericController{
         
         
         // if the parameters are not received then skip logic
-        if (originalRequest.getParameter("subscriptionId") == null){
+        if (originalRequest.getParameter("subscriptionId") == null && originalRequest.getParameter("unsubscriptionId") == null){
             return mav;
         }
         
-        Long subscriptionId = Long.valueOf(originalRequest.getParameter("subscriptionId"));
+        // get subscription id
+        Long subscriptionId = null;
+        if (originalRequest.getParameter("subscriptionId") != null){
+            subscriptionId = Long.valueOf(originalRequest.getParameter("subscriptionId"));
+        }else if (originalRequest.getParameter("unsubscriptionId") != null){
+            subscriptionId = Long.valueOf(originalRequest.getParameter("unsubscriptionId"));
+        }
         
         // if it's an activation
         if (originalRequest.getParameter("activationkey") != null){

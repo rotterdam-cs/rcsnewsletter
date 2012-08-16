@@ -24,7 +24,7 @@
 <%@include file="../commons/errorsFunctions.jsp" %>
 
 
-<div id="newsletter-registration-panel-<portlet:namespace/>" style="padding:10px"></div>
+<div id="newsletter-registration-panel-<portlet:namespace/>"></div>
 
 </body>
 

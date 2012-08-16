@@ -7,10 +7,9 @@
 <%@taglib prefix="portlet" uri="http://java.sun.com/portlet" %>
 <portlet:defineObjects />
 
-<div id="errorsView<portlet:namespace/>" style="padding: 0 .7em;">
+<div id="errorsView<portlet:namespace/>" style="padding: 0 .7em; margin-bottom: 5px">
 </div>
 
-<div id="messagesView<portlet:namespace/>" style="padding: 0 .7em;">
+<div id="messagesView<portlet:namespace/>" style="padding: 0 .7em; margin-bottom: 5px">
 </div>
 
-<br>

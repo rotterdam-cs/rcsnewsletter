@@ -56,6 +56,11 @@
         </tr>
         <c:if test="${!(registerForm.categoryId eq 0)}">
         <tr>
+            <td colspan="2">
+                <hr>
+            </td>
+        </tr>
+        <tr>
             <td><a href="javascript:loadUnregisterView()"><fmt:message key="newsletter.registration.link.unregister" /></a> </td>
             <td>
                 <input id="btn-register-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.registration.button.register" />" />

@@ -39,20 +39,25 @@
 
 <form:form id="unregister-form-${namespace}"  cssClass="newsletter-forms-form" modelAttribute="registerForm">
     <form:hidden path="categoryId"  />
-     <table>
+    <table>
         <tr>
             <td><label><fmt:message key="newsletter.registration.email" />*</label></td>
             <td><form:input path="email"  cssClass="field-long required custom-email" /></td>
         </tr>
         <tr>
-            <td><a href="javascript:loadRegisterView()"><fmt:message key="newsletter.registration.link.register" /></a> </td>
             <c:if test="${registerForm.categoryId ne 0}">
+            <tr>
+                <td colspan="2">
+                    <hr>
+                </td>
+            </tr>
             <td>
+                <td><a href="javascript:loadRegisterView()"><fmt:message key="newsletter.registration.link.register" /></a> </td>
                 <input id="btn-unregister-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.registration.link.unregister" />" />
             </td>
-            </c:if>
-        </tr>
-    </table>
+        </c:if>
+    </tr>
+</table>
 </form:form>
 
 
@@ -74,60 +79,60 @@
         clearMessages();
         
         <c:if test="${registerForm.categoryId eq 0}">
-               showErrors(['<fmt:message key="newsletter.registration.settings.error.nolistfound" />']);
-        </c:if>
-    });
+                showErrors(['<fmt:message key="newsletter.registration.settings.error.nolistfound" />']);
+    </c:if>
+            });
     
-    /**
-     * Apply styles to UI
-     */
-    function styleUI(){
-        // styles on buttons
-        jQuery('#newsletter-registration-panel-<portlet:namespace/> input[type="button"]').button();
+            /**
+             * Apply styles to UI
+             */
+            function styleUI(){
+                // styles on buttons
+                jQuery('#newsletter-registration-panel-<portlet:namespace/> input[type="button"]').button();
         
-    }
+            }
     
     
-    /**
-     * Init UI events
-     */
-    function initEvents(){
+            /**
+             * Init UI events
+             */
+            function initEvents(){
         
-         // click on 'Unregister' button
-        jQuery('#btn-unregister-<portlet:namespace/>').click(function(){
-            clearMessages();
-            clearErrors();
-            // validate form
-             var form = jQuery('#unregister-form-${namespace}');
-             if (form.valid()){ 
+                // click on 'Unregister' button
+                jQuery('#btn-unregister-<portlet:namespace/>').click(function(){
+                    clearMessages();
+                    clearErrors();
+                    // validate form
+                    var form = jQuery('#unregister-form-${namespace}');
+                    if (form.valid()){ 
                  
-                    // send data via ajax
-                    jQuery.ajax({
-                        url: '${unregisterUrl}'
-                        ,type: 'POST'
-                        ,data: form.serialize()
-                        ,success: function(response){
-                            if (response.success){
-                                showMessages(response.messages);
-                                form.resetForm();
-                            }else{
-                                showErrors(response.validationKeys);
+                        // send data via ajax
+                        jQuery.ajax({
+                            url: '${unregisterUrl}'
+                            ,type: 'POST'
+                            ,data: form.serialize()
+                            ,success: function(response){
+                                if (response.success){
+                                    showMessages(response.messages);
+                                    form.resetForm();
+                                }else{
+                                    showErrors(response.validationKeys);
+                                }
                             }
-                        }
-                        ,failure: function(response){
-                            // TODO: display errors here
-                        }
-                    });
-             }
-        });
+                            ,failure: function(response){
+                                // TODO: display errors here
+                            }
+                        });
+                    }
+                });
         
           
-    }
+            }
     
     
-    /**
-     *  Loads unregister view
-     */
-    function loadRegisterView(){
-        $('#newsletter-registration-panel-<portlet:namespace/>').load('${showRegisterFormUrl}');
-    }
+            /**
+             *  Loads unregister view
+             */
+            function loadRegisterView(){
+                $('#newsletter-registration-panel-<portlet:namespace/>').load('${showRegisterFormUrl}');
+            }

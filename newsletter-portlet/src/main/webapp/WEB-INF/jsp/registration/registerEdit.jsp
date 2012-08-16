@@ -99,7 +99,6 @@
                     ,success: function(response){
                         if (response.success){
                             showMessages(response.messages);
-                            form.resetForm();
                         }else{
                             showErrors(response.validationKeys);
                         }

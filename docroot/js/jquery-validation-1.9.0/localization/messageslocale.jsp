@@ -1,6 +1,6 @@
 <%@page import="com.liferay.portal.kernel.util.LocaleUtil"%>
 <%@page import="java.util.Locale"%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%    
     String languageId = request.getParameter("languageId");
@@ -12,4 +12,4 @@
     String language = locale.getLanguage();
     String extLocaleFile = "messages_" + language + ".js";
 %>
-<jsp:include page="<%=extLocaleFile%>" />
+<c:import url="<%=extLocaleFile%>" />

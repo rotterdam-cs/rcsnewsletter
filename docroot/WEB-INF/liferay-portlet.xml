@@ -9,8 +9,6 @@
         <control-panel-entry-weight>1</control-panel-entry-weight>
         <instanceable>false</instanceable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
-        <header-portlet-css>/js/ckeditor/contents.css</header-portlet-css>
-        <header-portlet-css>/js/ckeditor/skins/kama/editor.css</header-portlet-css>
         <header-portlet-css>/js/jquery-validation-1.9.0/demo/css/screen.css</header-portlet-css>
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
         <header-portlet-css>/js/jquery.jqGrid-4.3.1/css/ui.jqgrid.css</header-portlet-css>

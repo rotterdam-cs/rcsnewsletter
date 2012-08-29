@@ -1,19 +1,8 @@
 /*
-Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
+Copyright (c) 2003-2011, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.html or http://ckeditor.com/license
 */
-/*
-Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.html or http://ckeditor.com/license
-*/
-/**
- * Reset and Default Values
- */
-.cke_skin_kama *,
-.cke_skin_kama a:hover,
-.cke_skin_kama a:link,
-.cke_skin_kama a:visited,
-.cke_skin_kama a:active {
+.cke_skin_kama *, .cke_skin_kama a:hover, .cke_skin_kama a:link, .cke_skin_kama a:visited, .cke_skin_kama a:active {
   margin: 0;
   padding: 0;
   border: 0;
@@ -28,25 +17,14 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   white-space: nowrap;
   cursor: auto;
   color: #000;
-  float: none;
   font-size: 12px;
   font-family: Arial,Helvetica,Tahoma,Verdana,Sans-Serif; }
 
-.cke_skin_kama .cke_rtl *,
-.cke_skin_kama .cke_rtl a:hover,
-.cke_skin_kama .cke_rtl a:link,
-.cke_skin_kama .cke_rtl a:visited,
-.cke_skin_kama .cke_rtl a:active,
-.cke_rtl .cke_skin_kama *,
-.cke_rtl .cke_skin_kama a:hover,
-.cke_rtl .cke_skin_kama a:link,
-.cke_rtl .cke_skin_kama a:visited,
-.cke_rtl .cke_skin_kama a:active {
+.cke_skin_kama .cke_rtl *, .cke_skin_kama .cke_rtl a:hover, .cke_skin_kama .cke_rtl a:link, .cke_skin_kama .cke_rtl a:visited, .cke_skin_kama .cke_rtl a:active, .cke_rtl .cke_skin_kama *, .cke_rtl .cke_skin_kama a:hover, .cke_rtl .cke_skin_kama a:link, .cke_rtl .cke_skin_kama a:visited, .cke_rtl .cke_skin_kama a:active {
   text-align: right; }
 
 .cke_skin_kama iframe {
-  vertical-align: inherit;
-  /** For IE */ }
+  vertical-align: inherit; }
 
 .cke_skin_kama textarea {
   white-space: pre; }
@@ -57,26 +35,19 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 .cke_skin_kama .cke_browser_gecko textarea[disabled] {
   cursor: default; }
 
-.cke_skin_kama input[type="text"],
-.cke_skin_kama input[type="password"] {
+.cke_skin_kama input[type="text"], .cke_skin_kama input[type="password"] {
   cursor: text; }
 
-.cke_skin_kama input[type="text"][disabled],
-.cke_skin_kama input[type="password"][disabled] {
+.cke_skin_kama input[type="text"][disabled], .cke_skin_kama input[type="password"][disabled] {
   cursor: default; }
 
 .cke_skin_kama fieldset {
   padding: 10px;
   border: 2px groove #E0DFE3; }
 
-/*
-Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.html or http://ckeditor.com/license
-*/
 .cke_skin_kama {
   display: block; }
 
-/* Main editor only settings. */
 span.cke_skin_kama {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -84,40 +55,33 @@ span.cke_skin_kama {
   border: 1px solid #D3D3D3;
   padding: 5px; }
 
-.cke_skin_kama span.cke_browser_webkit,
-.cke_skin_kama span.cke_browser_gecko18 {
+.cke_skin_kama span.cke_browser_webkit, .cke_skin_kama span.cke_browser_gecko18 {
   display: block; }
 
 .cke_skin_kama .cke_wrapper {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  -webkit-touch-callout: none;
   border-radius: 5px;
   background-color: #d3d3d3;
   background-image: url(images/sprites.png);
   background-repeat: repeat-x;
   background-position: 0 -1950px;
   display: block;
-  /* IE Quirks: editor chrome overflow horizontally without an explicit width. */
   _display: inline-block;
-  padding: 5px;
-  /*background-color: Red;*/ }
+  padding: 5px; }
 
 .cke_shared .cke_skin_kama .cke_wrapper {
   padding-bottom: 0; }
 
-.cke_skin_kama .cke_browser_ie6 .cke_wrapper,
-.cke_skin_kama .cke_browser_iequirks .cke_wrapper {
+.cke_skin_kama .cke_browser_ie6 .cke_wrapper, .cke_skin_kama .cke_browser_iequirks .cke_wrapper {
   background-image: none; }
 
 .cke_skin_kama .cke_editor {
   display: inline-table;
   width: 100%; }
 
-.cke_skin_kama .cke_browser_ie .cke_editor,
 .cke_skin_kama .cke_browser_webkit .cke_editor {
-  display: table;
-  /* #6684, #8342 */ }
+  display: table; }
 
 .cke_skin_kama .ltr .cke_browser_ie iframe {
   margin-right: -10px; }
@@ -141,13 +105,12 @@ span.cke_skin_kama {
   outline: auto 5px -webkit-focus-ring-color; }
 
 .cke_skin_kama textarea.cke_source {
-  font-family: 'Courier New' , Monospace;
+  font-family: 'Courier New',Monospace;
   font-size: small;
   background-color: #fff;
   white-space: pre; }
 
 .cke_skin_kama .cke_browser_iequirks textarea.cke_source {
-  /* For IE6+Quirks only */
   _white-space: normal; }
 
 .cke_skin_kama .cke_resizer {
@@ -156,52 +119,42 @@ span.cke_skin_kama {
   margin-top: 9px;
   display: block;
   float: right;
-  /* resizer.gif*/
   background-image: url(images/sprites.png);
   _background-image: url(images/sprites_ie6.png);
   background-position: 0 -1428px;
   background-repeat: no-repeat;
   cursor: se-resize; }
 
-/* Adobe AIR doesn't support *-resize cursor shape. */
-.cke_skin_kama .cke_browser_air .cke_resizer,
-.cke_skin_kama .cke_browser_air .cke_rtl .cke_resizer {
+.cke_skin_kama .cke_browser_air .cke_resizer, .cke_skin_kama .cke_browser_air .cke_rtl .cke_resizer {
   cursor: move; }
 
 .cke_skin_kama .cke_resizer_rtl {
   cursor: sw-resize;
-  /* resizer_rtl.gif*/
   background-position: 0 -1455px;
   float: left; }
 
-.cke_skin_kama .cke_resizer_horizontal,
-.cke_skin_kama .cke_rtl .cke_resizer_horizontal {
+.cke_skin_kama .cke_resizer_horizontal, .cke_skin_kama .cke_rtl .cke_resizer_horizontal {
   cursor: e-resize; }
 
-.cke_skin_kama .cke_resizer_vertical,
-.cke_skin_kama .cke_rtl .cke_resizer_vertical {
+.cke_skin_kama .cke_resizer_vertical, .cke_skin_kama .cke_rtl .cke_resizer_vertical {
   cursor: n-resize; }
 
 .cke_skin_kama .cke_maximized .cke_resizer {
   display: none; }
 
-.cke_skin_kama .cke_browser_ie6 .cke_contents textarea,
-.cke_skin_kama .cke_browser_ie7 .cke_contents textarea {
+.cke_skin_kama .cke_browser_ie6 .cke_contents textarea, .cke_skin_kama .cke_browser_ie7 .cke_contents textarea {
   position: absolute; }
 
 .cke_skin_kama .cke_browser_ie.cke_browser_quirks .cke_contents iframe {
   position: absolute;
   top: 0; }
 
-.cke_skin_kama .cke_browser_ie6 .cke_editor,
-.cke_skin_kama .cke_browser_ie7 .cke_editor {
+.cke_skin_kama .cke_browser_ie6 .cke_editor, .cke_skin_kama .cke_browser_ie7 .cke_editor {
   display: inline-block; }
 
-.cke_skin_kama .cke_browser_ie6 .cke_editor,
-.cke_shared .cke_skin_kama .cke_browser_ie7 .cke_wrapper {
+.cke_skin_kama .cke_browser_ie6 .cke_editor, .cke_shared .cke_skin_kama .cke_browser_ie7 .cke_wrapper {
   padding-bottom: 5px; }
 
-/* All voice labels are not displayed. */
 .cke_skin_kama .cke_voice_label {
   display: none; }
 
@@ -215,10 +168,6 @@ span.cke_skin_kama {
   height: 0;
   overflow: hidden; }
 
-/*
-Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.html or http://ckeditor.com/license
-*/
 .cke_skin_kama .cke_panel {
   border: 1px solid #8f8f73;
   background-color: #fff;
@@ -232,18 +181,10 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 .cke_skin_kama .cke_contextmenu {
   margin: 0; }
 
-/* Ideally we would use "inherit here"... but you know... IE :( */
 .cke_skin_kama .cke_panel iframe {
   width: 100%;
   height: 100%; }
 
-/*
- * All the following styles are to be used inside the iframe that holds panel
- * contents. We don't use the cke_skin_default there to avoid the reset to be
- * active.
- * This is not an issue as we'll never have two skins running inside the same
- * panel iframe.
- */
 html.cke_skin_kama_container {
   overflow: auto;
   overflow-x: hidden; }
@@ -257,82 +198,64 @@ body.cke_panel_frame {
 ul.cke_panel_list {
   list-style-type: none;
   margin: 3px;
-  padding: 0px;
+  padding: 0;
   white-space: nowrap; }
 
 li.cke_panel_listItem {
-  margin: 0px; }
+  margin: 0; }
 
 .cke_panel_listItem a {
   padding: 2px;
   display: block;
   border: 1px solid #fff;
-  color: inherit !important;
+  color: inherit!important;
   text-decoration: none;
   overflow: hidden;
   text-overflow: ellipsis; }
 
-/* IE6 */
 * html .cke_panel_listItem a {
   width: 100%;
-  /* IE is not able to inherit the color, so we must force it to black */
   color: #000; }
 
-/* IE7 */
 *:first-child + html .cke_panel_listItem a {
-  /* IE is not able to inherit the color, so we must force it to black */
   color: #000; }
 
 .cke_panel_listItem.cke_selected a {
   border: 1px solid #ccc;
   background-color: #e9f5ff; }
 
-.cke_panel_listItem a:hover,
-.cke_panel_listItem a:focus,
-.cke_panel_listItem a:active {
+.cke_panel_listItem a:hover, .cke_panel_listItem a:focus, .cke_panel_listItem a:active {
   border-color: #316ac5;
   background-color: #dff1ff; }
 
-.cke_hc .cke_panel_listItem.cke_selected a,
-.cke_hc .cke_panel_listItem a:hover,
-.cke_hc .cke_panel_listItem a:focus,
-.cke_hc .cke_panel_listItem a:active {
+.cke_hc .cke_panel_listItem.cke_selected a, .cke_hc .cke_panel_listItem a:hover, .cke_hc .cke_panel_listItem a:focus, .cke_hc .cke_panel_listItem a:active {
   border-width: 3px;
-  padding: 0px; }
+  padding: 0; }
 
 .cke_panel_grouptitle {
   font-size: 11px;
-  font-family: 'Microsoft Sans Serif' , Tahoma, Arial, Verdana, Sans-Serif;
+  font-family: 'Microsoft Sans Serif',Tahoma,Arial,Verdana,Sans-Serif;
   font-weight: bold;
   white-space: nowrap;
   background-color: #dcdcdc;
   color: #000;
-  margin: 0px;
+  margin: 0;
   padding: 3px; }
 
-.cke_panel_listItem p,
-.cke_panel_listItem h1,
-.cke_panel_listItem h2,
-.cke_panel_listItem h3,
-.cke_panel_listItem h4,
-.cke_panel_listItem h5,
-.cke_panel_listItem h6,
-.cke_panel_listItem pre {
+.cke_panel_listItem p, .cke_panel_listItem h1, .cke_panel_listItem h2, .cke_panel_listItem h3, .cke_panel_listItem h4, .cke_panel_listItem h5, .cke_panel_listItem h6, .cke_panel_listItem pre {
   margin-top: 3px;
   margin-bottom: 3px; }
 
-.cke_skin_kama .cke_button_textcolor_panel,
-.cke_skin_kama .cke_button_bgcolor_panel {
+.cke_skin_kama .cke_button_textcolor_panel, .cke_skin_kama .cke_button_bgcolor_panel {
   width: 150px;
   height: 135px; }
 
 .cke_colorblock {
   padding: 3px;
   font-size: 11px;
-  font-family: 'Microsoft Sans Serif', Tahoma, Arial, Verdana, Sans-Serif; }
+  font-family: 'Microsoft Sans Serif',Tahoma,Arial,Verdana,Sans-Serif; }
 
-.cke_colorblock,
-.cke_colorblock a {
+.cke_colorblock, .cke_colorblock a {
   text-decoration: none;
   color: #000; }
 
@@ -353,52 +276,34 @@ a.cke_colorbox {
 .cke_rtl a.cke_colorbox {
   float: right; }
 
-a:hover.cke_colorbox,
-a:focus.cke_colorbox,
-a:active.cke_colorbox {
+a:hover.cke_colorbox, a:focus.cke_colorbox, a:active.cke_colorbox {
   border: #316ac5 1px solid;
   background-color: #dff1ff; }
 
-a.cke_colorauto,
-a.cke_colormore {
+a.cke_colorauto, a.cke_colormore {
   border: #fff 1px solid;
   padding: 2px;
   display: block;
   cursor: pointer; }
 
-a:hover.cke_colorauto,
-a:hover.cke_colormore,
-a:focus.cke_colorauto,
-a:focus.cke_colormore,
-a:active.cke_colorauto,
-a:active.cke_colormore {
+a:hover.cke_colorauto, a:hover.cke_colormore, a:focus.cke_colorauto, a:focus.cke_colormore, a:active.cke_colorauto, a:active.cke_colormore {
   border: #316ac5 1px solid;
   background-color: #dff1ff; }
 
-/*
-Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.html or http://ckeditor.com/license
-*/
 @media print {
-  /* For printing, we simply hide the toolbar */
   .cke_skin_kama .cke_toolbox {
     display: none; } }
-.cke_skin_kama .cke_browser_webkit .cke_toolbox,
-.cke_skin_kama .cke_browser_webkit .cke_toolbox > span {
+.cke_skin_kama .cke_browser_webkit .cke_toolbox, .cke_skin_kama .cke_browser_webkit .cke_toolbox > span {
   white-space: normal; }
 
 .cke_skin_kama .cke_toolbox {
   clear: both;
-  /* Define the padding-bottom otherwise the collapser button will not be clickable #4932*/
   padding-bottom: 1px; }
 
-.cke_skin_kama a.cke_toolbox_collapser,
-.cke_skin_kama a:hover.cke_toolbox_collapser {
-  /* arrowtop.gif */
+.cke_skin_kama a.cke_toolbox_collapser, .cke_skin_kama a:hover.cke_toolbox_collapser {
   background-image: url(images/sprites.png);
   _background-image: url(images/sprites_ie6.png);
   background-position: 3px -1366px;
-  /* +3px +4px */
   background-repeat: no-repeat;
   width: 11px;
   height: 11px;
@@ -407,8 +312,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   margin: 11px 0 2px;
   cursor: pointer; }
 
-.cke_skin_kama .cke_rtl a.cke_toolbox_collapser,
-.cke_skin_kama .cke_rtl a:hover.cke_toolbox_collapser {
+.cke_skin_kama .cke_rtl a.cke_toolbox_collapser, .cke_skin_kama .cke_rtl a:hover.cke_toolbox_collapser {
   float: left; }
 
 .cke_skin_kama a.cke_toolbox_collapser span {
@@ -420,29 +324,21 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   font-family: Arial;
   display: inline; }
 
-.cke_skin_kama a.cke_toolbox_collapser_min,
-.cke_skin_kama a:hover.cke_toolbox_collapser_min {
-  /* arrowleft.gif*/
+.cke_skin_kama a.cke_toolbox_collapser_min, .cke_skin_kama a:hover.cke_toolbox_collapser_min {
   background-image: url(images/sprites.png);
   _background-image: url(images/sprites_ie6.png);
   background-position: 4px -1387px;
-  /* +4px +3px */
   background-repeat: no-repeat;
   margin: 2px 4px; }
 
-.cke_skin_kama .cke_rtl a.cke_toolbox_collapser_min,
-.cke_skin_kama .cke_rtl a:hover.cke_toolbox_collapser_min {
-  /* arrowright.gif*/
-  background-position: 4px -1408px;
-  /* +2px +3px */ }
+.cke_skin_kama .cke_rtl a.cke_toolbox_collapser_min, .cke_skin_kama .cke_rtl a:hover.cke_toolbox_collapser_min {
+  background-position: 4px -1408px; }
+
+.cke_skin_kama .cke_toolbar {
+  display: inline; }
 
 .cke_skin_kama .cke_separator {
-  display: inline-block;
-  border-left: solid 1px #D3D3D3;
-  margin: 3px 2px 0;
-  height: 16px;
-  /* These are for IE < 8, but it's ok for the others */
-  vertical-align: top; }
+  display: none; }
 
 .cke_skin_kama .cke_break {
   font-size: 0;
@@ -473,11 +369,11 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   margin-right: 0;
   margin-left: 6px; }
 
-.cke_skin_kama .cke_button a,
-.cke_skin_kama .cke_button a:hover,
-.cke_skin_kama .cke_button a:focus,
-.cke_skin_kama .cke_button a:active,
-.cke_skin_kama .cke_button a.cke_off {
+.cke_skin_kama .cke_toolgroup {
+  display: block;
+  height: 22px; }
+
+.cke_skin_kama .cke_button a, .cke_skin_kama .cke_button a:hover, .cke_skin_kama .cke_button a:focus, .cke_skin_kama .cke_button a:active, .cke_skin_kama .cke_button a.cke_off {
   border-radius: 3px;
   outline: none;
   padding: 2px 4px;
@@ -485,17 +381,13 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   display: inline-block;
   cursor: default; }
 
-.cke_skin_kama .cke_button a,
-.cke_skin_kama .cke_button a.cke_off {
+.cke_skin_kama .cke_button a, .cke_skin_kama .cke_button a.cke_off {
   filter: alpha(opacity=70);
-  /* IE */
-  opacity: 0.70;
-  /* Safari, Opera and Mozilla */
+  opacity: .70;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px; }
 
-.cke_skin_kama .cke_hc .cke_button a,
-.cke_skin_kama .cke_hc .cke_button a.cke_off {
+.cke_skin_kama .cke_hc .cke_button a, .cke_skin_kama .cke_hc .cke_button a.cke_off {
   opacity: 1.0;
   filter: alpha(opacity=100);
   border: 1px solid white; }
@@ -503,66 +395,43 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 .cke_skin_kama .cke_button a.cke_on {
   background-color: #a3d7ff;
   filter: alpha(opacity=100);
-  /* IE */
   opacity: 1;
-  /* Safari, Opera and Mozilla */
   padding: 2px 4px; }
 
 .cke_skin_kama .cke_hc .cke_button a.cke_on {
-  padding: 0 2px !important;
+  padding: 0 2px!important;
   border-width: 3px; }
 
 .cke_skin_kama .cke_button a.cke_disabled * {
   filter: alpha(opacity=30);
-  /* IE */
-  opacity: 0.3;
-  /* Safari, Opera and Mozilla */ }
+  opacity: .3; }
 
-/* IE with zoom != 100% will distort the icons otherwise #4821 */
-.cke_skin_kama .cke_browser_ie .cke_button a.cke_disabled *,
-.cke_skin_kama .cke_browser_ie a:hover.cke_button .cke_disabled * {
+.cke_skin_kama .cke_browser_ie .cke_button a.cke_disabled *, .cke_skin_kama .cke_browser_ie a:hover.cke_button .cke_disabled * {
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale'), alpha(opacity=30); }
 
-.cke_skin_kama .cke_browser_ie .cke_rtl .cke_button a.cke_disabled *,
-.cke_skin_kama .cke_browser_ie .cke_rtl a:hover.cke_button .cke_disabled * {
+.cke_skin_kama .cke_browser_ie .cke_rtl .cke_button a.cke_disabled *, .cke_skin_kama .cke_browser_ie .cke_rtl a:hover.cke_button .cke_disabled * {
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale'), alpha(opacity=30); }
 
-.cke_skin_kama .cke_browser_ie6 .cke_button a.cke_disabled *,
-.cke_skin_kama .cke_browser_ie6 a:hover.cke_button .cke_disabled *,
-.cke_skin_kama .cke_browser_ie .cke_button.cke_noalphafix a.cke_disabled * {
+.cke_skin_kama .cke_browser_ie6 .cke_button a.cke_disabled *, .cke_skin_kama .cke_browser_ie6 a:hover.cke_button .cke_disabled *, .cke_skin_kama .cke_browser_ie .cke_button.cke_noalphafix a.cke_disabled * {
   filter: alpha(opacity=30); }
 
-.cke_skin_kama .cke_hc .cke_button a.cke_disabled *,
-.cke_skin_kama .cke_browser_ie.cke_hc a:hover.cke_button .cke_disabled * {
+.cke_skin_kama .cke_hc .cke_button a.cke_disabled *, .cke_skin_kama .cke_browser_ie.cke_hc a:hover.cke_button .cke_disabled * {
   filter: alpha(opacity=60);
-  opacity: 0.6; }
+  opacity: .6; }
 
-.cke_skin_kama .cke_button a:hover.cke_on,
-.cke_skin_kama .cke_button a:focus.cke_on,
-.cke_skin_kama .cke_button a:active.cke_on,
-.cke_skin_kama .cke_button a:hover.cke_off,
-.cke_skin_kama .cke_button a:focus.cke_off,
-.cke_skin_kama .cke_button a:active.cke_off {
+.cke_skin_kama .cke_button a:hover.cke_on, .cke_skin_kama .cke_button a:focus.cke_on, .cke_skin_kama .cke_button a:active.cke_on, .cke_skin_kama .cke_button a:hover.cke_off, .cke_skin_kama .cke_button a:focus.cke_off, .cke_skin_kama .cke_button a:active.cke_off {
   filter: alpha(opacity=100);
-  /* IE */
   opacity: 1;
-  /* Safari, Opera and Mozilla */
   padding: 2px 4px; }
 
-.cke_skin_kama .cke_button a:hover,
-.cke_skin_kama .cke_button a:focus,
-.cke_skin_kama .cke_button a:active {
+.cke_skin_kama .cke_button a:hover, .cke_skin_kama .cke_button a:focus, .cke_skin_kama .cke_button a:active {
   background-color: #dff1ff; }
 
-.cke_skin_kama .cke_button a:hover.cke_on,
-.cke_skin_kama .cke_button a:focus.cke_on,
-.cke_skin_kama .cke_button a:active.cke_on {
+.cke_skin_kama .cke_button a:hover.cke_on, .cke_skin_kama .cke_button a:focus.cke_on, .cke_skin_kama .cke_button a:active.cke_on {
   background-color: #86caff; }
 
-.cke_skin_kama .cke_hc .cke_button a:hover,
-.cke_skin_kama .cke_hc .cke_button a:focus,
-.cke_skin_kama .cke_hc .cke_button a:active {
-  padding: 0 2px !important;
+.cke_skin_kama .cke_hc .cke_button a:hover, .cke_skin_kama .cke_hc .cke_button a:focus, .cke_skin_kama .cke_hc .cke_button a:active {
+  padding: 0 2px!important;
   border-width: 3px; }
 
 .cke_skin_kama .cke_button .cke_icon {
@@ -573,30 +442,36 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   width: 16px;
   height: 16px;
   display: inline-block;
+  float: left;
   cursor: default; }
 
 .cke_skin_kama .cke_rtl .cke_button .cke_icon {
   background-image: url(icons_rtl.png); }
 
-/* IE with zoom != 100% will distort the icons otherwise #4821 */
 .cke_skin_kama .cke_browser_ie .cke_button .cke_icon {
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale'); }
 
 .cke_skin_kama .cke_browser_ie .cke_rtl .cke_button .cke_icon {
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale'); }
 
-.cke_skin_kama .cke_browser_ie6 .cke_button .cke_icon,
-.cke_skin_kama .cke_browser_ie6 .cke_rtl .cke_button .cke_icon,
-.cke_skin_kama .cke_browser_ie .cke_button.cke_noalphafix .cke_icon,
-.cke_skin_kama .cke_browser_ie .cke_rtl .cke_button.cke_noalphafix .cke_icon {
-  /*filter:;*/ }
+.cke_skin_kama .cke_browser_ie6 .cke_button .cke_icon, .cke_skin_kama .cke_browser_ie6 .cke_rtl .cke_button .cke_icon, .cke_skin_kama .cke_browser_ie .cke_button.cke_noalphafix .cke_icon, .cke_skin_kama .cke_browser_ie .cke_rtl .cke_button.cke_noalphafix .cke_icon {
+  filter: ""; }
+
+.cke_skin_kama .cke_rtl .cke_button .cke_icon {
+  float: right; }
 
 .cke_skin_kama .cke_button .cke_label {
   cursor: default;
   display: none;
   padding-left: 3px;
   line-height: 18px;
-  vertical-align: middle; }
+  vertical-align: middle;
+  float: left; }
+
+.cke_skin_kama .cke_rtl .cke_button .cke_label {
+  padding-left: 0;
+  padding-right: 3px;
+  float: right; }
 
 .cke_skin_kama .cke_hc .cke_button .cke_label {
   padding: 0;
@@ -617,67 +492,54 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   height: 17px;
   width: 8px;
   background-position: 2px -1469px;
-  /* (+2, -5) */
   background-image: url(images/sprites.png);
   _background-image: url(images/sprites_ie6.png);
   background-repeat: no-repeat;
+  float: left;
   cursor: default; }
 
-/* IE with zoom != 100% will distort the icons otherwise #4821 */
 .cke_skin_kama .cke_browser_ie .cke_button .cke_buttonarrow {
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale'); }
 
 .cke_skin_kama .cke_browser_ie6 .cke_button .cke_buttonarrow {
-  /*filter: ;*/ }
+  filter: ""; }
 
-/*** Firefox 2 ***/
-.cke_skin_kama .cke_browser_gecko .cke_toolbar,
-.cke_skin_kama .cke_browser_gecko .cke_button a,
-.cke_skin_kama .cke_browser_gecko .cke_button a.cke_off,
-.cke_skin_kama .cke_browser_gecko .cke_button .cke_icon,
-.cke_skin_kama .cke_browser_gecko .cke_button .cke_buttonarrow,
-.cke_skin_kama .cke_browser_gecko .cke_separator,
-.cke_skin_kama .cke_browser_gecko .cke_toolbar_start {
+.cke_skin_kama .cke_rtl .cke_button .cke_buttonarrow {
+  background-position: 0 -1469px;
+  float: right; }
+
+.cke_skin_kama .cke_browser_gecko .cke_toolbar, .cke_skin_kama .cke_browser_gecko .cke_button a, .cke_skin_kama .cke_browser_gecko .cke_button a.cke_off, .cke_skin_kama .cke_browser_gecko .cke_button .cke_icon, .cke_skin_kama .cke_browser_gecko .cke_button .cke_buttonarrow, .cke_skin_kama .cke_browser_gecko .cke_separator, .cke_skin_kama .cke_browser_gecko .cke_toolbar_start {
   display: block;
   float: left; }
 
 .cke_skin_kama .cke_browser_gecko.cke_hc .cke_button .cke_icon {
   display: none; }
 
-.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_toolbar,
-.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_button a,
-.cke_skin_kama .cke_browser_gecko .cke_rtl.cke_button a.cke_off,
-.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_button .cke_icon,
-.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_button .cke_buttonarrow,
-.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_separator,
-.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_toolbar_start {
+.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_toolbar, .cke_skin_kama .cke_browser_gecko .cke_rtl .cke_button a, .cke_skin_kama .cke_browser_gecko .cke_rtl.cke_button a.cke_off, .cke_skin_kama .cke_browser_gecko .cke_rtl .cke_button .cke_icon, .cke_skin_kama .cke_browser_gecko .cke_rtl .cke_button .cke_buttonarrow, .cke_skin_kama .cke_browser_gecko .cke_rtl .cke_toolbar_start {
   float: right; }
 
-.cke_skin_kama .cke_browser_gecko .cke_button .cke_label,
-.cke_skin_kama .cke_browser_gecko .cke_break {
+.cke_skin_kama .cke_browser_gecko .cke_button .cke_label, .cke_skin_kama .cke_browser_gecko .cke_break {
   float: left; }
 
-.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_button .cke_label,
-.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_break {
+.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_button .cke_label, .cke_skin_kama .cke_browser_gecko .cke_rtl .cke_break {
   float: right; }
 
-/*** WebKit ***/
-/* We have originally used display:inline-block+float for cke_toolbar and it
-   worked well in all browsers, except IE+RTL. We had to change it to inline
-   and remove the float. This change didn't play well with Safari. */
+.cke_skin_kama .cke_browser_ie .cke_rtl .cke_button .cke_icon, .cke_skin_kama .cke_browser_ie .cke_rtl .cke_button .cke_label, .cke_skin_kama .cke_browser_ie .cke_rtl .cke_button .cke_buttonarrow {
+  float: none; }
+
 .cke_skin_kama .cke_browser_webkit .cke_toolbar {
   float: left; }
 
 .cke_skin_kama .cke_browser_webkit .cke_rtl .cke_toolbar {
   float: right; }
 
-/*** Mixed Fixes ***/
-.cke_skin_kama .cke_browser_ie .cke_button .cke_label {
-  line-height: 16px; }
+.cke_skin_kama .cke_browser_ie8 .cke_button .cke_label, .cke_skin_kama .cke_browser_opera .cke_button .cke_label, .cke_skin_kama .cke_browser_webkit .cke_button .cke_label {
+  line-height: 20px; }
 
-/* Fix cursor shape consistency on toolbar combos (#4031) */
-.cke_skin_kama .cke_browser_ie .cke_rcombo,
-.cke_skin_kama .cke_browser_ie .cke_rcombo * {
+.cke_skin_kama .cke_browser_opera.cke_browser_quirks .cke_button .cke_label, .cke_skin_kama .cke_browser_iequirks .cke_button .cke_label {
+  line-height: 17px; }
+
+.cke_skin_kama .cke_browser_ie .cke_rcombo, .cke_skin_kama .cke_browser_ie .cke_rcombo * {
   cursor: default; }
 
 .cke_skin_kama .cke_browser_ie .cke_toolbox {
@@ -687,10 +549,6 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 .cke_shared .cke_skin_kama .cke_browser_ie .cke_toolbox {
   padding-bottom: 0; }
 
-/*
-Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.html or http://ckeditor.com/license
-*/
 .cke_skin_kama .cke_contextmenu {
   padding: 2px; }
 
@@ -700,15 +558,11 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 .cke_skin_kama .cke_menuitem span {
   cursor: default; }
 
-.cke_skin_kama .cke_menuitem a:hover,
-.cke_skin_kama .cke_menuitem a:focus,
-.cke_skin_kama .cke_menuitem a:active {
+.cke_skin_kama .cke_menuitem a:hover, .cke_skin_kama .cke_menuitem a:focus, .cke_skin_kama .cke_menuitem a:active {
   background-color: #D3D3D3;
   display: block; }
 
-.cke_hc .cke_menuitem a:hover,
-.cke_hc .cke_menuitem a:focus,
-.cke_hc .cke_menuitem a:active {
+.cke_hc .cke_menuitem a:hover, .cke_hc .cke_menuitem a:focus, .cke_hc .cke_menuitem a:active {
   border: 2px solid; }
 
 .cke_skin_kama .cke_menuitem .cke_icon {
@@ -723,33 +577,27 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 .cke_rtl .cke_skin_kama .cke_menuitem .cke_icon {
   background-image: url(icons_rtl.png); }
 
-/* IE with zoom != 100% will distort the icons otherwise #4821 */
 .cke_browser_ie .cke_skin_kama .cke_menuitem .cke_icon {
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale'); }
 
 .cke_browser_ie.cke_rtl .cke_skin_kama .cke_menuitem .cke_icon {
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale'); }
 
-.cke_browser_ie6 .cke_skin_kama .cke_menuitem .cke_icon,
-.cke_browser_ie .cke_skin_kama .cke_menuitem.cke_noalphafix .cke_icon {
-  /*filter: ;*/ }
+.cke_browser_ie6 .cke_skin_kama .cke_menuitem .cke_icon, .cke_browser_ie .cke_skin_kama .cke_menuitem.cke_noalphafix .cke_icon {
+  filter: ""; }
 
 .cke_skin_kama .cke_menuitem .cke_disabled .cke_icon {
   filter: alpha(opacity=70);
-  /* IE */
-  opacity: 0.70;
-  /* Safari, Opera and Mozilla */ }
+  opacity: .70; }
 
-/* IE with zoom != 100% will distort the icons otherwise #4821 */
 .cke_browser_ie .cke_skin_kama .cke_menuitem .cke_disabled .cke_icon {
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale'); }
 
 .cke_browser_ie.cke_rtl .cke_skin_kama .cke_menuitem .cke_disabled .cke_icon {
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale'); }
 
-.cke_browser_ie6 .cke_skin_kama .cke_menuitem .cke_disabled .cke_icon,
-.cke_browser_ie .cke_skin_kama .cke_menuitem.cke_noalphafix .cke_disabled .cke_icon {
-  /*filter: ;*/ }
+.cke_browser_ie6 .cke_skin_kama .cke_menuitem .cke_disabled .cke_icon, .cke_browser_ie .cke_skin_kama .cke_menuitem.cke_noalphafix .cke_disabled .cke_icon {
+  filter: ""; }
 
 .cke_skin_kama .cke_menuitem .cke_icon_wrapper {
   background-color: #D3D3D3;
@@ -758,27 +606,19 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   height: 16px;
   float: left;
   filter: alpha(opacity=70);
-  /* IE */
-  opacity: 0.70;
-  /* Safari, Opera and Mozilla */
+  opacity: .70;
   clear: both; }
 
 .cke_rtl .cke_skin_kama .cke_menuitem .cke_icon_wrapper {
   float: right; }
 
-.cke_skin_kama .cke_menuitem a:hover .cke_icon_wrapper,
-.cke_skin_kama .cke_menuitem a:focus .cke_icon_wrapper,
-.cke_skin_kama .cke_menuitem a:active .cke_icon_wrapper {
+.cke_skin_kama .cke_menuitem a:hover .cke_icon_wrapper, .cke_skin_kama .cke_menuitem a:focus .cke_icon_wrapper, .cke_skin_kama .cke_menuitem a:active .cke_icon_wrapper {
   background-color: #9d9d9d;
   border: solid 4px #9d9d9d;
   filter: alpha(opacity=70);
-  /* IE */
-  opacity: 0.70;
-  /* Safari, Opera and Mozilla */ }
+  opacity: .70; }
 
-.cke_skin_kama .cke_menuitem a:hover.cke_disabled .cke_icon_wrapper,
-.cke_skin_kama .cke_menuitem a:focus.cke_disabled .cke_icon_wrapper,
-.cke_skin_kama .cke_menuitem a:active.cke_disabled .cke_icon_wrapper {
+.cke_skin_kama .cke_menuitem a:hover.cke_disabled .cke_icon_wrapper, .cke_skin_kama .cke_menuitem a:focus.cke_disabled .cke_icon_wrapper, .cke_skin_kama .cke_menuitem a:active.cke_disabled .cke_icon_wrapper {
   background-color: #D3D3D3;
   border: solid 4px #D3D3D3; }
 
@@ -791,12 +631,9 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   margin-left: 24px;
   background-color: #fff; }
 
-/* Set these after the document has been loaded and we know the dimensions*/
 .cke_skin_kama .cke_frameLoaded .cke_menuitem .cke_label {
   filter: alpha(opacity=70);
-  /* IE */
-  opacity: 0.70;
-  /* Safari, Opera and Mozilla */ }
+  opacity: .70; }
 
 .cke_rtl .cke_skin_kama .cke_menuitem .cke_label {
   padding-right: 0;
@@ -806,31 +643,22 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 
 .cke_skin_kama .cke_menuitem a.cke_disabled .cke_label {
   filter: alpha(opacity=30);
-  /* IE */
-  opacity: 0.30;
-  /* Safari, Opera and Mozilla */ }
+  opacity: .30; }
 
-.cke_skin_kama .cke_menuitem a:hover .cke_label,
-.cke_skin_kama .cke_menuitem a:focus .cke_label,
-.cke_skin_kama .cke_menuitem a:active .cke_label {
+.cke_skin_kama .cke_menuitem a:hover .cke_label, .cke_skin_kama .cke_menuitem a:focus .cke_label, .cke_skin_kama .cke_menuitem a:active .cke_label {
   background-color: #D3D3D3; }
 
-.cke_skin_kama .cke_menuitem a.cke_disabled:hover .cke_label,
-.cke_skin_kama .cke_menuitem a.cke_disabled:focus .cke_label,
-.cke_skin_kama .cke_menuitem a.cke_disabled:active .cke_label {
+.cke_skin_kama .cke_menuitem a.cke_disabled:hover .cke_label, .cke_skin_kama .cke_menuitem a.cke_disabled:focus .cke_label, .cke_skin_kama .cke_menuitem a.cke_disabled:active .cke_label {
   background-color: transparent; }
 
 .cke_skin_kama .cke_menuseparator {
   background-color: #D3D3D3;
   height: 2px;
   filter: alpha(opacity=70);
-  /* IE */
-  opacity: 0.70;
-  /* Safari, Opera and Mozilla */
+  opacity: .70;
   _font-size: 0; }
 
 .cke_skin_kama .cke_menuarrow {
-  /* arrowright.gif*/
   background-image: url(images/sprites.png);
   _background-image: url(images/sprites_ie6.png);
   background-position: 0 -1411px;
@@ -845,10 +673,9 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   float: left;
   margin-right: 0;
   margin-left: 2px;
-  /* arrowleft.gif*/
   background-image: url(images/sprites.png);
   _background-image: url(images/sprites_ie6.png);
-  background-position: 0px -1390px;
+  background-position: 0 -1390px;
   background-repeat: no-repeat; }
 
 .cke_skin_kama .cke_menuarrow span {
@@ -861,7 +688,6 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 .cke_hc .cke_skin_kama .cke_menuarrow span {
   display: inline; }
 
-/* #3766 In the context menu, long labels with second level menu get wrapped */
 .cke_browser_ie.cke_ltr .cke_skin_kama .cke_menuarrow {
   position: absolute;
   right: 2px; }
@@ -870,12 +696,6 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   position: absolute;
   left: 2px; }
 
-/* END #3766 */
-/*
-Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.html or http://ckeditor.com/license
-*/
-/* Special Combo */
 .cke_skin_kama .cke_rcombo {
   display: inline; }
 
@@ -887,14 +707,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   height: auto;
   _height: 100px; }
 
-/* IE6 workaround, shouldn't be here */
-.cke_skin_kama .cke_browser_iequirks .cke_rcombopanel,
-.cke_skin_kama .cke_browser_ie6 .cke_rcombopanel {
-  /*	width: 150px;*/ }
-
-.cke_skin_kama .cke_rcombo a,
-.cke_skin_kama .cke_rcombo a:active,
-.cke_skin_kama .cke_rcombo a:hover {
+.cke_skin_kama .cke_rcombo a, .cke_skin_kama .cke_rcombo a:active, .cke_skin_kama .cke_rcombo a:hover {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
@@ -910,18 +723,14 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   margin-right: 6px;
   margin-bottom: 5px; }
 
-.cke_skin_kama .cke_rtl .cke_rcombo a,
-.cke_skin_kama .cke_rtl .cke_rcombo a:active,
-.cke_skin_kama .cke_rtl .cke_rcombo a:hover {
+.cke_skin_kama .cke_rtl .cke_rcombo a, .cke_skin_kama .cke_rtl .cke_rcombo a:active, .cke_skin_kama .cke_rtl .cke_rcombo a:hover {
   float: right;
   margin-right: 0;
   margin-left: 6px; }
 
 .cke_skin_kama .cke_hc .cke_rcombo a {
   filter: alpha(opacity=100);
-  /* IE */
-  opacity: 1.0;
-  /* Safari, Opera and Mozilla */ }
+  opacity: 1.0; }
 
 .cke_skin_kama .cke_rcombo .cke_label {
   display: none;
@@ -929,10 +738,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   vertical-align: top;
   margin-right: 5px;
   filter: alpha(opacity=70);
-  /* IE */
-  opacity: 0.70;
-  /* Safari, Opera and Mozilla */
-  /* background-color: #f1f1e3;	Because of IE6+ClearType */ }
+  opacity: .70; }
 
 .cke_skin_kama .cke_rtl .cke_rcombo .cke_label {
   margin-right: 0;
@@ -941,7 +747,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 .cke_skin_kama .cke_rcombo .cke_inline_label {
   line-height: 21px;
   font-style: italic;
-  color: #666666; }
+  color: #666; }
 
 .cke_skin_kama .cke_hc .cke_rcombo .cke_openbutton {
   vertical-align: top; }
@@ -952,9 +758,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 
 .cke_skin_kama .cke_rcombo .cke_text {
   filter: alpha(opacity=70);
-  /* IE */
-  opacity: 0.70;
-  /* Safari, Opera and Mozilla */
+  opacity: .70;
   height: 21px;
   line-height: 21px;
   width: 60px;
@@ -986,113 +790,70 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 .cke_skin_kama .cke_browser_iequirks .cke_rcombo .cke_openbutton {
   margin-bottom: 0; }
 
-.cke_skin_kama .cke_rcombo .cke_off a:hover .cke_text,
-.cke_skin_kama .cke_rcombo .cke_off a:focus .cke_text,
-.cke_skin_kama .cke_rcombo .cke_off a:active .cke_text,
-.cke_skin_kama .cke_rcombo .cke_on .cke_text {
+.cke_skin_kama .cke_rcombo .cke_off a:hover .cke_text, .cke_skin_kama .cke_rcombo .cke_off a:focus .cke_text, .cke_skin_kama .cke_rcombo .cke_off a:active .cke_text, .cke_skin_kama .cke_rcombo .cke_on .cke_text {
   border-color: #316ac5;
   filter: alpha(opacity=100);
-  /* IE */
-  opacity: 1;
-  /* Safari, Opera and Mozilla */ }
+  opacity: 1; }
 
-.cke_skin_kama .cke_rcombo .cke_off a:hover .cke_openbutton,
-.cke_skin_kama .cke_rcombo .cke_off a:focus .cke_openbutton,
-.cke_skin_kama .cke_rcombo .cke_off a:active .cke_openbutton,
-.cke_skin_kama .cke_rcombo .cke_on .cke_openbutton {
+.cke_skin_kama .cke_rcombo .cke_off a:hover .cke_openbutton, .cke_skin_kama .cke_rcombo .cke_off a:focus .cke_openbutton, .cke_skin_kama .cke_rcombo .cke_off a:active .cke_openbutton, .cke_skin_kama .cke_rcombo .cke_on .cke_openbutton {
   border-color: #316ac5;
   background-color: #dff1ff; }
 
 .cke_skin_kama .cke_rcombo .cke_on .cke_text {
-  -moz-border-radius-bottomleft: 0px;
-  -webkit-border-bottom-left-radius: 0px;
-  border-bottom-left-radius: 0px; }
+  -moz-border-radius-bottomleft: 0;
+  -webkit-border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0; }
 
 .cke_skin_kama .cke_rcombo .cke_on .cke_openbutton {
-  -moz-border-radius-bottomright: 0px;
-  -webkit-border-bottom-right-radius: 0px;
-  border-bottom-right-radius: 0px; }
+  -moz-border-radius-bottomright: 0;
+  -webkit-border-bottom-right-radius: 0;
+  border-bottom-right-radius: 0; }
 
 .cke_skin_kama .cke_rcombo .cke_disabled .cke_label {
   filter: alpha(opacity=30);
-  /* IE */
-  opacity: 0.3;
-  /* Safari, Opera and Mozilla */ }
+  opacity: .3; }
 
 .cke_skin_kama .cke_hc .cke_rcombo .cke_disabled .cke_label {
   filter: alpha(opacity=70);
-  opacity: 0.7; }
+  opacity: .7; }
 
-.cke_skin_kama .cke_rcombo .cke_disabled .cke_text,
-.cke_skin_kama .cke_rcombo .cke_disabled .cke_openbutton {
+.cke_skin_kama .cke_rcombo .cke_disabled .cke_text, .cke_skin_kama .cke_rcombo .cke_disabled .cke_openbutton {
   filter: alpha(opacity=50);
-  /* IE */
-  opacity: 0.5;
-  /* Safari, Opera and Mozilla */ }
+  opacity: .5; }
 
-/* IE with zoom != 100% will distort the icons otherwise #4821 */
 .cke_skin_kama .cke_browser_ie .cke_rcombo .cke_disabled .cke_openbutton {
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale'), alpha(opacity=50); }
 
 .cke_skin_kama .cke_browser_ie6 .cke_rcombo .cke_disabled .cke_openbutton {
   filter: alpha(opacity=50); }
 
-.cke_skin_kama .cke_hc .cke_rcombo .cke_disabled .cke_text,
-.cke_skin_kama .cke_hc .cke_rcombo .cke_disabled .cke_openbutton {
+.cke_skin_kama .cke_hc .cke_rcombo .cke_disabled .cke_text, .cke_skin_kama .cke_hc .cke_rcombo .cke_disabled .cke_openbutton {
   filter: alpha(opacity=80);
-  opacity: 0.8; }
+  opacity: .8; }
 
 .cke_skin_kama .cke_rcombo .cke_disabled .cke_text {
   color: #fff; }
 
-/* RTL */
-.cke_skin_kama .cke_rtl .cke_rcombo span {
-  /*	_zoom: 1;*/ }
-
-.cke_skin_kama .cke_rtl .cke_rcombo .cke_text {
-  /*	_float: left;*/ }
-
-/* Firefox 2 & WebKit Section */
-.cke_skin_kama .cke_browser_gecko .cke_rcombo .cke_text,
-.cke_skin_kama .cke_browser_gecko .cke_rcombo .cke_openbutton,
-.cke_skin_kama .cke_browser_webkit .cke_rcombo .cke_text,
-.cke_skin_kama .cke_browser_webkit .cke_rcombo .cke_openbutton {
+.cke_skin_kama .cke_browser_gecko .cke_rcombo .cke_text, .cke_skin_kama .cke_browser_gecko .cke_rcombo .cke_openbutton, .cke_skin_kama .cke_browser_webkit .cke_rcombo .cke_text, .cke_skin_kama .cke_browser_webkit .cke_rcombo .cke_openbutton {
   display: block;
   float: left; }
 
-.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_rcombo .cke_text,
-.cke_skin_kama .cke_browser_webkit .cke_rtl .cke_rcombo .cke_text {
-  /*	float: right;*/ }
-
-.cke_skin_kama .cke_browser_gecko .cke_rcombo .cke_label,
-.cke_skin_kama .cke_browser_webkit .cke_rcombo .cke_label {
-  /*display: block;*/
+.cke_skin_kama .cke_browser_gecko .cke_rcombo .cke_label, .cke_skin_kama .cke_browser_webkit .cke_rcombo .cke_label {
   float: left; }
 
-.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_rcombo .cke_label,
-.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_rcombo .cke_text,
-.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_rcombo .cke_openbutton,
-.cke_skin_kama .cke_browser_webkit .cke_rtl .cke_rcombo .cke_label,
-.cke_skin_kama .cke_browser_webkit .cke_rtl .cke_rcombo .cke_text,
-.cke_skin_kama .cke_browser_webkit .cke_rtl .cke_rcombo .cke_openbutton {
+.cke_skin_kama .cke_browser_gecko .cke_rtl .cke_rcombo .cke_label, .cke_skin_kama .cke_browser_gecko .cke_rtl .cke_rcombo .cke_text, .cke_skin_kama .cke_browser_gecko .cke_rtl .cke_rcombo .cke_openbutton, .cke_skin_kama .cke_browser_webkit .cke_rtl .cke_rcombo .cke_label, .cke_skin_kama .cke_browser_webkit .cke_rtl .cke_rcombo .cke_text, .cke_skin_kama .cke_browser_webkit .cke_rtl .cke_rcombo .cke_openbutton {
   float: right; }
 
 .cke_skin_kama .cke_browser_ie7 .cke_rcombo .cke_text {
   line-height: 18px; }
 
-.cke_skin_kama .cke_browser_ie6 .cke_rcombo .cke_text,
-.cke_skin_kama .cke_browser_iequirks .cke_rcombo .cke_text {
+.cke_skin_kama .cke_browser_ie6 .cke_rcombo .cke_text, .cke_skin_kama .cke_browser_iequirks .cke_rcombo .cke_text {
   height: auto;
   line-height: 17px; }
 
-.cke_skin_kama .cke_rtl .cke_rcombo .cke_font .cke_text,
-.cke_skin_kama .cke_rtl .cke_rcombo .cke_fontSize .cke_text {
+.cke_skin_kama .cke_rtl .cke_rcombo .cke_font .cke_text, .cke_skin_kama .cke_rtl .cke_rcombo .cke_fontSize .cke_text {
   direction: ltr; }
 
-/*
-Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.html or http://ckeditor.com/license
-*/
 @media print {
   .cke_path {
     display: none; } }
@@ -1108,8 +869,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
   _width: 100%;
   margin: 0 0 5px; }
 
-.cke_skin_kama .cke_path a,
-.cke_skin_kama .cke_path .cke_empty {
+.cke_skin_kama .cke_path a, .cke_skin_kama .cke_path .cke_empty {
   display: inline-block;
   float: left;
   padding: 1px 4px 0;
@@ -1119,35 +879,23 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 .cke_skin_kama .cke_path .cke_empty {
   visibility: hidden; }
 
-.cke_skin_kama .cke_rtl .cke_path a,
-.cke_skin_kama .cke_rtl .cke_path cke_empty {
+.cke_skin_kama .cke_rtl .cke_path a, .cke_skin_kama .cke_rtl .cke_path cke_empty {
   float: right; }
 
-.cke_skin_kama .cke_path a:hover,
-.cke_skin_kama .cke_path a:focus,
-.cke_skin_kama .cke_path a:active {
+.cke_skin_kama .cke_path a:hover, .cke_skin_kama .cke_path a:focus, .cke_skin_kama .cke_path a:active {
   background-color: #dff1ff;
   padding: 1px 4px 0;
   outline: none;
   color: #000; }
 
-/* IE double float-right workaround */
-.cke_skin_kama .cke_browser_ie .cke_rtl .cke_path a,
-.cke_skin_kama .cke_browser_ie .cke_rtl .cke_path .cke_empty {
+.cke_skin_kama .cke_browser_ie .cke_rtl .cke_path a, .cke_skin_kama .cke_browser_ie .cke_rtl .cke_path .cke_empty {
   float: none; }
 
 .cke_skin_kama .cke_path .cke_label {
   display: none; }
 
-/*
-Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.html or http://ckeditor.com/license
-*/
 .cke_skin_kama .cke_button_source .cke_icon {
   background-position: 0 0; }
-
-.cke_skin_kama .cke_button_docProps .cke_icon {
-  background-position: 0 -16px; }
 
 .cke_skin_kama .cke_button_newpage .cke_icon {
   background-position: 0 -48px; }
@@ -1230,8 +978,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 .cke_skin_kama .cke_button_print .cke_icon {
   background-position: 0 -176px; }
 
-.cke_skin_kama .cke_button_checkspell .cke_icon,
-.cke_skin_kama .cke_button_scayt .cke_icon {
+.cke_skin_kama .cke_button_checkspell .cke_icon, .cke_skin_kama .cke_button_scayt .cke_icon {
   background-position: 0 -192px; }
 
 .cke_skin_kama .cke_button_pagebreak .cke_icon {
@@ -1363,42 +1110,30 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 .cke_skin_kama .cke_button_iframe .cke_icon {
   background-position: 0 -1279px; }
 
-/*
-Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.html or http://ckeditor.com/license
-*/
-/* "Source" button label */
 .cke_skin_kama .cke_button_source .cke_label {
   display: inline; }
 
-/* "Styles" panel size */
 .cke_skin_kama .cke_styles_panel {
   width: 150px;
   height: 170px; }
 
-/* "Format" panel size */
 .cke_skin_kama .cke_format_panel {
   width: 150px;
   height: 170px; }
 
-/* "Font" panel size */
 .cke_skin_kama .cke_font_panel {
   width: 150px;
   height: 170px; }
 
-/* "Font Size" panel size */
 .cke_skin_kama .cke_fontSize_panel {
   height: 170px; }
 
-/* "Font Size" combo width */
 .cke_skin_kama .cke_fontSize .cke_text {
   width: 25px; }
 
-/* "Font Size" combo width (IE Quirks) */
 .cke_skin_kama .cke_browser_iequirks .cke_fontSize .cke_text {
   width: 32px; }
 
-/* Restore the container visibility */
 html .cke_skin_kama {
   visibility: inherit; }
 

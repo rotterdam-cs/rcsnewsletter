@@ -22,6 +22,7 @@ import javax.mail.internet.InternetAddress;
 import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.model.NewsletterSubscription;
@@ -366,7 +367,7 @@ public class EmailFormat {
                 //If there is a content related to this block
                 if (ntb.size() > count) {
                     if (ntb.get(count).getArticleId() != null && ntb.get(count).getArticleId() != UNDEFINED) {
-                        JournalArticle ja = JournalArticleLocalServiceUtil.getLatestArticle(themeDisplay.getDoAsGroupId(),ntb.get(count).getArticleId().toString());
+                        JournalArticle ja = JournalArticleLocalServiceUtil.getLatestArticle(themeDisplay.getDoAsGroupId(),ntb.get(count).getArticleId().toString(), WorkflowConstants.STATUS_APPROVED);
                         JournalArticleDisplay jad = JournalArticleLocalServiceUtil.getArticleDisplay(ja.getGroupId(), ja.getArticleId(), ja.getTemplateId(), "PRINT", themeDisplay.getLocale().getLanguage(), themeDisplay);
                         String content = jad.getContent();                        
                         toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, jad.getTitle());                        

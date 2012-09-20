@@ -40,7 +40,6 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
     @Value("${newsletter.admin.name}")
     private String fromName;    
 
-    @Async
     @Override
     public void sendTestMailing(Long mailingId, String testEmail, ThemeDisplay themeDisplay) {        
         try {
@@ -72,7 +71,6 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         }      
     }
 
-    @Async
     @Override
     public void sendMailing(Long mailingId, ThemeDisplay themeDisplay, Long archiveId) {
         try {

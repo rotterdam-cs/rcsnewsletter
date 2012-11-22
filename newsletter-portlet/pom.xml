@@ -128,7 +128,7 @@
             <groupId>com.rcs.portletfaces</groupId>
             <artifactId>portletfaces-bridge-impl</artifactId>
             <version>2.0.1</version>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>org.portletfaces</groupId>
             <artifactId>portletfaces-bridge-api</artifactId>
@@ -138,8 +138,8 @@
             <groupId>org.portletfaces</groupId>
             <artifactId>portletfaces-logging</artifactId>
             <version>1.1.0</version>
-        </dependency>   
-        
+        </dependency>
+
         <dependency>
             <groupId>org.portletfaces.alloy.faces</groupId>
             <artifactId>alloyfaces</artifactId>
@@ -176,28 +176,34 @@
             <version>1.2.1</version>
             <scope>compile</scope>
         </dependency>
-        
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.faces</artifactId>
+            <version>2.1.14</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
-    
-    <repositories>                
+
+    <repositories>
         <repository>
             <id>maven2-repository-portletfaces.org</id>
             <url>http://repo.portletfaces.org/mvn/maven2</url>
         </repository>
-        <repository>  
-            <id>prime-repo</id>  
-            <name>PrimeFaces Maven Repository</name>  
-            <url>http://repository.primefaces.org</url>  
-            <layout>default</layout>  
+        <repository>
+            <id>prime-repo</id>
+            <name>PrimeFaces Maven Repository</name>
+            <url>http://repository.primefaces.org</url>
+            <layout>default</layout>
         </repository>
-        <repository> 
-            <id>project</id> 
-            <name>Project Maven Repository</name> 
-            <layout>default</layout> 
-            <url>file://${project.basedir}/lib/</url> 
-        </repository>         
+        <repository>
+            <id>project</id>
+            <name>Project Maven Repository</name>
+            <layout>default</layout>
+            <url>file://${project.basedir}/lib/</url>
+        </repository>
     </repositories>
-    
+
     <properties>
         <liferay.auto.deploy.dir>${liferay.deploydir}</liferay.auto.deploy.dir>
     </properties>

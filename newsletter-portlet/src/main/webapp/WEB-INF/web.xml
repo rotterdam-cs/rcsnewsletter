@@ -40,6 +40,8 @@
     </context-param>
     <listener>
         <listener-class>org.portletfaces.bridge.servlet.BridgeSessionListener</listener-class>
+    </listener>
+    <listener>
         <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
     </listener>
     <servlet>

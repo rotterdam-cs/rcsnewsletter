@@ -1,36 +1,35 @@
 <?xml version="1.0"?>
 <!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.0.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_0_0.dtd">
 
-<liferay-portlet-app>       
-        
-    <portlet>        
-        <portlet-name>Newsletter-Admin-Faces</portlet-name>            
+<liferay-portlet-app>
+
+    <portlet>
+        <portlet-name>Newsletter-Admin-Faces</portlet-name>
         <icon>/icon.png</icon>
-        <control-panel-entry-category>content</control-panel-entry-category>            
-        <control-panel-entry-weight>1</control-panel-entry-weight>                        
-        <instanceable>false</instanceable>                        
-        <ajaxable>false</ajaxable>                    
-        <header-portlet-css>/css/newsletter.css</header-portlet-css>                
+        <control-panel-entry-category>content</control-panel-entry-category>
+        <control-panel-entry-weight>1</control-panel-entry-weight>
+        <instanceable>false</instanceable>
+        <ajaxable>false</ajaxable>
+        <header-portlet-css>/css/newsletter.css</header-portlet-css>
         <header-portlet-css>/js/ckeditor/contents.css</header-portlet-css>
         <header-portlet-css>/js/ckeditor/skins/kama/editor.css</header-portlet-css>
         <header-portlet-javascript>/js/jquery-1.6.4.min.js</header-portlet-javascript>
         <header-portlet-javascript>/js/ckeditor/ckeditor.js</header-portlet-javascript>
         <footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
-        
-    </portlet> 
+    </portlet>
 
-    <portlet>            
-        <portlet-name>Newsletter-Registration</portlet-name>            
+    <portlet>
+        <portlet-name>Newsletter-Registration</portlet-name>
         <icon>/icon.png</icon>
-        <instanceable>true</instanceable>                        
-        <ajaxable>false</ajaxable>                    
+        <instanceable>true</instanceable>
+        <ajaxable>false</ajaxable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
         <header-portlet-javascript>/js/jquery-1.6.4.min.js</header-portlet-javascript>
         <footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
-    </portlet> 
-        
-    <portlet>            
-        <portlet-name>Newsletter-Registration-Confirm</portlet-name>            
+    </portlet>
+
+    <portlet>
+        <portlet-name>Newsletter-Registration-Confirm</portlet-name>
         <icon>/icon.png</icon>
         <instanceable>true</instanceable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
@@ -38,16 +37,16 @@
         <footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
         <css-class-wrapper>newsletter-confirmation-msg</css-class-wrapper>
     </portlet>
-        
-    <portlet>            
-        <portlet-name>Online-Newsletter-Viewer</portlet-name>            
+
+    <portlet>
+        <portlet-name>Online-Newsletter-Viewer</portlet-name>
         <icon>/icon.png</icon>
         <instanceable>true</instanceable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
         <footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
         <css-class-wrapper>online-newsletter-viewer</css-class-wrapper>
     </portlet>
-        
+
     <role-mapper>
         <role-name>administrator</role-name>
         <role-link>Administrator</role-link>

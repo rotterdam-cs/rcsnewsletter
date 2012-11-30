@@ -16,16 +16,10 @@
         </property>
     </bean>
 
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+    <bean id="sessionFactory" class="com.rcs.newsletter.commons.CustomizedSessionFactory">
         <property name="dataSource" ref="liferayDataSource" />
         <property name="schemaUpdate" value="true" />
         <property name="packagesToScan" value="com.rcs.newsletter.core.model" />
-        <property name="hibernateProperties">
-            <props>
-                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
-                <prop key="hibernate.show_sql">false</prop>
-            </props>
-        </property>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">

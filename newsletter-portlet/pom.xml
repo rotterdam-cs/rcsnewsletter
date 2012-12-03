@@ -4,13 +4,13 @@
     <parent>
         <artifactId>newsletter</artifactId>
         <groupId>com.rcs</groupId>
-        <version>1.2</version>
+        <version>6.1.2.1</version>
     </parent>
     <groupId>com.rcs</groupId>
     <artifactId>newsletter-portlet</artifactId>
     <packaging>war</packaging>
     <name>newsletter Portlet</name>
-    <version>1.2</version>
+    <version>6.1.2.1</version>
     <build>
         <plugins>
             <plugin>
@@ -106,7 +106,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>1.7.1</version>
+            <version>${gson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.sun.faces</groupId>

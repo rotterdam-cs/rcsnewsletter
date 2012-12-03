@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
-        <action>
-            <actionName>CUSTOM-deploy</actionName>
-            <displayName>deploy</displayName>
-            <goals>
-                <goal>liferay:deploy</goal>
-            </goals>
-        </action>
-        <action>
-            <actionName>CUSTOM-All In One</actionName>
-            <displayName>All In One</displayName>
-            <goals>
-                <goal>clean</goal>
-                <goal>install</goal>
-                <goal>liferay:deploy</goal>
-            </goals>
-        </action>
-    </actions>
+    <action>
+        <actionName>CUSTOM-deploy</actionName>
+        <displayName>Deploy to Liferay</displayName>
+        <goals>
+            <goal>liferay:deploy</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-All In One</actionName>
+        <displayName>All In One</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+            <goal>liferay:deploy</goal>
+        </goals>
+    </action>
+</actions>

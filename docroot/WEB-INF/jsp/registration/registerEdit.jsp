@@ -47,10 +47,11 @@
             <td><label><fmt:message key="newsletter.registration.settings.field.disablednamefields" /></label></td>
             <td><form:checkbox path="disabledNameFields" /> </td>
         </tr>
-        <td colspan="2">
-            <input id="btn-save-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.registration.settings.button.savesettings" />" />
-        </td>
-    </tr>
+        <tr>
+	        <td colspan="2">
+	            <input id="btn-save-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.registration.settings.button.savesettings" />" />
+	        </td>
+    	</tr>
 </table>
 </form:form>
 

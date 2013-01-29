@@ -136,3 +136,4 @@
             function loadRegisterView(){
                 $('#newsletter-registration-panel-<portlet:namespace/>').load('${showRegisterFormUrl}');
             }
+</script>

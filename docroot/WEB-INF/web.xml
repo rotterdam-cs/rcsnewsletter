@@ -9,6 +9,7 @@
         <description>Spring framework global application context.</description>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+	
     <!-- allow lazy loading on requests -->
     <filter>
         <filter-name>OpenSessionInViewFilter</filter-name>

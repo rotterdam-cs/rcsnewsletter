@@ -147,3 +147,4 @@
     function loadUnregisterView(){
         $('#newsletter-registration-panel-<portlet:namespace/>').load('${showUnregisterFormUrl}');
     }
+</script>

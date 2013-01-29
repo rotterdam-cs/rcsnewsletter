@@ -9,7 +9,7 @@
         <control-panel-entry-weight>1</control-panel-entry-weight>
         <instanceable>false</instanceable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
-        <header-portlet-css>/js/jquery-validation-1.9.0/demo/css/screen.css</header-portlet-css>
+        <header-portlet-css>/js/jquery-validation-1.9.0/css/screen.css</header-portlet-css>
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
         <header-portlet-css>/js/jquery.jqGrid-4.3.1/css/ui.jqgrid.css</header-portlet-css>
         <header-portlet-javascript>/js/jquery-1.7.1.min.js</header-portlet-javascript>
@@ -29,7 +29,7 @@
         <configuration-action-class>com.rcs.newsletter.portlets.newsletterregistration.NewsletterRegistrationConfigurationAction</configuration-action-class>
         <instanceable>true</instanceable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
-        <header-portlet-css>/js/jquery-validation-1.9.0/demo/css/screen.css</header-portlet-css>
+        <header-portlet-css>/js/jquery-validation-1.9.0/css/screen.css</header-portlet-css>
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
         <header-portlet-css>/js/jquery.jqGrid-4.3.1/css/ui.jqgrid.css</header-portlet-css>
         <header-portlet-javascript>/js/jquery-1.7.1.min.js</header-portlet-javascript>
@@ -48,7 +48,7 @@
         <icon>/icon.png</icon>
         <instanceable>true</instanceable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
-        <header-portlet-css>/js/jquery-validation-1.9.0/demo/css/screen.css</header-portlet-css>
+        <header-portlet-css>/js/jquery-validation-1.9.0/css/screen.css</header-portlet-css>
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
         <header-portlet-css>/js/jquery.jqGrid-4.3.1/css/ui.jqgrid.css</header-portlet-css>
         <header-portlet-javascript>/js/jquery-1.7.1.min.js</header-portlet-javascript>
@@ -67,7 +67,7 @@
         <icon>/icon.png</icon>
         <instanceable>true</instanceable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
-        <header-portlet-css>/js/jquery-validation-1.9.0/demo/css/screen.css</header-portlet-css>
+        <header-portlet-css>/js/jquery-validation-1.9.0/css/screen.css</header-portlet-css>
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
         <header-portlet-css>/js/jquery.jqGrid-4.3.1/css/ui.jqgrid.css</header-portlet-css>
         <header-portlet-javascript>/js/jquery-1.7.1.min.js</header-portlet-javascript>

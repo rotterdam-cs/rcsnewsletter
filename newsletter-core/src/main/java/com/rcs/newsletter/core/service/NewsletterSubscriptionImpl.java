@@ -10,8 +10,8 @@ import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,7 @@ public class NewsletterSubscriptionImpl extends CRUDServiceImpl<NewsletterSubscr
 
     @Autowired
     private SessionFactory sessionFactory;
-    private final static Logger logger = LoggerFactory.getLogger(NewsletterSubscriptionImpl.class);
+    private final static Log logger = LogFactoryUtil.getLog(NewsletterSubscriptionImpl.class);
 
     @Override
     public List<NewsletterSubscription> findBySubscriptor(NewsletterSubscriptor newsletterSubscriptor) {

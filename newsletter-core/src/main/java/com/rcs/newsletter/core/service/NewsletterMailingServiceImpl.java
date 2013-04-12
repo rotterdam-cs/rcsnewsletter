@@ -77,8 +77,16 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
             NewsletterMailing mailing = findById(mailingId).getPayload();
             String content = EmailFormat.getEmailFromTemplate(mailing, themeDisplay);
             
+            logger.error("***** building content:");
+            logger.error(content);
+            logger.error("***********************");
+            
             //Add full path to images
             content = EmailFormat.fixImagesPath(content, themeDisplay);            
+            
+            logger.error("***** fixing images path:");
+            logger.error(content);
+            logger.error("***********************");
             
             String title = mailing.getName();
             
@@ -87,6 +95,11 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
             MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, title, content);
             String bodyContent = message.getBody();
             
+            logger.error("***** generating bodyContent:");
+            logger.error(bodyContent);
+            logger.error("***********************");
+            
+            int logcounter = 0;
             for (NewsletterSubscription newsletterSubscription : mailing.getList().getSubscriptions()) {
                 if(newsletterSubscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
                     NewsletterSubscriptor subscriptor = newsletterSubscription.getSubscriptor();
@@ -95,7 +108,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
                     MailMessage personalMessage = message;
 
                     toIA = new InternetAddress(subscriptor.getEmail(), name);
-                    logger.info("Sending to " + name + "<" + subscriptor.getEmail() + ">");
+                    logger.info(logcounter + ") Sending to " + name + "<" + subscriptor.getEmail() + ">");
                     personalMessage.setTo(toIA);
 
                     //Replace User Info
@@ -103,9 +116,19 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
                     personalMessage.setBody(tmpContent);
 
                     mailingUtil.sendEmail(personalMessage);
+                    
+                    //Log message each 100 submissions
+                    logcounter++;
+                    if (logcounter == 100) {
+                        logger.error("***** Message:");
+                        logger.error(tmpContent);
+                        logger.error("***********************");
+                        logcounter = 0;
+                    }
+                    
                 }
             }
-            logger.info("End Sending personalizable conent");
+            logger.error("End Sending personalizable conent");
         } catch (Exception ex) {
             logger.error("Error while trying to read article", ex);
         }

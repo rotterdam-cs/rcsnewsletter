@@ -337,14 +337,20 @@ public class EmailFormat {
      * @return 
      */
     public static String getEmailFromTemplate(NewsletterMailing mailing, ThemeDisplay themeDisplay) throws Exception {
-        log.debug("Executing getEmailFromTemplate in EmailFormat");
+        log.error("Executing getEmailFromTemplate in EmailFormat");
         NewsletterTemplate template = mailing.getTemplate();
         String result = template.getTemplate();
         String fTagBlockOpen = fixTagsToRegex(TEMPLATE_TAG_BLOCK_OPEN);
         String fTagBlockClose = fixTagsToRegex(TEMPLATE_TAG_BLOCK_CLOSE);
         String fTagBlockTitle = fixTagsToRegex(TEMPLATE_TAG_TITLE);
         String fTagBlockContent = fixTagsToRegex(TEMPLATE_TAG_CONTENT);
-
+        
+        log.error("***********************************************************");
+        log.error("**************************************** template original:");
+        log.error(result);
+        log.error("***********************************************************");
+        log.error("***********************************************************");
+        
         result = result.replace(TEMPLATE_TAG_BLOCK_OPEN, fTagBlockOpen).replace(TEMPLATE_TAG_BLOCK_CLOSE, fTagBlockClose).replace(TEMPLATE_TAG_TITLE, fTagBlockTitle).replace(TEMPLATE_TAG_CONTENT, fTagBlockContent);
         String resulttmp = new String(result);
 
@@ -392,7 +398,7 @@ public class EmailFormat {
                     //resulttmp = resulttmp.replaceFirst(toReplace, "");
                 }
                 m = patternBlock.matcher(resulttmp);
-
+                
             } catch (PortalException ex) {
                 log.error("Error while trying to read article", ex);
             } catch (SystemException ex) {
@@ -400,6 +406,11 @@ public class EmailFormat {
             }
             count++;
         }
+        log.error("***********************************************************");
+        log.error("******************************************* template final:");
+        log.error(resulttmp);
+        log.error("***********************************************************");
+        log.error("***********************************************************");
         return resulttmp;
     }
 

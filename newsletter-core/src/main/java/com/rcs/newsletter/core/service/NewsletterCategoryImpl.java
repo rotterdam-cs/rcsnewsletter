@@ -16,8 +16,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 
 /**
@@ -31,7 +31,7 @@ public class NewsletterCategoryImpl extends CRUDServiceImpl<NewsletterCategory> 
     @Autowired
     private SessionFactory sessionFactory;
     
-    private final static Logger logger = LoggerFactory.getLogger(NewsletterSubscriptionImpl.class);
+    private final static Log logger = LogFactoryUtil.getLog(NewsletterSubscriptionImpl.class);
     
     @Override
     public NewsletterCategory findByKey(String categoryKey) {

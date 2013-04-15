@@ -47,9 +47,9 @@
             <ul>
                 <li><a href="${listsURL}"><fmt:message key="newsletter.admin.lists"/></a></li>
                 <li><a href="${subscribersURL}"><fmt:message key="newsletter.admin.subscribers"/></a></li>
-                <li><a href="${mailingURL}"><fmt:message key="newsletter.admin.mailing"/></a></li>
-                <li><a href="${archiveURL}"><fmt:message key="newsletter.admin.archive"/></a></li>
                 <li><a href="${templatesURL}"><fmt:message key="newsletter.admin.templates"/></a></li>
+                <li><a href="${mailingURL}"><fmt:message key="newsletter.admin.mailing"/></a></li>
+                <li><a href="${archiveURL}"><fmt:message key="newsletter.admin.archive"/></a></li>                
             </ul>
         </div>
     </body>

@@ -283,13 +283,15 @@
     }
 
     function sendNewsletter(mailingId){
+    	jQuery("#newsletterAdmin<portlet:namespace/>").mask('<fmt:message key="newsletter.tab.mailing.sendingnewsletter"/>');
         jQuery.ajax({
             url: '${sendNewsletterUrl}'
             ,type: 'POST'
             ,data: {
                 mailingId: mailingId
             }
-            ,success: function(response){
+            ,success: function(response) {
+            	jQuery("#newsletterAdmin<portlet:namespace/>").unmask();
                 if (response.success){
                     showMessages(response.messages);
                 }else{

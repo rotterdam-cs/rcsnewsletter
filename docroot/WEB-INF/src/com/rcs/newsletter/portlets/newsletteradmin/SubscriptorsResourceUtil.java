@@ -48,7 +48,7 @@ public class SubscriptorsResourceUtil {
     @Autowired
     private NewsletterCategoryService categoryService;
 
-    private static final Log logger = LogFactoryUtil.getLog(NewsletterResourcePortlet.class);
+    private static final Log logger = LogFactoryUtil.getLog(NewsletterCategoryService.class);
 
     private static final String ID_COLUMN = "Id";
 
@@ -198,23 +198,25 @@ public class SubscriptorsResourceUtil {
                 String firstName;
                 String lastName;
                 String email;
-
+                
                 HSSFCell nameCell = row.getCell(NAME_INDEX);
-                if (nameCell != null && nameCell.getCellType() == HSSFCell.CELL_TYPE_STRING && StringUtils.hasText(nameCell.getStringCellValue())) {
-                    firstName = nameCell.getStringCellValue();
+                if (nameCell != null && nameCell.getCellType() == HSSFCell.CELL_TYPE_STRING && StringUtils.hasText(nameCell.getStringCellValue())) {                                   
+                	firstName = nameCell.getStringCellValue();
                 }else{
-                    logger.warn(String.format("Error loading first name from row %d", i + 1));
-                    omitted++;
-                    continue;
+//                    logger.warn(String.format("Error loading first name from row %d", i + 1));
+//                    omitted++;
+//                    continue;
+                	  firstName = " ";
                 }
 
                 HSSFCell lastNameCell = row.getCell(LAST_NAME_INDEX);
-                if (lastNameCell != null && lastNameCell.getCellType() == HSSFCell.CELL_TYPE_STRING && StringUtils.hasText(lastNameCell.getStringCellValue())) {
+                if (lastNameCell != null && lastNameCell.getCellType() == HSSFCell.CELL_TYPE_STRING && StringUtils.hasText(lastNameCell.getStringCellValue())) {                	
                     lastName = lastNameCell.getStringCellValue();
                 }else{
-                    logger.warn(String.format("Error loading last name from row %d", i + 1));
-                    omitted++;
-                    continue;
+//                    logger.warn(String.format("Error loading last name from row %d", i + 1));
+//                    omitted++;
+//                    continue;
+                	lastName = " ";
                 }
                 
                 HSSFCell emailCell = row.getCell(EMAIL_INDEX);
@@ -225,6 +227,7 @@ public class SubscriptorsResourceUtil {
                     omitted++;
                     continue;                    
                 }
+               
                 NewsletterSubscriptionDTO newSubscription = new NewsletterSubscriptionDTO();
                 newSubscription.setSubscriptorFirstName(firstName);
                 newSubscription.setSubscriptorLastName(lastName);
@@ -233,7 +236,9 @@ public class SubscriptorsResourceUtil {
             }
             result.setRowsProcessed(processed);
             result.setRowsOmitted(omitted);
-            subscriptionService.createSubscriptionsForCategory(result, themeDisplay, categoryId, newSubscriptions);
+            logger.info("*******************************************************************-" + result.isSuccess());
+            result = subscriptionService.createSubscriptionsForCategory(result, themeDisplay, categoryId, newSubscriptions);
+            logger.info("---------------------------------------------------------------------" + result.isSuccess());
             return result;
         } catch (IOException ex) {
             logger.error("Error in importSubscriptorsFromExcel " + ex);

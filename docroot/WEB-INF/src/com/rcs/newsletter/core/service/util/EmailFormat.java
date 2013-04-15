@@ -332,7 +332,7 @@ public class EmailFormat {
      * @return 
      */
     public static String getEmailFromTemplate(NewsletterMailing mailing, ThemeDisplay themeDisplay) throws Exception {
-        log.debug("Executing getEmailFromTemplate in EmailFormat");
+        log.info("Executing getEmailFromTemplate in EmailFormat");
         NewsletterTemplate template = mailing.getTemplate();
         String result = template.getTemplate();
         String fTagBlockOpen = fixTagsToRegex(TEMPLATE_TAG_BLOCK_OPEN);
@@ -340,6 +340,12 @@ public class EmailFormat {
         String fTagBlockTitle = fixTagsToRegex(TEMPLATE_TAG_TITLE);
         String fTagBlockContent = fixTagsToRegex(TEMPLATE_TAG_CONTENT);
 
+        log.info("***********************************************************");
+        log.info("**************************************** template original:");
+        log.info(result);
+        log.info("***********************************************************");
+        log.info("***********************************************************");
+        
         result = result.replace(TEMPLATE_TAG_BLOCK_OPEN, fTagBlockOpen).replace(TEMPLATE_TAG_BLOCK_CLOSE, fTagBlockClose).replace(TEMPLATE_TAG_TITLE, fTagBlockTitle).replace(TEMPLATE_TAG_CONTENT, fTagBlockContent);
         String resulttmp = new String(result);
 
@@ -404,6 +410,11 @@ public class EmailFormat {
             }
             count++;
         }
+        log.info("***********************************************************");
+        log.info("******************************************* template final:");
+        log.info(resulttmp);
+        log.info("***********************************************************");
+        log.info("***********************************************************");
         return resulttmp;
     }
 

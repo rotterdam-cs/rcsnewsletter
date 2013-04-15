@@ -63,7 +63,10 @@
      */
     function initEvents(){
         // click on 'Add Template' button
-        jQuery('#btn-addtemplate-<portlet:namespace/>').click(function(){
+        jQuery('#btn-addtemplate-<portlet:namespace/>').click(function() {
+        	if (CKEDITOR.instances["<portlet:namespace/>template_editor"]) {
+            	CKEDITOR.remove(CKEDITOR.instances["<portlet:namespace/>template_editor"]);
+            }
             jQuery('#templates-panel').load('${editTemplateUrl}');
         });
         
@@ -123,6 +126,9 @@
      * Edit template
      */
     function editTemplate(templateId){
+    	if (CKEDITOR.instances["<portlet:namespace/>template_editor"]) {
+        	CKEDITOR.remove(CKEDITOR.instances["<portlet:namespace/>template_editor"]);
+        }
         jQuery('#templates-panel').load('${editTemplateUrl}', {id: templateId});
     }
     

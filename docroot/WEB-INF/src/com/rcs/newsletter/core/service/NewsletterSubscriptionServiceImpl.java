@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.mail.internet.InternetAddress;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.jdto.DTOBinder;
@@ -49,80 +50,105 @@ public class NewsletterSubscriptionServiceImpl extends CRUDServiceImpl<Newslette
         return ServiceActionResult.buildSuccess(binder.bindFromBusinessObjectList(NewsletterSubscriptionDTO.class, subscriptions));        
     }
     
-    private NewsletterSubscription findByEmailAndCategory(ThemeDisplay themeDisplay, String email, long newsletterCategoryId) {
-        Session currentSession = sessionFactory.getCurrentSession();
+    private NewsletterSubscription findByEmailAndCategory(ThemeDisplay themeDisplay, String email, long newsletterCategoryId) throws HibernateException, Exception {
+    	NewsletterSubscription nls = null;
+    	Session currentSession = sessionFactory.getCurrentSession();
         Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
         criteria.add(Restrictions.eq(NewsletterSubscription.COMPANYID, themeDisplay.getCompanyId()));
         criteria.add(Restrictions.eq(NewsletterSubscription.GROUPID, themeDisplay.getScopeGroupId()));        
         criteria.createCriteria(NewsletterSubscription.SUBSCRIPTOR).add(Restrictions.ilike(NewsletterSubscriptor.EMAIL, email));
         criteria.createCriteria(NewsletterSubscription.CATEGORY).add(Restrictions.idEq(newsletterCategoryId));
         criteria.setMaxResults(1);
+        nls = (NewsletterSubscription) criteria.uniqueResult();
 
-        return (NewsletterSubscription) criteria.uniqueResult();
+        return nls;
     }
 
-    public NewsletterSubscriptor subscriptorForEmail(String email, ThemeDisplay themeDisplay) {
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(NewsletterSubscriptor.class);
+    public NewsletterSubscriptor subscriptorForEmail(String email, ThemeDisplay themeDisplay) throws HibernateException, Exception {
+    	NewsletterSubscriptor nls = null;
+    	
+    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(NewsletterSubscriptor.class);
         criteria.add(Restrictions.eq(NewsletterSubscriptor.COMPANYID, themeDisplay.getCompanyId()));
         criteria.add(Restrictions.eq(NewsletterSubscriptor.GROUPID, themeDisplay.getScopeGroupId()));
         criteria.add(Restrictions.ilike(NewsletterSubscriptor.EMAIL, email));
         criteria.setMaxResults(1);
-        return (NewsletterSubscriptor) criteria.uniqueResult();
+        nls = (NewsletterSubscriptor) criteria.uniqueResult();
+
+	    return nls;
     }    
     
-    public void createSubscriptionsForCategory(CreateMultipleSubscriptionsResult result, ThemeDisplay themeDisplay, long categoryId, List<NewsletterSubscriptionDTO> newSubscriptions) {
+    public CreateMultipleSubscriptionsResult createSubscriptionsForCategory(CreateMultipleSubscriptionsResult result, ThemeDisplay themeDisplay, long categoryId, List<NewsletterSubscriptionDTO> newSubscriptions) {
         if (newSubscriptions == null){
             result.setSuccess(false);
-            return;
+            logger.error("newSubscriptions null");
+            return result;
         }
         if (newSubscriptions.isEmpty()){
             result.setSuccess(false);
-            return; 
+            logger.error("newSubscriptions empty");
+            return result; 
         }
         
         ServiceActionResult<NewsletterCategory> sarCategory = categoryService.findById(categoryId);
         if (!sarCategory.isSuccess()){
             result.setSuccess(false);
-            return;
+            logger.error("sarCategory not Success");
+            return result;
         }
         
         long omitted = 0;
         long created = 0;
-        for (NewsletterSubscriptionDTO subscriptionData : newSubscriptions){
-            String subscriptorEmail = subscriptionData.getSubscriptorEmail();
-            
-            NewsletterSubscription subscription = findByEmailAndCategory(themeDisplay, subscriptorEmail, categoryId);
-            if (subscription != null){
-                logger.warn(String.format("Email address %s is already subscribed to the list", subscriptorEmail));
-                omitted++;
+        for (NewsletterSubscriptionDTO subscriptionData : newSubscriptions){     
+        	String subscriptorEmail = subscriptionData.getSubscriptorEmail();
+        	try {            	
+	            NewsletterSubscription subscription = findByEmailAndCategory(themeDisplay, subscriptorEmail, categoryId);
+	            if (subscription != null){
+	                logger.warn(String.format("Email address %s is already subscribed to the list", subscriptorEmail));
+	                omitted++;
+	                continue;
+	            }
+	            if (subscriptorEmail.isEmpty()) {
+	            	logger.warn(String.format("Empty Email address %s", subscriptorEmail));
+	                omitted++;
+	                continue;
+	            }
+	            NewsletterSubscriptor subscriptor = subscriptorForEmail(subscriptorEmail, themeDisplay);
+	            if (subscriptor == null) {
+	                subscriptor = new NewsletterSubscriptor();
+	                subscriptor.setEmail(subscriptorEmail);
+	                subscriptor.setFirstName(subscriptionData.getSubscriptorFirstName());
+	                subscriptor.setLastName(subscriptionData.getSubscriptorLastName());
+	                subscriptor.setCompanyid(themeDisplay.getCompanyId());
+	                subscriptor.setGroupid(themeDisplay.getScopeGroupId());
+	                sessionFactory.getCurrentSession().save(subscriptor);
+	            }	            
+	            subscription = new NewsletterSubscription();
+	            subscription.setSubscriptor(subscriptor);
+	            subscription.setCategory(sarCategory.getPayload());
+	            subscription.setStatus(SubscriptionStatus.ACTIVE);
+	            subscription.setGroupid(themeDisplay.getScopeGroupId());
+	            subscription.setCompanyid(themeDisplay.getCompanyId());
+	            subscription.setActivationKey(SubscriptionUtil.getUniqueKey());
+	            subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
+	            sessionFactory.getCurrentSession().save(subscription);
+	            created++;
+	            logger.warn("subscriptor:" + subscriptor.getEmail() + "-" + subscriptor.getFirstName() + "-" + subscriptor.getLastName());
+        	}catch (HibernateException e) {
+        		omitted++;
+            	logger.error("error with email " + subscriptorEmail );            	
                 continue;
-            }
-            
-            NewsletterSubscriptor subscriptor = subscriptorForEmail(subscriptorEmail, themeDisplay);
-            if (subscriptor == null){
-                subscriptor = new NewsletterSubscriptor();
-                subscriptor.setEmail(subscriptorEmail);
-                subscriptor.setFirstName(subscriptionData.getSubscriptorFirstName());
-                subscriptor.setLastName(subscriptionData.getSubscriptorLastName());
-                subscriptor.setCompanyid(themeDisplay.getCompanyId());
-                subscriptor.setGroupid(themeDisplay.getScopeGroupId());
-                sessionFactory.getCurrentSession().save(subscriptor);
-            }
-            
-            subscription = new NewsletterSubscription();
-            subscription.setSubscriptor(subscriptor);
-            subscription.setCategory(sarCategory.getPayload());
-            subscription.setStatus(SubscriptionStatus.ACTIVE);
-            subscription.setGroupid(themeDisplay.getScopeGroupId());
-            subscription.setCompanyid(themeDisplay.getCompanyId());
-            subscription.setActivationKey(SubscriptionUtil.getUniqueKey());
-            subscription.setDeactivationKey(SubscriptionUtil.getUniqueKey());
-            sessionFactory.getCurrentSession().save(subscription);
-            created++;
+        	} catch (Exception e) {
+            	omitted++;
+            	logger.error("error with email " + subscriptorEmail );            	
+                continue;
+			}
         }
-        result.setSuccess(true);
+
+        result.setSuccess(true);       
         result.setRowsOmitted(result.getRowsOmitted() + omitted);
         result.setSubscriptionsCreated(created);
+        logger.warn("Finishing " + result.isSuccess()); 
+        return result;
     }
 
     public ServiceActionResult createSubscription(NewsletterSubscriptionDTO subscriptionDTO, ThemeDisplay themeDisplay) {
@@ -135,7 +161,16 @@ public class NewsletterSubscriptionServiceImpl extends CRUDServiceImpl<Newslette
         }
         
         // check if the subscription already exists
-        NewsletterSubscription subscription = findByEmailAndCategory(themeDisplay, subscriptionDTO.getSubscriptorEmail(), Long.valueOf(subscriptionDTO.getCategoryId()));
+        NewsletterSubscription subscription = null;
+		try {
+			subscription = findByEmailAndCategory(themeDisplay, subscriptionDTO.getSubscriptorEmail(), Long.valueOf(subscriptionDTO.getCategoryId()));
+		} catch (NumberFormatException e1) {
+			logger.error(e1);
+		} catch (HibernateException e1) {		
+			logger.error(e1);
+		} catch (Exception e1) {
+			logger.error(e1);
+		}
         if (subscription != null){
             String error = bundle.getString("newsletter.registration.register.error.alreadyregisterd");
             error = error.replace("{EMAIL_ADDRESS}", subscriptionDTO.getSubscriptorEmail());
@@ -146,7 +181,14 @@ public class NewsletterSubscriptionServiceImpl extends CRUDServiceImpl<Newslette
         NewsletterCategory category = categoryService.findById(Long.valueOf(subscriptionDTO.getCategoryId())).getPayload();
         
         
-        NewsletterSubscriptor subscriptor = subscriptorForEmail(subscriptionDTO.getSubscriptorEmail(), themeDisplay);
+        NewsletterSubscriptor subscriptor = null;
+		try {
+			subscriptor = subscriptorForEmail(subscriptionDTO.getSubscriptorEmail(), themeDisplay);
+		} catch (HibernateException e1) {
+			logger.error(e1);
+		} catch (Exception e1) {
+			logger.error(e1);
+		}
             if (subscriptor == null){
                 subscriptor = new NewsletterSubscriptor();
                 subscriptor.setEmail(subscriptionDTO.getSubscriptorEmail());
@@ -270,7 +312,16 @@ public class NewsletterSubscriptionServiceImpl extends CRUDServiceImpl<Newslette
         ResourceBundle bundle = ResourceBundle.getBundle("Language", themeDisplay.getLocale());
         
          // validate subscription
-        NewsletterSubscription subscription = findByEmailAndCategory(themeDisplay, subscriptionDTO.getSubscriptorEmail(), Long.valueOf(subscriptionDTO.getCategoryId()));
+        NewsletterSubscription subscription = null;
+		try {
+			subscription = findByEmailAndCategory(themeDisplay, subscriptionDTO.getSubscriptorEmail(), Long.valueOf(subscriptionDTO.getCategoryId()));
+		} catch (NumberFormatException e1) {
+			logger.error(e1);
+		} catch (HibernateException e1) {
+			logger.error(e1);
+		} catch (Exception e1) {
+			logger.error(e1);
+		}
         if (subscription == null){
             return ServiceActionResult.buildFailure(null, bundle.getString("newsletter.confirmation.error.subscriptionnotfound"));
         }

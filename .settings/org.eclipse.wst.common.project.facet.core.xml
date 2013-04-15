@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <faceted-project>
-  <runtime name="Liferay v6.1.1 GA2"/>
+  <runtime name="Liferay v6.1 CE (Tomcat 7)"/>
   <fixed facet="wst.jsdt.web"/>
   <fixed facet="java"/>
   <fixed facet="jst.web"/>

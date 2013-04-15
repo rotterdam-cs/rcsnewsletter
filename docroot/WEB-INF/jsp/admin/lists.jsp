@@ -92,6 +92,9 @@
 
                             jQuery('.editSubscribeIcon').click(function(){
                                 var id = jQuery(this).attr('listId');
+                                if (CKEDITOR.instances["<portlet:namespace/>emailEditor"]) {
+                                	CKEDITOR.remove(CKEDITOR.instances["<portlet:namespace/>emailEditor"]);
+                                }
                                 jQuery('#ckEditorContainer<portlet:namespace/>').load('${getCKEditorURL}', {listId: id, type:'subscribe'}, function(){
                                     jQuery('#gridContainer<portlet:namespace/>').hide();
                                     jQuery('#ckEditorContainer<portlet:namespace/>').show();                                      
@@ -102,6 +105,9 @@
 
                             jQuery('.editUnsubscribeIcon').click(function(){
                                 var id = jQuery(this).attr('listId');
+                                if (CKEDITOR.instances["<portlet:namespace/>emailEditor"]) {
+                                	CKEDITOR.remove(CKEDITOR.instances["<portlet:namespace/>emailEditor"]);
+                                }
                                 jQuery('#ckEditorContainer<portlet:namespace/>').load('${getCKEditorURL}', {listId: id, type:'unsubscribe'}, function(){
                                     jQuery('#gridContainer<portlet:namespace/>').hide();
                                     jQuery('#ckEditorContainer<portlet:namespace/>').show();                                      
@@ -110,6 +116,9 @@
 
                             jQuery('.editGreeting').click(function(){
                                 var id = jQuery(this).attr('listId');
+                                if (CKEDITOR.instances["<portlet:namespace/>emailEditor"]) {
+                                	CKEDITOR.remove(CKEDITOR.instances["<portlet:namespace/>emailEditor"]);
+                                }
                                 jQuery('#ckEditorContainer<portlet:namespace/>').load('${getCKEditorURL}', {listId: id, type:'greeting'}, function(){
                                     jQuery('#gridContainer<portlet:namespace/>').hide();
                                     jQuery('#ckEditorContainer<portlet:namespace/>').show();                                      

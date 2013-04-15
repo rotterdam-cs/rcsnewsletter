@@ -8,13 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-
-import org.apache.log4j.Logger;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
-
 import com.liferay.portal.util.PortalUtil;
 import com.rcs.newsletter.commons.GenericController;
 import com.rcs.newsletter.commons.Utils;
@@ -42,7 +40,7 @@ public class NewsletterRegistrationEditController extends GenericController {
 
     public static final String PORTLET_PROPERTY_NEWSLETTER_LIST = "newsletterList";
     public static final String PORTLET_PROPERTY_DISABLED_NAME_FIELDS = "disabledNameFields";
-    private Logger logger = Logger.getLogger(NewsletterRegistrationConfigurationAction.class);
+    private Log logger = LogFactoryUtil.getLog(NewsletterRegistrationConfigurationAction.class);
     @Autowired
     private NewsletterCategoryService categoryService;
     

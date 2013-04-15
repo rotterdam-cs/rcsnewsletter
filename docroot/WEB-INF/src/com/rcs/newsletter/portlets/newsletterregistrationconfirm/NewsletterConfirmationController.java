@@ -12,7 +12,8 @@ import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.log4j.Logger;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,7 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 @RequestMapping("VIEW")
 public class NewsletterConfirmationController extends GenericController{
  
-    private Logger logger = Logger.getLogger(NewsletterConfirmationController.class);
+    private Log logger = LogFactoryUtil.getLog(NewsletterConfirmationController.class);
     
     @Autowired
     private NewsletterSubscriptionService subscriptionService;

@@ -4,7 +4,8 @@
  */
 package com.rcs.newsletter.core.forms.jqgrid;
 
-import org.apache.log4j.Logger;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import org.codehaus.jackson.map.ObjectMapper;
 
 /**
@@ -13,7 +14,7 @@ import org.codehaus.jackson.map.ObjectMapper;
  */
 public class GridForm {
     
-    private static Logger logger = Logger.getLogger(GridForm.class);
+    private static Log logger = LogFactoryUtil.getLog(GridForm.class);
     
     private String sord;
     private String sidx;

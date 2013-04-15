@@ -12,8 +12,8 @@ import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.log4j.Logger;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import org.hibernate.SQLQuery;
 import org.jdto.DTOBinder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class NewsletterSubscriptorServiceImpl extends CRUDServiceImpl<NewsletterSubscriptor> implements NewsletterSubscriptorService {
 
-	private Logger logger = Logger.getLogger(NewsletterSubscriptorServiceImpl.class);
+	private Log logger = LogFactoryUtil.getLog(NewsletterSubscriptorServiceImpl.class);
 	
     @Autowired
     private NewsletterSubscriptionService subscriptionService;

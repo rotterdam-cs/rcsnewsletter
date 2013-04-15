@@ -202,6 +202,7 @@
                     submitHandler: function(form) {
                         clearErrors();
                         clearMessages();
+                        jQuery("#newsletterAdmin<portlet:namespace/>").mask("<fmt:message key="newsletter.admin.subscribers.importer.importing" bundle="${newsletter}"/>");
                         jQuery(form).ajaxSubmit({
                             url: '${importSubscribersURL}',
                             dataType: 'json',
@@ -210,6 +211,7 @@
                             },
                             type: 'POST',
                             success:function(data){
+                            	jQuery("#newsletterAdmin<portlet:namespace/>").unmask();
                                 if (data && data.success){
                                     showMessages(data.errors);
                                 }else{

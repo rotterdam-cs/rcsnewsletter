@@ -16,7 +16,8 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-import org.apache.log4j.Logger;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -34,7 +35,7 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 @RequestMapping("VIEW")
 public class NewsletterAdminController extends GenericController {
     
-    private Logger logger = Logger.getLogger(NewsletterAdminController.class);
+    private Log logger = LogFactoryUtil.getLog(NewsletterAdminController.class);
     
     @Autowired
     private NewsletterCategoryService categoryService;

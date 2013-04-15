@@ -14,7 +14,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-import org.apache.log4j.Logger;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,7 +32,7 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 @RequestMapping("VIEW")
 public class TemplatesController extends GenericController {
     
-    private Logger logger = Logger.getLogger(TemplatesController.class);
+    private Log logger = LogFactoryUtil.getLog(TemplatesController.class);
     
     @Autowired
     private NewsletterTemplateService templateService;

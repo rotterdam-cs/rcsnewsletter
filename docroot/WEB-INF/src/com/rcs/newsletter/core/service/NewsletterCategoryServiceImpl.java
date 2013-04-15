@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import org.apache.log4j.Logger;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
@@ -39,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCategory> implements NewsletterCategoryService {
     
-    private Logger logger = Logger.getLogger(NewsletterCategoryServiceImpl.class);
+    private Log logger = LogFactoryUtil.getLog(NewsletterCategoryServiceImpl.class);
           
     @Autowired
     private DTOBinder binder;

@@ -28,7 +28,7 @@ public interface NewsletterSubscriptionService extends CRUDService<NewsletterSub
      * @param categoryId
      * @param newSubscriptions 
      */
-    void createSubscriptionsForCategory(CreateMultipleSubscriptionsResult result, ThemeDisplay themeDisplay, long categoryId, List<NewsletterSubscriptionDTO> newSubscriptions);
+    CreateMultipleSubscriptionsResult createSubscriptionsForCategory(CreateMultipleSubscriptionsResult result, ThemeDisplay themeDisplay, long categoryId, List<NewsletterSubscriptionDTO> newSubscriptions);
     
     
     /**

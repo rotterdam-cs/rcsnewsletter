@@ -14,7 +14,8 @@ import java.util.ResourceBundle;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.log4j.Logger;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,7 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 @RequestMapping("VIEW")
 public class NewsletterOnlineViewerController extends GenericController {
 
-    private Logger logger = Logger.getLogger(NewsletterOnlineViewerController.class);
+    private Log logger = LogFactoryUtil.getLog(NewsletterOnlineViewerController.class);
     @Autowired
     private NewsletterArchiveService archiveService;
 

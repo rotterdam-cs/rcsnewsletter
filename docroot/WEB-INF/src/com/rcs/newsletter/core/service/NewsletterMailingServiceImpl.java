@@ -36,7 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import javax.validation.Validator;
-import org.apache.log4j.Logger;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
@@ -51,7 +52,7 @@ import org.jdto.DTOBinder;
 @Transactional
 class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> implements NewsletterMailingService {
 
-    private static Logger logger = Logger.getLogger(NewsletterMailingServiceImpl.class);
+    private static Log logger = LogFactoryUtil.getLog(NewsletterMailingServiceImpl.class);
     
     @Autowired
     private DTOBinder binder;
@@ -131,17 +132,30 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         try {
             NewsletterMailing mailing = findById(mailingId).getPayload();
             String content = EmailFormat.getEmailFromTemplate(mailing, themeDisplay);
-
+            
+            logger.error("***** building content:");
+            logger.error(content);
+            logger.error("***********************");
+            
             //Add full path to images
             content = EmailFormat.fixImagesPath(content, themeDisplay);
 
+            logger.error("***** fixing images path:");
+            logger.error(content);
+            logger.error("***********************");
+            
             String title = mailing.getName();
 
             InternetAddress fromIA = new InternetAddress(mailing.getList().getFromEmail(), mailing.getList().getFromName());
             InternetAddress toIA = new InternetAddress();
             MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, title, content);
             String bodyContent = message.getBody();
+            
+            logger.error("***** generating bodyContent:");
+            logger.error(bodyContent);
+            logger.error("***********************");
 
+            int logcounter = 0;
             for (NewsletterSubscription newsletterSubscription : mailing.getList().getSubscriptions()) {
                 if (newsletterSubscription.getStatus().equals(SubscriptionStatus.ACTIVE)) {
                     NewsletterSubscriptor subscriptor = newsletterSubscription.getSubscriptor();
@@ -150,7 +164,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
                     MailMessage personalMessage = message;
 
                     toIA = new InternetAddress(subscriptor.getEmail(), name);
-                    logger.info("Sending to " + name + "<" + subscriptor.getEmail() + ">");
+                    logger.info(logcounter + ") Sending to " + name + "<" + subscriptor.getEmail() + ">");
                     personalMessage.setTo(toIA);
 
                     //Replace User Info
@@ -158,6 +172,15 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
                     personalMessage.setBody(tmpContent);
 
                     mailingUtil.sendEmail(personalMessage);
+                    
+                  //Log message each 100 submissions
+                    logcounter++;
+                    if (logcounter == 100) {
+                        logger.error("***** Message:");
+                        logger.error(tmpContent);
+                        logger.error("***********************");
+                        logcounter = 0;
+                    }
                 }
             }
             logger.info("End Sending personalizable conent");

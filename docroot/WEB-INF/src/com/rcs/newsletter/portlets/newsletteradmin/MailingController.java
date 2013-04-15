@@ -20,7 +20,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-import org.apache.log4j.Logger;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -44,7 +45,7 @@ public class MailingController extends GenericController {
     @Autowired
     private NewsletterTemplateService templateService;
     
-    private Logger logger = Logger.getLogger(MailingController.class);
+    private Log logger = LogFactoryUtil.getLog(MailingController.class);
     
     @ResourceMapping("mailing")
     public ModelAndView mailingTab(ResourceRequest request, ResourceResponse response){

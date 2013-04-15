@@ -4,7 +4,8 @@ import java.io.PrintWriter;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.log4j.Logger;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.web.servlet.view.AbstractView;
 
@@ -18,7 +19,7 @@ public class JacksonJsonView extends AbstractView {
 
     private final static ObjectMapper mapper = new ObjectMapper();
 
-    public static final Logger log = Logger.getLogger(JacksonJsonView.class);
+    public static final Log log = LogFactoryUtil.getLog(JacksonJsonView.class);
     
     public JacksonJsonView() {
         setContentType("application/json");

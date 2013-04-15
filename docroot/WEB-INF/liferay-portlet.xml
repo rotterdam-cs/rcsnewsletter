@@ -12,6 +12,7 @@
         <header-portlet-css>/js/jquery-validation-1.9.0/css/screen.css</header-portlet-css>
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
         <header-portlet-css>/js/jquery.jqGrid-4.3.1/css/ui.jqgrid.css</header-portlet-css>
+        <header-portlet-css>/js/jquery-loadmask/jquery.loadmask.css</header-portlet-css>
         <header-portlet-javascript>/js/jquery-1.7.1.min.js</header-portlet-javascript>
         <footer-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/js/jquery-ui-1.8.16.custom.min.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/development-bundle/ui/i18n/jquery.ui.datepickerlocale.jsp</footer-portlet-javascript>
@@ -21,6 +22,7 @@
         <footer-portlet-javascript>/js/jquery-validation-1.9.0/jquery.validate.min.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery-validation-1.9.0/localization/messageslocale.jsp</footer-portlet-javascript>
         <footer-portlet-javascript>/js/ckeditor/ckeditor.js</footer-portlet-javascript>
+        <footer-portlet-javascript>/js/jquery-loadmask/jquery.loadmask.min.js</footer-portlet-javascript>
     </portlet>
 
     <portlet>

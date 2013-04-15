@@ -122,9 +122,13 @@ public class LiferayMailingUtil {
             InternetAddress fromIA = fromName != null ? new InternetAddress(fromEmail, fromName) : new InternetAddress(fromEmail);
             InternetAddress toIA = toName != null ? new InternetAddress(toMail, toName) : new InternetAddress(toMail);
             
-            MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);
-                        
+            MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);                        
             message.setBody(content);
+            
+            log.error("***** content:");            
+            log.error(content);
+            log.error("***********************");
+            
             MailEngineNL.send(message);
                         
             result = true;

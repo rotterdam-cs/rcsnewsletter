@@ -16,6 +16,8 @@ import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
 import java.util.List;
 import java.net.MalformedURLException;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.springframework.stereotype.Component;
+
 import javax.mail.internet.InternetAddress;
 import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.kernel.log.Log;
@@ -473,11 +475,12 @@ public class EmailFormat {
             List<JournalArticle> newsletterArticles = new ArrayList<JournalArticle>(resultArticleNewsletter.values());
 
             //Create HTML select option with all newsletter articles
-            StringBuilder selectHTMLOptionsSB = new StringBuilder("<option value=\"");
-            selectHTMLOptionsSB.append(String.valueOf(UNDEFINED));
-            selectHTMLOptionsSB.append("\">");
-            selectHTMLOptionsSB.append(emptySelectorMessage);
-            selectHTMLOptionsSB.append("</option>");
+            StringBuilder selectHTMLOptionsSB = new StringBuilder("");
+            //StringBuilder selectHTMLOptionsSB = new StringBuilder("<option value=\"");
+            //selectHTMLOptionsSB.append(String.valueOf(UNDEFINED));
+            //selectHTMLOptionsSB.append("\">");
+            //selectHTMLOptionsSB.append(emptySelectorMessage);
+            //selectHTMLOptionsSB.append("</option>");
             for (JournalArticle journalArticle : newsletterArticles) {
                 selectHTMLOptionsSB.append("<option value=\"");
                 //selectHTMLOptionsSB.append(journalArticle.getId());

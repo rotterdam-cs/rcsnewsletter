@@ -23,7 +23,7 @@
 <portlet:resourceURL id='mailingList' var='mailingListUrl'/>
 <portlet:resourceURL id='saveMailing' var='saveMailingUrl'/>
 <portlet:resourceURL id='deleteMailing' var='deleteMailingUrl'/>
-
+<portlet:resourceURL id='getPreview' var='getPreviewUrl'/>
 
 <%--
     Header and Actions
@@ -54,7 +54,7 @@
         <tr>
             <td><label><fmt:message key="newsletter.tab.mailing.field.label.template" /></label></td>
             <td>
-                <select id="select-template-<portlet:namespace/>" name="templateId" class="field-long required">
+                <select id="select-template-<portlet:namespace/>" name="templateId" class="field-long required" onchange="preview();" >
                     <c:forEach items="${templateOptions}" var="t">
                         <option value="${t.id}" 
                                 blocksQuantity="${t.blocks}"
@@ -75,11 +75,11 @@
                 <%-- 
                     Article combo boxes used when editing an existing Mailing
                 --%>
-                <div id="article-combos-<portlet:namespace/>">
+                <div id="article-combos-<portlet:namespace/>" style="display: none;">
                     <c:if test="${! empty mailing.id}">
-                        <c:forEach items="${mailing.articles}" var="article">
-                             <fmt:message key="newsletter.tab.mailing.label.articleforblock" /> &nbsp;
-                             <select  class="required" style="margin-top:5px">
+                        <c:forEach items="${mailing.articles}" var="article" varStatus="loop">
+                             <fmt:message key="newsletter.tab.mailing.label.articleforblock" /> ${loop.index} &nbsp;
+                             <select class="required blockSelectorSelectHide" style="margin-top:5px" id="blockSelectorSelectHide${loop.index}">
                                  <c:forEach items="${articlesOptions}" var="a">
                                      <option value="${a.id}"
                                              <c:if test="${a.id eq article.id}"> selected="selected" </c:if>
@@ -100,7 +100,7 @@
                 --%>
                 <div style="display:none" id="article-sample-combo">
                    <fmt:message key="newsletter.tab.mailing.label.articleforblock" /> &nbsp;
-                   <select  class="required" style="margin-top:5px">
+                   <select class="required" style="margin-top:5px" id="blockSelectorSelectHide{idtoreplace}">
                         <c:forEach items="${articlesOptions}" var="a">
                             <option value="${a.id}">${a.name}</option>
                         </c:forEach>
@@ -108,7 +108,7 @@
                    <br>
                 </div>
                               
-                 
+                 <div id="preview"> </div>
             </td>
         </tr>
         <tr>
@@ -280,8 +280,44 @@
             jQuery('#article-combos-<portlet:namespace/>').html('');
             for(var i = 0 ; i < quantity; i++){
                 var htmlCombo = jQuery('#article-sample-combo').html();
+                htmlCombo = htmlCombo.replace("{idtoreplace}", i);
                 jQuery('#article-combos-<portlet:namespace/>').append(htmlCombo);
             }
+        }  
+        
+        function selectArticlesToTemplate() {
+            jQuery.each(jQuery(".blockSelectorSelect"),function(i,e) {
+                var check = e.value;
+                var idCombo = jQuery(this).attr("id");
+                idCombo = idCombo.replace("blockSelectorSelect", "");
+                jQuery("#blockSelectorSelectHide" + idCombo).val(check);
+            });
         }
-    
+        
+        function preview() {
+        	var templateId = jQuery("#select-template-<portlet:namespace/>").val();    		
+        	 jQuery.ajax({
+                 url: '${getPreviewUrl}'
+                 ,type: 'POST'
+                 ,data: {"templateId" : templateId }
+                 ,success: function(response) {
+                     jQuery("#preview").html(response);
+                     <c:if test="${!empty mailing.id}">                     
+                     jQuery.each(jQuery(".blockSelectorSelectHide"), function(i,e) {
+                         var check = e.value;
+                         var idCombo = jQuery(this).attr("id");
+                         idCombo = idCombo.replace("blockSelectorSelectHide", "");                         
+                         jQuery("#blockSelectorSelect" + idCombo).val(check);
+                     });
+                   	 </c:if>
+                 }
+                 ,failure: function(response) {
+                	 //console.log(response);
+                 }
+             });        	
+        }
+        
+        <c:if test="${!empty mailing.id}">        
+        	preview(${mailing.templateId});            
+        </c:if>
 </script>

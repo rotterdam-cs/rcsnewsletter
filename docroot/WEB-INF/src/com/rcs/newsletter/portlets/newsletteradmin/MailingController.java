@@ -1,6 +1,8 @@
 package com.rcs.newsletter.portlets.newsletteradmin;
 
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.rcs.newsletter.commons.ResourceBundleHelper;
 import com.rcs.newsletter.commons.GenericController;
 import com.rcs.newsletter.commons.Utils;
 import com.rcs.newsletter.core.dto.JournalArticleDTO;
@@ -13,21 +15,33 @@ import com.rcs.newsletter.core.service.NewsletterMailingService;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import com.rcs.newsletter.core.service.util.EmailFormat;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+import javax.servlet.http.HttpServletResponse;
+
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.servlet.ServletResponseUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 /**
@@ -44,6 +58,7 @@ public class MailingController extends GenericController {
     private NewsletterCategoryService categoryService;
     @Autowired
     private NewsletterTemplateService templateService;
+
     
     private Log logger = LogFactoryUtil.getLog(MailingController.class);
     
@@ -109,8 +124,7 @@ public class MailingController extends GenericController {
      */
     @ResourceMapping(value="editMailing")
     public ModelAndView editTemplate(ResourceRequest request, ResourceResponse response, Long id){
-        ModelAndView mav = new ModelAndView("admin/mailingEdit");
-        
+        ModelAndView mav = new ModelAndView("admin/mailingEdit");        
         boolean showToRemove = request.getParameter("remove") != null;
         
         NewsletterMailingDTO mailing = new NewsletterMailingDTO();
@@ -146,9 +160,46 @@ public class MailingController extends GenericController {
         mav.addObject("articlesOptions", articles); // for templates combo
         mav.addObject("remove", showToRemove);       // view to remove/edit
         
-        
-        
         return mav;
+    }
+    
+    
+    
+    @ResourceMapping(value = "getPreview")
+    public void getPreview(
+		 Long templateId
+		,ResourceRequest request
+		,ResourceResponse response
+    ) throws Exception {		
+		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+		Locale locale = LocaleUtil.fromLanguageId(LanguageUtil.getLanguageId(request));
+		logger.info(templateId);
+		if (templateId != null) {
+			String templateContent = templateService.findById(templateId).getPayload().getTemplate(); 
+			String content = parseTemplateEdit(templateContent, themeDisplay, locale);
+			
+			HttpServletResponse servletResponse = ((LiferayPortletResponse) response).getHttpServletResponse();
+			servletResponse.setContentType("text/plain");
+			ServletResponseUtil.write(servletResponse, content);
+		}
+    }
+    
+    private String parseTemplateEdit(String template, ThemeDisplay themeDisplay, Locale locale ) {
+    	logger.debug("Executing parseTemplateEdit() in EditMailingManagedBean");
+        String result = "";
+        try {            
+            result = EmailFormat.parseTemplateEdit(template, "rcs-newsletter", "newsletter", "newsletter", themeDisplay);
+            if (result.isEmpty()) {
+            	result = ResourceBundleHelper.getKeyLocalizedValue("newsletter.admin.mailing.template.no.blocks", locale);
+            }
+        } catch (ClassNotFoundException ex) {
+        	logger.error(ex);
+        } catch (InstantiationException ex) {
+        	logger.error(ex);
+        } catch (IllegalAccessException ex) {
+        	logger.error(ex);
+        }
+        return result;
     }
     
     

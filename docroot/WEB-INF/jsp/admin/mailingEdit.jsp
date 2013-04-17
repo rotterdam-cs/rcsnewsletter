@@ -295,13 +295,15 @@
         }
         
         function preview() {
+        	jQuery("#preview").mask('<fmt:message key="newsletter.loading.preview"/>');
         	var templateId = jQuery("#select-template-<portlet:namespace/>").val();    		
         	 jQuery.ajax({
                  url: '${getPreviewUrl}'
                  ,type: 'POST'
                  ,data: {"templateId" : templateId }
                  ,success: function(response) {
-                     jQuery("#preview").html(response);
+                	 jQuery("#preview").unmask();
+                	 jQuery("#preview").html(response);
                      <c:if test="${!empty mailing.id}">                     
                      jQuery.each(jQuery(".blockSelectorSelectHide"), function(i,e) {
                          var check = e.value;

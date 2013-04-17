@@ -62,9 +62,16 @@
                         colModel:[
                             { name : 'subscriptorId',  width : 50,  searchoptions: {}, sortable : false, search : false },
                             { name : 'subscriptorFullname' ,  width : 150, searchoptions: {}, sortable : false, search : false },
-                            { name : 'subscriptorEmail',  width : 100, searchoptions: {},  sortable : false, search : false },
+                            { name : 'subscriptorEmail',  width : 100, searchoptions: {sopt:['cn']},  sortable : false, search : true },
                             { name : 'action', width : 100, searchoptions: {},  sortable : false, search : false }
                         ],
+                        search : {
+                            Find: "Find",
+                            Reset: "Reset",
+                            odata : ['equal'],
+                            matchText: " match",
+                            rulesText: " rules"
+                          },
                         jsonReader : {
                             root: "payload.result",
                             page: "payload.currentPage",
@@ -111,7 +118,7 @@
                         postData: {
                             nocache: (new Date()).getTime(),
                             selectedList: jQuery('#listsCombo<portlet:namespace/>').val(),
-                            onlyActive: jQuery('#activeStatusCheck<portlet:namespace/>').is(':checked')
+                            onlyActive: (jQuery('#activeStatusCheck<portlet:namespace/>').is(':checked'))?false:true
                         }
                     }).trigger("reloadGrid");
                 });

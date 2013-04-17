@@ -90,6 +90,86 @@ public class NewsletterSubscriptorServiceImpl extends CRUDServiceImpl<Newsletter
         return ServiceActionResult.buildSuccess(payload);
     }
 
+    
+    public ServiceActionResult<ListResultsDTO<NewsletterSubscriptionDTO>> findAllByStatusAndCategoryAndCriteria(
+    		ThemeDisplay themeDisplay 
+            ,int start
+            ,int limit
+            ,String ordercrit
+            ,String order 
+            ,SubscriptionStatus status
+            ,long categoryId
+            ,String searchField
+            ,String searchString         
+    ) {
+        
+        int count = findAllByStatusAndCategoryCountAndCriteria(themeDisplay, status, categoryId, searchField, searchString);
+        
+        String sql = "SELECT subscription.* FROM newsletter_subscription subscription "
+                   + "WHERE subscription.id IN ( "
+                   + "  SELECT min(s.id) FROM newsletter_subscription s "
+                   + "      INNER JOIN newsletter_subscriptor o ON (s.subscriptor_id = o.id) "
+                   + "      WHERE s.companyid = ? AND s.groupid = ? ";
+        if (status != null){
+            sql += " AND s.status = ? ";
+        }
+        if (categoryId != 0){
+            sql += " AND category_id = ? ";
+        }
+        
+        if (searchField != null && searchString != null) {
+        	if (searchField.equalsIgnoreCase("subscriptoremail")){
+        		searchField = "email";
+        	}
+        	sql += " AND " + searchField + " ILIKE ? ";
+        }
+        
+        sql += " GROUP BY o.id) ";
+
+        if (!ordercrit.isEmpty()) {
+            sql += " ORDER BY " + getActualOrderFieldForSQL(ordercrit);
+            if (NewsletterConstants.ORDER_BY_DESC.equals(order)) {
+                sql += " DESC";
+            } else {
+                sql += " ASC";
+            }
+        }
+
+        SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(sql);
+        query.addEntity("subscription", NewsletterSubscription.class);
+        
+        int paramIndex = 0;
+        query.setLong(paramIndex++, themeDisplay.getCompanyId());
+        query.setLong(paramIndex++, themeDisplay.getScopeGroupId());
+        if (status != null){
+            query.setString(paramIndex++, status.name());
+        }
+        if (categoryId != 0){
+            query.setLong(paramIndex++, categoryId);
+        }
+        if (searchField != null && searchString != null) {
+            query.setString(paramIndex++, "%" + searchString + "%");
+        }
+        
+        if (start != -1) {
+            query.setFirstResult(start);
+        }
+        if (limit != -1) {
+            query.setMaxResults(limit);
+        }
+                
+        List<NewsletterSubscription> newsletterSubscription = query.list();
+
+        ListResultsDTO<NewsletterSubscriptionDTO> payload = new ListResultsDTO(limit, start, count, 
+                binder.bindFromBusinessObjectList(NewsletterSubscriptionDTO.class, newsletterSubscription));
+
+        return ServiceActionResult.buildSuccess(payload);
+    }
+    
+    
+    
+    
+    
     private String getActualOrderFieldForSQL(String requestedField){
         if ("subscriptorId".equalsIgnoreCase(requestedField)){
             return "subscriptor_id";
@@ -126,7 +206,49 @@ public class NewsletterSubscriptorServiceImpl extends CRUDServiceImpl<Newsletter
         }
         return ((BigInteger)query.uniqueResult()).intValue();
     }
-
+    
+    
+    
+    
+    
+    public int findAllByStatusAndCategoryCountAndCriteria(ThemeDisplay themeDisplay, SubscriptionStatus status, long categoryId, String searchField, String searchString) {
+	        String sql = "select count(*) from ( "
+	                + "SELECT count(*) FROM newsletter_subscription s INNER JOIN newsletter_subscriptor o ON s.subscriptor_id=o.id "
+	                + "WHERE s.companyid = ? AND s.groupid = ? ";
+	
+			if (status != null){
+			    sql += " AND s.status = ? ";
+			}
+			
+			if (categoryId != 0){
+			    sql += " AND s.category_id = ? ";
+			}
+			
+			if (searchField != null  && searchString != null) {
+				if (searchField.equalsIgnoreCase("subscriptoremail")){
+	        		searchField = "email";
+	        	}
+				sql += " AND " + searchField + " ILIKE ? ";
+	        }
+			
+			sql += " GROUP BY o.id) as count_inner_query";
+			SQLQuery query = sessionFactory.getCurrentSession().createSQLQuery(sql);
+			
+			int paramIndex = 0;
+			query.setLong(paramIndex++, themeDisplay.getCompanyId());
+			query.setLong(paramIndex++, themeDisplay.getScopeGroupId());
+			
+			if (status != null){
+			    query.setString(paramIndex++, status.name());
+			}
+			if (categoryId != 0){
+			    query.setLong(paramIndex++, categoryId);
+			}
+			if (searchField != null && searchString != null){
+	            query.setString(paramIndex++, "%" + searchString + "%");
+	        }
+			return ((BigInteger)query.uniqueResult()).intValue();
+	}
 
     public ServiceActionResult updateSubscriptor(long subscriptorId, String firstName, String lastName, String email) {
         ServiceActionResult<NewsletterSubscriptor> sarSubscriptor = findById(subscriptorId);

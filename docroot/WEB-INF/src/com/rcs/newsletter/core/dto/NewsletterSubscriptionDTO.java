@@ -1,6 +1,9 @@
 package com.rcs.newsletter.core.dto;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
+
 import java.io.Serializable;
 import org.jdto.annotation.Source;
 import org.jdto.annotation.Sources;
@@ -11,7 +14,8 @@ import org.jdto.mergers.StringFormatMerger;
  * @author ggenovese <gustavo.genovese@rotterdam-cs.com>
  */
 public class NewsletterSubscriptionDTO implements Serializable{
-    private long id;
+	private Log log = LogFactoryUtil.getLog(NewsletterSubscriptionDTO.class);
+	private long id;
 
     private SubscriptionStatus status;    
 
@@ -19,10 +23,10 @@ public class NewsletterSubscriptionDTO implements Serializable{
     private long subscriptorId;
     
     @Source("subscriptor.firstName")
-    private String subscriptorFirstName;
+    private String subscriptorFirstName = "";
     
     @Source("subscriptor.lastName")
-    private String subscriptorLastName;
+    private String subscriptorLastName = "";
     
     @Sources( value = {
                     @Source("subscriptor.firstName"),
@@ -30,7 +34,7 @@ public class NewsletterSubscriptionDTO implements Serializable{
               },
               merger=StringFormatMerger.class,
               mergerParam="%s %s")
-    private String subscriptorFullname;
+    private String subscriptorFullname = "";
     
     @Source("subscriptor.email")
     private String subscriptorEmail;
@@ -89,7 +93,11 @@ public class NewsletterSubscriptionDTO implements Serializable{
     }
 
     public void setSubscriptorFirstName(String subscriptorFirstName) {
-        this.subscriptorFirstName = subscriptorFirstName;
+        if (subscriptorFirstName != null && !subscriptorFirstName.equals("null")) {
+    		this.subscriptorFirstName = subscriptorFirstName;
+        } else {
+        	this.subscriptorFirstName = "";
+        } 
     }
 
     public String getSubscriptorLastName() {
@@ -97,7 +105,11 @@ public class NewsletterSubscriptionDTO implements Serializable{
     }
 
     public void setSubscriptorLastName(String subscriptorLastName) {
-        this.subscriptorLastName = subscriptorLastName;
+        if (subscriptorLastName != null && !subscriptorLastName.equals("null")) {
+    		this.subscriptorLastName = subscriptorLastName;
+        } else {
+        	this.subscriptorLastName = "";
+        }    	
     }
 
     public String getSubscriptorFullname() {
@@ -105,7 +117,12 @@ public class NewsletterSubscriptionDTO implements Serializable{
     }
 
     public void setSubscriptorFullname(String subscriptorFullname) {
-        this.subscriptorFullname = subscriptorFullname;
+    	if (subscriptorFullname != null && !subscriptorFullname.equals("null null")) {
+    		this.subscriptorFullname = subscriptorFullname;
+        } else {
+        	this.subscriptorFullname = "";
+        }
+    	
     }
 
     public long getSubscriptorId() {

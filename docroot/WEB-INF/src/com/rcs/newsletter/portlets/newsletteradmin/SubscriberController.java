@@ -64,26 +64,51 @@ public class SubscriberController extends GenericController {
     }
     
     @ResourceMapping("getSubscribers")
-    public ModelAndView getSubscribers(ResourceRequest request, GridForm gridParams, 
-                                        String selectedList, 
-                                        @RequestParam(defaultValue="false") boolean onlyInactive){
+    public ModelAndView getSubscribers(
+    		 ResourceRequest request
+    		,GridForm gridParams
+    		,String selectedList
+    		,@RequestParam(defaultValue="true") boolean onlyActive
+    		//,@RequestParam(defaultValue="false") boolean onlyInactive
+    		,String searchField
+    		,String searchString
+    	){
         
-        SubscriptionStatus status = onlyInactive ? SubscriptionStatus.INACTIVE : SubscriptionStatus.ACTIVE;
+        //SubscriptionStatus status = onlyInactive ? SubscriptionStatus.INACTIVE : SubscriptionStatus.ACTIVE;
+    	SubscriptionStatus status = null;
+    	if (onlyActive) {
+    		status = SubscriptionStatus.ACTIVE;
+    	}
         long listId = 0;
         if (StringUtils.hasText(selectedList)){
             try{
                 listId = Long.parseLong(selectedList);
             }catch(NumberFormatException ex){}
         }
-        
-        ServiceActionResult<ListResultsDTO<NewsletterSubscriptionDTO>> subscriptions = 
-                subscriptorService.findAllByStatusAndCategory(Utils.getThemeDisplay(request), 
-                                                    gridParams.calculateStart(), 
-                                                    gridParams.getRows(), 
-                                                    gridParams.getSidx(), 
-                                                    gridParams.getSord(),
-                                                    status,
-                                                    listId);
+        ServiceActionResult<ListResultsDTO<NewsletterSubscriptionDTO>> subscriptions = null;
+        if ( searchField != null && searchString != null && !searchField.isEmpty() && !searchString.isEmpty() ) {
+        	subscriptions = subscriptorService.findAllByStatusAndCategoryAndCriteria(
+        		 Utils.getThemeDisplay(request) 
+                ,gridParams.calculateStart() 
+                ,gridParams.getRows() 
+                ,gridParams.getSidx() 
+                ,gridParams.getSord()
+                ,status
+                ,listId
+                ,searchField
+                ,searchString  
+            );
+        } else {
+        	subscriptions = subscriptorService.findAllByStatusAndCategory(
+        		 Utils.getThemeDisplay(request) 
+                ,gridParams.calculateStart() 
+                ,gridParams.getRows() 
+                ,gridParams.getSidx() 
+                ,gridParams.getSord()
+                ,status
+                ,listId
+            );
+        }
         return jsonResponse(subscriptions);
     }
     

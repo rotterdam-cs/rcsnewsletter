@@ -43,20 +43,22 @@
         <tr>
             <td><label><fmt:message key="newsletter.registration.email" />*</label></td>
             <td><form:input path="email"  cssClass="field-long required custom-email" /></td>
-        </tr>
-        <tr>
+        </tr>        
             <c:if test="${registerForm.categoryId ne 0}">
             <tr>
-                <td colspan="2">
-                    <hr>
-                </td>
+              <td colspan="2">
+                  <hr>
+              </td>
             </tr>
+            <tr>
             <td>
-                <td><a href="javascript:loadRegisterView()"><fmt:message key="newsletter.registration.link.register" /></a> </td>
-                <input id="btn-unregister-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.registration.link.unregister" />" />
+                <a href="javascript:loadRegisterView()"><fmt:message key="newsletter.registration.link.register" /></a>
             </td>
+            <td>
+            	<input id="btn-unregister-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.registration.link.unregister" />" />
+            </td>
+            </tr>
         </c:if>
-    </tr>
 </table>
 </form:form>
 

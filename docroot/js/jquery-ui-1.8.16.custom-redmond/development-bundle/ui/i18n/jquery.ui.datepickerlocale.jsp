@@ -1,7 +1,7 @@
 <%@page import="com.liferay.portal.kernel.util.LocaleUtil"%>
 <%@page import="java.util.Locale"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@page contentType="application/javascript" pageEncoding="UTF-8"%>
 <%    
     String languageId = request.getParameter("languageId");
         

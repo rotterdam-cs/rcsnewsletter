@@ -35,7 +35,7 @@ import com.rcs.newsletter.portlets.forms.RegistrationSettingsForm;
  * @author marcoslacoste
  */
 @Controller
-@RequestMapping("EDIT")
+@RequestMapping("edit")
 public class NewsletterRegistrationEditController extends GenericController {
 
     public static final String PORTLET_PROPERTY_NEWSLETTER_LIST = "newsletterList";

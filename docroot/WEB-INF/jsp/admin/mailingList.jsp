@@ -48,8 +48,13 @@
     </table>
 </form>
 <br>
-<input type="button" id="btn-send-newsletter-<portlet:namespace/>" value="<fmt:message key="newsletter.tab.mailing.button.sendnewsletter" />"  />
 
+<input type="button" id="btn-send-newsletter-<portlet:namespace/>" value="<fmt:message key="newsletter.tab.mailing.button.sendnewsletter" />"  />
+        
+<%--
+@@ToDo        
+<input type="text" value="" id="schedule" name="schedule" class="hasDatepicker">
+--%>
 
 <%--
     Dialogs
@@ -68,6 +73,10 @@
         styleUI();
         initEvents();
         createGrid();
+        /*
+        @@ToDo
+        jQuery('#schedule').datetimepicker();
+        */
     });
     
     /**

@@ -30,7 +30,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>newsletter-portlet</finalName>
+        <finalName>rcs-newsletter-portlet-6.1.2.2</finalName>
     </build>
     <dependencies>
         <dependency>

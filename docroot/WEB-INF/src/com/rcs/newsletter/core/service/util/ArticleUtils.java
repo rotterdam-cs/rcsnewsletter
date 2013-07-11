@@ -56,7 +56,7 @@ public class ArticleUtils {
      * @throws SystemException
      */
     public static List<JournalArticle> findArticlesByTag(ThemeDisplay themeDisplay, String tagName) throws PortalException, SystemException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        List<JournalArticle> journalArticleList = new ArrayList();
+        List<JournalArticle> journalArticleList = new ArrayList<JournalArticle>();
         if(AssetTagLocalServiceUtil.hasTag(themeDisplay.getScopeGroupId(), tagName)) {
             AssetTag assetTagObj = AssetTagLocalServiceUtil.getTag(themeDisplay.getScopeGroupId(), tagName);
             long tagid = assetTagObj.getTagId();
@@ -88,7 +88,7 @@ public class ArticleUtils {
      * @throws IllegalAccessException
      */
     public static List<JournalArticle> findArticlesByKeyword(ThemeDisplay themeDisplay, String tagName, SearchContext searchContext) throws PortalException, SystemException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        List journalArticleList = new ArrayList();
+        List<JournalArticle> journalArticleList = new ArrayList<JournalArticle>();
         Long companyId = themeDisplay.getCompanyId();        
         BooleanQuery searchQuery = BooleanQueryFactoryUtil.create(searchContext);
         String keywords = tagName;
@@ -158,7 +158,7 @@ public class ArticleUtils {
      * @throws SystemException
      */
     public static List<JournalArticle> getLastArticles(int quantity) throws PortalException, SystemException {
-        List<JournalArticle> journalArticleList = new ArrayList();
+        List<JournalArticle> journalArticleList = new ArrayList<JournalArticle>();
         try {
             List<String> journalArticlesIds =  new ArrayList<String>();
             for (JournalArticle article : JournalArticleLocalServiceUtil.getJournalArticles(-1, -1)) {
@@ -191,7 +191,7 @@ public class ArticleUtils {
      * @throws SystemException
      */
     public static List<JournalArticle> findArticlesByAuthorId(Long userId) throws PortalException, SystemException {
-        List<JournalArticle> journalArticleList = new ArrayList();
+        List<JournalArticle> journalArticleList = new ArrayList<JournalArticle>();
         try {
             for (JournalArticle article : JournalArticleLocalServiceUtil.getArticles()) {                
                 if (article.getUserId() == userId) {
@@ -214,7 +214,7 @@ public class ArticleUtils {
      * @throws SystemException
      */
     public static List<JournalArticle> findArticlesByType(String type) throws PortalException, SystemException {
-        List<JournalArticle> journalArticleList = new ArrayList();
+        List<JournalArticle> journalArticleList = new ArrayList<JournalArticle>();
         try {
             for (JournalArticle article : JournalArticleLocalServiceUtil.getArticles()) {
                 JournalArticle a = JournalArticleLocalServiceUtil.getLatestArticle(article.getGroupId(), article.getArticleId());
@@ -259,7 +259,7 @@ public class ArticleUtils {
      * @throws SystemException
      */
     public static List<JournalArticle> findArticlesByCategory(String category) throws PortalException, SystemException {
-        List journalArticleList = new ArrayList();
+        List<JournalArticle> journalArticleList = new ArrayList<JournalArticle>();
         AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
         assetEntryQuery.setClassName(JournalArticle.class.getName());//to get only journal articles
         long[] anyCategoryIds = {findCategoryIdByName(category)};

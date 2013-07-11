@@ -1,24 +1,13 @@
 
 package com.rcs.newsletter.core.service;
 
-import com.liferay.portal.theme.ThemeDisplay;
-import com.rcs.newsletter.core.model.NewsletterCategory;
-import com.rcs.newsletter.core.model.NewsletterEntity;
-import com.rcs.newsletter.core.model.NewsletterMailing;
-import com.rcs.newsletter.core.model.NewsletterSubscription;
-import com.rcs.newsletter.core.model.NewsletterSubscriptor;
-import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
-import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
-import com.rcs.newsletter.core.forms.jqgrid.GridForm;
-import com.rcs.newsletter.core.forms.jqgrid.GridRestrictionsUtil;
-import com.rcs.newsletter.core.service.common.ListResultsDTO;
-import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
+
+import javax.validation.ConstraintViolation;
+
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
@@ -30,6 +19,21 @@ import org.jdto.DTOBinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
+import com.rcs.newsletter.core.forms.jqgrid.GridRestrictionsUtil;
+import com.rcs.newsletter.core.model.NewsletterCategory;
+import com.rcs.newsletter.core.model.NewsletterEntity;
+import com.rcs.newsletter.core.model.NewsletterMailing;
+import com.rcs.newsletter.core.model.NewsletterSubscription;
+import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
+import com.rcs.newsletter.core.service.common.ListResultsDTO;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
 
 
 /**
@@ -79,7 +83,8 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
         return criteria;
     }
     
-    public ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> findAllNewsletterCategories(ThemeDisplay themeDisplay, GridForm gridForm) {
+    @SuppressWarnings("unchecked")
+	public ServiceActionResult<ListResultsDTO<NewsletterCategoryDTO>> findAllNewsletterCategories(ThemeDisplay themeDisplay, GridForm gridForm) {
 
         Criteria criteriaForCount = createCriteriaForCategories(themeDisplay, gridForm);
         criteriaForCount.setProjection(Projections.rowCount());
@@ -91,26 +96,29 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
         
         List<NewsletterCategory> result = criteria.list();
 
-        ListResultsDTO<NewsletterCategoryDTO> payload = new ListResultsDTO(gridForm.getRows(), gridForm.calculateStart(), count, binder.bindFromBusinessObjectList(NewsletterCategoryDTO.class, result));
+        ListResultsDTO<NewsletterCategoryDTO> payload = new ListResultsDTO<NewsletterCategoryDTO>(gridForm.getRows(), gridForm.calculateStart(), count, binder.bindFromBusinessObjectList(NewsletterCategoryDTO.class, result));
         return ServiceActionResult.buildSuccess(payload);
     }
     
     public List<NewsletterCategoryDTO> findAllNewsletterCategories(ThemeDisplay themeDisplay) {
         Criteria criteria = createCriteriaForCategories(themeDisplay, null);
         criteria.addOrder(Order.asc("name"));
-        List<NewsletterCategory> result = criteria.list();
+        
+        @SuppressWarnings("unchecked")
+		List<NewsletterCategory> result = criteria.list();
         List<NewsletterCategoryDTO> listDTO = binder.bindFromBusinessObjectList(NewsletterCategoryDTO.class, result);
         return listDTO;
     }
     
-    public List<NewsletterCategory> findNewsletterCategorysBySubscriber(NewsletterSubscriptor subscriptor) {
+	public List<NewsletterCategory> findNewsletterCategorysBySubscriber(NewsletterSubscriptor subscriptor) {
         List<NewsletterCategory> result = new ArrayList<NewsletterCategory>();
-        List<NewsletterSubscription> newsletterSubscription;
         try {
             Session currentSession = sessionFactory.getCurrentSession();
             Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
             criteria.add(Restrictions.eq(NewsletterSubscription.SUBSCRIPTOR, subscriptor));
-            newsletterSubscription = criteria.list();
+            
+            @SuppressWarnings("unchecked")
+            List<NewsletterSubscription> newsletterSubscription = criteria.list();
             for (NewsletterSubscription nls : newsletterSubscription) {
                 result.add(nls.getCategory());
             }
@@ -128,10 +136,20 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
         newsletterCategory.setCompanyid(companyId);
         fillCategoryData(newsletterCategory, name, description, fromname, fromemail, adminemail);
         
-        Set violations = validator.validate(newsletterCategory);
+        Set<ConstraintViolation<NewsletterCategory>> violations = validator.validate(newsletterCategory);
         if (violations.isEmpty()){
-            ServiceActionResult saveResult = save(newsletterCategory);
-            return saveResult;
+            ServiceActionResult<NewsletterCategory> saveResult = save(newsletterCategory);
+            ServiceActionResult<NewsletterCategoryDTO> result;
+            
+            if (saveResult.isSuccess()){
+            	result = ServiceActionResult.buildSuccess(
+            					binder.bindFromBusinessObject(NewsletterCategoryDTO.class, newsletterCategory));
+            }
+            else{
+            	result = ServiceActionResult.buildFailure(null, saveResult.getValidationKeys());
+            }
+            return result;
+
         }else{
             List<String> violationsKeys = new LinkedList<String>();
             fillViolations(violations, violationsKeys);
@@ -168,10 +186,10 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
         dummyNewsletterCategory.setCompanyid(newsletterCategory.getCompanyid());
         fillCategoryData(dummyNewsletterCategory, name, description, fromname, fromemail, adminemail);
 
-        Set violations = validator.validate(dummyNewsletterCategory);
+        Set<ConstraintViolation<NewsletterCategory>> violations = validator.validate(dummyNewsletterCategory);
         if (violations.isEmpty()){
             fillCategoryData(newsletterCategory, name, description, fromname, fromemail, adminemail);
-            ServiceActionResult saveResult = update(newsletterCategory);
+            ServiceActionResult<NewsletterCategory> saveResult = update(newsletterCategory);
             if (saveResult.isSuccess()){
                 NewsletterCategoryDTO dto = binder.bindFromBusinessObject(NewsletterCategoryDTO.class, saveResult.getPayload());
                 return ServiceActionResult.buildSuccess(dto);
@@ -186,10 +204,10 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
         }
     }
 
-    public ServiceActionResult deleteCategory(long categoryId) {
+    public ServiceActionResult<Void> deleteCategory(long categoryId) {
         ServiceActionResult<NewsletterCategory> sarCategory = findById(categoryId);
         if (!sarCategory.isSuccess()){
-            return sarCategory;
+        	return ServiceActionResult.buildFailure(null, sarCategory.getValidationKeys());
         }
         
         
@@ -230,28 +248,28 @@ public class NewsletterCategoryServiceImpl extends CRUDServiceImpl<NewsletterCat
         return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(NewsletterCategoryDTO.class, sarCategory.getPayload()));
     }
 
-    public ServiceActionResult setCategoryGreetingEmailContent(long categoryId, String content) {
+    public ServiceActionResult<Void> setCategoryGreetingEmailContent(long categoryId, String content) {
         ServiceActionResult<NewsletterCategory> sarCategory = findById(categoryId);
         if (!sarCategory.isSuccess()){
-            return sarCategory;
+        	return ServiceActionResult.buildFailure(null, sarCategory.getValidationKeys());
         }
         sarCategory.getPayload().setGreetingEmail(content);
         return ServiceActionResult.buildSuccess(null);
     }
 
-    public ServiceActionResult setCategorySubscribeEmailContent(long categoryId, String content) {
+    public ServiceActionResult<Void> setCategorySubscribeEmailContent(long categoryId, String content) {
         ServiceActionResult<NewsletterCategory> sarCategory = findById(categoryId);
         if (!sarCategory.isSuccess()){
-            return sarCategory;
+        	return ServiceActionResult.buildFailure(null, sarCategory.getValidationKeys());
         }
         sarCategory.getPayload().setSubscriptionEmail(content);
         return ServiceActionResult.buildSuccess(null);
     }
 
-    public ServiceActionResult setCategoryUnsubscribeEmailContent(long categoryId, String content) {
+    public ServiceActionResult<Void> setCategoryUnsubscribeEmailContent(long categoryId, String content) {
         ServiceActionResult<NewsletterCategory> sarCategory = findById(categoryId);
         if (!sarCategory.isSuccess()){
-            return sarCategory;
+        	return ServiceActionResult.buildFailure(null, sarCategory.getValidationKeys());
         }
         sarCategory.getPayload().setUnsubscriptionEmail(content);
         return ServiceActionResult.buildSuccess(null);

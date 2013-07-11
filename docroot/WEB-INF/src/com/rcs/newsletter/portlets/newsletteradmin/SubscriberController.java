@@ -1,28 +1,19 @@
 package com.rcs.newsletter.portlets.newsletteradmin;
 
-import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
-import com.liferay.portal.kernel.servlet.ServletResponseUtil;
-import com.rcs.newsletter.commons.GenericController;
-import com.rcs.newsletter.commons.Utils;
-import com.rcs.newsletter.core.dto.CreateMultipleSubscriptionsResult;
-import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
-import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
-import com.rcs.newsletter.core.forms.jqgrid.GridForm;
-import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
-import com.rcs.newsletter.core.service.NewsletterCategoryService;
-import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
-import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
-import com.rcs.newsletter.core.service.common.ListResultsDTO;
-import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import com.rcs.newsletter.portlets.admin.CRUDActionEnum;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javax.portlet.*;
+
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 import javax.servlet.http.HttpServletResponse;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +24,23 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
+
+import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.servlet.ServletResponseUtil;
+import com.rcs.newsletter.commons.GenericController;
+import com.rcs.newsletter.commons.Utils;
+import com.rcs.newsletter.core.dto.CreateMultipleSubscriptionsResult;
+import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
+import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
+import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
+import com.rcs.newsletter.core.service.NewsletterCategoryService;
+import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
+import com.rcs.newsletter.core.service.NewsletterSubscriptorService;
+import com.rcs.newsletter.core.service.common.ListResultsDTO;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import com.rcs.newsletter.portlets.admin.CRUDActionEnum;
 
 /**
  *
@@ -118,7 +126,8 @@ public class SubscriberController extends GenericController {
         return jsonResponse(result);
     }
     
-    @ResourceMapping("editDeleteSubscriptor")
+    @SuppressWarnings("incomplete-switch")
+	@ResourceMapping("editDeleteSubscriptor")
     public ModelAndView editDeleteSubscriptor(String action,
                                               String subscriptorId,
                                               String firstName, String lastName, String email){
@@ -133,21 +142,24 @@ public class SubscriberController extends GenericController {
             id = Long.parseLong(subscriptorId);
         }catch(NumberFormatException ex){}
         
-        ServiceActionResult result = null;
+
         switch (enumAction){
-            case UPDATE:
-                result = subscriptorService.updateSubscriptor(id, firstName, lastName, email);
-                break;
+            case UPDATE:{
+            	ServiceActionResult<NewsletterSubscriptor> result = subscriptorService.updateSubscriptor(id, firstName, lastName, email);
+                if (result != null){
+                    return jsonResponse(result);
+                }
+                break;}
                 
-            case DELETE:
-                result = subscriptorService.deleteSubscriptor(id);
-                break;
+            case DELETE:{
+            	ServiceActionResult<Void> result = subscriptorService.deleteSubscriptor(id);
+                if (result != null){
+                    return jsonResponse(result);
+                }
+                break;}
         }
         
-        if (result == null){
-            return null;
-        }
-        return jsonResponse(result);
+        return null;
     }
 
     @ActionMapping(params = "action=importSubscribers")
@@ -206,7 +218,8 @@ public class SubscriberController extends GenericController {
     }
 
     class UploadResult implements Serializable {
-        private String errors;
+		private static final long serialVersionUID = 1L;
+		private String errors;
         private boolean success;
 
         public UploadResult() {

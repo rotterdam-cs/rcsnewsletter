@@ -1,21 +1,13 @@
 package com.rcs.newsletter.portlets.newsletteradmin;
 
-import com.liferay.portal.kernel.util.HtmlUtil;
-import com.rcs.newsletter.commons.GenericController;
-import com.rcs.newsletter.commons.Utils;
-import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
-import com.rcs.newsletter.core.forms.jqgrid.GridForm;
-import com.rcs.newsletter.core.service.NewsletterTemplateService;
-import com.rcs.newsletter.core.service.common.ListResultsDTO;
-import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,6 +16,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
+import com.liferay.portal.kernel.util.HtmlUtil;
+import com.rcs.newsletter.commons.GenericController;
+import com.rcs.newsletter.commons.Utils;
+import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
+import com.rcs.newsletter.core.service.NewsletterTemplateService;
+import com.rcs.newsletter.core.service.common.ListResultsDTO;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
+
 /**
  *
  * @author ggenovese <gustavo.genovese@rotterdam-cs.com>
@@ -31,8 +32,6 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 @Controller
 @RequestMapping("VIEW")
 public class TemplatesController extends GenericController {
-    
-    private Log logger = LogFactoryUtil.getLog(TemplatesController.class);
     
     @Autowired
     private NewsletterTemplateService templateService;
@@ -89,7 +88,7 @@ public class TemplatesController extends GenericController {
             result.getPayload().setCurrentPage(form.getPage());
         }else{
             result.getPayload().setCurrentPage(0);
-            result.getPayload().setResult(new ArrayList());
+            result.getPayload().setResult(new ArrayList<NewsletterTemplateDTO>());
             result.getPayload().setTotalRecords(0);
         }
         
@@ -164,7 +163,7 @@ public class TemplatesController extends GenericController {
     public ModelAndView deleteTemplate(ResourceRequest request, ResourceResponse response, @RequestParam Long id){
         ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, request.getLocale());
         
-        ServiceActionResult result = templateService.deleteTemplate(Utils.getThemeDisplay(request), id);
+        ServiceActionResult<Void> result = templateService.deleteTemplate(Utils.getThemeDisplay(request), id);
         if (result.isSuccess()){
             result.addMessage(bundle.getString("newsletter.tab.templates.message.deleted"));
         }

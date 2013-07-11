@@ -10,8 +10,6 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.NewsletterConstants;
 import com.rcs.newsletter.core.model.NewsletterCategory;
@@ -24,7 +22,6 @@ import com.rcs.newsletter.core.service.common.ServiceActionResult;
 @Repository
 @Transactional
 public class NewsletterPortletSettingsServiceImpl implements NewsletterPortletSettingsService {    
-    private static Log log = LogFactoryUtil.getLog(NewsletterPortletSettingsServiceImpl.class);
     
     @Autowired
     private HibernateTemplate template;
@@ -37,7 +34,7 @@ public class NewsletterPortletSettingsServiceImpl implements NewsletterPortletSe
     private NewsletterCategoryService categoryService;
     
     
-    public ServiceActionResult validateSettings(Long categoryId, ThemeDisplay themeDisplay){
+    public ServiceActionResult<Void> validateSettings(Long categoryId, ThemeDisplay themeDisplay){
         ResourceBundle bundle = ResourceBundle.getBundle("Language", themeDisplay.getLocale());
     	
     	ServiceActionResult<NewsletterCategory> findCategoryResult = categoryService.findById(categoryId);

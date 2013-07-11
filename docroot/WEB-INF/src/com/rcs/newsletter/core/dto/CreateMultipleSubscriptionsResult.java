@@ -7,7 +7,9 @@ import java.io.Serializable;
  * @author ggenovese <gustavo.genovese@rotterdam-cs.com>
  */
 public class CreateMultipleSubscriptionsResult implements Serializable{
-    boolean success;
+	private static final long serialVersionUID = 1L;
+	
+	boolean success;
     private long rowsProcessed;
     private long rowsOmitted;
     private long subscriptionsCreated;

@@ -1,8 +1,21 @@
 package com.rcs.newsletter.core.service;
 
+import java.util.List;
+import java.util.ResourceBundle;
+
+import javax.mail.internet.InternetAddress;
+
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import org.jdto.DTOBinder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.rcs.newsletter.NewsletterConstants;
 import com.rcs.newsletter.core.dto.CreateMultipleSubscriptionsResult;
 import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
 import com.rcs.newsletter.core.model.NewsletterCategory;
@@ -13,17 +26,6 @@ import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.core.service.util.EmailFormat;
 import com.rcs.newsletter.core.service.util.LiferayMailingUtil;
 import com.rcs.newsletter.core.service.util.SubscriptionUtil;
-import java.util.List;
-import java.util.ResourceBundle;
-import javax.mail.internet.InternetAddress;
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
-import org.jdto.DTOBinder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -43,7 +45,9 @@ public class NewsletterSubscriptionServiceImpl extends CRUDServiceImpl<Newslette
         Session currentSession = sessionFactory.getCurrentSession();
         Criteria criteria = currentSession.createCriteria(NewsletterSubscription.class);
         criteria.createCriteria(NewsletterSubscription.SUBSCRIPTOR).add(Restrictions.idEq(subscriptorId));
-        List<NewsletterSubscription> subscriptions = criteria.list();
+
+        @SuppressWarnings("unchecked")
+		List<NewsletterSubscription> subscriptions = criteria.list();
         if (subscriptions == null){
             return ServiceActionResult.buildFailure(null, "Could not find subscriptions");
         }
@@ -151,7 +155,7 @@ public class NewsletterSubscriptionServiceImpl extends CRUDServiceImpl<Newslette
         return result;
     }
 
-    public ServiceActionResult createSubscription(NewsletterSubscriptionDTO subscriptionDTO, ThemeDisplay themeDisplay) {
+    public ServiceActionResult<Void> createSubscription(NewsletterSubscriptionDTO subscriptionDTO, ThemeDisplay themeDisplay) {
         ResourceBundle bundle = ResourceBundle.getBundle("Language", themeDisplay.getLocale());
         
         // validate category exists
@@ -236,7 +240,7 @@ public class NewsletterSubscriptionServiceImpl extends CRUDServiceImpl<Newslette
     
     
 
-    public ServiceActionResult activateSubscription(Long subscriptionId, String activationKey, ThemeDisplay themeDisplay) {
+    public ServiceActionResult<String> activateSubscription(Long subscriptionId, String activationKey, ThemeDisplay themeDisplay) {
         ResourceBundle bundle = ResourceBundle.getBundle("Language", themeDisplay.getLocale());
         
         // validate subscription
@@ -281,7 +285,7 @@ public class NewsletterSubscriptionServiceImpl extends CRUDServiceImpl<Newslette
     }
     
     
-    public ServiceActionResult deactivateSubscription(Long subscriptionId, String deactivationKey, ThemeDisplay themeDisplay) {
+    public ServiceActionResult<Void> deactivateSubscription(Long subscriptionId, String deactivationKey, ThemeDisplay themeDisplay) {
         ResourceBundle bundle = ResourceBundle.getBundle("Language", themeDisplay.getLocale());
         
         // validate subscription
@@ -308,7 +312,7 @@ public class NewsletterSubscriptionServiceImpl extends CRUDServiceImpl<Newslette
         
     }
 
-    public ServiceActionResult removeSubscription(NewsletterSubscriptionDTO subscriptionDTO, ThemeDisplay themeDisplay) {
+    public ServiceActionResult<Void> removeSubscription(NewsletterSubscriptionDTO subscriptionDTO, ThemeDisplay themeDisplay) {
         ResourceBundle bundle = ResourceBundle.getBundle("Language", themeDisplay.getLocale());
         
          // validate subscription

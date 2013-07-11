@@ -10,14 +10,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.StringTokenizer;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
-
 
 import java.io.UnsupportedEncodingException;
 
@@ -72,7 +73,7 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
         "a", "and", "as", "at", "be", "do", "i", "if", "in", "is", "it", "so", "the", "to", "de",
         "het", "een", "van"
     };
-    private static Map commonWordsMap = null;
+    private static Map<String, String> commonWordsMap = null;
     /**
      * Pseudo-random number generator object for use with randomString(). The Random class is not
      * considered to be cryptographically secure, so only use these random Strings for low to
@@ -126,7 +127,7 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
             return false;
         }
         try {
-            Double numberToBeTested = new Double(string);
+            new Double(string);
         } catch (Exception e) {
             //logger.warn("An error has occured: ", e);
             return false;
@@ -410,7 +411,7 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
         if (commonWordsMap == null) {
             synchronized (initLock) {
                 if (commonWordsMap == null) {
-                    commonWordsMap = new HashMap();
+                    commonWordsMap = new HashMap<String, String>();
 
                     for (int i = 0; i < commonWords.length; i++) {
                         commonWordsMap.put(commonWords[i], commonWords[i]);
@@ -420,7 +421,7 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
         }
 
         //Now, add all words that aren't in the common map to results
-        ArrayList results = new ArrayList(words.length);
+        ArrayList<String> results = new ArrayList<String>(words.length);
 
         for (int i = 0; i < words.length; i++) {
             if (!commonWordsMap.containsKey(words[i])) {
@@ -963,13 +964,13 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
      *  The key value is wrapped in {key} and at the place
      *  found in the line the {key} is replaced by the value.
      */
-    public static String parseInserts(String line, Map inserts) {
+    public static String parseInserts(String line, Map<String, String> inserts) {
         String result = new String(line);
 
-        for (Iterator i = inserts.entrySet().iterator(); i.hasNext();) {
-            Map.Entry entry = (Map.Entry) i.next();
-            String tag = "{" + ((String) entry.getKey()).trim() + "}";
-            result = StringUtils.replace(result, tag, (String) entry.getValue());
+        for (Iterator<Entry<String, String>> i = inserts.entrySet().iterator(); i.hasNext();) {
+            Entry<String, String> entry = i.next();
+            String tag = "{" + entry.getKey().trim() + "}";
+            result = StringUtils.replace(result, tag, entry.getValue());
         }
 
         return result;
@@ -979,13 +980,13 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
      *  The key value is NOT wrapped in "{" / "}" and at the place
      *  found in the line the {key} is replaced by the value.
      */
-    public static String parseExactInserts(String line, Map inserts) {
+    public static String parseExactInserts(String line, Map<String, String> inserts) {
         String result = new String(line);
 
-        for (Iterator i = inserts.entrySet().iterator(); i.hasNext();) {
-            Map.Entry entry = (Map.Entry) i.next();
-            String tag = ((String) entry.getKey()).trim();
-            result = StringUtils.replace(result, tag, (String) entry.getValue());
+        for (Iterator<Entry<String, String>> i = inserts.entrySet().iterator(); i.hasNext();) {
+            Entry<String, String> entry = i.next();
+            String tag = entry.getKey().trim();
+            result = StringUtils.replace(result, tag, entry.getValue());
         }
 
         return result;
@@ -1039,7 +1040,7 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
             return new String[0];
         } else {
             String[] tmp = StringUtils.split(line, separator);
-            List valid = new ArrayList();
+            List<String> valid = new ArrayList<String>();
             for (int i = 0; i < tmp.length; i++) {
                 String value = tmp[i];
                 if (trim) {
@@ -1073,7 +1074,7 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
         }
         boolean result = true;
         try {
-            InternetAddress emailAddr = new InternetAddress(emailaddress);
+            new InternetAddress(emailaddress);
             if (!hasNameAndDomain(emailaddress)) {
                 result = false;
             }

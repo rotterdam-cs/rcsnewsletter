@@ -80,7 +80,7 @@ public interface NewsletterMailingService extends CRUDService<NewsletterMailing>
      * @param mailingId
      * @return 
      */
-    ServiceActionResult<NewsletterMailingDTO> deleteMailing(ThemeDisplay themeDisplay, Long mailingId);
+    ServiceActionResult<Void> deleteMailing(ThemeDisplay themeDisplay, Long mailingId);
     
     
      /**
@@ -99,7 +99,7 @@ public interface NewsletterMailingService extends CRUDService<NewsletterMailing>
      * @param themeDisplay
      * @return 
      */
-    ServiceActionResult<NewsletterMailingDTO> sendNewsletter(Long mailingId, ThemeDisplay themeDisplay);
+    ServiceActionResult<Void> sendNewsletter(Long mailingId, ThemeDisplay themeDisplay);
     
     
 }

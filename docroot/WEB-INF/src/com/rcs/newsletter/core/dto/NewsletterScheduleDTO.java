@@ -1,10 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.rcs.newsletter.core.dto;
 
+import java.io.Serializable;
 import java.util.Date;
+
 import org.jdto.annotation.Source;
 import org.jdto.mergers.DateFormatMerger;
 
@@ -12,8 +10,10 @@ import org.jdto.mergers.DateFormatMerger;
  *
  *  @author Pablo Rendon <pablo.rendon@rotterdam-cs.com>
  */
-public class NewsletterScheduleDTO  extends DataTransferObject {
+public class NewsletterScheduleDTO  implements Serializable {
     
+	private static final long serialVersionUID = 1L;
+	
     private Long id;
     
     private Boolean pending;

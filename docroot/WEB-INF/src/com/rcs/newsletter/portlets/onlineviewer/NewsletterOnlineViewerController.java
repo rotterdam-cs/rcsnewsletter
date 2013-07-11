@@ -4,23 +4,22 @@
  */
 package com.rcs.newsletter.portlets.onlineviewer;
 
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.portlet.bind.annotation.RenderMapping;
+
 import com.liferay.portal.util.PortalUtil;
 import com.rcs.newsletter.commons.GenericController;
 import com.rcs.newsletter.commons.Utils;
 import com.rcs.newsletter.core.dto.NewsletterOnlineViewDTO;
 import com.rcs.newsletter.core.service.NewsletterArchiveService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import java.util.ResourceBundle;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.servlet.http.HttpServletRequest;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.portlet.ModelAndView;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 /**
  *
@@ -30,13 +29,11 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 @RequestMapping("VIEW")
 public class NewsletterOnlineViewerController extends GenericController {
 
-    private Log logger = LogFactoryUtil.getLog(NewsletterOnlineViewerController.class);
     @Autowired
     private NewsletterArchiveService archiveService;
 
     @RenderMapping
     public ModelAndView defaultView(RenderRequest request, RenderResponse response) {
-        ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME);
 
         ModelAndView mav = new ModelAndView("viewer/onlineviewer");
         HttpServletRequest originalRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(request));

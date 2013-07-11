@@ -1,11 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.rcs.newsletter.core.forms.jqgrid;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import org.codehaus.jackson.map.ObjectMapper;
 
 /**
@@ -14,17 +8,12 @@ import org.codehaus.jackson.map.ObjectMapper;
  */
 public class GridForm {
     
-    private static Log logger = LogFactoryUtil.getLog(GridForm.class);
-    
     private String sord;
     private String sidx;
     private int page;
     private int rows = 15;
     private String filters;
     private GridFiltersForm filtersForm;
-    
-     
-
     
     
     /**

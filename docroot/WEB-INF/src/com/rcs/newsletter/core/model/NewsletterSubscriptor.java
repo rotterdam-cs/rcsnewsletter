@@ -2,8 +2,6 @@ package com.rcs.newsletter.core.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Pattern.Flag;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -25,7 +23,6 @@ public class NewsletterSubscriptor extends NewsletterEntity {
     private String lastName;
 
     @NotBlank
-    //@Pattern(regexp = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]([_A-Za-z0-9-]+)+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", flags={Flag.CASE_INSENSITIVE})
     @Email
     private String email;
 

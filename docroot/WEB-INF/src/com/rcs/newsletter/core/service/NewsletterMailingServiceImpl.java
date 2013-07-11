@@ -10,9 +10,12 @@ import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.util.LiferayMailingUtil;
 import com.rcs.newsletter.core.service.util.EmailFormat;
+
 import javax.mail.internet.InternetAddress;
+
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.rcs.newsletter.NewsletterConstants.*;
+
 import com.rcs.newsletter.core.dto.JournalArticleDTO;
 import com.rcs.newsletter.core.dto.NewsletterArchiveDTO;
 import com.rcs.newsletter.core.dto.NewsletterMailingDTO;
@@ -31,13 +35,18 @@ import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.core.service.util.ArticleUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+
+import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
@@ -74,10 +83,6 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
 
     @Autowired
     private NewsletterSubscriptorService subscriptorService;
-
-    
-    @Autowired
-    private LiferayMailingUtil mailingUtil;
     
     @Value("${newsletter.mail.from}")
     private String fromEmailAddress;
@@ -114,7 +119,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
             InternetAddress toIA = new InternetAddress(testEmail);
             MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, title, content);
             message.setHTMLFormat(true);
-            mailingUtil.sendEmail(message);
+            LiferayMailingUtil.sendEmail(message);
 
             //mailingUtil.sendArticleByEmail(mailing.getArticleId(), themeDisplay, testEmail, fromEmailAddress);
 
@@ -171,7 +176,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
                     String tmpContent = EmailFormat.replaceUserInfo(bodyContent, newsletterSubscription, themeDisplay, archiveId);
                     personalMessage.setBody(tmpContent);
 
-                    mailingUtil.sendEmail(personalMessage);
+                    LiferayMailingUtil.sendEmail(personalMessage);
                     
                   //Log message each 100 submissions
                     logcounter++;
@@ -239,7 +244,9 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
                 criteria.add(criterion);
             }
         }
-        List<NewsletterMailing> list = criteria.list();
+        
+        @SuppressWarnings("unchecked")
+		List<NewsletterMailing> list = criteria.list();
         
         
         // fill dtos
@@ -289,7 +296,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
 
         
         // validate required fields
-        Set errors = validator.validate(mailing);
+        Set<ConstraintViolation<NewsletterMailing>> errors = validator.validate(mailing);
         if (!errors.isEmpty()) {
             List<String> errorsList = new ArrayList<String>();
             fillViolations(errors, errorsList);
@@ -375,14 +382,14 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
 
     }
 
-    public ServiceActionResult deleteMailing(ThemeDisplay themeDisplay, Long mailingId) {
+    public ServiceActionResult<Void> deleteMailing(ThemeDisplay themeDisplay, Long mailingId) {
         ServiceActionResult<NewsletterMailing> findResult = findById(mailingId);
         if (findResult.isSuccess()) {
             
             // delete blocks
             List<NewsletterTemplateBlock> blocks = templateBlockService.findAllByMailing(findResult.getPayload());
             for(NewsletterTemplateBlock block: blocks){
-                ServiceActionResult<NewsletterTemplateBlock> deleteBlockResult = templateBlockService.delete(block);
+                ServiceActionResult<Void> deleteBlockResult = templateBlockService.delete(block);
                 if (!deleteBlockResult.isSuccess()){
                     return ServiceActionResult.buildFailure(null);
                 }
@@ -423,14 +430,13 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
                         resultArticleNewsletter.put(article.getArticleId(), article);
                     }
                 }
-                articlesDTO = fillArticlesDTO(new ArrayList(resultArticleNewsletter.values()), themeDisplay);
+                articlesDTO = fillArticlesDTO(new ArrayList<JournalArticle>(resultArticleNewsletter.values()), themeDisplay);
                 
             } catch (SystemException ex) {
                 logger.error("Could not filter the articles by this category, type, or tag", ex);
             } catch (PortalException ex) {
                 logger.error("Could not filter the articles by this category, type, or tag", ex);
             }
-            List<JournalArticle> newsletterArticles = new ArrayList<JournalArticle>(resultArticleNewsletter.values());
         }catch(Exception e){
             logger.error("Error trying to get articles for Mailing. Exception: " + e.getMessage(), e);
         }
@@ -450,7 +456,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         return dtos;
     }
 
-    public ServiceActionResult sendNewsletter(Long mailingId, ThemeDisplay themeDisplay) {
+    public ServiceActionResult<Void> sendNewsletter(Long mailingId, ThemeDisplay themeDisplay) {
         // obtain mailing info
         ServiceActionResult<NewsletterMailing> findMailingResult= findById(mailingId);
         if (!findMailingResult.isSuccess()){
@@ -476,16 +482,10 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         
         // delete mailing after it's sent
         logger.info("Deleting mailing...");
-        ServiceActionResult deleteMailing = deleteMailing(themeDisplay, mailingId);
+        ServiceActionResult<Void> deleteMailing = deleteMailing(themeDisplay, mailingId);
         if (!deleteMailing.isSuccess()){
             return ServiceActionResult.buildFailure(null);
         }
         return ServiceActionResult.buildSuccess(null);
-        
-        
     }
-    
-    
-   
-   
 }

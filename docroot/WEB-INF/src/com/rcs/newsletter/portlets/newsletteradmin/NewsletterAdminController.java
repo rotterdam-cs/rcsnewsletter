@@ -1,23 +1,15 @@
 package com.rcs.newsletter.portlets.newsletteradmin;
 
-import com.rcs.newsletter.commons.GenericController;
-import com.rcs.newsletter.commons.Utils;
-import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
-import com.rcs.newsletter.core.forms.jqgrid.GridForm;
-import com.rcs.newsletter.core.service.NewsletterCategoryService;
-import com.rcs.newsletter.core.service.common.ListResultsDTO;
-import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import com.rcs.newsletter.portlets.admin.CRUDActionEnum;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.ResourceBundle;
+
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,6 +19,15 @@ import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
+import com.rcs.newsletter.commons.GenericController;
+import com.rcs.newsletter.commons.Utils;
+import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
+import com.rcs.newsletter.core.service.NewsletterCategoryService;
+import com.rcs.newsletter.core.service.common.ListResultsDTO;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import com.rcs.newsletter.portlets.admin.CRUDActionEnum;
+
 /**
  *
  * @author ggenovese <gustavo.genovese@rotterdam-cs.com>
@@ -34,8 +35,6 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 @Controller
 @RequestMapping("VIEW")
 public class NewsletterAdminController extends GenericController {
-    
-    private Log logger = LogFactoryUtil.getLog(NewsletterAdminController.class);
     
     @Autowired
     private NewsletterCategoryService categoryService;
@@ -84,32 +83,37 @@ public class NewsletterAdminController extends GenericController {
             categoryId = Long.parseLong(id);
         }catch(NumberFormatException ex){}
         
-        ServiceActionResult result = null;
         switch (enumAction){
-            case CREATE:
+            case CREATE:{
                 long companyId = Utils.getThemeDisplay(request).getCompanyId();
                 long groupId = Utils.getThemeDisplay(request).getScopeGroupId();
-                result = categoryService.createCategory(groupId, companyId, name, description, fromname, fromemail, adminemail);
-                break;
+                ServiceActionResult<NewsletterCategoryDTO> result = categoryService.createCategory(groupId, companyId, name, description, fromname, fromemail, adminemail);
+                if (result != null){
+                	return jsonResponse(result);
+                }
+                break;}
                 
-            case UPDATE:
-                result = categoryService.editCategory(categoryId, name, description, fromname, fromemail, adminemail);
-                break;
+            case UPDATE:{
+            	ServiceActionResult<NewsletterCategoryDTO> result = categoryService.editCategory(categoryId, name, description, fromname, fromemail, adminemail);
+                if (result != null){
+                	return jsonResponse(result);
+                }            	
+                break;}
                 
             case DELETE:
-                result = categoryService.deleteCategory(categoryId);
+            	ServiceActionResult<Void> result = categoryService.deleteCategory(categoryId);
+                if (result != null){
+                	return jsonResponse(result);
+                }
                 break;
         }
         
-        if (result != null){
-            return jsonResponse(result);
-        }
         return null;
     }
     
     @ResourceMapping("getListData")
     public ModelAndView getListData(ResourceRequest request, @RequestParam long id){
-        ServiceActionResult result = categoryService.getCategoryDTO(id);
+        ServiceActionResult<NewsletterCategoryDTO> result = categoryService.getCategoryDTO(id);
         return jsonResponse(result);
     }
     
@@ -170,7 +174,7 @@ public class NewsletterAdminController extends GenericController {
             categoryId = Long.parseLong(listId);
         }catch(NumberFormatException ex){}
 
-        ServiceActionResult result = null;
+        ServiceActionResult<Void> result = null;
         if ("greeting".equalsIgnoreCase(type)){
             result = categoryService.setCategoryGreetingEmailContent(categoryId, content);
         }else if ("subscribe".equalsIgnoreCase(type)){

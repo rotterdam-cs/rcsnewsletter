@@ -40,7 +40,7 @@ public interface NewsletterSubscriptorService extends CRUDService<NewsletterSubs
     
     int findAllByStatusAndCategoryCountAndCriteria(ThemeDisplay themeDisplay, SubscriptionStatus status, long categoryId, String searchField, String searchString );
     
-    ServiceActionResult updateSubscriptor(long subscriptorId, String firstName, String lastName, String email);
+    ServiceActionResult<NewsletterSubscriptor> updateSubscriptor(long subscriptorId, String firstName, String lastName, String email);
     
-    ServiceActionResult deleteSubscriptor(long subscriptorId);
+    ServiceActionResult<Void> deleteSubscriptor(long subscriptorId);
 }

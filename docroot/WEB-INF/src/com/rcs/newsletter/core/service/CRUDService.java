@@ -16,7 +16,7 @@ public interface CRUDService<E extends NewsletterEntity> {
     
     public ServiceActionResult<E> update(E entity);
     
-    public ServiceActionResult<E> delete(E entity);
+    public ServiceActionResult<Void> delete(E entity);
     
     public ServiceActionResult<E> findById(long entityId);
     

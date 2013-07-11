@@ -21,7 +21,7 @@ public interface NewsletterArchiveService extends CRUDService<NewsletterArchive>
      * @param mailingDTO
      * @return 
      */
-    ServiceActionResult saveArchive(NewsletterMailing mailing, String emailBody, ThemeDisplay themeDisplay);
+    ServiceActionResult<NewsletterArchiveDTO> saveArchive(NewsletterMailing mailing, String emailBody, ThemeDisplay themeDisplay);
 
     
     /**

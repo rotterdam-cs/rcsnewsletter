@@ -1,39 +1,14 @@
 package com.rcs.newsletter.core.service.util;
 
-import com.liferay.mail.model.FileAttachment;
-import com.liferay.mail.service.MailServiceUtil;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.log.LogUtil;
-import com.liferay.portal.kernel.mail.Account;
-import com.liferay.portal.kernel.mail.MailMessage;
-import com.liferay.portal.kernel.mail.SMTPAccount;
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.InfrastructureUtil;
-import com.liferay.portal.kernel.util.Validator;
-
-import com.liferay.util.mail.LiferayMimeMessage;
-import com.liferay.util.mail.MailEngine;
-import com.liferay.util.mail.MailEngineException;
 import java.io.File;
-
 import java.net.SocketException;
-
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
-import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-
-import javax.activation.FileTypeMap;
 import javax.activation.MimetypesFileTypeMap;
-import javax.activation.URLDataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Part;
@@ -47,6 +22,21 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.apache.commons.lang.time.StopWatch;
+
+import com.liferay.mail.service.MailServiceUtil;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.mail.Account;
+import com.liferay.portal.kernel.mail.MailMessage;
+import com.liferay.portal.kernel.mail.SMTPAccount;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.InfrastructureUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.util.mail.LiferayMimeMessage;
+import com.liferay.util.mail.MailEngine;
+import com.liferay.util.mail.MailEngineException;
 
 /**
  * @author Brian Wing Shun Chan
@@ -506,9 +496,9 @@ public class MailEngineNL {
 
 	private static final String _MULTIPART_TYPE_ALTERNATIVE = "alternative";
 
-	private static final String _MULTIPART_TYPE_MIXED = "mixed";
+	//private static final String _MULTIPART_TYPE_MIXED = "mixed";
         
-        private static final String _MULTIPART_TYPE_RELATED = "related";//Added By Pablo
+    private static final String _MULTIPART_TYPE_RELATED = "related";//Added By Pablo
 
 	private static final String _TEXT_HTML = "text/html;charset=\"UTF-8\"";
 

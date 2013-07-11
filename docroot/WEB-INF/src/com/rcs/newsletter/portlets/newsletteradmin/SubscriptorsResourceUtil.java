@@ -4,7 +4,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.rcs.newsletter.commons.NewsletterResourcePortlet;
 import com.rcs.newsletter.commons.Utils;
 import com.rcs.newsletter.core.dto.CreateMultipleSubscriptionsResult;
 import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
@@ -173,12 +172,6 @@ public class SubscriptorsResourceUtil {
         CreateMultipleSubscriptionsResult result = new CreateMultipleSubscriptionsResult();
         try {
             HSSFWorkbook workbook = new HSSFWorkbook(inputStream);
-
-            if (workbook == null){
-                result.setSuccess(false);
-                logger.warn("Error loading the workbook");
-                return result;
-            }
 
             if (categoryId == 0) {
                 result.setSuccess(false);

@@ -1,19 +1,13 @@
 package com.rcs.newsletter.core.service;
 
-import com.liferay.portal.theme.ThemeDisplay;
-import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
-import com.rcs.newsletter.core.forms.jqgrid.GridForm;
-import com.rcs.newsletter.core.forms.jqgrid.GridRestrictionsUtil;
-import com.rcs.newsletter.core.model.NewsletterEntity;
-import com.rcs.newsletter.core.model.NewsletterMailing;
-import com.rcs.newsletter.core.model.NewsletterTemplate;
-import com.rcs.newsletter.core.service.common.ListResultsDTO;
-import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
+
+import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -25,8 +19,16 @@ import org.jdto.DTOBinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
+
+import com.liferay.portal.theme.ThemeDisplay;
+import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
+import com.rcs.newsletter.core.forms.jqgrid.GridRestrictionsUtil;
+import com.rcs.newsletter.core.model.NewsletterEntity;
+import com.rcs.newsletter.core.model.NewsletterMailing;
+import com.rcs.newsletter.core.model.NewsletterTemplate;
+import com.rcs.newsletter.core.service.common.ListResultsDTO;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
 
 
 /**
@@ -45,8 +47,6 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
     
     @Autowired
     private Validator validator;
-    
-    private final static Logger logger = LoggerFactory.getLogger(NewsletterTemplateServiceImpl.class);
 
     
     public ServiceActionResult<ListResultsDTO<NewsletterTemplateDTO>> findAllTemplates(ThemeDisplay themeDisplay, GridForm gridForm, String orderField, String orderType) {
@@ -65,7 +65,9 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
                 criteria.add(criterion);
             }
         }
-        List<NewsletterTemplate> list = criteria.list();
+        
+        @SuppressWarnings("unchecked")
+		List<NewsletterTemplate> list = criteria.list();
         
         // create and return ListResultsDTO
         ListResultsDTO<NewsletterTemplateDTO> dto = new ListResultsDTO<NewsletterTemplateDTO>(gridForm.getRows(), gridForm.calculateStart(), totalRecords, binder.bindFromBusinessObjectList(NewsletterTemplateDTO.class, list));
@@ -107,7 +109,7 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
         template.setGroupid(themeDisplay.getScopeGroupId());
         
         // validate required fields
-        Set errors = validator.validate(template);
+        Set<ConstraintViolation<NewsletterTemplate>> errors = validator.validate(template);
         if (!errors.isEmpty()){
             List<String> errorsList = new ArrayList<String>();
             fillViolations(errors, errorsList);
@@ -134,7 +136,7 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
         templateDTO.setBlocks(countBlocksInTemplate(template.getId()));
     }
     
-    public ServiceActionResult deleteTemplate(ThemeDisplay themeDisplay, Long templateId) {
+    public ServiceActionResult<Void> deleteTemplate(ThemeDisplay themeDisplay, Long templateId) {
         ResourceBundle bundle = ResourceBundle.getBundle("Language", themeDisplay.getLocale());
         ServiceActionResult<NewsletterTemplate> findResult = findById(templateId);
         if (findResult.isSuccess()){
@@ -152,7 +154,8 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
         Criteria criteria = createCriteriaForTemplates(themeDisplay);
         criteria.addOrder(Order.asc("name"));
         
-        List<NewsletterTemplate> result = criteria.list();
+        @SuppressWarnings("unchecked")
+		List<NewsletterTemplate> result = criteria.list();
         List<NewsletterTemplateDTO> dtos = new ArrayList<NewsletterTemplateDTO>();
         
         for(NewsletterTemplate entity: result){
@@ -181,7 +184,10 @@ public class NewsletterTemplateServiceImpl extends CRUDServiceImpl<NewsletterTem
      private List<NewsletterMailing> findByMailingsUsedByTemplate(Long templateId) {
        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(NewsletterMailing.class);
        criteria.add(Restrictions.eq("template.id", templateId));
-       return criteria.list();
+       
+       @SuppressWarnings("unchecked")
+       List<NewsletterMailing> mailings = criteria.list();
+       return mailings;
     }
    
     

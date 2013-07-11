@@ -103,7 +103,7 @@ public class NewsletterRegistrationEditController extends GenericController {
         try {
             
         	// validate settings
-        	ServiceActionResult validateSettingsResult = portletSettingsService.validateSettings(settings.getListId(), Utils.getThemeDisplay(request));
+        	ServiceActionResult<Void> validateSettingsResult = portletSettingsService.validateSettings(settings.getListId(), Utils.getThemeDisplay(request));
         	if (!validateSettingsResult.isSuccess()){
         		return jsonResponse(validateSettingsResult);
         	}

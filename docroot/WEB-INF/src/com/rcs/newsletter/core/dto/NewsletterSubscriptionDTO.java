@@ -1,20 +1,21 @@
 package com.rcs.newsletter.core.dto;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
-
 import java.io.Serializable;
+
 import org.jdto.annotation.Source;
 import org.jdto.annotation.Sources;
 import org.jdto.mergers.StringFormatMerger;
+
+import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 
 /**
  *
  * @author ggenovese <gustavo.genovese@rotterdam-cs.com>
  */
 public class NewsletterSubscriptionDTO implements Serializable{
-	private Log log = LogFactoryUtil.getLog(NewsletterSubscriptionDTO.class);
+	
+	private static final long serialVersionUID = 1L;
+
 	private long id;
 
     private SubscriptionStatus status;    

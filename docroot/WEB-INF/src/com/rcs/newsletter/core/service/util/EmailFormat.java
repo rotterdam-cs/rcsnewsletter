@@ -1,49 +1,63 @@
 package com.rcs.newsletter.core.service.util;
 
-import com.liferay.portlet.journal.model.JournalArticleDisplay;
-import java.util.ResourceBundle;
-import com.rcs.newsletter.core.model.commons.TemplateBlockComparator;
-import java.util.Collections;
-import com.rcs.newsletter.core.model.NewsletterMailing;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
-import com.liferay.portlet.journal.model.JournalArticle;
-import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
-import java.util.List;
-import java.net.MalformedURLException;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.springframework.stereotype.Component;
+import static com.rcs.newsletter.NewsletterConstants.CONFIRMATION_LINK_TOKEN;
+import static com.rcs.newsletter.NewsletterConstants.CONFIRMATION_UNREGISTER_LINK_TOKEN;
+import static com.rcs.newsletter.NewsletterConstants.FIRST_NAME_TOKEN;
+import static com.rcs.newsletter.NewsletterConstants.LAST_NAME_TOKEN;
+import static com.rcs.newsletter.NewsletterConstants.LIST_NAME_TOKEN;
+import static com.rcs.newsletter.NewsletterConstants.NEWSLETTER_BUNDLE;
+import static com.rcs.newsletter.NewsletterConstants.ONLINE_ARTICLE_LINK;
+import static com.rcs.newsletter.NewsletterConstants.ONLINE_NEWSLETTER_CONFIRMATION_PAGE;
+import static com.rcs.newsletter.NewsletterConstants.ONLINE_NEWSLETTER_VIEWER_PAGE;
+import static com.rcs.newsletter.NewsletterConstants.TEMPLATE_TAG_BLOCK_CLOSE;
+import static com.rcs.newsletter.NewsletterConstants.TEMPLATE_TAG_BLOCK_OPEN;
+import static com.rcs.newsletter.NewsletterConstants.TEMPLATE_TAG_CONTENT;
+import static com.rcs.newsletter.NewsletterConstants.TEMPLATE_TAG_TITLE;
+import static com.rcs.newsletter.NewsletterConstants.UNDEFINED;
 
-import javax.mail.internet.InternetAddress;
-import com.liferay.portal.kernel.mail.MailMessage;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.rcs.newsletter.core.model.NewsletterCategory;
-import com.rcs.newsletter.core.model.NewsletterSubscription;
-import com.rcs.newsletter.core.model.NewsletterSubscriptor;
-import com.rcs.newsletter.core.model.NewsletterTemplate;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static com.rcs.newsletter.NewsletterConstants.*;
+import javax.mail.internet.InternetAddress;
+
+import org.apache.commons.lang.StringEscapeUtils;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.mail.MailMessage;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.journal.model.JournalArticle;
+import com.liferay.portlet.journal.model.JournalArticleDisplay;
+import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
+import com.rcs.newsletter.core.model.NewsletterCategory;
+import com.rcs.newsletter.core.model.NewsletterMailing;
+import com.rcs.newsletter.core.model.NewsletterSubscription;
+import com.rcs.newsletter.core.model.NewsletterSubscriptor;
+import com.rcs.newsletter.core.model.NewsletterTemplate;
+import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
+import com.rcs.newsletter.core.model.commons.TemplateBlockComparator;
 
 public class EmailFormat {
 
     private static Log log = LogFactoryUtil.getLog(EmailFormat.class);
-    //Boundle Keys
-    private static final String TEMPLATE_BLOCK_EMPTY_SELECTOR = "newsletter.admin.mailing.template.select.article";
+    //Bundle Keys
+    //private static final String TEMPLATE_BLOCK_EMPTY_SELECTOR = "newsletter.admin.mailing.template.select.article";
     private static final String DEFAULT_REPLACEMENT_USER_TOKEN = "newsletter.admin.mailing.default.replacement.user";
     
     /**
@@ -236,7 +250,7 @@ public class EmailFormat {
      */
     public static MailMessage getMailMessageWithAttachedImages(InternetAddress fromIA, InternetAddress toIA, String subject, String content) throws Exception {
 
-        ArrayList images = getImagesPathFromHTML(content);
+        ArrayList<String> images = getImagesPathFromHTML(content);
 
         MailMessage message = new MailMessage(fromIA, toIA, subject, content, true);
 
@@ -270,9 +284,9 @@ public class EmailFormat {
      * @param htmltext a String HTML with content
      * @return an ArrayList with the images paths
      */
-    public static ArrayList getImagesPathFromHTML(String htmltext) {
+    public static ArrayList<String> getImagesPathFromHTML(String htmltext) {
 
-        ArrayList imagesList = new ArrayList();
+        ArrayList<String> imagesList = new ArrayList<String>();
         try {
             // get everything that is inside the <img /> tag
             String[] imagesTag = StringUtils.substringsBetween(htmltext, "<img ", ">");
@@ -354,7 +368,7 @@ public class EmailFormat {
         List<NewsletterTemplateBlock> ntbAll = mailing.getBlocks();
         
         // FIX (remove null blocks until we fix mapping problem)
-        List<NewsletterTemplateBlock> ntb = new ArrayList();
+        List<NewsletterTemplateBlock> ntb = new ArrayList<NewsletterTemplateBlock>();
         for(NewsletterTemplateBlock b :ntbAll){
             if (b != null){
                 ntb.add(b);
@@ -429,8 +443,8 @@ public class EmailFormat {
         log.debug("Executing parseTemplateEdit in EmailFormat");
         String result = "";
 
-        ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, themeDisplay.getLocale());
-        String emptySelectorMessage = newsletterMessageBundle.getString(TEMPLATE_BLOCK_EMPTY_SELECTOR);
+        //ResourceBundle newsletterMessageBundle = ResourceBundle.getBundle(NEWSLETTER_BUNDLE, themeDisplay.getLocale());
+        //String emptySelectorMessage = newsletterMessageBundle.getString(TEMPLATE_BLOCK_EMPTY_SELECTOR);
         String fTagBlockOpen = fixTagsToRegex(TEMPLATE_TAG_BLOCK_OPEN);
         String fTagBlockClose = fixTagsToRegex(TEMPLATE_TAG_BLOCK_CLOSE);
         String templateContent = validateTemplateFormat(incomingTemplateContent);

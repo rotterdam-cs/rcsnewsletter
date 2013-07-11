@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.rcs.newsletter.core.forms.jqgrid;
 
 import org.hibernate.criterion.Criterion;
@@ -38,8 +34,6 @@ public class GridRestrictionsUtil {
 
         // rules
         for (GridFilterRule rule : filtersForm.getRules()) {
-
-            Criterion c = null;
 
             // operator == "cn" => contains
             if (rule.getOp().equals("cn")) {

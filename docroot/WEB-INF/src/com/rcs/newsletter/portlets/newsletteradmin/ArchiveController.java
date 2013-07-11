@@ -72,7 +72,7 @@ public class ArchiveController extends GenericController {
             result.getPayload().setCurrentPage(form.getPage());
         }else{
             result.getPayload().setCurrentPage(0);
-            result.getPayload().setResult(new ArrayList());
+            result.getPayload().setResult(new ArrayList<NewsletterArchiveDTO>());
             result.getPayload().setTotalRecords(0);
         }
         

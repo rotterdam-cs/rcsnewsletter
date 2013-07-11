@@ -37,7 +37,7 @@ public interface NewsletterSubscriptionService extends CRUDService<NewsletterSub
      * @param themeDisplay
      * @return 
      */
-    ServiceActionResult createSubscription(NewsletterSubscriptionDTO subscriptionDTO, ThemeDisplay themeDisplay);
+    ServiceActionResult<Void> createSubscription(NewsletterSubscriptionDTO subscriptionDTO, ThemeDisplay themeDisplay);
 
     
     /**
@@ -47,7 +47,7 @@ public interface NewsletterSubscriptionService extends CRUDService<NewsletterSub
      * @param themeDisplay
      * @return 
      */
-    ServiceActionResult activateSubscription(Long subscriptionId, String activationKey, ThemeDisplay themeDisplay);
+    ServiceActionResult<String> activateSubscription(Long subscriptionId, String activationKey, ThemeDisplay themeDisplay);
     
      /**
      * Deactivates a subscription
@@ -56,7 +56,7 @@ public interface NewsletterSubscriptionService extends CRUDService<NewsletterSub
      * @param themeDisplay
      * @return 
      */
-    ServiceActionResult deactivateSubscription(Long subscriptionId, String deactivationKey, ThemeDisplay themeDisplay);
+    ServiceActionResult<Void> deactivateSubscription(Long subscriptionId, String deactivationKey, ThemeDisplay themeDisplay);
 
     
     /**
@@ -65,7 +65,7 @@ public interface NewsletterSubscriptionService extends CRUDService<NewsletterSub
      * @param themeDisplay
      * @return 
      */
-    ServiceActionResult removeSubscription(NewsletterSubscriptionDTO subscriptionDTO, ThemeDisplay themeDisplay);
+    ServiceActionResult<Void> removeSubscription(NewsletterSubscriptionDTO subscriptionDTO, ThemeDisplay themeDisplay);
 
     
 }

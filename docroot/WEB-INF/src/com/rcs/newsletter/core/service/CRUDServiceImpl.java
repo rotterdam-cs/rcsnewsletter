@@ -6,13 +6,16 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.NewsletterConstants;
 import com.rcs.newsletter.core.model.NewsletterEntity;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+
 import org.hibernate.*;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -36,15 +39,16 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
     
     protected Log logger = LogFactoryUtil.getLog(getClass());
 
-    private Class getEntityClass() {
-        Class result = null;
+    @SuppressWarnings("unchecked")
+	private Class<E> getEntityClass() {
+        Class<E> result = null;
 
         Type genericSuperClass = this.getClass().getGenericSuperclass();
 
         if (genericSuperClass instanceof ParameterizedType) {
             ParameterizedType pt = (ParameterizedType) genericSuperClass;
             Type[] fieldArgTypes = pt.getActualTypeArguments();
-            result = (Class) fieldArgTypes[0];
+            result = (Class<E>) fieldArgTypes[0];
         }
 
         return result;
@@ -54,7 +58,7 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
     public ServiceActionResult<E> save(E entity) {
         List<String> validationKeys = new ArrayList<String>();
 
-        Set violations = validator.validate(entity);
+        Set<ConstraintViolation<E>> violations = validator.validate(entity);
         if (!violations.isEmpty()) {
             fillViolations(violations, validationKeys);
             String[] dummy = null;
@@ -68,7 +72,7 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
     public ServiceActionResult<E> update(E entity) {
         List<String> validationKeys = new ArrayList<String>();
 
-        Set violations = validator.validate(entity);
+        Set<ConstraintViolation<E>> violations = validator.validate(entity);
         if (!violations.isEmpty()) {
             fillViolations(violations, validationKeys);
             return ServiceActionResult.buildFailure(entity, validationKeys);
@@ -78,13 +82,13 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
         }
     }
 
-    public ServiceActionResult<E> delete(E entity) {
+    public ServiceActionResult<Void> delete(E entity) {
         sessionFactory.getCurrentSession().delete(entity);
         try {
             sessionFactory.getCurrentSession().flush();
             return ServiceActionResult.buildSuccess(null);
         }catch(HibernateException ex){
-            return ServiceActionResult.buildFailure(entity);
+            return ServiceActionResult.buildFailure(null);
         }
     }
 
@@ -96,7 +100,8 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
             criteria.setMaxResults(1);
             Object entityObject = criteria.uniqueResult();
             if(entityObject != null) {
-                E entity = (E) entityObject;
+                @SuppressWarnings("unchecked")
+				E entity = (E) entityObject;
                 return ServiceActionResult.buildSuccess(entity);
             }
         } catch (Exception ex) {
@@ -119,7 +124,7 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
      * @param violations
      * @param validationKeys 
      */
-    protected void fillViolations(Set<ConstraintViolation<?>> violations, List<String> validationKeys) {
+    protected void fillViolations(Set<ConstraintViolation<E>> violations, List<String> validationKeys) {
         for (ConstraintViolation<?> constraintViolation : violations) {
             validationKeys.add(constraintViolation.getPropertyPath()+" "+constraintViolation.getMessage());
         }
@@ -145,7 +150,8 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
                 criteria.addOrder(Order.asc(ordercrit)); 
             }
         }
-        List<E> entities = criteria.list();
+        @SuppressWarnings("unchecked")
+		List<E> entities = criteria.list();
         
         return ServiceActionResult.buildSuccess(entities);        
     }

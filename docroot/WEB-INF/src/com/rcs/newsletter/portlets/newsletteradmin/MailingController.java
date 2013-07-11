@@ -1,31 +1,23 @@
 package com.rcs.newsletter.portlets.newsletteradmin;
 
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
-import com.rcs.newsletter.commons.ResourceBundleHelper;
-import com.rcs.newsletter.commons.GenericController;
-import com.rcs.newsletter.commons.Utils;
-import com.rcs.newsletter.core.dto.JournalArticleDTO;
-import com.rcs.newsletter.core.dto.NewsletterMailingDTO;
-import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
-import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
-import com.rcs.newsletter.core.forms.jqgrid.GridForm;
-import com.rcs.newsletter.core.service.NewsletterCategoryService;
-import com.rcs.newsletter.core.service.NewsletterMailingService;
-import com.rcs.newsletter.core.service.NewsletterTemplateService;
-import com.rcs.newsletter.core.service.common.ListResultsDTO;
-import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import com.rcs.newsletter.core.service.util.EmailFormat;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -34,15 +26,22 @@ import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.portlet.ModelAndView;
-import org.springframework.web.portlet.bind.annotation.ActionMapping;
-import org.springframework.web.portlet.bind.annotation.ResourceMapping;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
+import com.rcs.newsletter.commons.GenericController;
+import com.rcs.newsletter.commons.ResourceBundleHelper;
+import com.rcs.newsletter.commons.Utils;
+import com.rcs.newsletter.core.dto.JournalArticleDTO;
+import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
+import com.rcs.newsletter.core.dto.NewsletterMailingDTO;
+import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
+import com.rcs.newsletter.core.forms.jqgrid.GridForm;
+import com.rcs.newsletter.core.service.NewsletterCategoryService;
+import com.rcs.newsletter.core.service.NewsletterMailingService;
+import com.rcs.newsletter.core.service.NewsletterTemplateService;
+import com.rcs.newsletter.core.service.common.ListResultsDTO;
+import com.rcs.newsletter.core.service.common.ServiceActionResult;
+import com.rcs.newsletter.core.service.util.EmailFormat;
 
 /**
  *
@@ -106,7 +105,7 @@ public class MailingController extends GenericController {
             result.getPayload().setCurrentPage(form.getPage());
         }else{
             result.getPayload().setCurrentPage(0);
-            result.getPayload().setResult(new ArrayList());
+            result.getPayload().setResult(new ArrayList<NewsletterMailingDTO>());
             result.getPayload().setTotalRecords(0);
         }
         
@@ -235,7 +234,7 @@ public class MailingController extends GenericController {
     public ModelAndView deleteMailing(ResourceRequest request, ResourceResponse response, @RequestParam Long id){
         ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, request.getLocale());
         
-        ServiceActionResult result = mailingService.deleteMailing(Utils.getThemeDisplay(request), id);
+        ServiceActionResult<Void> result = mailingService.deleteMailing(Utils.getThemeDisplay(request), id);
         if (result.isSuccess()){
             result.addMessage(bundle.getString("newsletter.tab.mailing.message.deleted"));
         }else{

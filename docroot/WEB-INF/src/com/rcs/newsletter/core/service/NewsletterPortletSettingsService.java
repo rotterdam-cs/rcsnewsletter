@@ -15,6 +15,6 @@ public interface NewsletterPortletSettingsService {
 	 * @param themeDisplay
 	 * @return
 	 */
-	public ServiceActionResult validateSettings(Long categoryId, ThemeDisplay themeDisplay);
+	public ServiceActionResult<Void> validateSettings(Long categoryId, ThemeDisplay themeDisplay);
 	
 }

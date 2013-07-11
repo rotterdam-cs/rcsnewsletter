@@ -1,7 +1,9 @@
 package com.rcs.newsletter.util;
 
 import java.util.List;
+
 import javax.portlet.ActionRequest;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
@@ -14,7 +16,8 @@ public class FileUploadUtil {
         return PortletFileUpload.isMultipartContent(request);
     }
 
-    public static List<FileItem> parseRequest(final ActionRequest request) throws FileUploadException {
+    @SuppressWarnings("unchecked")
+	public static List<FileItem> parseRequest(final ActionRequest request) throws FileUploadException {
         FileItemFactory factory = new DiskFileItemFactory();
         PortletFileUpload upload = new PortletFileUpload(factory);
         return upload.parseRequest(request);

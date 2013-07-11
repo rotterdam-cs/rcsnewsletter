@@ -54,7 +54,7 @@ public interface NewsletterTemplateService extends CRUDService<NewsletterTemplat
      * @param id
      * @return 
      */
-    public ServiceActionResult deleteTemplate(ThemeDisplay themeDisplay, Long templateId);
+    public ServiceActionResult<Void> deleteTemplate(ThemeDisplay themeDisplay, Long templateId);
     
     
     

@@ -70,7 +70,8 @@ public class NewsletterScheduleServiceImpl extends CRUDServiceImpl<NewsletterSch
             }
         }
 
-        List<NewsletterSchedule> list = criteria.list();
+        @SuppressWarnings("unchecked")
+		List<NewsletterSchedule> list = criteria.list();
         
         // create and return ListResultsDTO
         ListResultsDTO<NewsletterScheduleDTO> dto = new ListResultsDTO<NewsletterScheduleDTO>(gridForm.getRows(), gridForm.calculateStart(), totalRecords, binder.bindFromBusinessObjectList(NewsletterScheduleDTO.class, list));

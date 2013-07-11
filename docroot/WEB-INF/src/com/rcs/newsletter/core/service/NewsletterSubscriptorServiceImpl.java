@@ -1,5 +1,18 @@
 package com.rcs.newsletter.core.service;
 
+import java.math.BigInteger;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+
+import org.hibernate.SQLQuery;
+import org.jdto.DTOBinder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.NewsletterConstants;
 import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
@@ -8,17 +21,6 @@ import com.rcs.newsletter.core.model.NewsletterSubscriptor;
 import com.rcs.newsletter.core.model.enums.SubscriptionStatus;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import java.math.BigInteger;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import org.hibernate.SQLQuery;
-import org.jdto.DTOBinder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 /**
  *
  * @author Ariel Parra <ariel@rotterdam-cs.com>
@@ -26,8 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class NewsletterSubscriptorServiceImpl extends CRUDServiceImpl<NewsletterSubscriptor> implements NewsletterSubscriptorService {
-
-	private Log logger = LogFactoryUtil.getLog(NewsletterSubscriptorServiceImpl.class);
 	
     @Autowired
     private NewsletterSubscriptionService subscriptionService;
@@ -82,9 +82,11 @@ public class NewsletterSubscriptorServiceImpl extends CRUDServiceImpl<Newsletter
         if (limit != -1) {
             query.setMaxResults(limit);
         }
-        List<NewsletterSubscription> newsletterSubscription = query.list();
+        
+        @SuppressWarnings("unchecked")
+		List<NewsletterSubscription> newsletterSubscription = query.list();
 
-        ListResultsDTO<NewsletterSubscriptionDTO> payload = new ListResultsDTO(limit, start, count, 
+        ListResultsDTO<NewsletterSubscriptionDTO> payload = new ListResultsDTO<NewsletterSubscriptionDTO>(limit, start, count, 
                 binder.bindFromBusinessObjectList(NewsletterSubscriptionDTO.class, newsletterSubscription));
 
         return ServiceActionResult.buildSuccess(payload);
@@ -158,9 +160,10 @@ public class NewsletterSubscriptorServiceImpl extends CRUDServiceImpl<Newsletter
             query.setMaxResults(limit);
         }
                 
-        List<NewsletterSubscription> newsletterSubscription = query.list();
+        @SuppressWarnings("unchecked")
+		List<NewsletterSubscription> newsletterSubscription = query.list();
 
-        ListResultsDTO<NewsletterSubscriptionDTO> payload = new ListResultsDTO(limit, start, count, 
+        ListResultsDTO<NewsletterSubscriptionDTO> payload = new ListResultsDTO<NewsletterSubscriptionDTO>(limit, start, count, 
                 binder.bindFromBusinessObjectList(NewsletterSubscriptionDTO.class, newsletterSubscription));
 
         return ServiceActionResult.buildSuccess(payload);
@@ -208,9 +211,6 @@ public class NewsletterSubscriptorServiceImpl extends CRUDServiceImpl<Newsletter
     }
     
     
-    
-    
-    
     public int findAllByStatusAndCategoryCountAndCriteria(ThemeDisplay themeDisplay, SubscriptionStatus status, long categoryId, String searchField, String searchString) {
 	        String sql = "select count(*) from ( "
 	                + "SELECT count(*) FROM newsletter_subscription s INNER JOIN newsletter_subscriptor o ON s.subscriptor_id=o.id "
@@ -250,7 +250,7 @@ public class NewsletterSubscriptorServiceImpl extends CRUDServiceImpl<Newsletter
 			return ((BigInteger)query.uniqueResult()).intValue();
 	}
 
-    public ServiceActionResult updateSubscriptor(long subscriptorId, String firstName, String lastName, String email) {
+    public ServiceActionResult<NewsletterSubscriptor> updateSubscriptor(long subscriptorId, String firstName, String lastName, String email) {
         ServiceActionResult<NewsletterSubscriptor> sarSubscriptor = findById(subscriptorId);
         if (!sarSubscriptor.isSuccess()){
             return sarSubscriptor;
@@ -262,7 +262,7 @@ public class NewsletterSubscriptorServiceImpl extends CRUDServiceImpl<Newsletter
         dummySubscriptor.setLastName(lastName);
         dummySubscriptor.setEmail(email);
         
-        Set violations = validator.validate(dummySubscriptor);
+        Set<ConstraintViolation<NewsletterSubscriptor>> violations = validator.validate(dummySubscriptor);
         if (violations.isEmpty()){
             subscriptor.setFirstName(firstName);
             subscriptor.setLastName(lastName);
@@ -275,18 +275,18 @@ public class NewsletterSubscriptorServiceImpl extends CRUDServiceImpl<Newsletter
         return ServiceActionResult.buildFailure(null, violationsKeys);
     }
 
-    public ServiceActionResult deleteSubscriptor(long subscriptorId) {
+    public ServiceActionResult<Void> deleteSubscriptor(long subscriptorId) {
         ServiceActionResult<List<NewsletterSubscriptionDTO>> sarSubscriptionDTO = subscriptionService.findSubscriptionsBySubscriptorId(subscriptorId);
         if (!sarSubscriptionDTO.isSuccess()){
-            return sarSubscriptionDTO;
+        	return ServiceActionResult.buildFailure(null, sarSubscriptionDTO.getValidationKeys());
         }
         for (NewsletterSubscriptionDTO subscriptionDTO: sarSubscriptionDTO.getPayload()){
             ServiceActionResult<NewsletterSubscription> sarSubscription = subscriptionService.findById(subscriptionDTO.getId());
             if (!sarSubscription.isSuccess()){
-                return sarSubscription;
+            	return ServiceActionResult.buildFailure(null, sarSubscription.getValidationKeys());
             }
             
-            ServiceActionResult<NewsletterSubscription> sarDeleteSubscription = subscriptionService.delete(sarSubscription.getPayload());
+            ServiceActionResult<Void> sarDeleteSubscription = subscriptionService.delete(sarSubscription.getPayload());
             if (!sarSubscription.isSuccess()){
                 return sarDeleteSubscription;
             }
@@ -294,7 +294,7 @@ public class NewsletterSubscriptorServiceImpl extends CRUDServiceImpl<Newsletter
         
         ServiceActionResult<NewsletterSubscriptor> sarSubscriptor = findById(subscriptorId);
         if (!sarSubscriptor.isSuccess()){
-            return sarSubscriptor;
+        	return ServiceActionResult.buildFailure(null, sarSubscriptor.getValidationKeys());
         }
         NewsletterSubscriptor subscriptor = sarSubscriptor.getPayload();
         return delete(subscriptor);

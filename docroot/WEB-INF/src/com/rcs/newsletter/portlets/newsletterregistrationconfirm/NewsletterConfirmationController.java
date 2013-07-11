@@ -1,24 +1,20 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.rcs.newsletter.portlets.newsletterregistrationconfirm;
+
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import com.liferay.portal.util.PortalUtil;
 import com.rcs.newsletter.commons.GenericController;
 import com.rcs.newsletter.commons.Utils;
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.servlet.http.HttpServletRequest;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.portlet.ModelAndView;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 /**
  *
@@ -27,8 +23,6 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 @Controller
 @RequestMapping("VIEW")
 public class NewsletterConfirmationController extends GenericController{
- 
-    private Log logger = LogFactoryUtil.getLog(NewsletterConfirmationController.class);
     
     @Autowired
     private NewsletterSubscriptionService subscriptionService;
@@ -56,7 +50,7 @@ public class NewsletterConfirmationController extends GenericController{
         // if it's an activation
         if (originalRequest.getParameter("activationkey") != null){
             String activationKey = originalRequest.getParameter("activationkey");
-            ServiceActionResult activationResult = subscriptionService.activateSubscription(subscriptionId, activationKey, Utils.getThemeDisplay(request));
+            ServiceActionResult<String> activationResult = subscriptionService.activateSubscription(subscriptionId, activationKey, Utils.getThemeDisplay(request));
             mav.addObject("result", activationResult);
             
         }
@@ -64,7 +58,7 @@ public class NewsletterConfirmationController extends GenericController{
         // if it's an deactivation
         if (originalRequest.getParameter("deactivationkey") != null){
             String deactivationKey = originalRequest.getParameter("deactivationkey");
-            ServiceActionResult deactivationResult = subscriptionService.deactivateSubscription(subscriptionId, deactivationKey, Utils.getThemeDisplay(request));
+            ServiceActionResult<Void> deactivationResult = subscriptionService.deactivateSubscription(subscriptionId, deactivationKey, Utils.getThemeDisplay(request));
             mav.addObject("result", deactivationResult);
         }
         

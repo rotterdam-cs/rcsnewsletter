@@ -12,9 +12,11 @@ import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.core.service.util.EmailFormat;
+
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
@@ -37,8 +39,7 @@ public class NewsletterArchiveServiceImpl extends CRUDServiceImpl<NewsletterArch
     
     @Autowired
     DTOBinder binder;
-    
-    
+
     public ServiceActionResult<NewsletterArchiveDTO> saveArchive(NewsletterMailing mailing, String emailBody, ThemeDisplay themeDisplay) {
         NewsletterArchive archive = new NewsletterArchive();
         archive.setGroupid(mailing.getGroupid());
@@ -76,7 +77,8 @@ public class NewsletterArchiveServiceImpl extends CRUDServiceImpl<NewsletterArch
             }
         }
 
-        List<NewsletterArchive> list = criteria.list();
+        @SuppressWarnings("unchecked")
+		List<NewsletterArchive> list = criteria.list();
         
         // create and return ListResultsDTO
         ListResultsDTO<NewsletterArchiveDTO> dto = new ListResultsDTO<NewsletterArchiveDTO>(gridForm.getRows(), gridForm.calculateStart(), totalRecords, binder.bindFromBusinessObjectList(NewsletterArchiveDTO.class, list));

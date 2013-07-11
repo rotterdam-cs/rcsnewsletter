@@ -187,6 +187,7 @@
                 
                 jQuery('#importButton<portlet:namespace/>').click(function(){
                     clearErrors();
+                    clearMessages()
                     validatorImport.resetForm();
                     jQuery('#gridSubscribersContainer<portlet:namespace/>').hide();
                     jQuery('#importSubscribers<portlet:namespace/>').show();
@@ -221,6 +222,10 @@
                             	jQuery("#newsletterAdmin<portlet:namespace/>").unmask();
                                 if (data && data.success){
                                     showMessages(data.errors);
+                                    jQuery('#importSubscribers<portlet:namespace/>').hide();
+                                    jQuery('#gridSubscribersContainer<portlet:namespace/>').show();
+                                    jQuery("#subscribersGrid<portlet:namespace/>").trigger("reloadGrid");
+                                    setTimeout(function(){clearMessages();}, 10000);
                                 }else{
                                     showErrors(data.errors);
                                 }

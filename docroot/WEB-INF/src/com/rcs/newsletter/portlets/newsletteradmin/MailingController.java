@@ -165,11 +165,7 @@ public class MailingController extends GenericController {
     
     
     @ResourceMapping(value = "getPreview")
-    public void getPreview(
-		 Long templateId
-		,ResourceRequest request
-		,ResourceResponse response
-    ) throws Exception {		
+    public void getPreview(Long templateId,ResourceRequest request,ResourceResponse response) throws Exception {		
 		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 		Locale locale = LocaleUtil.fromLanguageId(LanguageUtil.getLanguageId(request));
 		logger.info(templateId);

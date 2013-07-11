@@ -511,7 +511,7 @@ public class EmailFormat {
                 StringBuilder selectHTMLItemSB = new StringBuilder("<div id=\"blockSelector");
                 selectHTMLItemSB.append(count);
                 selectHTMLItemSB.append("\">");
-                selectHTMLItemSB.append("<select class=\"blockSelectorSelect\"");
+                selectHTMLItemSB.append("<select class=\"required blockSelectorSelect\"");
                 selectHTMLItemSB.append(" id=\"blockSelectorSelect");
                 selectHTMLItemSB.append(count);
                 selectHTMLItemSB.append("\" class=\"newsletter-forms-input-text\" onchange=\"selectArticlesToTemplate() \">");

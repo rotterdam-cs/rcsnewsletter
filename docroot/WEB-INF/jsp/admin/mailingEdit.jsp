@@ -9,9 +9,8 @@
 <%@taglib prefix="portlet" uri="http://java.sun.com/portlet" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@taglib  prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <fmt:setBundle basename="Language"/>
 <portlet:defineObjects />
@@ -297,29 +296,30 @@
         function preview() {
         	jQuery("#preview").mask('<fmt:message key="newsletter.loading.preview"/>');
         	var templateId = jQuery("#select-template-<portlet:namespace/>").val();    		
-        	 jQuery.ajax({
-                 url: '${getPreviewUrl}'
-                 ,type: 'POST'
-                 ,data: {"templateId" : templateId }
-                 ,success: function(response) {
-                	 jQuery("#preview").unmask();
-                	 jQuery("#preview").html(response);
-                     <c:if test="${!empty mailing.id}">                     
-                     jQuery.each(jQuery(".blockSelectorSelectHide"), function(i,e) {
-                         var check = e.value;
-                         var idCombo = jQuery(this).attr("id");
-                         idCombo = idCombo.replace("blockSelectorSelectHide", "");                         
-                         jQuery("#blockSelectorSelect" + idCombo).val(check);
-                     });
-                   	 </c:if>
-                 }
-                 ,failure: function(response) {
-                	 //console.log(response);
-                 }
-             });        	
+            jQuery.ajax({
+				url: '${getPreviewUrl}',
+                type: 'POST',
+                data: {"templateId" : templateId },
+                success: function(response) {
+                	jQuery("#preview").unmask();
+                	jQuery("#preview").html(response);
+
+					<c:if test="${!empty mailing.id}">                     
+                    jQuery.each(jQuery(".blockSelectorSelectHide"), function(i,e) {
+                    	var check = e.value;
+                        var idCombo = jQuery(this).attr("id");
+                        idCombo = idCombo.replace("blockSelectorSelectHide", "");                         
+                        jQuery("#blockSelectorSelect" + idCombo).val(check);
+                    });
+                   	</c:if>
+                },
+                failure: function(response) {
+                	//console.log(response);
+                }
+            });        	
         }
         
         <c:if test="${!empty mailing.id}">        
-        	preview(${mailing.templateId});            
+        	preview();            
         </c:if>
 </script>

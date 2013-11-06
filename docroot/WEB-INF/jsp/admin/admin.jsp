@@ -18,6 +18,7 @@
 <portlet:resourceURL id="archive" var="archiveURL"/>
 <portlet:resourceURL id="templates" var="templatesURL"/>
 <portlet:resourceURL id="schedule" var="scheduleURL"/>
+<portlet:resourceURL id="untagging" var="untaggingURL"/>
 
 <html>
     <head>
@@ -51,7 +52,8 @@
                 <li><a href="${templatesURL}"><fmt:message key="newsletter.admin.templates"/></a></li>
                 <li><a href="${mailingURL}"><fmt:message key="newsletter.admin.mailing"/></a></li>
                 <li><a href="${archiveURL}"><fmt:message key="newsletter.admin.archive"/></a></li>                
-                <li><a href="${scheduleURL}"><fmt:message key="newsletter.admin.schedule"/></a></li> 
+                <li><a href="${scheduleURL}"><fmt:message key="newsletter.admin.schedule"/></a></li>            
+                <li><a href="${untaggingURL}"><fmt:message key="newsletter.admin.untagging"/></a></li> 
             </ul>
         </div>
     </body>

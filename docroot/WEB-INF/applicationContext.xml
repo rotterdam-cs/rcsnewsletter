@@ -23,6 +23,7 @@
     <context:component-scan base-package="com.rcs.newsletter.commons" />
     <!-- look for service classes -->
     <context:component-scan base-package="com.rcs.newsletter.core.service" />
+    <context:component-scan base-package="com.rcs.newsletter.util" />
     
     <!-- configure the usage of hibernate validator -->
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />

@@ -26,10 +26,19 @@ import com.liferay.portlet.journal.model.JournalArticleResource;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.journal.service.JournalArticleResourceLocalServiceUtil;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
+import com.rcs.newsletter.core.service.NewsletterCategoryService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 import java.util.Comparator;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.hibernate.mapping.Array;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
+import sun.util.logging.resources.logging;
 
 /**
  * General Article Utils
@@ -39,6 +48,10 @@ public class ArticleUtils {
 
     private static Log log = LogFactoryUtil.getLog(ArticleUtils.class);
 
+    @Autowired
+    NewsletterCategoryService newsLetterCategoryService;
+    
+    
     static final Comparator<JournalArticle> ARTICLE_ORDER = new Comparator<JournalArticle>() {
         public int compare(JournalArticle a1, JournalArticle a2) {
             return a2.getModifiedDate().compareTo(a1.getModifiedDate());
@@ -68,7 +81,8 @@ public class ArticleUtils {
             if (assetEntryList.size() > 0) {
                 for (AssetEntry ae : assetEntryList) {
                     JournalArticleResource journalArticleResourceObj = JournalArticleResourceLocalServiceUtil.getJournalArticleResource(ae.getClassPK());
-                    JournalArticle journalArticleObj = JournalArticleLocalServiceUtil.getLatestArticle(themeDisplay.getScopeGroupId(), journalArticleResourceObj.getArticleId());
+                    //JournalArticle journalArticleObj = JournalArticleLocalServiceUtil.getLatestArticle(themeDisplay.getScopeGroupId(), journalArticleResourceObj.getArticleId());
+                    JournalArticle journalArticleObj = JournalArticleLocalServiceUtil.getArticle(journalArticleResourceObj.getGroupId(), journalArticleResourceObj.getArticleId());
                     journalArticleList.add(journalArticleObj);
                 }
             }
@@ -76,6 +90,81 @@ public class ArticleUtils {
         return journalArticleList;
     }
 
+
+    /**
+     * Remove the tag and category and change the type to rcs-general
+     * @param tagName
+     * @param typeName
+     * @param categoryName
+     * @return
+     */
+	public static void untagUncategoryUntypeById(long id, String tagName, String typeName, String categoryName) throws PortalException, SystemException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+
+    	
+    	JournalArticle articleToDeleteTagType = null;
+    	
+        for (JournalArticle article : JournalArticleLocalServiceUtil.getArticles()) {   
+            if (article.getArticleId().equals((""+id))) {
+            	articleToDeleteTagType = JournalArticleLocalServiceUtil.getArticle(article.getGroupId(), article.getArticleId());
+                break;
+            }
+        }
+    	
+    	AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(articleToDeleteTagType.getGroupId(),articleToDeleteTagType.getArticleResourceUuid());
+
+    	//remove tag
+    	List<AssetTag> tagsUnmodifiable;
+    	tagsUnmodifiable = entry.getTags();
+    	List<String> tags = Collections.emptyList();
+   	
+    	for(AssetTag tag : tagsUnmodifiable){
+    		if(! tag.getName().equals(tagName)){
+    			tags.add(tag.getName());
+    			
+    		}else{
+    			log.info("Tag removed");
+    		}
+    	}
+
+    	//Remove Category
+    	long categoyId = findCategoryIdByName(categoryName);
+    	long[] categoryIdsArray = entry.getCategoryIds();
+    	List<Long> categoryIdsList = new ArrayList<Long>();
+
+    	for(long catId : categoryIdsArray){
+    		if(catId != categoyId){
+    			categoryIdsList.add(new Long(catId));
+    			log.info("Category added: "+ catId + " - ");
+    		}else{
+    			log.info("Category removed");
+    		}
+    	}
+
+    	// Update Tag and Category
+    	try{
+	    	JournalArticleLocalServiceUtil.updateAsset(articleToDeleteTagType.getUserId(), articleToDeleteTagType, (long [])ArrayUtils.toPrimitive(categoryIdsList.toArray(new Long [categoryIdsList.size()])), tags.toArray(new String[tags.size()]),new long [0]);
+	    	log.info("Tag and categories Updated");
+    	}catch(Exception e){
+    		log.error("Tag and Categories don't updated - error: "+e);
+    	}
+    	
+    	//Remove Type
+    	if(articleToDeleteTagType.getType().equals(typeName)){
+    		articleToDeleteTagType.setType("rcs-general");
+    		log.info("Type removed");
+    	}
+    	
+    	// Update Type
+    	JournalArticleLocalServiceUtil.updateJournalArticle(articleToDeleteTagType);
+    	log.info("Type Updated");
+
+    	return;       
+    }
+    
+
+    
+    
+    
     /**
      * Search Articles by Keyword
      * @param themeDisplay
@@ -164,7 +253,9 @@ public class ArticleUtils {
             for (JournalArticle article : JournalArticleLocalServiceUtil.getJournalArticles(-1, -1)) {
                  if (JournalArticleLocalServiceUtil.hasArticle(article.getGroupId(), article.getArticleId())) {
                     if (!journalArticlesIds.contains(article.getArticleId())) {
-                        JournalArticle a = JournalArticleLocalServiceUtil.getLatestArticle(article.getGroupId(), article.getArticleId());
+                    	JournalArticle a = JournalArticleLocalServiceUtil.getArticle(article.getGroupId(), article.getArticleId());
+                        
+                    	//JournalArticle a = JournalArticleLocalServiceUtil.getLatestArticle(article.getGroupId(), article.getArticleId());
                         journalArticleList.add(a);
                         journalArticlesIds.add(article.getArticleId());
                     }
@@ -195,7 +286,9 @@ public class ArticleUtils {
         try {
             for (JournalArticle article : JournalArticleLocalServiceUtil.getArticles()) {                
                 if (article.getUserId() == userId) {
-                    JournalArticle a = JournalArticleLocalServiceUtil.getLatestArticle(article.getGroupId(), article.getArticleId());
+                	JournalArticle a = JournalArticleLocalServiceUtil.getArticle(article.getGroupId(), article.getArticleId());
+                    
+                    //JournalArticle a = JournalArticleLocalServiceUtil.getLatestArticle(article.getGroupId(), article.getArticleId());
                     journalArticleList.add(a);
                 }
             }
@@ -217,7 +310,9 @@ public class ArticleUtils {
         List<JournalArticle> journalArticleList = new ArrayList<JournalArticle>();
         try {
             for (JournalArticle article : JournalArticleLocalServiceUtil.getArticles()) {
-                JournalArticle a = JournalArticleLocalServiceUtil.getLatestArticle(article.getGroupId(), article.getArticleId());
+            	JournalArticle a = JournalArticleLocalServiceUtil.getArticle(article.getGroupId(), article.getArticleId());
+                
+            	//JournalArticle a = JournalArticleLocalServiceUtil.getLatestArticle(article.getGroupId(), article.getArticleId());
                 if (a.getType().equalsIgnoreCase(type)) {
                     journalArticleList.add(a);
                 }
@@ -268,6 +363,8 @@ public class ArticleUtils {
         if (assetEntryList.size() > 0) {
             for (AssetEntry ae : assetEntryList) {
                 JournalArticleResource journalArticleResourceObj = JournalArticleResourceLocalServiceUtil.getJournalArticleResource(ae.getClassPK());
+                
+            	//JournalArticleResource journalArticleResourceObj = JournalArticleResourceLocalServiceUtil.getJournalArticleResource(ae.getClassPK());
                 JournalArticle journalArticleObj = JournalArticleLocalServiceUtil.getLatestArticle(journalArticleResourceObj.getGroupId(), journalArticleResourceObj.getArticleId());
                 if (journalArticleObj != null) {
                     journalArticleList.add(journalArticleObj);

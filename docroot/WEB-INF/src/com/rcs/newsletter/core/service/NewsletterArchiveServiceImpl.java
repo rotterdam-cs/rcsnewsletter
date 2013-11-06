@@ -12,6 +12,7 @@ import com.rcs.newsletter.core.model.NewsletterSubscription;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.core.service.util.EmailFormat;
+import com.sun.org.apache.xml.internal.resolver.helpers.Debug;
 
 import java.util.Date;
 import java.util.List;
@@ -76,12 +77,16 @@ public class NewsletterArchiveServiceImpl extends CRUDServiceImpl<NewsletterArch
                 criteria.add(criterion);
             }
         }
-
+        
         @SuppressWarnings("unchecked")
 		List<NewsletterArchive> list = criteria.list();
         
+        
+        int max = ((gridForm.calculateStart()+gridForm.getRows()) > list.size()) ? list.size() : gridForm.calculateStart()+gridForm.getRows(); 
+        List<NewsletterArchive> sublist = list.subList(gridForm.calculateStart(), max);
+        
         // create and return ListResultsDTO
-        ListResultsDTO<NewsletterArchiveDTO> dto = new ListResultsDTO<NewsletterArchiveDTO>(gridForm.getRows(), gridForm.calculateStart(), totalRecords, binder.bindFromBusinessObjectList(NewsletterArchiveDTO.class, list));
+        ListResultsDTO<NewsletterArchiveDTO> dto = new ListResultsDTO<NewsletterArchiveDTO>(gridForm.getRows(), gridForm.calculateStart(), totalRecords, binder.bindFromBusinessObjectList(NewsletterArchiveDTO.class, sublist));
         return ServiceActionResult.buildSuccess(dto);
     }
 

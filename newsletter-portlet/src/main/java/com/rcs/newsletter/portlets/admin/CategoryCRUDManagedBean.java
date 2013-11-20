@@ -2,15 +2,24 @@ package com.rcs.newsletter.portlets.admin;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.util.PortalUtil;
 import static com.rcs.newsletter.NewsletterConstants.SERVER_MESSAGE_BUNDLE;
 import com.rcs.newsletter.core.model.NewsletterCategory;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 import com.rcs.newsletter.util.FacesUtil;
+import java.util.Map;
 import java.util.ResourceBundle;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.portlet.ActionRequest;
+import javax.portlet.ReadOnlyException;
+import javax.portlet.RenderRequest;
+import javax.portlet.filter.ActionRequestWrapper;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Scope;
 
 /**
@@ -38,6 +47,8 @@ public class CategoryCRUDManagedBean {
     private String description;
     private boolean active;
     private String adminEmail;
+    
+    private Long groupId;
 
     /////////////// GETTERS && SETTERS ////////////////
     public long getId() {
@@ -104,6 +115,14 @@ public class CategoryCRUDManagedBean {
         this.adminEmail = adminEmail;
     }
     
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+    
     
 
     //////////////// METHODS //////////////////////
@@ -143,12 +162,17 @@ public class CategoryCRUDManagedBean {
         NewsletterCategory newsletterCategory = null;
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ResourceBundle serverMessageBundle = ResourceBundle.getBundle(SERVER_MESSAGE_BUNDLE, facesContext.getViewRoot().getLocale());
+
         String message = "";        
+        //RenderRequest request = (RenderRequest) facesContext.getExternalContext().getR
         switch (getAction()) {
             case CREATE:
                 newsletterCategory = new NewsletterCategory();
                 newsletterCategory.setGroupid(uiState.getGroupid());
                 newsletterCategory.setCompanyid(uiState.getCompanyid());
+
+
+
                 
                 fillNewsletterCategory(newsletterCategory);
                 ServiceActionResult<NewsletterCategory> saveResult = categoryCRUDService.save(newsletterCategory);
@@ -179,8 +203,7 @@ public class CategoryCRUDManagedBean {
                 }
                 break;
         }
-        
-        return "admin?faces-redirect=true";
+       return "admin?faces-redirect=true";
     }
 
     private void fillNewsletterCategory(NewsletterCategory newsletterCategory) {

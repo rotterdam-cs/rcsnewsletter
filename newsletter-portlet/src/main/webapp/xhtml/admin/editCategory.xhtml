@@ -3,14 +3,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.prime.com.tr/ui"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
     <f:loadBundle basename="Language" var="msg" />
     <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>
 <!--        <title><h:outputText value="#{nlk['newsletter.admin.category.edit']}" /></title>-->
     </h:head>
     <h:body>        
-        <h:form>
+        <h:form styleClass="multi-site-form">
+            <p:inputText styleClass="groupId" id="groupId" value="#{categoryCRUDManagedBean.groupId}" style="display: none"/>   
             <h:inputHidden value="#{categoryCRUDManagedBean.id}"/>
             <h:inputHidden value="#{categoryCRUDManagedBean.action}"/>
             <h:panelGrid width="600px" columns="2" styleClass="newsletter-forms-form" columnClasses="newsletter-forms-column-left,newsletter-forms-column-right">                                
@@ -29,7 +31,7 @@
                 
                 <h:outputLabel value="#{nlk['newsletter.admin.category.adminemail']}: "/> 
                 <p:inputText styleClass="newsletter-forms-input-text" id="adminEmail" value="#{categoryCRUDManagedBean.adminEmail}"/>
-                
+
                 <h:outputLabel value=" "/> 
                 <h:outputText value="* #{nlk['newsletter.admin.category.adminemail.details']}" />
                                 
@@ -40,5 +42,11 @@
                 </f:facet>
             </h:panelGrid>            
         </h:form>
+        <!--   Support #12850     -->
+        <script type="text/javascript"> 
+            jQuery(document).ready(function() {  
+                multiSiteForms(#{request.getParameter('doAsGroupId')});
+            });
+        </script> 
     </h:body>
 </html>

@@ -10,7 +10,7 @@
 <!--        <title><h:outputText value="#{msg['newsletter.admin.subscribers']}" /></title>-->
     </h:head>
     <h:body>
-        <h:form>
+        <h:form styleClass="multi-site-form">
             <p:growl id="messages" />
             <h1>#{nlk['newsletter.admin.subscriber.edit']}</h1>
             <h:inputHidden value="#{subscriberCRUDManagedBean.id}"/>
@@ -32,5 +32,10 @@
             </h:panelGrid>
             
         </h:form>        
+         <script type="text/javascript"> 
+            jQuery(document).ready(function() {  
+                multiSiteForms(#{request.getParameter('doAsGroupId')});
+            });
+        </script> 
     </h:body>
 </html>

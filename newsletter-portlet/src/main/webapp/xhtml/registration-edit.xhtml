@@ -12,7 +12,7 @@
     <h:body>
         <h2>#{nlk['newsletter.registration.config.title']}</h2>
         <hr />
-        <h:form>
+        <h:form styleClass="multi-site-form">
             <p:messages id="messages" />
             <h:panelGrid columns="2" styleClass="newsletter-forms-form" columnClasses="newletter-registration-settings,newletter-registration-settings">
                 <h:outputLabel value="#{msg['newsletter.admin.general.list']}:" />
@@ -28,5 +28,10 @@
                 <p:commandButton update="messages" styleClass="newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.config.save']}" action="#{subscriptionManagedBean.doSaveSettings}"/>                
             </div>
         </h:form>
+        <script type="text/javascript"> 
+            jQuery(document).ready(function() {  
+                multiSiteForms(#{request.getParameter('doAsGroupId')});
+            });
+        </script> 
     </h:body>
 </html>

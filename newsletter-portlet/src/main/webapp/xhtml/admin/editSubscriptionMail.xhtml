@@ -18,7 +18,7 @@
         <h2>#{subscriptionEmailManagedBean.subscriptionType}</h2>
         <br></br>
 
-        <h:form id="edit-subscription-email-form">
+        <h:form id="edit-subscription-email-form" styleClass="multi-site-form">
             <h:inputHidden value="#{subscriptionEmailManagedBean.subscriptionType}"/>
             <p:dialog modal="true" header="#{nlk['newsletter.admin.category.subscriptionmail.help']}" widgetVar="dlg3" hideEffect="explode" height="150" width="400" resizable="false">  
                 <h:outputText value="#{subscriptionEmailManagedBean.helpPageText}" escape="false"/>  
@@ -70,7 +70,11 @@
             <p:commandButton styleClass="newsletter-forms-button" value="#{msg['newsletter.admin.general.edit']}" update="editSubscriptionMailMessage" action="#{subscriptionEmailManagedBean.save}" ajax="false"/>
             <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />            
         </h:form>
-
+        <script type="text/javascript"> 
+            jQuery(document).ready(function() {  
+                multiSiteForms(#{request.getParameter('doAsGroupId')});
+            });
+        </script> 
     </h:body>
 
 </html>

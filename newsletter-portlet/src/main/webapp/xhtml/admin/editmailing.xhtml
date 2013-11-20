@@ -34,7 +34,7 @@
             });
         //]]> 
         </script>
-        <h:form>
+        <h:form styleClass="multi-site-form">
             <h:inputHidden value="#{editMailingManagedBean.currentAction}" />
             <h:inputHidden value="#{editMailingManagedBean.mailingId}" />            
             <h:panelGrid columns="2" styleClass="newsletter-forms-form" columnClasses="newsletter-forms-column-left,newsletter-forms-column-right">
@@ -65,5 +65,10 @@
             <p:commandButton styleClass="newsletter-forms-button" action="#{editMailingManagedBean.save}" update="messages" value="#{nlk[editMailingManagedBean.saveButtonKey]}" />
             <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
         </h:form>
+        <script type="text/javascript"> 
+            jQuery(document).ready(function() {  
+                multiSiteForms(#{request.getParameter('doAsGroupId')});
+            });
+        </script> 
     </h:body>
 </html>

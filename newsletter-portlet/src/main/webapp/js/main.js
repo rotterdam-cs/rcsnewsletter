@@ -1,6 +1,7 @@
 $j = jQuery.noConflict();
 
-jQuery(document).ready(function() {                
+jQuery(document).ready(function() {    
+
     $j("#unregister-link").click(function() {
        $j('.unregister-button').toggle();
        $j('.register-button').toggle();
@@ -21,4 +22,14 @@ jQuery(document).ready(function() {
     if (msg != "") {
         jQuery(".newsletter-confirmation-msg").show();
     }
+    
+
+
 });
+
+    function multiSiteForms(groupId){
+        $j('.multi-site-form').each(function (index) {
+            action = $j(this).attr('action')+"&doAsGroupId="+groupId;
+            $j(this).attr('action',action);
+        });
+    }

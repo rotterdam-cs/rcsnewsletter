@@ -4,6 +4,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.journal.model.JournalArticle;
@@ -35,7 +36,7 @@ public class UserUiStateManagedBean implements Serializable {
     public static final int TEMPLATE_TAB_INDEX = 2;
     public static final int MAILING_TAB_INDEX = 3;
     public static final int ARCHIVE_TAB_INDEX = 4;
-    private Long groupid;
+    private Long groupid = 0l;
     private Long companyid;
     //Message for do a redirect
     private String succesMessage = "";
@@ -137,7 +138,6 @@ public class UserUiStateManagedBean implements Serializable {
 
         Map requestMap = facesContext.getExternalContext().getRequestMap();
         result = (ThemeDisplay) requestMap.get(WebKeys.THEME_DISPLAY);
-
         return result;
     }
 
@@ -191,7 +191,8 @@ public class UserUiStateManagedBean implements Serializable {
             setChangeGroup(!groupid.equals(ServiceContextThreadLocal.getServiceContext().getScopeGroupId()));
         }
         groupid = ServiceContextThreadLocal.getServiceContext().getScopeGroupId();
-
+        
+        logger.info("getgroupId: " + groupid);
         return groupid;
     }
 

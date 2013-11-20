@@ -10,7 +10,7 @@
 <!--        <title>#{nlk['newsletter.admin.template.delete.title']}</title>-->
     </h:head>
     <h:body>
-        <h:form>
+        <h:form styleClass="multi-site-form">
             <h:inputHidden value="#{templateCRUDManagedBean.id}"/>
             <h1>#{nlk['newsletter.admin.template.delete.title']}</h1>
             <span>
@@ -47,5 +47,11 @@
             });
         //]]> 
         </script>
+        
+        <script type="text/javascript"> 
+            jQuery(document).ready(function() {  
+                multiSiteForms(#{request.getParameter('doAsGroupId')});
+            });
+        </script> 
     </h:body>
 </html>

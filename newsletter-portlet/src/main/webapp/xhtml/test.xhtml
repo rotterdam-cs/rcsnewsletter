@@ -7,7 +7,7 @@
         <title>Facelet Title</title>
     </h:head>-->
     <h:body>
-        <h:form id="ajaxDemoForm">
+        <h:form id="ajaxDemoForm" styleClass="multi-site-form">
              <h:outputLink value="#"
                onclick="#{javaScriptPortletSessionBean.ajaxDataURL}">
                   <h:outputText value="Invoke Portlet Data API via Ajax"/>
@@ -16,6 +16,11 @@
              </div>-->
 
            </h:form>
+        <script type="text/javascript"> 
+            jQuery(document).ready(function() {  
+                multiSiteForms(#{request.getParameter('doAsGroupId')});
+            });
+        </script> 
     </h:body>
 </html>
 

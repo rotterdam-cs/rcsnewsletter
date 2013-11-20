@@ -5,7 +5,8 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.prime.com.tr/ui"
       xmlns:c="http://java.sun.com/jsp/jstl/core"
->    
+          
+      xmlns:ui="http://java.sun.com/jsf/facelets">    
     <f:loadBundle basename="Language" var="msg" />
     <f:loadBundle basename="Newsletter" var="nlk" />
     <h:head>
@@ -46,7 +47,7 @@
         </c:if>        
         <br />
         <div id="errmsg" class="hiddenMsg"><h3 class="portlet-msg-error" id="errmsg"> #{nlk['newsletter.admin.template.malformed']}... </h3></div>
-        <h:form id="edit-template-email-form">
+        <h:form id="edit-template-email-form" styleClass="multi-site-form">
             <h:inputHidden value="#{templateCRUDManagedBean.id}"/>
             <h:inputHidden value="#{templateCRUDManagedBean.action}"/>
             <p:dialog modal="true" header="#{nlk['newsletter.admin.template.help']}" widgetVar="dlg3" hideEffect="explode" height="500" width="550" resizable="false">  
@@ -97,5 +98,10 @@
             <span id="errmsg2" class="hiddenMsg"><p:commandButton styleClass="newsletter-forms-button hiddenMsg" id="okbuttongood" value="#{msg['newsletter.admin.general.save']}" update="editSubscriptionMailMessage" action="#{templateCRUDManagedBean.save}" ajax="false" /></span>            
             <span id="errmsg3"><p:commandButton styleClass="newsletter-forms-button hiddenMsg" id="okbuttongood3" value="#{msg['newsletter.admin.general.cancel']}" update="editSubscriptionMailMessage" action="#{templateCRUDManagedBean.cancel}" ajax="false" /></span>
         </h:form>
-    </h:body>
+        <script type="text/javascript"> 
+            jQuery(document).ready(function() {  
+                multiSiteForms(#{request.getParameter('doAsGroupId')});
+            });
+        </script> 
+    </h:body> 
 </html>

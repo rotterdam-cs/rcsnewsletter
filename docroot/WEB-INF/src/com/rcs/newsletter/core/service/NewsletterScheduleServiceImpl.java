@@ -1,6 +1,8 @@
 
 package com.rcs.newsletter.core.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -8,17 +10,24 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.jdto.DTOBinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.service.ThemeLocalService;
+import com.liferay.portal.service.ThemeLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.NewsletterScheduleDTO;
 import com.rcs.newsletter.core.forms.jqgrid.GridForm;
 import com.rcs.newsletter.core.forms.jqgrid.GridRestrictionsUtil;
 import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.model.NewsletterSchedule;
+import com.rcs.newsletter.core.model.NewsletterTemplateBlock;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
 
@@ -36,21 +45,37 @@ public class NewsletterScheduleServiceImpl extends CRUDServiceImpl<NewsletterSch
     @Autowired
     DTOBinder binder;
     
-    public ServiceActionResult<NewsletterScheduleDTO> saveSchedule(NewsletterMailing mailing, Date sendDate, ThemeDisplay themeDisplay) {
+    @Autowired
+    private NewsletterMailingService mailingService;
+
+    private Log logger = LogFactoryUtil.getLog(NewsletterScheduleServiceImpl.class);
+    
+    
+    public ServiceActionResult<NewsletterScheduleDTO> saveSchedule(NewsletterMailing mailing2, Date sendDate, ThemeDisplay themeDisplay) {
+    	
     	NewsletterSchedule newsletterSchedule = new NewsletterSchedule();
-    	newsletterSchedule.setGroupid(mailing.getGroupid());
-    	newsletterSchedule.setCompanyid(mailing.getCompanyid());
-    	newsletterSchedule.setMailing(mailing);
+    	newsletterSchedule.setGroupid(mailing2.getGroupid());
+    	newsletterSchedule.setCompanyid(mailing2.getCompanyid());
+    	newsletterSchedule.setMailing(mailing2);
     	newsletterSchedule.setPending(true);
     	newsletterSchedule.setSendDate(sendDate);
+    	
+    	newsletterSchedule.setLocale(themeDisplay.getLocale());
+    	newsletterSchedule.setPortalURL(themeDisplay.getPortalURL());
+    	newsletterSchedule.setUrlHome(themeDisplay.getURLHome());
         
         ServiceActionResult<NewsletterSchedule> saveResult = save(newsletterSchedule);
         if (saveResult.isSuccess()){
-            return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(NewsletterScheduleDTO.class, saveResult.getPayload()));
+        	logger.info("shedule saved");
+        	return ServiceActionResult.buildSuccess(binder.bindFromBusinessObject(NewsletterScheduleDTO.class, saveResult.getPayload()));
+            
         }else{
+        	logger.info("error saving schedule");
             return ServiceActionResult.buildFailure(null);
         }
     }
+    
+  
 
     
     public ServiceActionResult<ListResultsDTO<NewsletterScheduleDTO>> findAllSchedules(ThemeDisplay themeDisplay, GridForm gridForm, String orderField, String orderType) {
@@ -79,6 +104,21 @@ public class NewsletterScheduleServiceImpl extends CRUDServiceImpl<NewsletterSch
     }
 
     
+    public List<NewsletterSchedule> findAllSchedulesUntilNow() {
+    	
+        // get records
+        Session currentSession = sessionFactory.getCurrentSession();
+        Criteria criteria = currentSession.createCriteria(NewsletterSchedule.class);
+        logger.info(new Date().toString());
+        criteria.add(Restrictions.le("sendDate", new Date()));
+        
+        @SuppressWarnings("unchecked")
+		List<NewsletterSchedule> list = criteria.list();
+        
+         return list;
+    }
+
+    
     public ServiceActionResult<NewsletterScheduleDTO> findSchedule(Long scheduleId) {
         ServiceActionResult<NewsletterSchedule> findResult = findById(scheduleId);
         if (findResult.isSuccess()){
@@ -86,6 +126,48 @@ public class NewsletterScheduleServiceImpl extends CRUDServiceImpl<NewsletterSch
         }
         return ServiceActionResult.buildFailure(null);
     }
+    
+    @Scheduled(cron="0 1 * * * *") //runs every hour at 1
+    public void sendScheduleMailing(){
+    	logger.info("Inside sendScheduleMailing Job");  	
+    	List<NewsletterSchedule> scheduleMailings = findAllSchedulesUntilNow();
+    	
+    	
 
+    	for(NewsletterSchedule schedule : scheduleMailings){
+    		
+    		ThemeDisplay themeDisplay = new ThemeDisplay();
+    		themeDisplay.setLocale(schedule.getLocale());
+    		themeDisplay.setPortalURL(schedule.getPortalURL());
+    		themeDisplay.setURLHome(schedule.getUrlHome());
+    		themeDisplay.setDoAsGroupId(schedule.getGroupid());
+    	
+
+    		NewsletterMailing mailing = schedule.getMailing();
+    		
+    		Date date = schedule.getSendDate();
+    		
+    		deleteSchedule(schedule.getId());
+    		
+    		ServiceActionResult<Void> result = mailingService.sendNewsletter(mailing.getId(), themeDisplay);
+    		
+    		if (!result.isSuccess()){
+    			saveSchedule(mailing, date, themeDisplay);
+    		}
+    		
+    	}
+    	
+    }
+    
+    
+
+    public ServiceActionResult<Void> deleteSchedule(Long scheduleId) {
+        ServiceActionResult<NewsletterSchedule> findResult = findById(scheduleId);
+        if (findResult.isSuccess()) {
+        	// delete schedule
+            return delete(findResult.getPayload());
+        }
+        return ServiceActionResult.buildFailure(null);
+    }
 
 }

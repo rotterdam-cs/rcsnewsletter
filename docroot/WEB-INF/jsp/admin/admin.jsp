@@ -56,5 +56,17 @@
                 <li><a href="${untaggingURL}"><fmt:message key="newsletter.admin.untagging"/></a></li> 
             </ul>
         </div>
+        
+        <script>
+        
+        	
+        	
+        	jQuery('#backButton').live('click',function(){
+        		jQuery('li.ui-tabs-selected.ui-state-active').removeClass('ui-tabs-selected').addClass("reloadThis");
+            	jQuery('.reloadThis > a').click(); 
+            	jQuery('.reloadThis').removeClass("reloadThis");
+        	});	
+        
+        </script>
     </body>
 </html>

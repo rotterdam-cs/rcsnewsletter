@@ -35,6 +35,8 @@ public class NewsletterMailing extends NewsletterEntity {
     @OneToMany(mappedBy="mailing")
     @OrderColumn(name = "blockOrder")    
     private List<NewsletterTemplateBlock> blocks;
+    
+    private Boolean pending = false;
 
     public List<NewsletterTemplateBlock> getBlocks() {
         return blocks;
@@ -67,5 +69,12 @@ public class NewsletterMailing extends NewsletterEntity {
     public void setTemplate(NewsletterTemplate template) {
         this.template = template;
     }
+    
+    public Boolean getPending() {
+		return pending;
+	}
+	public void setPending(Boolean pending) {
+		this.pending = pending;
+	}
     
 }

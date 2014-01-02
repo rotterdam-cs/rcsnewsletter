@@ -21,6 +21,8 @@
 <portlet:resourceURL id='editMailing' var='editMailingUrl'/>
 <portlet:resourceURL id='testEmail' var='testEmailUrl'/>
 <portlet:resourceURL id='sendNewsletter' var='sendNewsletterUrl'/>
+<portlet:resourceURL id='sheduleNewsletter' var='sheduleNewsletterUrl'/>
+
 
 
 <%--
@@ -65,7 +67,17 @@
     <div id="send-newsletter-dialog-<portlet:namespace/>" title="<fmt:message key="newsletter.tab.mailing.dialog.sendnewsletter.title"/>">
     </div>
 </div>
+<div style="display:none">
 
+    <div id="shedule-newsletter-dialog-<portlet:namespace/>" title="Schedule">
+        <p><div id="scheduleDatepicker-<portlet:namespace/>" ></div> 
+
+  			<input id="inputScheduleHours-<portlet:namespace/>"/ style="display:none">
+  			<div id="scheduleHours-<portlet:namespace/>"></div>
+  			
+        </p>
+    </div>
+</div>
 
 <script type="text/javascript">
     
@@ -100,6 +112,26 @@
                 },
                 "<fmt:message key="newsletter.common.cancel" />": function(){
                     jQuery("#send-newsletter-dialog-<portlet:namespace/>").dialog('close');
+                },
+                "<fmt:message key="newsletter.tab.mailing.button.schedulenewsletter" />": function(){
+                	jQuery("#shedule-newsletter-dialog-<portlet:namespace/>").dialog({
+                		autoOpen: true,
+                		modal: true,
+                		width: 400,
+                		buttons:{
+                            "<fmt:message key="newsletter.tab.mailing.button.schedulenewsletter" />": function(){
+                            	jQuery("#send-newsletter-dialog-<portlet:namespace/>").dialog('close');
+                                jQuery("#shedule-newsletter-dialog-<portlet:namespace/>").dialog('close');
+                                var rowId = jQuery('#mailing-list-<portlet:namespace/>').jqGrid('getGridParam', 'selrow');
+                                var rowData = jQuery('#mailing-list-<portlet:namespace/>').jqGrid('getRowData', rowId);
+                                sheduleNewsletter(rowData.id);
+                            },
+                            "<fmt:message key="newsletter.common.cancel" />": function(){
+                                jQuery("#shedule-newsletter-dialog-<portlet:namespace/>").dialog('close');
+                            }
+                		}
+                		
+                	});
                 }
             }
         });
@@ -314,4 +346,40 @@
         });
     }
     
+    /* Schedule Mailing*/
+    
+    scheduleDatepicker = jQuery( "#scheduleDatepicker-<portlet:namespace/>" ).datepicker({dateFormat: "yy-mm-dd" });
+    jQuery( "#scheduleHours-<portlet:namespace/>" ).timepicker({'showMinute':false,'showButtonPanel':false, 'altField': "#inputScheduleHours-<portlet:namespace/>"});
+    
+    function sheduleNewsletter(mailingId){
+    	jQuery("#newsletterAdmin<portlet:namespace/>").mask('<fmt:message key="newsletter.tab.mailing.sendingnewsletter"/>');
+       
+    	jQuery.ajax({
+            url: '${sheduleNewsletterUrl}'
+            ,type: 'POST'
+            ,data: {
+                mailingId: mailingId,
+                date: jQuery.datepicker.formatDate("yy-mm-dd",jQuery( "#scheduleDatepicker-<portlet:namespace/>" ).datepicker('getDate')),
+                hour: jQuery( "#inputScheduleHours-<portlet:namespace/>" ).val()
+            }
+            ,success: function(response) {
+            	
+            	jQuery("#newsletterAdmin<portlet:namespace/>").unmask();
+                if (response.success){
+                    showMessages(response.messages);
+                }else{
+                    showErrors(response.validationKeys);
+                }
+                jQuery("#mailing-list-<portlet:namespace/>").trigger('reloadGrid');
+            }
+            ,failure: function(response){
+            	
+                showErrors(['<fmt:message key="newsletter.tab.mailing.error.sendingnewsletter"/>']);
+            }
+        });
+    }
+
+
+
+
 </script>

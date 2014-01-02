@@ -2,6 +2,7 @@
 package com.rcs.newsletter.core.service;
 
 import java.util.Date;
+import java.util.List;
 
 import com.liferay.portal.theme.ThemeDisplay;
 import com.rcs.newsletter.core.dto.NewsletterScheduleDTO;
@@ -44,4 +45,11 @@ public interface NewsletterScheduleService extends CRUDService<NewsletterSchedul
      */
     ServiceActionResult<NewsletterScheduleDTO> findSchedule(Long scheduleId);
 
+    /**
+     * Return Schedule Mailing until now
+     * @return 
+     */
+    List<NewsletterSchedule> findAllSchedulesUntilNow();
+    
+    void sendScheduleMailing();
 }

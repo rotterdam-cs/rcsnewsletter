@@ -367,6 +367,8 @@ public class EmailFormat {
 
         List<NewsletterTemplateBlock> ntbAll = mailing.getBlocks();
         
+        log.info("all blocks " + ntbAll.size());
+        
         // FIX (remove null blocks until we fix mapping problem)
         List<NewsletterTemplateBlock> ntb = new ArrayList<NewsletterTemplateBlock>();
         for(NewsletterTemplateBlock b :ntbAll){
@@ -394,8 +396,15 @@ public class EmailFormat {
                 if (ntb.size() > count) {
                     if (ntb.get(count).getArticleId() != null && ntb.get(count).getArticleId() != UNDEFINED) {
                         JournalArticle ja = JournalArticleLocalServiceUtil.getLatestArticle(themeDisplay.getDoAsGroupId(),ntb.get(count).getArticleId().toString());
-                        JournalArticleDisplay jad = JournalArticleLocalServiceUtil.getArticleDisplay(ja.getGroupId(), ja.getArticleId(), ja.getTemplateId(), "PRINT", themeDisplay.getLocale().getLanguage(), themeDisplay);
-                        String content = jad.getContent();                        
+                        
+                        
+                        
+                       // JournalArticleDisplay jad = JournalArticleLocalServiceUtil.getArticleDisplay(ja.getGroupId(), ja.getArticleId(), ja.getTemplateId(), "PRINT", themeDisplay.getLocale().getLanguage(), themeDisplay);
+                        JournalArticleDisplay jad = JournalArticleLocalServiceUtil.getArticleDisplay(ja.getGroupId(), ja.getArticleId(), ja.getTemplateId(), "PRINT", themeDisplay.getLocale().getLanguage(), null);
+                        String content = jad.getContent();     
+                        
+                        log.info("Block: " + content);
+                        
                         toReplaceTmp = toReplaceTmp.replace(fTagBlockTitle, jad.getTitle());                        
                         toReplaceTmp = toReplaceTmp.replace(fTagBlockContent, content);
 

@@ -20,11 +20,20 @@
 --%>
 <portlet:resourceURL id='archivesList' var='archivesListUrl'/>
 
+<%--
+    Header
+    #########
+--%>
+<input id="backButton" type="button" value="<fmt:message key="newsletter.common.back" />" />
+
+<hr>
 
 <%--
     Edit Form
     #########
 --%>
+
+
 <form id="archive-form-<portlet:namespace/>" class="newsletter-forms-form">
     
     <table>
@@ -34,7 +43,7 @@
         </tr>
         <tr>
             <td><label><fmt:message key="newsletter.tab.archives.field.label.name" /></label></td>
-            <td><input type="text" name="name" class="required field-long" style="width:200px" value="<c:out value="${archive.name}" />" /></td>
+            <td><input type="text" name="name" class="required field-long" style="width:200px" value="<c:out value="${archive.mailing}" />" /></td>
         </tr>
         <tr>
             <td colspan="2">

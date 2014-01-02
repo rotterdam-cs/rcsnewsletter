@@ -25,9 +25,13 @@
 <portlet:resourceURL id='getPreview' var='getPreviewUrl'/>
 
 <%--
-    Header and Actions
-    ##################
---%>
+	HEADER
+	######
+ --%>
+<input id="backButton" type="button" value="<fmt:message key="newsletter.common.back" />" />
+<hr>
+
+
 
 
 <%--

@@ -51,6 +51,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.jdto.DTOBinder;
 
 /**
@@ -138,16 +139,16 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
             NewsletterMailing mailing = findById(mailingId).getPayload();
             String content = EmailFormat.getEmailFromTemplate(mailing, themeDisplay);
             
-            logger.error("***** building content:");
-            logger.error(content);
-            logger.error("***********************");
+            logger.info("***** building content:");
+            logger.info(content);
+            logger.info("***********************");
             
             //Add full path to images
             content = EmailFormat.fixImagesPath(content, themeDisplay);
 
-            logger.error("***** fixing images path:");
-            logger.error(content);
-            logger.error("***********************");
+            logger.info("***** fixing images path:");
+            logger.info(content);
+            logger.info("***********************");
             
             String title = mailing.getName();
 
@@ -236,6 +237,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         Session currentSession = sessionFactory.getCurrentSession();
         Criteria criteria = currentSession.createCriteria(NewsletterMailing.class);
         criteria.addOrder(Order.asc(orderField));
+        criteria.add(Restrictions.eq("pending", false));
         
         // add search filters
         if (gridForm != null){
@@ -300,6 +302,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         if (!errors.isEmpty()) {
             List<String> errorsList = new ArrayList<String>();
             fillViolations(errors, errorsList);
+        	logger.info("Error Validation: "+errorsList.toString());
             return ServiceActionResult.buildFailure(null, errorsList);
         }
 
@@ -330,8 +333,12 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
             
             NewsletterMailingDTO savedDTO = binder.bindFromBusinessObject(NewsletterMailingDTO.class, result.getPayload());
             savedDTO = fillMailingDTO(result.getPayload(), savedDTO, themeDisplay);
+            
+            logger.info("Mailing Saved/Updated");
+            
             return ServiceActionResult.buildSuccess(savedDTO);
         } else {
+        	logger.error("Mailing didn't Save/Update");
             return ServiceActionResult.buildFailure(null);
         }
     }
@@ -373,6 +380,8 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
 
     private void fillMailing(NewsletterMailingDTO mailingDTO, NewsletterMailing mailing) {
         mailing.setName(mailingDTO.getName());
+        
+        mailing.setPending(mailingDTO.getPending());
 
         NewsletterCategory category = categoryService.findById(mailingDTO.getListId()).getPayload();
         mailing.setList(category);
@@ -483,7 +492,7 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
         // delete mailing after it's sent
         logger.info("Deleting mailing...");
         ServiceActionResult<Void> deleteMailing = deleteMailing(themeDisplay, mailingId);
-        if (!deleteMailing.isSuccess()){
+        if (!deleteMailing.isSuccess()){    	
             return ServiceActionResult.buildFailure(null);
         }
         return ServiceActionResult.buildSuccess(null);

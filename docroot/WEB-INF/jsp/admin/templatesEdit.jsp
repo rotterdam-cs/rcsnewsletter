@@ -24,11 +24,18 @@
 
 
 <%--
-    Header and Actions
-    ##################
---%>
+	HEADER
+	######
+ --%>
+
+
+
+
+
 
 <input id="btn-help-<portlet:namespace/>" type="button" value="<fmt:message key="newsletter.admin.category.general.help" />" />
+<input id="backButton" type="button" value="<fmt:message key="newsletter.common.back" />" />
+
 <hr>
 
 <%--

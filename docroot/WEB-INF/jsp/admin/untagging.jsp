@@ -24,7 +24,6 @@
     <div id="untagging-panel">
 
 
-
         <%--
             Include Archive List View (by default)
             ########################################

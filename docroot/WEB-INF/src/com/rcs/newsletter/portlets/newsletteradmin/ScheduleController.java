@@ -1,14 +1,24 @@
 package com.rcs.newsletter.portlets.newsletteradmin;
 
 import com.rcs.newsletter.commons.GenericController;
+import org.springframework.scheduling.annotation.Scheduled;
 import com.rcs.newsletter.commons.Utils;
 import com.rcs.newsletter.core.dto.NewsletterScheduleDTO;
 import com.rcs.newsletter.core.forms.jqgrid.GridForm;
+import com.rcs.newsletter.core.model.NewsletterMailing;
+import com.rcs.newsletter.core.model.NewsletterSchedule;
+import com.rcs.newsletter.core.service.NewsletterMailingService;
 import com.rcs.newsletter.core.service.NewsletterScheduleService;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
+import org.springframework.scheduling.annotation.Async;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
@@ -30,6 +40,8 @@ public class ScheduleController extends GenericController {
     @Autowired
     private NewsletterScheduleService scheduleService;
     
+    @Autowired
+    private NewsletterMailingService mailingService;
     
     @ResourceMapping("schedule")
     public ModelAndView archiveTab(ResourceRequest request, ResourceResponse response){
@@ -68,6 +80,9 @@ public class ScheduleController extends GenericController {
             ORDER_BY_DESC
         );
 
+       logger.info("CompanyId: "+ Utils.getThemeDisplay(request).getCompanyId());
+        logger.info("ThemeId: "+Utils.getThemeDisplay(request).getThemeId());
+
         // if an error occurrs then return no record
         if (result.isSuccess()){
             result.getPayload().setCurrentPage(form.getPage());
@@ -90,18 +105,21 @@ public class ScheduleController extends GenericController {
      * @return 
      */
     @ResourceMapping(value="viewSchedule")
-    public ModelAndView viewArchive(ResourceRequest request, ResourceResponse response, Long id){
-        ModelAndView mav = new ModelAndView("admin/scheduleView");
+    public ModelAndView viewSchedule(ResourceRequest request, ResourceResponse response, Long id){
+        logger.info("Inside ViewSchedule");
+    	ModelAndView mav = new ModelAndView("admin/scheduleView");
         
-        NewsletterScheduleDTO archive = new NewsletterScheduleDTO();
+        NewsletterScheduleDTO schedule = new NewsletterScheduleDTO();
         
         if (id != null){
             ServiceActionResult<NewsletterScheduleDTO> findTemplate = scheduleService.findSchedule(id);
-            archive = findTemplate.getPayload();
+            schedule = findTemplate.getPayload();
+            logger.info("schedule status:" + schedule.getPending());
         }
         
-        mav.addObject("archive", archive);
+        mav.addObject("archive", schedule);
         
         return mav;
     }
+
 }

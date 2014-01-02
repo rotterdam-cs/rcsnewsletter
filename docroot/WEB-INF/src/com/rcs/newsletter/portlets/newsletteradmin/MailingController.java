@@ -1,6 +1,9 @@
 package com.rcs.newsletter.portlets.newsletteradmin;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -36,8 +39,10 @@ import com.rcs.newsletter.core.dto.NewsletterCategoryDTO;
 import com.rcs.newsletter.core.dto.NewsletterMailingDTO;
 import com.rcs.newsletter.core.dto.NewsletterTemplateDTO;
 import com.rcs.newsletter.core.forms.jqgrid.GridForm;
+import com.rcs.newsletter.core.model.NewsletterMailing;
 import com.rcs.newsletter.core.service.NewsletterCategoryService;
 import com.rcs.newsletter.core.service.NewsletterMailingService;
+import com.rcs.newsletter.core.service.NewsletterScheduleService;
 import com.rcs.newsletter.core.service.NewsletterTemplateService;
 import com.rcs.newsletter.core.service.common.ListResultsDTO;
 import com.rcs.newsletter.core.service.common.ServiceActionResult;
@@ -57,6 +62,8 @@ public class MailingController extends GenericController {
     private NewsletterCategoryService categoryService;
     @Autowired
     private NewsletterTemplateService templateService;
+    @Autowired
+    private NewsletterScheduleService scheduleService;
 
     
     private Log logger = LogFactoryUtil.getLog(MailingController.class);
@@ -100,6 +107,7 @@ public class MailingController extends GenericController {
                                     "name", 
                                     ORDER_BY_ASC);
 
+        
         // if an error occurrs then return no record
         if (result.isSuccess()){
             result.getPayload().setCurrentPage(form.getPage());
@@ -276,5 +284,44 @@ public class MailingController extends GenericController {
         }
     }
     
-    
+    @ResourceMapping(value="sheduleNewsletter")
+    public ModelAndView sheduleNewsletter(ResourceRequest request, ResourceResponse response, @RequestParam Long mailingId,@RequestParam String date,@RequestParam String hour){
+        logger.info("Scheduling newsletter for mailing: " + mailingId);
+        date += " "+hour;
+        ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, request.getLocale());
+        
+        SimpleDateFormat format = new SimpleDateFormat ("yyyy-MM-dd H:m");
+        
+               
+        try{
+        	
+        	//Set True Pending Attribute for Scheduling.
+        	ServiceActionResult<NewsletterMailingDTO> mailingDTOActionResult = mailingService.findMailing(mailingId, Utils.getThemeDisplay(request));
+            NewsletterMailingDTO mailingDTO = mailingDTOActionResult.getPayload();
+            
+            Long [] artcileIds = new Long[mailingDTO.getArticles().size()];
+            
+            for(int i=0; i<mailingDTO.getArticles().size(); i++){
+            	artcileIds[i] = mailingDTO.getArticles().get(i).getId();
+            }
+            
+            mailingDTO.setArticleIds(artcileIds);
+
+            mailingDTO.setPending(true);
+            mailingService.saveMailing(Utils.getThemeDisplay(request), mailingDTO);
+            
+            logger.info("Set pending mailing: "+date);
+            
+            //Schedule the Mailing
+            ServiceActionResult<NewsletterMailing> findMailingResult= mailingService.findById(mailingId);
+            scheduleService.saveSchedule(findMailingResult.getPayload(), format.parse(date), Utils.getThemeDisplay(request));
+          
+            logger.info("Save schedule mailing");
+            
+            return jsonResponse(ServiceActionResult.buildSuccess(null, bundle.getString("newsletter.tab.mailing.message.newslettersent")));
+        }catch(Exception e){
+            logger.error("Error while trying to schedule email. Exception: " + e.getMessage(), e);
+            return jsonResponse(ServiceActionResult.buildFailure(null, bundle.getString("newsletter.tab.mailing.error.sendingnewsletter")));
+        }
+    }
 }

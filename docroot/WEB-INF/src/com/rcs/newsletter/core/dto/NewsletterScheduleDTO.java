@@ -22,20 +22,18 @@ public class NewsletterScheduleDTO  implements Serializable {
     private long mailingId;
     
     @Source("mailing.name")
-    private long mailing;
+    private String mailing;
     
     private Date sendDate;
     
-    @Source(value = "sendDate", merger=DateFormatMerger.class, mergerParam="yyyy-MM-dd hh:mm")
+    @Source(value = "sendDate", merger=DateFormatMerger.class, mergerParam="yyyy-MM-dd HH:mm")
     private String sendDateFormatted;
-
-    
-    
-	public long getMailing() {
+       
+	public String getMailing() {
 		return mailing;
 	}
 
-	public void setMailing(long mailing) {
+	public void setMailing(String mailing) {
 		this.mailing = mailing;
 	}
 

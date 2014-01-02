@@ -37,9 +37,12 @@ public class NewsletterMailingDTO implements Serializable {
     
     @DTOTransient
     private String articleNames;
-    
+
     @DTOTransient
     private int subscribersNumber;
+    
+    @DTOTransient
+    private Boolean pending =false;
     
     /**
      * @return the id
@@ -179,6 +182,20 @@ public class NewsletterMailingDTO implements Serializable {
      */
     public void setArticleNames(String articleNames) {
         this.articleNames = articleNames;
+    }
+
+    /**
+     * @return Schedule pending status
+     */
+    public Boolean getPending() {
+        return pending;
+    }
+
+    /**
+     * @param Schedule pending
+     */
+    public void setPending(Boolean pending) {
+        this.pending = pending;
     }
 
     

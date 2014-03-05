@@ -67,7 +67,7 @@ public class NewsletterAdminController extends GenericController {
                                           String fromname,
                                           String fromemail,
                                           String adminemail){
-        
+    	
         CRUDActionEnum enumAction = null;
         try{
             enumAction = CRUDActionEnum.valueOf(action);
@@ -120,7 +120,7 @@ public class NewsletterAdminController extends GenericController {
     @ResourceMapping("getCKEditor")
     public ModelAndView getCKEditor(ResourceRequest request, String listId, String type, ResourceResponse response){
         Map<String, Object> model = new HashMap<String, Object>();
-
+        
         long categoryId = 0;
         try{
             categoryId = Long.parseLong(listId);
@@ -153,7 +153,7 @@ public class NewsletterAdminController extends GenericController {
             model.put("type", type);
             model.put("helpContent", newsletterBundle.getString("newsletter.admin.category.unsubscriptionmail.info"));
         }
-
+        
         if (currentContent == null){
             currentContent = "";
         }

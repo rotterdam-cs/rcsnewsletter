@@ -30,7 +30,7 @@
   width: 40px; }
 
 .newsletter-panel-column-action {
-  width: 70px!important; }
+  width: 70px !important; }
 
 .newsletter-panel-column-email, newsletter-panel-column-name, newsletter-panel-column-description {
   width: 200px; }
@@ -59,13 +59,13 @@
   margin-right: 10px; }
 
 .newsletter-forms-form-listbox {
-  margin-right: 10px!important; }
+  margin-right: 10px !important; }
 
 .newsletter-forms-input-text {
-  width: 250px!important; }
+  width: 250px !important; }
 
 .newsletter-forms-input-textarea {
-  width: 245px!important; }
+  width: 245px !important; }
 
 .newsletter-forms-column-left {
   width: 120px; }
@@ -74,7 +74,7 @@
   width: 280px; }
 
 .newsletter-forms-button {
-  margin-right: 10px!important; }
+  margin-right: 10px !important; }
 
 .newsletter-forms-confirmation-delete-panel {
   margin-top: 5px; }
@@ -99,13 +99,13 @@
   text-align: left; }
 
 .newsletter-registration-input-text {
-  width: 90%!important; }
+  width: 90% !important; }
 
 .newletter-registration-settings {
   text-align: left; }
 
 .wijmo-wijmenu .wijmo-wijmenu-parent .wijmo-wijmenu-child {
-  width: 200px!important; }
+  width: 200px !important; }
 
 .activationkey {
   display: none; }
@@ -140,7 +140,7 @@
   width: 200px; }
 
 .exportbutton {
-  padding: 6px!important;
+  padding: 6px !important;
   margin-left: 10px; }
 
 .online-newsletter-viewer {
@@ -170,5 +170,9 @@
   padding: 0px !important; }
 
 .ui-pg-input {
-  padding: 2px !important; }
+  padding: 0px !important;
+  margin-top: 5px !important; }
+
+.ui-pg-table {
+  margin-top: -2.5px !important; }
 

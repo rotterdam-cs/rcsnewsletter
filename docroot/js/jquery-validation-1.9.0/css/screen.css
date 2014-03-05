@@ -5,7 +5,10 @@ Use: Main Screen Import
 ***********************************/
 
 @import "reset.css";
-@import "core.css";
+
+/*
+@import "core.css";   (broke liferay screen)
+*/
 
 @import "cmxformTemplate.css";
 @import "cmxform.css";

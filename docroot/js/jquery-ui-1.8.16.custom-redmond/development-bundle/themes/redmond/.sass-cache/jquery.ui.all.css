@@ -1,3 +1,5 @@
+@import url(jquery.ui.base.css);
+@import url(jquery.ui.theme.css);
 /*
  * jQuery UI CSS Framework 1.8.16
  *
@@ -7,6 +9,4 @@
  *
  * http://docs.jquery.com/UI/Theming
  */
-@import url(jquery.ui.base.css);
-@import url(jquery.ui.theme.css);
 

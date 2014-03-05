@@ -305,8 +305,8 @@ tr.ui-search-toolbar select {
 
 .ui-jqgrid .ui-separator {
   height: 18px;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
+  border-left: 1px solid #cccccc;
+  border-right: 1px solid #cccccc;
   margin: 1px;
   float: right; }
 

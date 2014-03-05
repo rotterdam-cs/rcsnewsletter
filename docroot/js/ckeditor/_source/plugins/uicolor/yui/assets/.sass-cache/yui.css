@@ -87,7 +87,7 @@ version: 2.7.0
   background-color: #F00;
   background-image: url(picker_mask.png); }
 
-*html .cke_uicolor_picker .yui-picker-bg {
+html .cke_uicolor_picker .yui-picker-bg {
   background-image: none;
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='picker_mask.png',sizingMethod='scale'); }
 
@@ -130,11 +130,11 @@ version: 2.7.0
 
 .cke_uicolor_picker .yui-picker-controls .hd {
   background: transparent;
-  border-width: 0!important; }
+  border-width: 0 !important; }
 
 .cke_uicolor_picker .yui-picker-controls .bd {
   height: 100px;
-  border-width: 0!important; }
+  border-width: 0 !important; }
 
 .cke_uicolor_picker .yui-picker-controls ul {
   float: left;

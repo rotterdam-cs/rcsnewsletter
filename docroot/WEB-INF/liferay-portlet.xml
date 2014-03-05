@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.1.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_1_0.dtd">
+<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.2.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_2_0.dtd">
 
 <liferay-portlet-app>
     <portlet>
@@ -8,6 +8,7 @@
         <control-panel-entry-category>content</control-panel-entry-category>
         <control-panel-entry-weight>1</control-panel-entry-weight>
         <instanceable>false</instanceable>
+        <requires-namespaced-parameters>false</requires-namespaced-parameters>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
         <header-portlet-css>/js/jquery-validation-1.9.0/css/screen.css</header-portlet-css>
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
@@ -33,6 +34,7 @@
         <icon>/icon.png</icon>
         <configuration-action-class>com.rcs.newsletter.portlets.newsletterregistration.NewsletterRegistrationEditController</configuration-action-class>
         <instanceable>true</instanceable>
+        <requires-namespaced-parameters>false</requires-namespaced-parameters>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
         <header-portlet-css>/js/jquery-validation-1.9.0/css/screen.css</header-portlet-css>
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
@@ -52,6 +54,7 @@
         <portlet-name>NewsletterRegistrationConfirm</portlet-name>
         <icon>/icon.png</icon>
         <instanceable>true</instanceable>
+        <requires-namespaced-parameters>false</requires-namespaced-parameters>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
         <header-portlet-css>/js/jquery-validation-1.9.0/css/screen.css</header-portlet-css>
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
@@ -71,6 +74,7 @@
         <portlet-name>OnlineNewsletterViewer</portlet-name>
         <icon>/icon.png</icon>
         <instanceable>true</instanceable>
+        <requires-namespaced-parameters>false</requires-namespaced-parameters>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
         <header-portlet-css>/js/jquery-validation-1.9.0/css/screen.css</header-portlet-css>
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>

@@ -12,4 +12,7 @@
     String language = locale.getLanguage();
     String extLocaleFile = "messages_" + language + ".js";
 %>
+
+<%@ page contentType="text/javascript" %>
+
 <c:import url="<%=extLocaleFile%>" />

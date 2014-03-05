@@ -1,11 +1,11 @@
 body, div {
-  font-family: 'lucida grande', helvetica, verdana, arial, sans-serif; }
+  font-family: "lucida grande", helvetica, verdana, arial, sans-serif; }
 
 body {
   margin: 0;
   padding: 0;
   font-size: small;
-  color: #333; }
+  color: #333333; }
 
 h1, h2 {
   font-family: 'trebuchet ms', verdana, arial;

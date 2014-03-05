@@ -208,7 +208,7 @@ li.cke_panel_listItem {
   padding: 2px;
   display: block;
   border: 1px solid #fff;
-  color: inherit!important;
+  color: inherit !important;
   text-decoration: none;
   overflow: hidden;
   text-overflow: ellipsis; }
@@ -399,7 +399,7 @@ a:hover.cke_colorauto, a:hover.cke_colormore, a:focus.cke_colorauto, a:focus.cke
   padding: 2px 4px; }
 
 .cke_skin_kama .cke_hc .cke_button a.cke_on {
-  padding: 0 2px!important;
+  padding: 0 2px !important;
   border-width: 3px; }
 
 .cke_skin_kama .cke_button a.cke_disabled * {
@@ -431,7 +431,7 @@ a:hover.cke_colorauto, a:hover.cke_colormore, a:focus.cke_colorauto, a:focus.cke
   background-color: #86caff; }
 
 .cke_skin_kama .cke_hc .cke_button a:hover, .cke_skin_kama .cke_hc .cke_button a:focus, .cke_skin_kama .cke_hc .cke_button a:active {
-  padding: 0 2px!important;
+  padding: 0 2px !important;
   border-width: 3px; }
 
 .cke_skin_kama .cke_button .cke_icon {

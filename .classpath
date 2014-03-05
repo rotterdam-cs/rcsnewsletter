@@ -1,22 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="docroot/WEB-INF/src"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-7-openjdk-amd64"/>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/com.liferay.ide.eclipse.server.tomcat.runtimeClasspathProvider/Liferay v6.2 CE (Tomcat 7)"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="com.liferay.ide.eclipse.server.plugin.container/portlet">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/com.liferay.ide.eclipse.server.tomcat.runtimeClasspathProvider/Liferay v6.1 CE ga1 Newsletter">
-		<attributes>
-			<attribute name="owner.project.facets" value="jst.web"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-6-openjdk-amd64">
-		<attributes>
-			<attribute name="owner.project.facets" value="java"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/antlr-2.7.6.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/avalon-framework-4.1.3.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/backport-util-concurrent-3.1.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/c3p0-0.9.1.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/cglib-nodep-2.2.2.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/commons-fileupload-1.2.1.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/commons-io-1.3.2.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/ehcache-1.5.0.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/hibernate-c3p0-3.6.0.Final.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/hibernate-commons-annotations-3.2.0.Final.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/hibernate-core-3.6.0.Final.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/hibernate-ehcache-3.6.0.Final.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/hibernate-jpa-2.0-api-1.0.0.Final.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/hibernate-validator-4.2.0.Final.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/jackson-core-lgpl-1.8.5.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/jackson-mapper-lgpl-1.8.5.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/javassist-3.12.1.GA.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/jdto-1.2.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/jsr107cache-1.0.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/jstl-1.2.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/jta-1.1.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/logkit-1.0.1.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/poi-3.6.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/spring-aop-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/spring-asm-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/spring-beans-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/spring-context-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/spring-context-support-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/spring-core-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/spring-expression-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/spring-jdbc-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/spring-orm-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/spring-tx-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/spring-web-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/spring-webmvc-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/spring-webmvc-portlet-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/validation-api-1.0.0.GA.jar"/>
 	<classpathentry kind="output" path="docroot/WEB-INF/classes"/>
 </classpath>

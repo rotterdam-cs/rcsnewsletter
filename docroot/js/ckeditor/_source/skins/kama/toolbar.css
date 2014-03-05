@@ -269,7 +269,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 .cke_skin_kama .cke_browser_ie .cke_button.cke_noalphafix .cke_icon,
 .cke_skin_kama .cke_browser_ie .cke_rtl .cke_button.cke_noalphafix .cke_icon
 {
-	filter: ;
+
 }
 
 
@@ -321,7 +321,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 }
 .cke_skin_kama .cke_browser_ie6 .cke_button .cke_buttonarrow
 {
-	filter: ;
+	
 }
 
 /*** Firefox 2 ***/

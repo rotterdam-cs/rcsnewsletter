@@ -84,7 +84,7 @@ input.ui-button {
 
 .ui-buttonset .ui-button {
   margin-left: 0;
-  margin-right: -0.3em; }
+  margin-right: -.3em; }
 
 /* workarounds */
 button.ui-button::-moz-focus-inner {

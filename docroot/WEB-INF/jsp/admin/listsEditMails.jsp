@@ -66,7 +66,7 @@
 <button type="button" id="helpButton<portlet:namespace/>"><fmt:message key="newsletter.admin.category.general.help"/></button>
 
 <div id="ckEditor<portlet:namespace/>">
-    <liferay-ui:input-editor height="100" name="emailEditor"/>
+    <liferay-ui:input-editor name="emailEditor" height="100"></liferay-ui:input-editor>
 </div>
 
 <br/>

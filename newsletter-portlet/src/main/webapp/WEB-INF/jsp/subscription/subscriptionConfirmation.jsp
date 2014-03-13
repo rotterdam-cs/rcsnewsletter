@@ -23,7 +23,7 @@
         <aui:input name='categoryId' type='hidden' value='${categoryId}'></aui:input>
         <input name="<portlet:namespace />email" type="hidden" value="${email}" />
         <aui:button-row>
-            <aui:button class='aui-button-input' value='<%=LanguageUtil.get(locale, "newsletter.subscription.confirmation")%>' onClick='confirmRegistration()'/>
+            <aui:button class='button-input' value='<%=LanguageUtil.get(locale, "newsletter.subscription.confirmation")%>' onClick='confirmRegistration()'/>
         </aui:button-row>
         
     </aui:fieldset>

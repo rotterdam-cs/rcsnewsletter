@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.0.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_0_0.dtd">
+<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.2.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_2_0.dtd">
 
 <liferay-portlet-app>
 
@@ -9,11 +9,12 @@
         <control-panel-entry-category>content</control-panel-entry-category>
         <control-panel-entry-weight>1</control-panel-entry-weight>
         <instanceable>false</instanceable>
+        <requires-namespaced-parameters>false</requires-namespaced-parameters>
         <ajaxable>false</ajaxable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
+        <header-portlet-css>/css/theme.css</header-portlet-css>
         <header-portlet-css>/js/ckeditor/contents.css</header-portlet-css>
         <header-portlet-css>/js/ckeditor/skins/kama/editor.css</header-portlet-css>
-        <header-portlet-javascript>/js/jquery-1.6.4.min.js</header-portlet-javascript>
         <header-portlet-javascript>/js/ckeditor/ckeditor.js</header-portlet-javascript>
         <footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
     </portlet>
@@ -22,9 +23,11 @@
         <portlet-name>Newsletter-Registration</portlet-name>
         <icon>/icon.png</icon>
         <instanceable>true</instanceable>
+        <requires-namespaced-parameters>false</requires-namespaced-parameters>
         <ajaxable>false</ajaxable>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
-        <header-portlet-javascript>/js/jquery-1.6.4.min.js</header-portlet-javascript>
+        <header-portlet-css>/css/theme.css</header-portlet-css>
+        <header-portlet-javascript>/js/jquery-1.8.3.min.js</header-portlet-javascript>
         <footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
     </portlet>
 
@@ -32,8 +35,10 @@
         <portlet-name>Newsletter-Registration-Confirm</portlet-name>
         <icon>/icon.png</icon>
         <instanceable>true</instanceable>
+        <requires-namespaced-parameters>false</requires-namespaced-parameters>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
-        <header-portlet-javascript>/js/jquery-1.6.4.min.js</header-portlet-javascript>
+        <header-portlet-css>/css/theme.css</header-portlet-css>
+        <header-portlet-javascript>/js/jquery-1.8.3.min.js</header-portlet-javascript>
         <footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
         <css-class-wrapper>newsletter-confirmation-msg</css-class-wrapper>
     </portlet>
@@ -42,7 +47,10 @@
         <portlet-name>Online-Newsletter-Viewer</portlet-name>
         <icon>/icon.png</icon>
         <instanceable>true</instanceable>
+        <requires-namespaced-parameters>false</requires-namespaced-parameters>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
+        <header-portlet-css>/css/theme.css</header-portlet-css>
+        <header-portlet-javascript>/js/jquery-1.8.3.min.js</header-portlet-javascript>
         <footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
         <css-class-wrapper>online-newsletter-viewer</css-class-wrapper>
     </portlet>

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rcs</groupId>
     <artifactId>newsletter</artifactId>
-    <version>6.1.2.1</version>
+    <version>6.2.0-ga1</version>
     <packaging>pom</packaging>
     <name>newsletter</name>
     <modules>
@@ -116,7 +116,7 @@
     </dependencies>
 
     <properties>
-        <liferay.version>6.1.0</liferay.version>
+        <liferay.version>6.2.0-ga1</liferay.version>
         <hibernate.version>3.6.0.Final</hibernate.version>
         <hibernatevalidator.version>4.2.0.Final</hibernatevalidator.version>
         <javassist.version>3.12.1.GA</javassist.version>
@@ -143,6 +143,25 @@
                 <updatePolicy>never</updatePolicy>
             </snapshots>
         </repository>
+        
+        <!-- where to find liferay portal -->
+    	<repository>
+        	<id>liferay-ce</id>
+        	<name>Liferay CE</name>
+        	<url>https://repository.liferay.com/nexus/content/groups/liferay-ce</url>
+        	<releases><enabled>true</enabled></releases>
+        	<snapshots><enabled>true</enabled></snapshots>
+    	</repository>
+    
     </repositories>
-
+	
+	<pluginRepositories>
+    	<pluginRepository>
+        	<id>liferay-ce</id>
+        	<url>https://repository.liferay.com/nexus/content/groups/liferay-ce/</url>
+        	<releases><enabled>true</enabled></releases>
+        	<snapshots><enabled>true</enabled></snapshots>
+    	</pluginRepository>
+	</pluginRepositories>
+	
 </project>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core">    
     <h:head>
 <!--        <title>Facelet Title</title>-->
@@ -45,13 +45,13 @@
                     <f:facet name="header">
                         #{msg['newsletter.admin.general.action']}
                     </f:facet>
-                    <p:menu type="tiered" styleClass="newsletter-panel-column-action">  
-                        <p:submenu label="#{msg['newsletter.admin.general.actions']}">
-                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.archive.preview']}" action="#{newsletterArchiveManagedBean.redirectPreviewContent}" icon="ui-icon ui-icon-arrowrefresh-1-w">  
+                    <p:tieredMenu styleClass="newsletter-panel-column-action">
+                    	<p:submenu label="#{msg['newsletter.admin.general.actions']}" >  
+                    		<p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.archive.preview']}" action="#{newsletterArchiveManagedBean.redirectPreviewContent}" icon="ui-icon-arrowrefresh-1-w">  
                                 <f:setPropertyActionListener target="#{newsletterArchiveManagedBean.emailContentBody}" value="#{item.emailBody}" />
-                            </p:menuitem>
-                        </p:submenu>
-                    </p:menu>                            
+                            </p:menuitem>  
+                    	</p:submenu>  
+    				</p:tieredMenu>                        
                 </p:column>
             </p:dataTable>
         </ui:component>

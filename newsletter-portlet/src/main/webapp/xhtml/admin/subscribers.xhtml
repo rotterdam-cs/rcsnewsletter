@@ -4,7 +4,7 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:portlet="http://java.sun.com/portlet_2_0"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://java.sun.com/jsf/facelets">
     
     <f:loadBundle basename="Language" var="msg" />
@@ -61,17 +61,17 @@
                     <f:facet name="header">
                         #{msg['newsletter.admin.general.action']}
                     </f:facet>
-                    <p:menu type="tiered" styleClass="newsletter-panel-column-action">  
-                        <p:submenu label="#{msg['newsletter.admin.general.actions']}">  
-                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{msg['newsletter.admin.general.edit']}" action="#{subscriberCRUDManagedBean.redirectEditSubscriber}" icon="ui-icon ui-icon-arrowrefresh-1-w">  
+                    <p:tieredMenu styleClass="newsletter-panel-column-action">
+                    	<p:submenu label="#{msg['newsletter.admin.general.actions']}" >  
+                    		<p:menuitem styleClass="newsletter-panel-action-submenu" value="#{msg['newsletter.admin.general.edit']}" action="#{subscriberCRUDManagedBean.redirectEditSubscriber}" icon="ui-icon-arrowrefresh-1-w">  
                                 <f:setPropertyActionListener target="#{subscriberCRUDManagedBean.id}" value="#{item.id}" />
                             </p:menuitem>
-                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{msg['newsletter.admin.general.remove']}" action="#{subscriberCRUDManagedBean.redirectDeleteSubscriber}" icon="ui-icon ui-icon-close">
+                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{msg['newsletter.admin.general.remove']}" action="#{subscriberCRUDManagedBean.redirectDeleteSubscriber}" icon="ui-icon-close">
                                 <f:setPropertyActionListener target="#{subscriberCRUDManagedBean.id}" value="#{item.id}" />
                                 <f:setPropertyActionListener target="#{categoryAdminManagedBean.subscriptorId}" value="#{item.id}" />
-                            </p:menuitem>                            
-                        </p:submenu>
-                    </p:menu>                            
+                            </p:menuitem>
+                    	</p:submenu>  
+    				</p:tieredMenu>                
                 </p:column>
 
             </p:dataTable>            

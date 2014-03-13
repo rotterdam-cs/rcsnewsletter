@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core">
     <f:loadBundle basename="Language" var="msg" />
@@ -62,7 +62,7 @@
             <br/>            
             <h:inputHidden id="template-Articles" value="#{editMailingManagedBean.templateArticles}" />
             
-            <p:commandButton styleClass="newsletter-forms-button" action="#{editMailingManagedBean.save}" update="messages" value="#{nlk[editMailingManagedBean.saveButtonKey]}" />
+            <p:commandButton styleClass="newsletter-forms-button" action="#{editMailingManagedBean.save}" value="#{nlk[editMailingManagedBean.saveButtonKey]}" />
             <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
         </h:form>
         <script type="text/javascript"> 

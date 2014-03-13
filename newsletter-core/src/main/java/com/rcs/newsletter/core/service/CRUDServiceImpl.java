@@ -52,8 +52,9 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
         return result;
     }
 
-    @Override
-    public ServiceActionResult<NewsletterEntity> save(NewsletterEntity entity) {
+    @SuppressWarnings("unchecked")
+	@Override
+    public ServiceActionResult<E> save(NewsletterEntity entity) {
         boolean success = true;
         List<String> validationKeys = new ArrayList<String>();
 
@@ -67,11 +68,12 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
 
         ServiceActionResult<NewsletterEntity> result = new ServiceActionResult<NewsletterEntity>(success, entity, validationKeys);
 
-        return result;
+        return (ServiceActionResult<E>) result;
     }
 
-    @Override
-    public ServiceActionResult<NewsletterEntity> update(NewsletterEntity entity) {
+    @SuppressWarnings("unchecked")
+	@Override
+    public ServiceActionResult<E> update(NewsletterEntity entity) {
         boolean success = true;
         List<String> validationKeys = new ArrayList<String>();
 
@@ -85,11 +87,12 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
 
         ServiceActionResult<NewsletterEntity> result = new ServiceActionResult<NewsletterEntity>(success, entity, validationKeys);
 
-        return result;
+        return (ServiceActionResult<E>) result;
     }
 
-    @Override
-    public ServiceActionResult<NewsletterEntity> delete(NewsletterEntity entity) {
+    @SuppressWarnings("unchecked")
+	@Override
+    public ServiceActionResult<E> delete(NewsletterEntity entity) {
         boolean success = true;
         List<String> validationKeys = new ArrayList<String>();
 
@@ -103,7 +106,7 @@ public class CRUDServiceImpl<E extends NewsletterEntity> implements CRUDService<
 
         ServiceActionResult<NewsletterEntity> result = new ServiceActionResult<NewsletterEntity>(success, entity, validationKeys);
 
-        return result;
+        return (ServiceActionResult<E>) result;
     }
 
     @Override

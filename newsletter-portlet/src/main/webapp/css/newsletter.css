@@ -22,12 +22,32 @@
     margin-bottom: 10px;
 }
 
+ul{
+	margin: 0 0 0 0!important;
+}
+
+submenu .ui-menu-child{
+    left: -205px !important;
+}
+
+.submenu > ul{
+    left: -205px !important;
+}
+.ui-widget-content.ui-menu-list.ui-corner-all.ui-helper-clearfix.ui-menu-child.ui-shadow{
+    left: -205px !important;
+}
+
 .newsletter-panel-action-submenu {
-    width: 40px;
+    width: 170px!important;
 }
 
 .newsletter-panel-column-action {    
-    width: 70px!important;
+    width: 80px!important;
+    overflow: visible!important;
+}
+
+.newsletter-overlayPanel-column-action {    
+    width: 180px!important;
 }
 
 .newsletter-panel-column-email, newsletter-panel-column-name, newsletter-panel-column-description {

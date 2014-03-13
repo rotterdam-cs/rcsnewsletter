@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
@@ -39,26 +39,26 @@
                 <p:column styleClass="newsletter-panel-column-action">
                     <f:facet name="header">
                         #{msg['newsletter.admin.general.action']}
-                    </f:facet>
-                    <p:menu type="tiered" styleClass="newsletter-panel-column-action">  
-                        <p:submenu label="#{msg['newsletter.admin.general.actions']}" >
-                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.list.menu.edit']}" action="#{categoryCRUDManagedBean.redirectEditCategory}" icon="ui-icon ui-icon-arrowrefresh-1-w">  
+                    </f:facet>       
+    				<p:tieredMenu styleClass="newsletter-panel-column-action">
+                    	<p:submenu label="#{msg['newsletter.admin.general.actions']}" > 
+                    		<p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.list.menu.edit']}" action="#{categoryCRUDManagedBean.redirectEditCategory}" icon="ui-icon-arrowrefresh-1-w">  
                                 <f:setPropertyActionListener target="#{categoryCRUDManagedBean.id}" value="#{item.id}" />
                             </p:menuitem>
-                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.list.menu.delete']}" action="#{categoryCRUDManagedBean.redirectDeleteCategory}" icon="ui-icon ui-icon-close">
+                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.list.menu.delete']}" action="#{categoryCRUDManagedBean.redirectDeleteCategory}" icon="ui-icon-close">
                                 <f:setPropertyActionListener target="#{categoryCRUDManagedBean.id}" value="#{item.id}" />
                             </p:menuitem>                            
-                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.list.menu.subscribemail.edit']}" action="#{subscriptionEmailManagedBean.redirectEditSubscribeMail}" icon="ui-icon ui-icon-star">
+                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.list.menu.subscribemail.edit']}" action="#{subscriptionEmailManagedBean.redirectEditSubscribeMail}" icon="ui-icon-star">
                                 <f:setPropertyActionListener target="#{subscriptionEmailManagedBean.categoryId}" value="#{item.id}" />
                             </p:menuitem>                            
-                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.list.menu.unsubscribemail.edit']}" action="#{subscriptionEmailManagedBean.redirectEditUnsubscribeMail}" icon="ui-icon ui-icon-star">
+                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.list.menu.unsubscribemail.edit']}" action="#{subscriptionEmailManagedBean.redirectEditUnsubscribeMail}" icon="ui-icon-star">
                                 <f:setPropertyActionListener target="#{subscriptionEmailManagedBean.categoryId}" value="#{item.id}" />
                             </p:menuitem>
-                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.list.menu.greetingmail.edit']}" action="#{subscriptionEmailManagedBean.redirectEditGreetingMail}" icon="ui-icon ui-icon-star">
+                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.list.menu.greetingmail.edit']}" action="#{subscriptionEmailManagedBean.redirectEditGreetingMail}" icon="ui-icon-star">
                                 <f:setPropertyActionListener target="#{subscriptionEmailManagedBean.categoryId}" value="#{item.id}" />
-                            </p:menuitem>
-                        </p:submenu>
-                    </p:menu>                            
+                            </p:menuitem>    
+                    	</p:submenu>  
+    				</p:tieredMenu>			   
                 </p:column>                
             </p:dataTable>
         </ui:composition>

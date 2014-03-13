@@ -1,5 +1,4 @@
 $j = jQuery.noConflict();
-
 jQuery(document).ready(function() {    
 
     $j("#unregister-link").click(function() {
@@ -33,3 +32,6 @@ jQuery(document).ready(function() {
             $j(this).attr('action',action);
         });
     }
+    
+    
+var $ = jQuery;

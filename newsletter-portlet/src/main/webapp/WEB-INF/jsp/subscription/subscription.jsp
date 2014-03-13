@@ -41,7 +41,7 @@
 <script type="text/javascript">
     
     function unsubscribe() {
-        AUI().use('aui-autocomplete', function(A) {
+        AUI().use('aui-autocomplete-deprecated', function(A) {
             var divNode = A.one('#subscription-content-div');
             A.io.request('${unregisterNewsletterSubscription}', {
                 method : 'GET'
@@ -76,7 +76,7 @@
     }
     
     function subscribe() {
-        AUI().use('aui-autocomplete', function(A) {
+        AUI().use('aui-autocomplete-deprecated', function(A) {
             var divNode = A.one('#subscription-content-div');
             A.io.request('${registerAction}', {
                 method : 'GET'
@@ -111,7 +111,7 @@
     }
     
     function confirmRegistration() {
-        AUI().use('aui-autocomplete', function(A) {
+        AUI().use('aui-autocomplete-deprecated', function(A) {
             var divNode = A.one('#subscription-content-div');
             A.io.request('${confirmSubscriptionAction}', {
                 method : 'GET'
@@ -159,7 +159,7 @@
     }
     
     function confirmUnregistration() {
-        AUI().use('aui-autocomplete', function(A) {
+        AUI().use('aui-autocomplete-deprecated', function(A) {
             var divNode = A.one('#subscription-content-div');
             A.io.request('${confirmUnsubscriptionAction}', {
                 method : 'GET'
@@ -219,8 +219,8 @@
             <aui:input name='lastName' label='<%=LanguageUtil.get(locale, "newsletter.common.lastname")%>' type='text' value=''></aui:input>
             <aui:input name='email' label='<%=LanguageUtil.get(locale, "newsletter.common.email")%>' type='text' value=''></aui:input>
             <aui:button-row>
-                <aui:button class='aui-button-input' value='<%=LanguageUtil.get(locale, "newsletter.unsubscribe")%>' onClick='unsubscribe()'/>
-                <aui:button class="aui-button-input" value='<%=LanguageUtil.get(locale, "newsletter.subscribe")%>' onClick='subscribe()'/>
+                <aui:button class='button-input' value='<%=LanguageUtil.get(locale, "newsletter.unsubscribe")%>' onClick='unsubscribe()'/>
+                <aui:button class="button-input" value='<%=LanguageUtil.get(locale, "newsletter.subscribe")%>' onClick='subscribe()'/>
             </aui:button-row>
         </aui:fieldset>
     </aui:form>

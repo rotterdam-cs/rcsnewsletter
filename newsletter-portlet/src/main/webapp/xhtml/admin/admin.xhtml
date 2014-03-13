@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core"      
       xmlns:ui="http://java.sun.com/jsf/facelets">
     <f:loadBundle basename="Language" var="msg" />
@@ -16,28 +16,28 @@
                     <f:event type="preRenderView" listener="#{userUiStateManagedBean.getMessage}" />
                 </f:metadata>
             </f:view>
-            <p:messages id="messages" />
+            
+            <p:messages id="messages" autoUpdate="true" />
             <p:tabView activeIndex="#{userUiStateManagedBean.adminActiveTabIndex}">
                 <p:tab title="#{msg['newsletter.admin.lists']}">
                     <ui:include src="lists.xhtml" />
                 </p:tab>
-
-                <p:tab title="#{msg['newsletter.admin.subscribers']}">
+				
+				<p:tab title="#{msg['newsletter.admin.subscribers']}">
                     <ui:include src="subscribers.xhtml" />
                 </p:tab>
                 
                 <p:tab title="#{msg['newsletter.admin.templates']}">
                     <ui:include src="templates.xhtml" />
                 </p:tab>
-
+               
                 <p:tab title="#{msg['newsletter.admin.mailing']}">
                     <ui:include src="mailing.xhtml" />
                 </p:tab>
-
-                <p:tab title="#{msg['newsletter.admin.archive']}">
+				
+				<p:tab title="#{msg['newsletter.admin.archive']}">
                     <ui:include src="archive.xhtml" />
                 </p:tab>
-                
                 
             </p:tabView>
             <br/>

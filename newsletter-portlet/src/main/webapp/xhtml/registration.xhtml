@@ -2,16 +2,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
- <!--   <h:head>
-        <title><h:outputText value="#{nlk['newsletter.registration.title']}" /></title>
-    </h:head>-->
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+       <!-- <title><h:outputText value="#{nlk['newsletter.registration.title']}" /></title>-->
+    </h:head>
     <h:body>        
         <f:loadBundle basename="Language" var="msg" />
         <f:loadBundle basename="Newsletter" var="nlk" />        
         <h:form styleClass="multi-site-form">
-            <p:messages />
+            <p:messages id="messages" autoUpdate="true" />
             <h:panelGrid columns="2" styleClass="registration-form" columnClasses="newsletter-registration-column-left,newsletter-registration-column-right">
                 
                 <h:outputLabel styleClass="infohidden" rendered="#{!subscriptionManagedBean.currentConfig.disableName}" value="#{msg['general.firstname']}:" />
@@ -29,8 +29,8 @@
                 <a href="javascript:void(0);" id="unregister-link">#{nlk['newsletter.registration.unregister']}</a>
                 <a href="javascript:void(0);" id="register-link" style="display: none;">#{nlk['newsletter.registration.register']}</a>
                 &nbsp;
-                <p:commandButton style="display: none;" styleClass="unregister-button newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.unregister']}" action="#{subscriptionManagedBean.doUnregister}" update="message" ajax="false" />
-                <p:commandButton styleClass="register-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.register']}" action="#{subscriptionManagedBean.doRegister}" update="message" ajax="false" />
+                <p:commandButton style="display: none;" styleClass="unregister-button newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.unregister']}" action="#{subscriptionManagedBean.doUnregister}" ajax="false" />
+                <p:commandButton styleClass="register-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.register']}" action="#{subscriptionManagedBean.doRegister}" ajax="false" />
             </div>
             
         </h:form>

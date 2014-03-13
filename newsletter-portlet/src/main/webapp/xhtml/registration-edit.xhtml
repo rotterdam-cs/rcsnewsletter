@@ -2,18 +2,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.prime.com.tr/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
     <f:loadBundle basename="Language" var="msg" />
     <f:loadBundle basename="Newsletter" var="nlk" />
-<!--    <h:head>
-        <title><h:outputText value="#{nlk['newsletter.registration.title']}" /></title>
-    </h:head>-->
+    <h:head>
+       <!-- <title><h:outputText value="#{nlk['newsletter.registration.title']}" /></title>-->
+    </h:head>
     <h:body>
         <h2>#{nlk['newsletter.registration.config.title']}</h2>
         <hr />
         <h:form styleClass="multi-site-form">
-            <p:messages id="messages" />
+            <p:messages id="messages" autoUpdate="true" />
             <h:panelGrid columns="2" styleClass="newsletter-forms-form" columnClasses="newletter-registration-settings,newletter-registration-settings">
                 <h:outputLabel value="#{msg['newsletter.admin.general.list']}:" />
                 <h:selectOneListbox size="1" value="#{subscriptionManagedBean.currentConfig.listId}">
@@ -25,7 +25,7 @@
                 
             </h:panelGrid>            
             <div class="registration-form-buttons-left">
-                <p:commandButton update="messages" styleClass="newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.config.save']}" action="#{subscriptionManagedBean.doSaveSettings}"/>                
+                <p:commandButton styleClass="newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.registration.config.save']}" action="#{subscriptionManagedBean.doSaveSettings}"/>                
             </div>
         </h:form>
         <script type="text/javascript"> 

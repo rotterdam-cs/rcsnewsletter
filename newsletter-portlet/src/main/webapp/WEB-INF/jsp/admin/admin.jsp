@@ -48,7 +48,7 @@
     
     function editCategory(categoryId) {        
         if(categoryId != -1) {
-            AUI().use('aui-autocomplete', function(A) {            
+            AUI().use('aui-autocomplete-deprecated', function(A) {            
                 A.io.request('${getNewsletterCategoryByIdAction}', {
                     method : 'GET'
                     ,dataType : 'json'
@@ -87,7 +87,7 @@
     }
     
     function saveNewsletter() {
-        AUI().use('aui-autocomplete', function(A) {
+        AUI().use('aui-autocomplete-deprecated', function(A) {
             A.io.request('${saveNewsletterAction}', {
                 method : 'GET'
                 ,dataType : 'json'
@@ -111,7 +111,7 @@
     }
   
     function updateNewsletter() {
-        AUI().use('aui-autocomplete', function(A) {
+        AUI().use('aui-autocomplete-deprecated', function(A) {
             A.io.request('${updateNewsletterAction}', {
                 method : 'GET'
                 ,dataType : 'json'
@@ -135,7 +135,7 @@
     }
     
     function deleteNewsletter() {
-        AUI().use('aui-autocomplete', function(A) {
+        AUI().use('aui-autocomplete-deprecated', function(A) {
             A.io.request('${deleteNewsletterAction}', {
                 method : 'GET'
                 ,dataType : 'json'
@@ -161,7 +161,7 @@
     function sendNewsletter() {
         var categoryId = document.getElementById('<portlet:namespace/>id').value;
         if(categoryId != -1) {
-            AUI().use('aui-autocomplete', function(A) {
+            AUI().use('aui-autocomplete-deprecated', function(A) {
                 A.io.request('${sendNewsletterAction}', {
                     method : 'GET'
                     ,dataType : 'json'
@@ -205,12 +205,12 @@
         <aui:input id='articleId' name='articleId' label='<%=LanguageUtil.get(locale, "newsletter.admin.article")%>' type='text' value='0'></aui:input>        
         <aui:button-row>
             <div id="save-content-div">
-                <aui:button class='aui-button-input' value='<%=LanguageUtil.get(locale, "newsletter.common.save")%>' onClick='saveNewsletter()'/>                
+                <aui:button class='button-input' value='<%=LanguageUtil.get(locale, "newsletter.common.save")%>' onClick='saveNewsletter()'/>                
             </div>
             <div id="update-content-div" style="display: none;">
-                <aui:button name="update-btn" class='aui-button-input' value='<%=LanguageUtil.get(locale, "newsletter.common.update")%>' onClick='updateNewsletter()' />
-                <aui:button name="delete-btn" class='aui-button-input' value='<%=LanguageUtil.get(locale, "newsletter.common.delete")%>' onClick='deleteNewsletter()' />
-                <aui:button name="send-btn" class='aui-button-input' value='<%=LanguageUtil.get(locale, "newsletter.admin.send")%>' onClick='sendNewsletter()' />            
+                <aui:button name="update-btn" class='button-input' value='<%=LanguageUtil.get(locale, "newsletter.common.update")%>' onClick='updateNewsletter()' />
+                <aui:button name="delete-btn" class='button-input' value='<%=LanguageUtil.get(locale, "newsletter.common.delete")%>' onClick='deleteNewsletter()' />
+                <aui:button name="send-btn" class='button-input' value='<%=LanguageUtil.get(locale, "newsletter.admin.send")%>' onClick='sendNewsletter()' />            
             </div>
         </aui:button-row>
     </aui:fieldset>

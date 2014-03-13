@@ -1,16 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>newsletter</artifactId>
         <groupId>com.rcs</groupId>
-        <version>6.1.2.1</version>
+        <version>6.2.0-ga1</version>
     </parent>
     <groupId>com.rcs</groupId>
     <artifactId>newsletter-portlet</artifactId>
     <packaging>war</packaging>
     <name>newsletter Portlet</name>
-    <version>6.1.2.1</version>
+    <version>6.2.0-ga1</version>
     <build>
         <plugins>
             <plugin>
@@ -30,7 +30,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>rcs-newsletter-portlet-6.1.2.2</finalName>
+        <finalName>rcs-newsletter-portlet-6.2.0-ga1</finalName>
     </build>
     <dependencies>
         <dependency>
@@ -121,35 +121,29 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>2.2.1</version>
+            <version>4.0</version>
         </dependency>
-
+        <dependency>  
+    		<groupId>org.primefaces.themes</groupId>  
+    		<artifactId>redmond</artifactId>  
+    		<version>1.0.10</version>  
+		</dependency> 
+		<dependency>
+			<groupId>com.liferay.faces</groupId>
+			<artifactId>liferay-faces-alloy</artifactId>
+			<version>3.2.4-ga5</version>
+		</dependency>
         <dependency>
-            <groupId>com.rcs.portletfaces</groupId>
-            <artifactId>portletfaces-bridge-impl</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.portletfaces</groupId>
-            <artifactId>portletfaces-bridge-api</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.portletfaces</groupId>
-            <artifactId>portletfaces-logging</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.portletfaces.alloy.faces</groupId>
-            <artifactId>alloyfaces</artifactId>
-            <version>1.0.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.portletfaces.liferay.faces</groupId>
-            <artifactId>liferayfaces</artifactId>
-            <version>6.0.0.2</version>
-        </dependency>
+			<groupId>com.liferay.faces</groupId>
+			<artifactId>liferay-faces-bridge-impl</artifactId>
+			<version>3.2.4-ga5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.liferay.faces</groupId>
+			<artifactId>liferay-faces-portal</artifactId>
+			<version>3.2.4-ga5</version>
+		</dependency>
+   
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>newsletter-core</artifactId>
@@ -163,13 +157,13 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.6</version>
+            <version>3.7</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>1.3.2</version>
-        </dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.4</version>
+		</dependency>
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
@@ -177,11 +171,21 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.faces</artifactId>
-            <version>2.1.14</version>
-            <scope>compile</scope>
-        </dependency>
+        	<groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.2</version>
+		</dependency>
+        <dependency>
+			<groupId>org.jboss.seam</groupId>
+			<artifactId>jboss-el</artifactId>
+			<version>2.0.0.GA</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>el-api</artifactId>
+					<groupId>javax.el</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
     </dependencies>
 

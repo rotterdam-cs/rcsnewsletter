@@ -5,11 +5,11 @@
     <parent>
         <artifactId>newsletter</artifactId>
         <groupId>com.rcs</groupId>
-        <version>6.1.2.1</version>
+        <version>6.2.0-ga1</version>
     </parent>
     <groupId>com.rcs</groupId>
     <artifactId>newsletter-core</artifactId>
-    <version>6.1.2.1</version>
+    <version>6.2.0-ga1</version>
     <name>newsletter-core</name>
     <url>http://maven.apache.org</url>
     <properties>

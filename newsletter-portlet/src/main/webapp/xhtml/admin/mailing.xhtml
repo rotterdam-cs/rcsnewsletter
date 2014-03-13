@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
@@ -14,7 +14,7 @@
             <f:loadBundle basename="Language" var="msg" />            
             <p:commandButton value="#{nlk['newsletter.admin.mailing.createtitle']}" action="#{newsletterMailingManagedBean.addMailing}" />
             <hr />
-            <p:dataTable var="row" value="#{newsletterMailingManagedBean.mailingList}" selection="#{newsletterMailingManagedBean.selectedMailing}">
+            <p:dataTable var="row" value="#{newsletterMailingManagedBean.mailingList}" rowKey="#{row.mailing.id}" selection="#{newsletterMailingManagedBean.selectedMailing}">
                 <p:column selectionMode="single"/>
                 <p:column styleClass="newsletter-panel-column-id">
                     <f:facet name="header">
@@ -48,31 +48,28 @@
                     <f:facet name="header">
                         #{msg['newsletter.admin.general.action']}
                     </f:facet>
-                    <p:menu type="tiered" styleClass="newsletter-panel-column-action">
-                        <p:submenu label="#{msg['newsletter.admin.general.actions']}">
-                            
-                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.mailing.updatetitle']}" icon="ui-icon ui-icon-pencil" action="#{newsletterMailingManagedBean.editMailing}">
+                    <p:tieredMenu styleClass="newsletter-panel-column-action">
+                    	<p:submenu label="#{msg['newsletter.admin.general.actions']}" >  
+                    		<p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.mailing.updatetitle']}" icon="ui-icon-pencil" action="#{newsletterMailingManagedBean.editMailing}">
+                                <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{row.mailing.id}" />
+                            </p:menuitem>  
+                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.mailing.deletemailing']}" icon="ui-icon-close" action="#{newsletterMailingManagedBean.beginDeletion}">
                                 <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{row.mailing.id}" />
                             </p:menuitem>
-                            
-                            <p:menuitem styleClass="newsletter-panel-action-submenu" value="#{nlk['newsletter.admin.mailing.deletemailing']}" icon="ui-icon ui-icon-close" action="#{newsletterMailingManagedBean.beginDeletion}">
-                                <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{row.mailing.id}" />
-                            </p:menuitem>
-                            
-                        </p:submenu>
-                    </p:menu>
+                    	</p:submenu>  
+    				</p:tieredMenu>
                 </p:column>
                 
             </p:dataTable>
             
             <p:inputText id="testEmail" styleClass="newsletter-forms-input-text newsletter-forms-button newsletter-forms-confirmation-delete-panel"  value="#{newsletterMailingManagedBean.testEmail}" />
-            <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendtest']}" action="#{newsletterMailingManagedBean.sendTestMailing}" update="messages" >
+            <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendtest']}" action="#{newsletterMailingManagedBean.sendTestMailing}" >
                 <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{newsletterMailingManagedBean.selectedMailing.mailing.id}" />
             </p:commandButton>                
             <br />
             <p:watermark for="testEmail" value="#{nlk['newsletter.admin.mailing.testfiller']}" />
             
-            <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendnewsletter']}" action="#{newsletterMailingManagedBean.redirectConfirmSend}" update="messages">
+            <p:commandButton styleClass="newsletter-forms-button newsletter-forms-confirmation-delete-panel" value="#{nlk['newsletter.admin.mailing.sendnewsletter']}" action="#{newsletterMailingManagedBean.redirectConfirmSend}">
                 <f:setPropertyActionListener target="#{newsletterMailingManagedBean.mailingId}" value="#{newsletterMailingManagedBean.selectedMailing.mailing.id}" />
             </p:commandButton>
         </ui:composition>

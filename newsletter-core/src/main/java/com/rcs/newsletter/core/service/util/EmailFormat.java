@@ -441,14 +441,14 @@ public class EmailFormat {
             HashMap<String, JournalArticle> resultArticleNewsletter = new HashMap<String, JournalArticle>();
             try {
                 //Search Articles by Type
-                List<JournalArticle> articlesByType = ArticleUtils.findArticlesByType(newsletterArticleType);
+                List<JournalArticle> articlesByType = ArticleUtils.findArticlesByType(themeDisplay, newsletterArticleType);
                 for (JournalArticle article : articlesByType) {
                     if (!resultArticleNewsletter.containsKey(article.getArticleId())) {
                         resultArticleNewsletter.put(article.getArticleId(), article);
                     }
                 }
                 //Search Articles by Category
-                List<JournalArticle> articlesByCategory = ArticleUtils.findArticlesByCategory(newsletterArticleCategory);
+                List<JournalArticle> articlesByCategory = ArticleUtils.findArticlesByCategory(themeDisplay, newsletterArticleCategory);
                 for (JournalArticle article : articlesByCategory) {
                     if (!resultArticleNewsletter.containsKey(article.getArticleId())) {
                         resultArticleNewsletter.put(article.getArticleId(), article);

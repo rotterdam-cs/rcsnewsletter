@@ -214,10 +214,10 @@ public class ArticleUtils {
      * @throws PortalException
      * @throws SystemException
      */
-    public static List<JournalArticle> findArticlesByType(String type) throws PortalException, SystemException {
+    public static List<JournalArticle> findArticlesByType(ThemeDisplay themeDisplay, String type) throws PortalException, SystemException {
         List<JournalArticle> journalArticleList = new ArrayList();
         try {
-            for (JournalArticle article : JournalArticleLocalServiceUtil.getArticles()) {
+            for (JournalArticle article : JournalArticleLocalServiceUtil.getArticles(themeDisplay.getSiteGroupId())) {
                 JournalArticle a = JournalArticleLocalServiceUtil.getLatestArticle(article.getGroupId(), article.getArticleId());
                 if (a.getType().equalsIgnoreCase(type)) {
                     journalArticleList.add(a);
@@ -259,19 +259,21 @@ public class ArticleUtils {
      * @throws PortalException
      * @throws SystemException
      */
-    public static List<JournalArticle> findArticlesByCategory(String category) throws PortalException, SystemException {
+    public static List<JournalArticle> findArticlesByCategory(ThemeDisplay themeDisplay, String category) throws PortalException, SystemException {
         List journalArticleList = new ArrayList();
         AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
         assetEntryQuery.setClassName(JournalArticle.class.getName());//to get only journal articles
-        long[] anyCategoryIds = {findCategoryIdByName(category)};
+        long[] anyCategoryIds = {findCategoryIdByNameAndGroupId(category, themeDisplay.getSiteGroupId())};
         assetEntryQuery.setAnyCategoryIds(anyCategoryIds);
         List <AssetEntry> assetEntryList = AssetEntryLocalServiceUtil.getEntries(assetEntryQuery);        
         if (assetEntryList.size() > 0) {
             for (AssetEntry ae : assetEntryList) {
                 JournalArticleResource journalArticleResourceObj = JournalArticleResourceLocalServiceUtil.getJournalArticleResource(ae.getClassPK());
                 JournalArticle journalArticleObj = JournalArticleLocalServiceUtil.getLatestArticle(journalArticleResourceObj.getGroupId(), journalArticleResourceObj.getArticleId());
-                if (journalArticleObj != null) {
-                    journalArticleList.add(journalArticleObj);
+                if ((journalArticleObj != null)) {
+                	if (journalArticleObj.getGroupId()==themeDisplay.getSiteGroupId()) {
+                		journalArticleList.add(journalArticleObj);
+                	}
                 }
             }
         }
@@ -291,6 +293,28 @@ public class ArticleUtils {
             List <AssetCategory> assetCategories = AssetCategoryLocalServiceUtil.getCategories();
             for (AssetCategory assetCategory : assetCategories) {
                 if (assetCategory.getName().equalsIgnoreCase(categoryName)) {
+                    result = assetCategory.getCategoryId();
+                }
+            }
+        } catch(SystemException ex) {
+            log.error(ex);
+        }
+        return result;
+    }
+    
+    /**
+     * @@Not Used
+     * Get Category ID By Name and GroupId
+     * @param articleName, groupId
+     * @return
+     * @throws SystemException
+     */
+    public static long findCategoryIdByNameAndGroupId(String categoryName, long groupId) throws SystemException {
+        long result = 0;
+        try {
+            List <AssetCategory> assetCategories = AssetCategoryLocalServiceUtil.getCategories();
+            for (AssetCategory assetCategory : assetCategories) {
+                if ( (assetCategory.getName().equalsIgnoreCase(categoryName)) && (assetCategory.getGroupId()==groupId) ) {
                     result = assetCategory.getCategoryId();
                 }
             }

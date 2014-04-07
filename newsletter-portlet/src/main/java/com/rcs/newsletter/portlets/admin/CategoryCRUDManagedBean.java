@@ -40,7 +40,7 @@ public class CategoryCRUDManagedBean {
     
     /////////////// PROPERTIES ////////////////////
     private long id;
-    private CRUDActionEnum action;
+    private static CRUDActionEnum action;
     private String name;
     private String fromName;
     private String fromEmail;

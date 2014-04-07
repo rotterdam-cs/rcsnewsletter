@@ -10,34 +10,42 @@
     <h:head>
 <!--        <title><h:outputText value="#{nlk['newsletter.admin.category.edit']}" /></title>-->
     </h:head>
-    <h:body>        
-        <h:form styleClass="multi-site-form">
+    <h:body>   
+        <h:form styleClass="multi-site-form" id="formNewsletterList">
             <p:inputText styleClass="groupId" id="groupId" value="#{categoryCRUDManagedBean.groupId}" style="display: none"/>   
             <h:inputHidden value="#{categoryCRUDManagedBean.id}"/>
             <h:inputHidden value="#{categoryCRUDManagedBean.action}"/>
-            <h:panelGrid width="600px" columns="2" styleClass="newsletter-forms-form" columnClasses="newsletter-forms-column-left,newsletter-forms-column-right">                                
+            <h:panelGrid width="650px" columns="3" styleClass="newsletter-forms-form" columnClasses="newsletter-forms-column-left,newsletter-forms-column-right">                                
             
                 <h:outputLabel value="#{msg['newsletter.admin.general.name']}: "/>
-                <p:inputText styleClass="newsletter-forms-input-text" id="name" value="#{categoryCRUDManagedBean.name}"/>
+                <p:inputText styleClass="newsletter-forms-input-text" id="name" value="#{categoryCRUDManagedBean.name}" required="true" requiredMessage="#{nlk['newsletter.admin.category.name.validation']}"/>
+                <p:message for="name" /> 
                 
                 <h:outputLabel value="#{msg['newsletter.admin.general.description']}: "/> 
-                <p:inputTextarea styleClass="newsletter-forms-input-textarea" id="description" value="#{categoryCRUDManagedBean.description}"/>
+                <p:inputTextarea styleClass="newsletter-forms-input-textarea" id="description" value="#{categoryCRUDManagedBean.description}" required="true" requiredMessage="#{nlk['newsletter.admin.category.description.validation']}"/>
+                <p:message for="description" /> 
                 
                 <h:outputLabel value="#{nlk['newsletter.admin.category.fromname']}: "/>                
-                <p:inputText styleClass="newsletter-forms-input-text" id="fromName" value="#{categoryCRUDManagedBean.fromName}"/>
+                <p:inputText styleClass="newsletter-forms-input-text" id="fromName" value="#{categoryCRUDManagedBean.fromName}" required="true" requiredMessage="#{nlk['newsletter.admin.category.fromname.validation']}"/>
+                <p:message for="fromName" />
                 
                 <h:outputLabel value="#{nlk['newsletter.admin.category.fromemail']}: "/> 
-                <p:inputText styleClass="newsletter-forms-input-text" id="fromEmail" value="#{categoryCRUDManagedBean.fromEmail}"/>
+                <p:inputText styleClass="newsletter-forms-input-text" id="fromEmail" value="#{categoryCRUDManagedBean.fromEmail}" validatorMessage="#{nlk['newsletter.admin.category.fromemail.validation']}">
+                	<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                </p:inputText>
+                <p:message for="fromEmail" />
                 
                 <h:outputLabel value="#{nlk['newsletter.admin.category.adminemail']}: "/> 
                 <p:inputText styleClass="newsletter-forms-input-text" id="adminEmail" value="#{categoryCRUDManagedBean.adminEmail}"/>
-
-                <h:outputLabel value=" "/> 
+				<h:outputLabel value=""/> 
+				
+                <h:outputLabel value=""/> 
                 <h:outputText value="* #{nlk['newsletter.admin.category.adminemail.details']}" />
-                                
+               	<h:outputLabel value=""/> 
+               	                   
                 <br />
                 <f:facet name="footer">
-                    <p:commandButton update="list-composition-id" styleClass="newsletter-forms-button" value="#{categoryCRUDManagedBean.action.key}" action="#{categoryCRUDManagedBean.save}" ajax="false"/>
+                    <p:commandButton styleClass="newsletter-forms-button" value="#{categoryCRUDManagedBean.action.key}" action="#{categoryCRUDManagedBean.save}" update="formNewsletterList" />
                     <p:button styleClass="newsletter-forms-button" outcome="admin" value="#{msg['newsletter.admin.general.cancel']}" />
                 </f:facet>
             </h:panelGrid>            

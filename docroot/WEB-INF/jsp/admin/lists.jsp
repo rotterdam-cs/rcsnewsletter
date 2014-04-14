@@ -160,6 +160,8 @@
                 
                 jQuery('#addList<portlet:namespace/>').click(function(){
                     showAddEditDeleteForm('CREATE');
+                    jQuery('#save<portlet:namespace/>').show();
+            		jQuery('#remove<portlet:namespace/>').hide();
                     jQuery("#addEditDeleteCategory<portlet:namespace/> .fieldToDisable").attr("disabled", false);
                 });
                 

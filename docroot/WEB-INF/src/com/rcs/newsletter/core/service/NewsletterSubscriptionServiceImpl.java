@@ -219,7 +219,8 @@ public class NewsletterSubscriptionServiceImpl extends CRUDServiceImpl<Newslette
             String content = category.getSubscriptionEmail();
             String subject = bundle.getString("newsletter.subscription.mail.subject");
             content = EmailFormat.replaceUserInfo(content, subscription, themeDisplay);
-            content = EmailFormat.fixImagesPath(content, themeDisplay);                            
+            content = EmailFormat.fixImagesPath(content, themeDisplay);        
+            content = EmailFormat.fixLinksPath(content, themeDisplay);
             InternetAddress fromIA = new InternetAddress(category.getFromEmail(), category.getFromName());
             InternetAddress toIA = new InternetAddress(subscriptor.getEmail());
             MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);
@@ -267,7 +268,8 @@ public class NewsletterSubscriptionServiceImpl extends CRUDServiceImpl<Newslette
                 String content = subscription.getCategory().getGreetingEmail();
                 String subject = bundle.getString("newsletter.subscription.mail.greetings.subject");
                 content = EmailFormat.replaceUserInfo(content, subscription, themeDisplay);
-                content = EmailFormat.fixImagesPath(content, themeDisplay);                            
+                content = EmailFormat.fixImagesPath(content, themeDisplay);   
+                content = EmailFormat.fixLinksPath(content, themeDisplay);
                 InternetAddress fromIA = new InternetAddress(subscription.getCategory().getFromEmail(), subscription.getCategory().getFromName());
                 InternetAddress toIA = new InternetAddress(subscription.getSubscriptor().getEmail());
                 MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);
@@ -336,7 +338,8 @@ public class NewsletterSubscriptionServiceImpl extends CRUDServiceImpl<Newslette
             String content = subscription.getCategory().getUnsubscriptionEmail();
             String subject = bundle.getString("newsletter.subscription.mail.unsubscription.subject");
             content = EmailFormat.replaceUserInfo(content, subscription, themeDisplay);
-            content = EmailFormat.fixImagesPath(content, themeDisplay);                            
+            content = EmailFormat.fixImagesPath(content, themeDisplay);
+            content = EmailFormat.fixLinksPath(content, themeDisplay);
             InternetAddress fromIA = new InternetAddress(subscription.getCategory().getFromEmail(), subscription.getCategory().getFromName());
             InternetAddress toIA = new InternetAddress(subscription.getSubscriptor().getEmail());
             MailMessage message = EmailFormat.getMailMessageWithAttachedImages(fromIA, toIA, subject, content);

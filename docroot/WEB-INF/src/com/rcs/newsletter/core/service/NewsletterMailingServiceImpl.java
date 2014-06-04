@@ -108,8 +108,9 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
             
             String content = EmailFormat.getEmailFromTemplate(mailing, themeDisplay);
             content = content.replace(LIST_NAME_TOKEN, mailing.getName());
-            //Add full path to images
+            //Add full path to images and links
             content = EmailFormat.fixImagesPath(content, themeDisplay);
+            content = EmailFormat.fixLinksPath(content, themeDisplay);
 
             //Replace User Info
             content = EmailFormat.replaceUserInfo(content, null, themeDisplay);
@@ -143,8 +144,9 @@ class NewsletterMailingServiceImpl extends CRUDServiceImpl<NewsletterMailing> im
             logger.info(content);
             logger.info("***********************");
             
-            //Add full path to images
+            //Add full path to images and links
             content = EmailFormat.fixImagesPath(content, themeDisplay);
+            content = EmailFormat.fixLinksPath(content, themeDisplay);
 
             logger.info("***** fixing images path:");
             logger.info(content);

@@ -174,6 +174,17 @@ public class EmailFormat {
     }
 
     /**
+     * Fix the relative Paths to Absolute Paths on links
+     */
+    public static String fixLinksPath(String emailBody, ThemeDisplay themeDisplay) {
+        String siteURL = getUrl(themeDisplay);
+        String result = emailBody.replaceAll("href=\"/", "href=\"" + siteURL);
+        result = result.replaceAll("href='/", "href='" + siteURL);
+        result = result.replaceAll("&amp;", "&");
+        return result;
+    }
+
+    /**
      * Returns the base server URL
      */
     public static String getUrl(ThemeDisplay themeDisplay) {

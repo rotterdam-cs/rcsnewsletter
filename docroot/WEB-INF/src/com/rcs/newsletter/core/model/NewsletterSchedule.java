@@ -33,7 +33,17 @@ public class NewsletterSchedule extends NewsletterEntity {
     private String portalURL;
     private Locale locale;
     
-    
+    /* themeDisplay configuration */
+    private Long layoutPlid;
+    private String pathFriendlyURLPublic;
+    private String pathFriendlyURLPrivateUser;
+    private String pathFriendlyURLPrivateGroup;
+    private String pathImage;
+    private String pathMain;
+    private String pathContext;
+    private String pathThemeImages;
+    private String serverName;
+    private String CDNHost;
     
     public Boolean getPending() {
 		return pending;
@@ -56,6 +66,10 @@ public class NewsletterSchedule extends NewsletterEntity {
 		this.sendDate = sendDate;
 	}
 	
+	/* 
+	 * themeDisplay configuration 
+	 */
+	
 	public String getUrlHome() {
 		return urlHome;
 	}
@@ -74,7 +88,76 @@ public class NewsletterSchedule extends NewsletterEntity {
 	public void setLocale(Locale locale) {
 		this.locale = locale;
 	}
-
+	
+	public Long getLayoutPlid() {
+		return layoutPlid;
+	}
+	public void setLayoutPlid(Long layoutPlid) {
+		this.layoutPlid = layoutPlid;
+	}
+	
+	public String getPathFriendlyURLPublic() {
+		return pathFriendlyURLPublic;
+	}
+	public void setPathFriendlyURLPublic(String pathFriendlyURLPublic) {
+		this.pathFriendlyURLPublic = pathFriendlyURLPublic;
+	}
+	
+	public String getPathFriendlyURLPrivateUser() {
+		return pathFriendlyURLPrivateUser;
+	}
+	public void setPathFriendlyURLPrivateUser(String pathFriendlyURLPrivateUser) {
+		this.pathFriendlyURLPrivateUser = pathFriendlyURLPrivateUser;
+	}
+	
+	public String getPathFriendlyURLPrivateGroup() {
+		return pathFriendlyURLPrivateGroup;
+	}
+	public void setPathFriendlyURLPrivateGroup(String pathFriendlyURLPrivateGroup) {
+		this.pathFriendlyURLPrivateGroup = pathFriendlyURLPrivateGroup;
+	}
+	
+	public String getPathImage() {
+		return pathImage;
+	}
+	public void setPathImage(String pathImage) {
+		this.pathImage = pathImage;
+	}
+	
+	public String getPathMain() {
+		return pathMain;
+	}
+	public void setPathMain(String pathMain) {
+		this.pathMain = pathMain;
+	}
+	
+	public String getPathContext() {
+		return pathContext;
+	}
+	public void setPathContext(String pathContext) {
+		this.pathContext = pathContext;
+	}
+	
+	public String getPathThemeImages() {
+		return pathThemeImages;
+	}
+	public void setPathThemeImages(String pathThemeImages) {
+		this.pathThemeImages = pathThemeImages;
+	}
+	
+	public String getServerName() {
+		return serverName;
+	}
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
+	}
+	
+	public String getCDNHost() {
+		return CDNHost;
+	}
+	public void setCDNHost(String CDNHost) {
+		this.CDNHost = CDNHost;
+	}
     
     
 }

@@ -10,12 +10,16 @@ import com.rcs.newsletter.commons.Utils;
 import com.rcs.newsletter.core.dto.NewsletterSubscriptionDTO;
 import com.rcs.newsletter.core.service.NewsletterSubscriptionService;
 import com.rcs.newsletter.portlets.forms.SubscriptionForm;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
+
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,6 +41,8 @@ public class NewsletterRegistrationController extends GenericController{
     
     @RenderMapping
     public ModelAndView initialView(RenderRequest request, RenderResponse response){
+    	ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME, request.getLocale());
+        response.setTitle(bundle.getString("newsletter.registration.portlet.title"));
         Map<String,Object> model = new HashMap<String,Object>();
         return new ModelAndView("registration/register", model);
     }

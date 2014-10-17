@@ -3,8 +3,9 @@
 Use: Main Screen Import
 
 ***********************************/
-@import url(reset.css);
-@import url(core.css);
+/* @import "reset.css";
+@import "core.css";
+*/
 @import url(cmxformTemplate.css);
 @import url(cmxform.css);
 

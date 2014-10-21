@@ -122,8 +122,16 @@
                         }
                     }).trigger("reloadGrid");
                 });
-                
 
+              	/* Search Email Event */
+        	 	jQuery("#input-search-email-<portlet:namespace/>").keyup(function() {
+        	  		var email = jQuery("#input-search-email-<portlet:namespace/>").val();
+        			var postdata = jQuery('#subscribersGrid<portlet:namespace/>').jqGrid('getGridParam','postData');
+        			jQuery.extend(postdata,{filters:'',searchField: 'subscriptorEmail',searchOper: 'eq',searchString: email});
+        			jQuery("#subscribersGrid<portlet:namespace/>").jqGrid('setGridParam', { search: true, postData: postdata });
+        			jQuery("#subscribersGrid<portlet:namespace/>").trigger("reloadGrid",[{page:1}]);
+        		});
+        	 	/* End Event */
                 
                 function getRowSubscriptorShowForm(id, action, disabledFields){
                     jQuery.ajax({
@@ -249,8 +257,15 @@
         <%-- GRID --%>
         <div id="gridSubscribersContainer<portlet:namespace/>">
             <label><fmt:message key="newsletter.admin.subscribers.only.show.subscribers.off"/></label>
-            <select id="listsCombo<portlet:namespace/>"></select><br/>
-
+            <select id="listsCombo<portlet:namespace/>"></select>
+			
+			<%-- div search email --%>
+			<div class="subcribersSearch">
+				<label><fmt:message key="newsletter.admin.subscribers.search.email"/></label>
+				<input type="text" id="input-search-email-<portlet:namespace/>" name="searchEmail" style="width:200px" placeholder="<fmt:message key="newsletter.admin.subscribers.search.email.placeholder" />"  />
+			</div>
+			
+			<br/>
             <input type="checkbox" id="activeStatusCheck<portlet:namespace/>"/>
                 <fmt:message key="newsletter.admin.subscribers.only.show.inactive.subscribers" bundle="${newsletter}"/><br/>
             <hr/>

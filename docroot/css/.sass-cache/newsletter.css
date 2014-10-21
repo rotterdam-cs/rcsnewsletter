@@ -162,6 +162,10 @@
 .field-long {
   width: 250px; }
 
+.subcribersSearch {
+  float: right;
+  margin-top: 15px; }
+
 /*
   JQuery Styles Fixes
  --------------------

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project>
 
-<project name="LiferayTestPortlets-portlet" basedir="." default="deploy">
+<project name="newsletter-springmvc-l6.1-portlet" basedir="." default="deploy">
 	<import file="../build-common-portlet.xml" />
 </project>

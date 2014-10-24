@@ -16,8 +16,8 @@
         <header-portlet-css>/js/jquery-loadmask/jquery.loadmask.css</header-portlet-css>        
         <header-portlet-css>/js/jquery-timepicker/jquery-ui-timepicker-addon.css</header-portlet-css>        
         <header-portlet-javascript>/js/jquery-1.7.1.min.js</header-portlet-javascript>
-        <footer-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/js/jquery-ui-1.8.16.custom.min.js</footer-portlet-javascript>
-        <footer-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/development-bundle/ui/jquery-ui-1.8.16.custom.js</footer-portlet-javascript>    
+        <header-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/js/jquery-ui-1.8.16.custom.min.js</header-portlet-javascript>
+        <header-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/development-bundle/ui/jquery-ui-1.8.16.custom.js</header-portlet-javascript>    
         <footer-portlet-javascript>/js/jquery-timepicker/jquery-ui-timepicker-addon.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/development-bundle/ui/i18n/jquery.ui.datepickerlocale.jsp</footer-portlet-javascript>        
         <footer-portlet-javascript>/js/jquery.jqGrid-4.3.1/js/i18n/jqgridlocale.jsp</footer-portlet-javascript>
@@ -32,7 +32,8 @@
     <portlet>
         <portlet-name>NewsletterRegistration</portlet-name>
         <icon>/icon.png</icon>
-        <configuration-action-class>com.rcs.newsletter.portlets.newsletterregistration.NewsletterRegistrationEditController</configuration-action-class>
+       <!-- #17044 -->
+<!--         <configuration-action-class>com.rcs.newsletter.portlets.newsletterregistration.NewsletterRegistrationEditController</configuration-action-class> -->
         <instanceable>true</instanceable>
         <requires-namespaced-parameters>false</requires-namespaced-parameters>
         <header-portlet-css>/css/newsletter.css</header-portlet-css>
@@ -40,8 +41,8 @@
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
         <header-portlet-css>/js/jquery.jqGrid-4.3.1/css/ui.jqgrid.css</header-portlet-css>
         <header-portlet-javascript>/js/jquery-1.9.1.min.js</header-portlet-javascript>
-        <footer-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/js/jquery-ui-1.8.16.custom.min.js</footer-portlet-javascript>
-        <footer-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/development-bundle/ui/i18n/jquery.ui.datepickerlocale.jsp</footer-portlet-javascript>
+        <header-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/js/jquery-ui-1.8.16.custom.min.js</header-portlet-javascript>
+        <header-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/development-bundle/ui/i18n/jquery.ui.datepickerlocale.jsp</header-portlet-javascript>
         <footer-portlet-javascript>/js/jquery.jqGrid-4.3.1/js/i18n/jqgridlocale.jsp</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery.jqGrid-4.3.1/js/jquery.jqGrid.src.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery.form/jquery.form.js</footer-portlet-javascript>
@@ -60,8 +61,8 @@
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
         <header-portlet-css>/js/jquery.jqGrid-4.3.1/css/ui.jqgrid.css</header-portlet-css>
         <header-portlet-javascript>/js/jquery-1.9.1.min.js</header-portlet-javascript>
-        <footer-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/js/jquery-ui-1.8.16.custom.min.js</footer-portlet-javascript>
-        <footer-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/development-bundle/ui/i18n/jquery.ui.datepickerlocale.jsp</footer-portlet-javascript>
+        <header-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/js/jquery-ui-1.8.16.custom.min.js</header-portlet-javascript>
+        <header-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/development-bundle/ui/i18n/jquery.ui.datepickerlocale.jsp</header-portlet-javascript>
         <footer-portlet-javascript>/js/jquery.jqGrid-4.3.1/js/i18n/jqgridlocale.jsp</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery.jqGrid-4.3.1/js/jquery.jqGrid.src.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery.form/jquery.form.js</footer-portlet-javascript>
@@ -80,8 +81,8 @@
         <header-portlet-css>/js/jquery-ui-1.8.16.custom-redmond/css/redmond/jquery-ui-1.8.16.custom.css</header-portlet-css>
         <header-portlet-css>/js/jquery.jqGrid-4.3.1/css/ui.jqgrid.css</header-portlet-css>
         <header-portlet-javascript>/js/jquery-1.9.1.min.js</header-portlet-javascript>
-        <footer-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/js/jquery-ui-1.8.16.custom.min.js</footer-portlet-javascript>
-        <footer-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/development-bundle/ui/i18n/jquery.ui.datepickerlocale.jsp</footer-portlet-javascript>
+        <header-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/js/jquery-ui-1.8.16.custom.min.js</header-portlet-javascript>
+        <header-portlet-javascript>/js/jquery-ui-1.8.16.custom-redmond/development-bundle/ui/i18n/jquery.ui.datepickerlocale.jsp</header-portlet-javascript>
         <footer-portlet-javascript>/js/jquery.jqGrid-4.3.1/js/i18n/jqgridlocale.jsp</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery.jqGrid-4.3.1/js/jquery.jqGrid.src.js</footer-portlet-javascript>
         <footer-portlet-javascript>/js/jquery.form/jquery.form.js</footer-portlet-javascript>

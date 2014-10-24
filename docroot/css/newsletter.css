@@ -199,6 +199,15 @@
     width: 250px;
 }
 
+.subcribersSearch{
+	float: right;
+	margin-top: 15px;
+}
+
+label{
+	display: inline-block!important;
+}
+
 /*
   JQuery Styles Fixes
  --------------------
